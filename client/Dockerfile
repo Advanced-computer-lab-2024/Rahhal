@@ -1,0 +1,9 @@
+ARG NODE_VERSION=20
+
+FROM node:${NODE_VERSION}-alpine
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+EXPOSE 3000

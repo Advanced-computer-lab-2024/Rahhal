@@ -1,0 +1,90 @@
+services:
+  frontend:
+    build: ./client
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/usr/src/app
+      - /usr/src/app/client/node_modules
+    depends_on:
+      - backend
+  backend:
+    build: ./gateway
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./gateway:/usr/src/app
+      - /usr/src/app/gateway/node_modules
+    depends_on:
+      - authentication
+      - booking
+      - entertainment
+      - payment
+      - user
+  authentication:
+    build: ./authentication
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./authentication:/usr/src/app
+      - /usr/src/app/authentication/node_modules
+    depends_on:
+      - authentication_database
+  authentication_database:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+  booking:
+    build: ./booking
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./booking:/usr/src/app
+      - /usr/src/app/booking/node_modules
+    depends_on:
+      - booking_database
+  booking_database:
+    image: mongo:latest
+    ports:
+      - "27018:27018"
+  entertainment:
+    build: ./entertainment
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./entertainment:/usr/src/app
+      - /usr/src/app/entertainment/node_modules
+    depends_on:
+      - entertainment_database
+  entertainment_database:
+    image: mongo:latest
+    ports:
+      - "27020:27020"
+  payment:
+    build: ./payment
+    ports:
+      - "3004:3000"
+    volumes:
+      - ./payment:/usr/src/app
+      - /usr/src/app/payment/node_modules
+    depends_on:
+      - payment_database
+  payment_database:
+    image: mongo:latest
+    ports:
+      - "27022:27022"
+  user:
+    build: ./user
+    ports:
+      - "3005:3000"
+    volumes:
+      - ./user:/usr/src/app
+      - /usr/src/app/user/node_modules
+    depends_on:
+      - user_database
+  user_database:
+    image: mongo:latest
+    ports:
+      - "27021:27021"
+
+
