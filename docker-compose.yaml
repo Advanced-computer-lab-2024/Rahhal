@@ -5,16 +5,16 @@ services:
       - "5173:5173"
     volumes:
       - ./client:/usr/src/app
-      - /usr/src/app/client/node_modules
+      - /usr/src/app/node_modules
     depends_on:
       - backend
   backend:
-    build: ./gateway
+    build: ./api-gateway
     ports:
       - "3000:3000"
     volumes:
-      - ./gateway:/usr/src/app
-      - /usr/src/app/gateway/node_modules
+      - ./api-gateway:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - authentication
       - booking
@@ -27,7 +27,7 @@ services:
       - "3001:3000"
     volumes:
       - ./authentication:/usr/src/app
-      - /usr/src/app/authentication/node_modules
+      - /usr/src/app/node_modules
     depends_on:
       - authentication_database
   authentication_database:
@@ -40,7 +40,7 @@ services:
       - "3002:3000"
     volumes:
       - ./booking:/usr/src/app
-      - /usr/src/app/booking/node_modules
+      - /usr/src/app/node_modules
     depends_on:
       - booking_database
   booking_database:
@@ -53,7 +53,7 @@ services:
       - "3003:3000"
     volumes:
       - ./entertainment:/usr/src/app
-      - /usr/src/app/entertainment/node_modules
+      - /usr/src/app/node_modules
     depends_on:
       - entertainment_database
   entertainment_database:
@@ -66,7 +66,7 @@ services:
       - "3004:3000"
     volumes:
       - ./payment:/usr/src/app
-      - /usr/src/app/payment/node_modules
+      - /usr/src/app/node_modules
     depends_on:
       - payment_database
   payment_database:
@@ -79,7 +79,7 @@ services:
       - "3005:3000"
     volumes:
       - ./user:/usr/src/app
-      - /usr/src/app/user/node_modules
+      - /usr/src/app/node_modules
     depends_on:
       - user_database
   user_database:
