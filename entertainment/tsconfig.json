@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node" /* Ensure Node.js-style module resolution. */,
+    "allowJs": true /* Allow JavaScript files to be included. */,
+    "noEmit": true /* Prevent TypeScript from emitting JavaScript files. */
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
