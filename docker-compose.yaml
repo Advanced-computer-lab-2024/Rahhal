@@ -34,6 +34,8 @@ services:
     image: mongo:latest
     ports:
       - "27017:27017"
+    volumes:
+      - "authentication-data:/data/db"
   booking:
     build: ./booking
     ports:
@@ -46,7 +48,9 @@ services:
   booking_database:
     image: mongo:latest
     ports:
-      - "27018:27018"
+      - "27018:27017"
+    volumes:
+      - "booking-data:/data/db"
   entertainment:
     build: ./entertainment
     ports:
@@ -59,7 +63,9 @@ services:
   entertainment_database:
     image: mongo:latest
     ports:
-      - "27020:27020"
+      - "27019:27017"
+    volumes:
+      - "entertainment-data:/data/db"
   payment:
     build: ./payment
     ports:
@@ -72,7 +78,9 @@ services:
   payment_database:
     image: mongo:latest
     ports:
-      - "27022:27022"
+      - "27020:27017"
+    volumes:
+      - "payment-data:/data/db"
   user:
     build: ./user
     ports:
@@ -85,6 +93,13 @@ services:
   user_database:
     image: mongo:latest
     ports:
-      - "27021:27021"
+      - "27021:27017"
+    volumes:
+      - "user-data:/data/db"
 
-
+volumes:
+  authentication-data:
+  booking-data:
+  entertainment-data:
+  payment-data:
+  user-data:
