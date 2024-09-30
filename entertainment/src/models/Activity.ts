@@ -7,7 +7,7 @@ export interface IActivity {
     name: string;
     date: Date;
     time: Date;
-    location: [number, number];
+    location: {longitude: number, latitude: number};    
     price: number | { min: number; max: number };
     category: string;
     tags: string[];
@@ -23,11 +23,15 @@ const activitySchema = new mongoose.Schema<IActivity>({
   name: { type: String, required: true },
   date: { type: Date, required: true },
   time: { type: Date, required: true },
-  location: { type: [Number], required: true , validate: {
-        validator: validateLocation,
-        message: 'Invalid location format, must be [longitude, latitude]'
-    }},
-   price: {
+  location: {
+    type: {
+        longitude: { type: Number, required: true },
+        latitude: { type: Number, required: true }
+    },
+    required: true,
+   
+  },
+  price: {
     type: mongoose.Schema.Types.Mixed,
     required: true,
     validate: {
@@ -50,11 +54,6 @@ const activitySchema = new mongoose.Schema<IActivity>({
 
 
 // Validators
-
-// Validate location format to be [longitude, latitude]
-function validateLocation(location: Array<number>) {
-    return Array.isArray(location) && location.length === 2 && location.every(e => typeof e === 'number');
-}
 
 
 // Validate price format to be a number or an object { min: number, max: number } and to be greater than or equal to 0
