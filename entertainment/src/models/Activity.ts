@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
+import { CONSTANTS } from '../utils/constants';
 
 
 // Define the schema for the activities collection
 export interface IActivity {
     name: string;
-    date: string;
-    time: string;
+    date: Date;
+    time: Date;
     location: [number, number];
     price: number | { min: number; max: number };
     category: string;
@@ -20,8 +21,8 @@ export interface IActivity {
 
 const activitySchema = new mongoose.Schema<IActivity>({
   name: { type: String, required: true },
-  date: { type: String, required: true },
-  time: { type: String, required: true },
+  date: { type: Date, required: true },
+  time: { type: Date, required: true },
   location: { type: [Number], required: true , validate: {
         validator: validateLocation,
         message: 'Invalid location format, must be [longitude, latitude]'
@@ -51,25 +52,25 @@ const activitySchema = new mongoose.Schema<IActivity>({
 // Validators
 
 // Validate location format to be [longitude, latitude]
-function validateLocation(v: Array<number>) {
-    return Array.isArray(v) && v.length === 2 && v.every(e => typeof e === 'number');
+function validateLocation(location: Array<number>) {
+    return Array.isArray(location) && location.length === 2 && location.every(e => typeof e === 'number');
 }
 
 
 // Validate price format to be a number or an object { min: number, max: number } and to be greater than or equal to 0
-function validatePrice(v: number | { min: number; max: number }) {
-    if (typeof v === 'number') {
-        return v >= 0;
-    } else if (typeof v === 'object') {
-        return v.min >= 0 && v.max > v.min;
+function validatePrice(price: number | { min: number; max: number }) {
+    if (typeof price === 'number') {
+        return price >= 0;
+    } else if (typeof price === 'object') {
+        return price.min >= 0 && price.max > price.min;
     }
     return false;
 }
 
 
 // Validate rating format to be a number between 0 and 5
-function validateRating(v: number) {
-    return v >= 0 && v <= 5;
+function validateRating(rating: number) {
+    return rating >= CONSTANTS.MIN_RATING && rating <= CONSTANTS.MAX_RATING;
 }
 
 const Activity = mongoose.model<IActivity>('Activity', activitySchema);

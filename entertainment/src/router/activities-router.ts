@@ -1,5 +1,5 @@
 import express from 'express';
-import activitiesController from '../controllers/activities-controller';
+import * as activitiesController from '../controllers/activities-controller';
 
 const router = express.Router();
 
@@ -12,4 +12,4 @@ router.put('/:id', activitiesController.updateActivity); // Update an existing a
 router.delete('/:id', activitiesController.deleteActivity); // Delete an activity
 
 
-module.exports = router;
+export default router;
