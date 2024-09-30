@@ -13,7 +13,7 @@ export async function getUserByEmail(email: string): Promise<IUser | null> {
 }
 
 export async function getUserById(userId: string): Promise<IUser | null> {
-  return await User.findOne({ _id: userId });
+  return await User.findById(userId);
 }
 
 //get all users
@@ -27,8 +27,16 @@ export async function updateUserByUsername(
   updatedUser: IUser,
 ): Promise<IUser | null> {
   return await User.findOneAndUpdate({ username: username }, updatedUser, {
-    new: true,
+    new: true,runValidators: true
   });
+}
+
+//update user by id
+export async function updateUserById(
+  userId: string,
+  updatedUser: IUser,
+): Promise<IUser | null> {
+  return await User.findByIdAndUpdate(userId, updatedUser, { new: true , runValidators: true });
 }
 
 export async function createUser(userData: IUser) {

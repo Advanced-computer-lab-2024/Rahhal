@@ -3,10 +3,10 @@ import userController from '../controller/user-controller';
 
 
 const router = express.Router();
-
-router.get('/getUser', userController.getUserByUsername);
+// for user routes
+router.get('/getUser/:id', userController.getUserById);
 router.get('/getAllUsers', userController.getAllUsers);
-router.put('/updateUser',userController.updateUserByUsername);
+router.put('/updateUser/:id',userController.updateUserById);
 
 
 export default router; 

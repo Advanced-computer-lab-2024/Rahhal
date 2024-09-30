@@ -32,12 +32,61 @@ const getAllUsers = async (req: Request, res: Response) => {
     }
 };
 
-//update user by usernaem
+//getUserById
+const getUserById = async (req: Request, res: Response) => {
+    try {
+        const userId = req.params.id;
+        const user = await userService.getUserById(userId);
+        if (!user) {
+            res.status(404).json({message : "User not found"});
+        }
+        else{
+            res.status(200).json(user);
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+};
+
+//get User by email
+const getUserByEmail = async (req: Request, res: Response) => {
+    try {
+        const email = req.body.email;
+        const user = await userService.getUserByEmail(email);
+        if (!user) {
+            res.status(404).json({message : "User not found"});
+        }
+        else{
+            res.status(200).json(user);
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+};
+
+//update user by username
 const updateUserByUsername = async (req: Request, res: Response) => {
     try {
         const username = req.body.username;
         const updatedUser = req.body;
         const user = await userService.updateUserByUsername(username, updatedUser);
+        if (!user) {
+            res.status(404).json({message : "User not found"});
+        }
+        else{
+            res.status(200).json(user);
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+};
+
+//update user by userId
+const updateUserById = async (req: Request, res: Response) => {
+    try {
+        const userId = req.params.id;
+        const updatedUser = req.body;
+        const user = await userService.updateUserById(userId, updatedUser);
         if (!user) {
             res.status(404).json({message : "User not found"});
         }
@@ -74,5 +123,5 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-export default {getUserByUsername, getAllUsers, updateUserByUsername, createUser, deleteUser}
+export default {getUserByUsername, getAllUsers, updateUserByUsername, createUser, deleteUser , getUserById , updateUserById , getUserByEmail};
 

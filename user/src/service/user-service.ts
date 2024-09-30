@@ -20,7 +20,6 @@ export async function createUser(userData: IUser) {
   }
 
   return await userRepository.createUser(userData);
-  ;
 }
 
 export async function deleteUser(userId: string) {
@@ -44,6 +43,16 @@ export async function getUserByUsername(
   return await userRepository.getUserByUsername(username);
 }
 
+//get specific user by id
+export async function getUserById(userId: string): Promise<IUser | null> {
+  return await userRepository.getUserById(userId);
+}
+
+//get specific user by email
+export async function getUserByEmail(email: string): Promise<IUser | null> {
+  return await userRepository.getUserByEmail(email);
+}
+
 //get all users
 export async function getAllUsers(): Promise<IUser[] | null> {
   return await userRepository.getAllUsers();
@@ -56,3 +65,12 @@ export async function updateUserByUsername(
 ): Promise<IUser | null> {
   return await userRepository.updateUserByUsername(username, updatedUser);
 }
+
+//update user and searching for the user using it id
+export async function updateUserById(
+  userId: string,
+  updatedUser: IUser,
+): Promise<IUser | null> {
+  return await userRepository.updateUserById(userId, updatedUser);
+}
+
