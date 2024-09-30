@@ -1,5 +1,5 @@
-import Activity from "../models/activities-model";
-import { IActivity } from "../models/activities-model";
+import Activity from "../models/Activity";
+import { IActivity } from "../models/Activity";
 
 
 // Get all activities

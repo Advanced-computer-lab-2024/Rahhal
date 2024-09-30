@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 
 // Routes
-app.use('/', activitiesRoutes);
+app.use('/activities', activitiesRoutes);
 
 // Connect to MongoDB
 mongoose.connect('mongodb://entertainment_database:27017', {

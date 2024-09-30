@@ -1,4 +1,4 @@
-import { IActivity } from "../models/activities-model";
+import { IActivity } from "../models/Activity";
 import * as activitiesRepository from "../repository/activities-repository";
 
 
