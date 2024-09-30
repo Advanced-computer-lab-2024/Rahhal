@@ -1,7 +1,4 @@
-// import { Schema, Types, model } from 'mongoose';
-
-import mongoose, { Schema, Document, Types } from "mongoose";
-// const Schema = mongoose.Schema;
+import mongoose, { Schema, Types } from 'mongoose';
 
 enum Role {
   admin = "admin",
@@ -12,32 +9,31 @@ enum Role {
   tourismGovernor = "tourismGovernor",
 }
 
-// type Role = 'admin' | 'tourist' | 'tourGuide' | 'advertiser' | 'seller' | 'tourismGovernor';
-export interface iUser extends Document {
-  _id: Types.ObjectId;
-  firstName?: string;
-  lastName?: string;
-  userName: string;
-  email: string;
-  password: string;
-  /*role: string, */
-  role: Role;
-  dob?: Date;
-  nationality?: string;
-  job?: string;
-  addresses?: string[];
-  phoneNumber?: string;
-  yearsOfExperience?: number;
-  previousWork?: string;
-  website?: string;
-  hotline?: number;
-  companyProfile?: string;
-  companyName?: string;
-  createdAt: Date;
-  updatedAt: Date;
+export interface IUser{
+    _id: Types.ObjectId,
+    firstName?: string,
+    lastName?: string,
+    username: string,
+    email: string,
+    password: string,
+    role: Role,
+    approved: boolean
+    dob?: Date,
+    nationality?: string,
+    job?: string,
+    addresses?: string[],
+    phoneNumber?: string,
+    yearsOfExperience?: number,
+    previousWork?: string,
+    website?: string,
+    hotline?: number,
+    companyProfile?: string,
+    companyName?: string,
+    createdAt: Date,
+    updatedAt: Date
 }
 
-const userSchema: Schema = new Schema<iUser>(
+const userSchema: Schema = new Schema<IUser>(
   {
     firstName: {
       type: String,
@@ -45,10 +41,10 @@ const userSchema: Schema = new Schema<iUser>(
     lastName: {
       type: String,
     },
-    userName: {
-      type: String,
-      unique: true,
-      required: true,
+    username: {
+        type: String,
+        unique: true,
+        required: true,
     },
     email: {
       type: String,
@@ -63,6 +59,10 @@ const userSchema: Schema = new Schema<iUser>(
       type: String,
       enum: Object.values(Role),
       required: true,
+    },
+    approved: {
+        type: Boolean,
+        default: false
     },
     // May add conditional required (eg: required if role is tourist)
     dob: {
@@ -102,7 +102,7 @@ const userSchema: Schema = new Schema<iUser>(
   { timestamps: true },
 );
 
-// const user = mongoose.model<iUser>("user", userSchema);
-// module.exports = {user};
 
-export default mongoose.model<iUser>("user", userSchema);
+
+const User = mongoose.model<IUser>('User', userSchema);
+export default User;

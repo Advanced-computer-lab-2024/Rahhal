@@ -1,14 +1,17 @@
-import User from '../model/user-model';
+import  user , {IUser} from '../model/user-model';
 
-// This file is responsible for handling the database operations.
 
-const createUser = async (userData: JSON) => {
-  const newUser = new User(userData);
-  return await newUser.save();
+//get specific user
+export async function getUserByUsername(username : string) : Promise<IUser | null> {
+    return await user.findOne({ userName : username });
 };
 
-const deleteUser = async (userId: string) => {
-  return await User.findByIdAndDelete(userId);
+//get all users
+export async function getAllUsers () : Promise<IUser[] | null> {
+    return await user.find();
 };
 
-export default { createUser, deleteUser };
+//update user
+export async function updateUserByUsername (username : string, updatedUser : IUser) : Promise<IUser | null> {
+    return await user.findOneAndUpdate({ username : username }, updatedUser, { new : true });
+};
