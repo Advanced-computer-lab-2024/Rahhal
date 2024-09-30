@@ -1,0 +1,114 @@
+.entertainment-card-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%; 
+    cursor: pointer;
+    
+    
+}
+
+.entertainment-card-container__image {
+    width: 100%;
+    height: 240px; /* Set a fixed height for the image container */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.entertainment-card-container__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* This ensures the image covers the entire container while maintaining its aspect ratio */
+    border-radius: inherit;
+}
+
+.entertainment-card-container__details {
+    display: grid;
+    grid-template-columns: 2.4fr 1.6fr; /* 2.5/4 for left column, 1.5/4 for right column */
+    grid-gap: 10px; /* Add some space between grid items */
+    padding: 1%;
+    
+}
+
+.entertainment-card-container__rating{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
+    gap: 3%;
+  
+    
+   
+    
+}
+
+.entertainment-card-container__title-location{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content:start;
+    width: 250px;
+
+}
+
+  
+
+.entertainment-card-container__title-location h3 {
+    margin: 0; /* Remove default margin from the title element */
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* This adds the "..." when the text is too long */
+    max-width: 100%; /* Ensure it respects the parent's width */
+    display: inline-block;
+} 
+
+.entertainment-card-container__title-location p {
+    margin: 0;
+    margin-top: 2%; /* Remove default margin from the title and location elements */
+    padding: 0;
+}
+
+.entertainment-card-container__price{
+    display: flex;
+    justify-content: right;
+    align-items: flex-end;
+   
+   
+   
+}
+
+
+.entertainment-card-container__price h5{
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* This adds the "..." when the text is too long */
+    max-width: 100%; /* Ensure it respects the parent's width */
+    display: inline-block;
+   
+ 
+  
+}
+
+.entertainment-card-container__language-time{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content:flex-start;
+
+   
+    
+}
+
+.entertainment-card-container__language-time p{
+    margin: 0;
+    margin-top: 3%;
+    font-size:small;
+    text-align: left;
+}
