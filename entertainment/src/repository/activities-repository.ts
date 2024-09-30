@@ -21,7 +21,7 @@ export async function createActivity(activitiesData: IActivity) {
 
 // Update an existing activity
 export async function updateActivity(id: string, activitiesData: IActivity) {
-    return await Activity.findByIdAndUpdate(id, activitiesData, { new: true });
+    return await Activity.findByIdAndUpdate(id, activitiesData, { new: true, runValidators: true });
 }
 
 // Delete an activity
