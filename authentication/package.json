@@ -25,6 +25,7 @@
     "vitest": "^2.1.1"
   },
   "dependencies": {
+    "authentication": "file:",
     "body-parser": "^1.20.2",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",

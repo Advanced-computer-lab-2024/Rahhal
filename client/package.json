@@ -11,6 +11,7 @@
     "pre-commit": "prettier . --write --log-level silent && eslint . --fix --quiet"
   },
   "dependencies": {
+    "client": "file:",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

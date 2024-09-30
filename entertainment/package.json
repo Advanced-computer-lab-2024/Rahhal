@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "src/app.ts",
+  "main": "src/server.ts",
   "scripts": {
     "dev": "tsx watch src/app.ts",
     "test": "vitest",
@@ -27,6 +27,7 @@
   "dependencies": {
     "body-parser": "^1.20.2",
     "dotenv": "^16.3.1",
+    "entertainment": "file:",
     "express": "^4.18.2",
     "mongoose": "^7.6.8",
     "morgan": "^1.10.0"
