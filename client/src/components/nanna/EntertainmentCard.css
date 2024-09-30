@@ -1,11 +1,11 @@
+/* Note: The card component needs to be placed in a div atleast with 280 pixels wide so no wrap occurs in the title */
+
 .entertainment-card-container{
     display: flex;
     flex-direction: column;
     justify-content: center;
     width: 100%; 
     cursor: pointer;
-    
-    
 }
 
 .entertainment-card-container__image {
@@ -27,7 +27,7 @@
 
 .entertainment-card-container__details {
     display: grid;
-    grid-template-columns: 2.4fr 1.6fr; /* 2.5/4 for left column, 1.5/4 for right column */
+    grid-template-columns: 2.2fr 1fr; 
     grid-gap: 10px; /* Add some space between grid items */
     padding: 1%;
     
@@ -40,9 +40,6 @@
     justify-content: right;
     gap: 3%;
   
-    
-   
-    
 }
 
 .entertainment-card-container__title-location{
@@ -50,21 +47,19 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content:start;
-    width: 250px;
-
 }
 
-  
 
 .entertainment-card-container__title-location h3 {
     margin: 0; /* Remove default margin from the title element */
     margin: 0;
     padding: 0;
-    white-space: nowrap;
+   
     overflow: hidden;
     text-overflow: ellipsis; /* This adds the "..." when the text is too long */
     max-width: 100%; /* Ensure it respects the parent's width */
     display: inline-block;
+    font-size: medium;
 } 
 
 .entertainment-card-container__title-location p {
@@ -77,33 +72,24 @@
     display: flex;
     justify-content: right;
     align-items: flex-end;
-   
-   
-   
 }
 
 
 .entertainment-card-container__price h5{
     margin: 0;
     padding: 0;
-    white-space: nowrap;
+   
     overflow: hidden;
     text-overflow: ellipsis; /* This adds the "..." when the text is too long */
     max-width: 100%; /* Ensure it respects the parent's width */
-    display: inline-block;
    
- 
-  
 }
 
 .entertainment-card-container__language-time{
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    justify-content:flex-start;
-
-   
-    
+    justify-content:flex-start; 
 }
 
 .entertainment-card-container__language-time p{
