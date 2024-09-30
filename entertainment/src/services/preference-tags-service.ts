@@ -1,11 +1,11 @@
 import * as preferenceTagsRepository from "@/database/repositories/preference-tags-repository";
 
-export async function getPreferenceTags() {
-  return await preferenceTagsRepository.getPreferenceTags();
+export const getPreferenceTags = async () => {
+    return await preferenceTagsRepository.getPreferenceTags();
 }
 
-export async function getPreferenceTag(id: string) {
-  return await preferenceTagsRepository.getPreferenceTag(id);
+export const getPreferenceTag = async (id: string) => {
+    return await preferenceTagsRepository.getPreferenceTag(id);
 }
 
 export async function getPreferenceTagByName(name: string) {
