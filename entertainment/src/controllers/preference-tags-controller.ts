@@ -43,4 +43,33 @@ export default {
     createPreferenceTag
 };
 
+export const updatePreferenceTag = async (req: Request, res: Response) => {
+    try{
+        const id=req.params.id;
+        const newName=req.body.name;
+        const result = await preferenceTagService.updatePreferenceTag(id,newName);
+        if (result)
+            res.status(status_codes.STATUS_OK).json(result);
+        else 
+            res.status(status_codes.NOT_FOUND).json({message : "Preference Tag not found"});
+        }catch(error)
+        {  
+            const message = (error as Error).message;
+            res.status(status_codes.SERVER_ERROR).json({error : message}) 
+        }
+}          
 
+export const deletePreferenceTag = async (req: Request, res: Response) => {
+    try{
+        const id=req.params.id;
+        const result = await preferenceTagService.deletePreferenceTag(id);
+        if (result)
+            res.status(status_codes.STATUS_OK).json(result);
+        else 
+            res.status(status_codes.NOT_FOUND).json({message : "Preference Tag not found"});
+    }catch(error)
+    {
+        const message = (error as Error).message;
+        res.status(status_codes.SERVER_ERROR).json({error : message}) 
+    }
+}

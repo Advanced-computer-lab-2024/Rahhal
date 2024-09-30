@@ -12,7 +12,7 @@ export async function getPreferenceTagByName(name: string) {
   return await preferenceTagsRepository.getPreferenceTagByName(name);
 }
 
-export async function createPreferenceTag(name: string) {
+export const createPreferenceTag= async (name: string) => {
   return await preferenceTagsRepository.createPreferenceTag(name);
 }
 
