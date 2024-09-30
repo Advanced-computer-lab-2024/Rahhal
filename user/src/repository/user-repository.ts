@@ -8,6 +8,14 @@ export async function getUserByUsername(
   return await User.findOne({ username: username });
 }
 
+export async function getUserByEmail(email: string): Promise<IUser | null> {
+  return await User.findOne({ email: email });
+}
+
+export async function getUserById(userId: string): Promise<IUser | null> {
+  return await User.findOne({ _id: userId });
+}
+
 //get all users
 export async function getAllUsers(): Promise<IUser[] | null> {
   return await User.find();
@@ -23,7 +31,7 @@ export async function updateUserByUsername(
   });
 }
 
-export async function createUser(userData: JSON) {
+export async function createUser(userData: IUser) {
   const newUser = new User(userData);
   return await newUser.save();
 }
