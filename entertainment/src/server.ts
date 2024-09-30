@@ -5,8 +5,7 @@ import dotenv from 'dotenv'
 // Load environment variables
 dotenv.config();
 
-// print every environment variable
-console.log(process.env);
+
 
 const PORT = process.env.PORT || 3000;
 
