@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 
 // Routes
-app.use("/users", userRoutes);
+app.use("/user", userRoutes);
 
 // // Connect to MongoDB
 // mongoose.connect("mongodb://user_database:27017", {
@@ -21,13 +21,9 @@ app.use("/users", userRoutes);
 mongoose.connect("mongodb://user_database:27017")
 .then(()=>{
   console.log("MongoDB is now connected!")
-// Starting server
- app.listen("3000", () => {
-    console.log(`Listening to requests on http://localhost:3000`);
-  })
 })
 .catch(err => console.log(err));
 
 
 
-module.exports = app;
+export default app;
