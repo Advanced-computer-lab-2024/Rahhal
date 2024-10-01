@@ -8,12 +8,12 @@ import React from "react"
 
 
 
-interface SwitchCardProps {
+interface ToggleableSwitchCardProps {
   title: string
   description: string
   icon: React.ReactNode
 }
-export const SwitchCard = ({ title, description, icon }: SwitchCardProps) => {
+export const ToggleableSwitchCard = ({ title, description, icon }: ToggleableSwitchCardProps) => {
   return (
     
     
