@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
+    "target": "ESNext",
+    "module": "ESNext",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -9,6 +9,7 @@
     "moduleResolution": "node" /* Ensure Node.js-style module resolution. */,
     "allowJs": true /* Allow JavaScript files to be included. */,
     "noEmit": true /* Prevent TypeScript from emitting JavaScript files. */,
+    "resolveJsonModule": true,
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"]
