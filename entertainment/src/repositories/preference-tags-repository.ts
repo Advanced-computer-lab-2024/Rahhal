@@ -13,7 +13,7 @@ export const createPreferenceTag = async (name: string) => {
 };
 
 export const updatePreferenceTag = async (id: string, name: string) => {
-  return PreferenceTag.findByIdAndUpdate(id, { name}, { new: true });
+  return PreferenceTag.findByIdAndUpdate(id, {name}, { new: true, runValidators: true });
 
 }
 
