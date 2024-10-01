@@ -11,9 +11,10 @@ interface EntertainmentCardProps {
     language?: string[];
     openingTime?: string;
     availability?:boolean;
+    seller?: string;
 }
 
-const EntertainmentCard: React.FC<EntertainmentCardProps> = ({image, title, price, rating, location, language, openingTime, availability}) => {
+const EntertainmentCard: React.FC<EntertainmentCardProps> = ({image, title, price, rating, location, language, openingTime, availability,seller}) => {
     return(
         <>
         <div className="entertainment-card-container">
@@ -33,6 +34,7 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({image, title, pric
                 <div className="entertainment-card-container__rating">
                     {/* rating goes here */}
                     <IoMdStar style={{ fontSize: "0.8rem" }} />
+
                     <p>{rating?.toPrecision(2) }</p>
                     
                 </div>
@@ -45,11 +47,16 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({image, title, pric
 
                     {availability!==undefined && (
                     availability? <p><br/>Available Book NOW!</p> : <p><br/>Booking Closed!</p>)}
+
+                    {seller!==undefined && (<p><strong>Seller:</strong>{seller}</p>)}
+
                 </div>
 
                 <div className="entertainment-card-container__price">
                     {/* price goes here */}
-                    <h5>From {price} EGP</h5>
+                    {/* for activities waiting for model to decide whether it is a number or string */}
+                    {seller===undefined &&(<h5>From {price} EGP</h5>)}
+                    {seller!==undefined &&(<h5>{price} EGP</h5>)}
                 </div>
                 
 
