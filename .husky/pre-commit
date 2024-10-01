@@ -1,4 +1,4 @@
-# Run the exec command on rahhal services only execluding the databases
+# Run the exec command on running rahhal services (containers) only, execluding the databases
 for SERVICE in $(docker ps --format "{{.Names}}" | grep '^rahhal' | grep -v 'database-1$'); do
     docker exec $SERVICE npm run pre-commit || exit 1;
 done

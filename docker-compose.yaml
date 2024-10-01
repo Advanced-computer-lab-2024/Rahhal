@@ -21,6 +21,8 @@ services:
       - entertainment
       - payment
       - user
+      - product
+      - order
   authentication:
     build: ./authentication
     ports:
@@ -96,6 +98,36 @@ services:
       - "27021:27017"
     volumes:
       - "user-data:/data/db"
+  product:
+    build: ./product
+    ports:
+      - "3006:3000"
+    volumes:
+      - ./product:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - product_database
+  product_database:
+    image: mongo:latest
+    ports:
+      - "27022:27017"
+    volumes:
+      - "product-data:/data/db"
+  order:
+    build: ./order
+    ports:
+      - "3007:3000"
+    volumes:
+      - ./order:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - order_database
+  order_database:
+    image: mongo:latest
+    ports:
+      - "27023:27017"
+    volumes:
+      - "order-data:/data/db"
 
 volumes:
   authentication-data:
@@ -103,3 +135,5 @@ volumes:
   entertainment-data:
   payment-data:
   user-data:
+  product-data:
+  order-data:
