@@ -1,6 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import userRoutes from "./api/routes/user-routes";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 // Middleware
