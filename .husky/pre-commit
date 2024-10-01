@@ -1,0 +1,5 @@
+for SERVICE in rahhal-backend-1; do
+    docker exec $SERVICE npm run pre-commit || exit 1;
+done
+
+# rahhal-frontend-1 rahhal-backend-1 rahhal-payment-1 rahhal-booking-1 rahhal-authentication-1 rahhal-user-1 rahhal-entertainment-1
