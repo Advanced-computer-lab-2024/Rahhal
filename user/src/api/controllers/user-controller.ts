@@ -1,19 +1,19 @@
 import {Request , Response}  from "express";
-import * as userService from "../service/user-service";
+import * as userService from "../../services/user-service";
+import {STATUS_CODES} from "../../utils/constants";
 
-//get specific user by username
 const getUserByUsername = async (req: Request, res: Response) => {
     try {
         const username = req.body.username;
         const user = await userService.getUserByUsername(username);
         if (!user) {
-             res.status(404).json({message : "User not found"});
+             res.status(STATUS_CODES.NOT_FOUND).json({message : "User not found"});
         }
         else{
-            res.status(200).json(user);
+            res.status(STATUS_CODES.STATUS_OK).json(user);
         }
     } catch (error) {
-         res.status(500).send(error);
+         res.status(STATUS_CODES.SERVER_ERROR).send(error);
     }
 };
 
@@ -21,14 +21,14 @@ const getUserByUsername = async (req: Request, res: Response) => {
 const getAllUsers = async (req: Request, res: Response) => {
     try {
         const users = await userService.getAllUsers();
-        if (users === null) {
-            res.status(404).json({message : "No users found"});
+        if (!users) {
+            res.status(STATUS_CODES.NOT_FOUND).json({message : "No users found"});
         }
         else{
-            res.status(200).json(users);
+            res.status(STATUS_CODES.STATUS_OK).json(users);
         }
     } catch (error) {
-        res.status(500).send(error);
+        res.status(STATUS_CODES.SERVER_ERROR).send(error);
     }
 };
 
@@ -38,13 +38,13 @@ const getUserById = async (req: Request, res: Response) => {
         const userId = req.params.id;
         const user = await userService.getUserById(userId);
         if (!user) {
-            res.status(404).json({message : "User not found"});
+            res.status(STATUS_CODES.NOT_FOUND).json({message : "User not found"});
         }
         else{
-            res.status(200).json(user);
+            res.status(STATUS_CODES.STATUS_OK).json(user);
         }
     } catch (error) {
-        res.status(500).send(error);
+        res.status(STATUS_CODES.SERVER_ERROR).send(error);
     }
 };
 
@@ -54,13 +54,13 @@ const getUserByEmail = async (req: Request, res: Response) => {
         const email = req.body.email;
         const user = await userService.getUserByEmail(email);
         if (!user) {
-            res.status(404).json({message : "User not found"});
+            res.status(STATUS_CODES.NOT_FOUND).json({message : "User not found"});
         }
         else{
-            res.status(200).json(user);
+            res.status(STATUS_CODES.STATUS_OK).json(user);
         }
     } catch (error) {
-        res.status(500).send(error);
+        res.status(STATUS_CODES.SERVER_ERROR).send(error);
     }
 };
 
@@ -71,13 +71,13 @@ const updateUserByUsername = async (req: Request, res: Response) => {
         const updatedUser = req.body;
         const user = await userService.updateUserByUsername(username, updatedUser);
         if (!user) {
-            res.status(404).json({message : "User not found"});
+            res.status(STATUS_CODES.NOT_FOUND).json({message : "User not found"});
         }
         else{
-            res.status(200).json(user);
+            res.status(STATUS_CODES.STATUS_OK).json(user);
         }
     } catch (error) {
-        res.status(500).send(error);
+        res.status(STATUS_CODES.SERVER_ERROR).send(error);
     }
 };
 
@@ -88,13 +88,13 @@ const updateUserById = async (req: Request, res: Response) => {
         const updatedUser = req.body;
         const user = await userService.updateUserById(userId, updatedUser);
         if (!user) {
-            res.status(404).json({message : "User not found"});
+            res.status(STATUS_CODES.NOT_FOUND).json({message : "User not found"});
         }
         else{
-            res.status(200).json(user);
+            res.status(STATUS_CODES.STATUS_OK).json(user);
         }
     } catch (error) {
-        res.status(500).send(error);
+        res.status(STATUS_CODES.SERVER_ERROR).send(error);
     }
 };
 
@@ -103,7 +103,7 @@ const createUser = async (req: Request, res: Response) => {
   try {
     const userData = req.body;
     const user = await userService.createUser(userData);
-    res.status(200).json({"data":user});
+    res.status(STATUS_CODES.STATUS_OK).json(user);
   } catch (error) {
     if (error instanceof Error) {
       res.status(400).json({"error": error.message});
@@ -114,8 +114,12 @@ const createUser = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id;
-    const user = await userService.deleteUser(userId);
-    res.status(200).json({"data":user});
+    const user = await userService.getUserById(userId);
+    if(!user){
+        res.status(STATUS_CODES.NOT_FOUND).json({message : "User not found"});
+    }
+    const deletedUser = await userService.deleteUser(userId);
+    res.status(STATUS_CODES.STATUS_OK).json(deletedUser);
   } catch (error) {
     if (error instanceof Error) {
       res.status(400).json({"error": error.message});

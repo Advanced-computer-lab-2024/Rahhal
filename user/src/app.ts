@@ -1,18 +1,25 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import userRoutes from './router/user-routes';
+import express from "express";
+import mongoose from "mongoose";
+import userRoutes from "./api/routes/user-routes";
+
 const app = express();
 // Middleware
 app.use(express.json());
 // Routes
-app.use('/user', userRoutes);
-// Connect to MongoDB
-mongoose.connect('mongodb://entertainment_database:27017')
-.then(() => {
-    console.log('Connected to MongoDB');
-    }
-)
-.catch((err) => {
-    console.log(err);
-});
+app.use("/users", userRoutes);
+
+const URI = process.env.MONGODB_URI || '';
+
+if (!URI) {
+  throw new Error("MONGODB_URI environment variable is not set");
+}
+
+mongoose.connect(URI)
+.then(()=>{
+  console.log("MongoDB is now connected!")
+})
+.catch(err => console.log(err));
+
+
+
 export default app;

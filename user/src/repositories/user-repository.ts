@@ -1,5 +1,5 @@
-import  user , {IUser} from '../model/user-model';
-
+import User, { IUser } from "../models/User";
+// This file is responsible for handling the database operations.
 
 //get specific user
 export async function getUserByUsername(
@@ -17,9 +17,9 @@ export async function getUserById(userId: string): Promise<IUser | null> {
 }
 
 //get all users
-export async function getAllUsers () : Promise<IUser[] | null> {
-    return await user.find();
-};
+export async function getAllUsers(): Promise<IUser[] | null> {
+  return await User.find();
+}
 
 //update user
 export async function updateUserByUsername(

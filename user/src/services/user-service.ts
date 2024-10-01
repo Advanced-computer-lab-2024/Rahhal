@@ -1,5 +1,5 @@
-import * as userRepository from "../repository/user-repository";
-import { IUser } from "../model/user-model";
+import * as userRepository from "../repositories/user-repository";
+import { IUser } from "../models/User";
 // This file is responsible for handling the business logic.
 
 export async function createUser(userData: IUser) {
@@ -22,15 +22,11 @@ export async function createUser(userData: IUser) {
   return await userRepository.createUser(userData);
 }
 
+//check if the user already exists
 export async function deleteUser(userId: string) {
-  //check if the user already exists
-  const user = await userRepository.getUserById(userId);
-  if (user) {
-    return await userRepository.deleteUser(userId);
-  }
-  else{
-    throw new Error("User Not Found");
-  }
+  
+  
+  return await userRepository.deleteUser(userId);
 
   // const deletedUser = await userRepository.deleteUser(userId);
   // return deletedUser;
