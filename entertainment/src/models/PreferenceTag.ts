@@ -3,7 +3,13 @@ import mongoose from 'mongoose';
 const PreferenceTagSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    unique: true,
+    required:[true, 'Name is required'],
+    validate: {
+      validator: (name: string) => {
+        return typeof name === 'string' && name.trim().length > 0;
+      }
+    }
   },
 });
 
