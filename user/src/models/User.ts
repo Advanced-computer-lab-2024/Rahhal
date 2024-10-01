@@ -45,7 +45,7 @@ const userSchema: Schema = new Schema<IUser>(
       },
       validate: {
         validator: function(firstName:string){
-          return typeof firstName === 'string' && firstName.length > 0 ;
+          return typeof firstName === 'string' && firstName.length > 0;
         },
         message: "Invalid first name entry",
       },
@@ -70,11 +70,10 @@ const userSchema: Schema = new Schema<IUser>(
       required: true,
       validate: {
         validator: function(username:string){
-          return typeof username === 'string' && username.length > 0;
+          return typeof username === 'string' && username.length > 0 && !username.includes(" ");
         },
         message: "Invalid username entry",
       },
-      // immutable: true,
     },
     email: {
       type: String,
