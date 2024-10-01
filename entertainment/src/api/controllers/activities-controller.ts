@@ -2,7 +2,6 @@ import express from "express";
 import * as activitiesService from "../../services/activities-service";
 import { STATUS_CODES } from "../../utils/constants";
 
-// Get all activities
 export async function getAllActivities(
   req: express.Request,
   res: express.Response,
@@ -10,12 +9,14 @@ export async function getAllActivities(
   try {
     const activities = await activitiesService.getAllActivities();
     res.status(STATUS_CODES.STATUS_OK).json(activities);
-  } catch (error: Error) {
-    res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
+  } catch (error: unknown) {
+    res.status(STATUS_CODES.SERVER_ERROR).json({
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    });
   }
 }
 
-// Get activity by id
 export async function getActivityById(
   req: express.Request,
   res: express.Response,
@@ -29,12 +30,14 @@ export async function getActivityById(
     } else {
       res.status(STATUS_CODES.STATUS_OK).json(activity);
     }
-  } catch (error: Error) {
-    res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
+  } catch (error: unknown) {
+    res.status(STATUS_CODES.SERVER_ERROR).json({
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    });
   }
 }
 
-// Create a new activity
 export async function createActivity(
   req: express.Request,
   res: express.Response,
@@ -42,12 +45,14 @@ export async function createActivity(
   try {
     const activity = await activitiesService.createActivity(req.body);
     res.status(STATUS_CODES.CREATED).json(activity);
-  } catch (error: Error) {
-    res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
+  } catch (error: unknown) {
+    res.status(STATUS_CODES.SERVER_ERROR).json({
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    });
   }
 }
 
-// Update an existing activity
 export async function updateActivity(
   req: express.Request,
   res: express.Response,
@@ -64,12 +69,14 @@ export async function updateActivity(
     } else {
       res.status(STATUS_CODES.STATUS_OK).json(activity);
     }
-  } catch (error: Error) {
-    res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
+  } catch (error: unknown) {
+    res.status(STATUS_CODES.SERVER_ERROR).json({
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    });
   }
 }
 
-// Delete an activity
 export async function deleteActivity(
   req: express.Request,
   res: express.Response,
@@ -83,7 +90,10 @@ export async function deleteActivity(
     } else {
       res.status(STATUS_CODES.STATUS_OK).json({ message: "Activity deleted" });
     }
-  } catch (error: Error) {
-    res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
+  } catch (error: unknown) {
+    res.status(STATUS_CODES.SERVER_ERROR).json({
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    });
   }
 }
