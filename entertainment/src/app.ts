@@ -1,6 +1,5 @@
-import express from 'express';
-import activitiesRoutes from './router/activities-router';
-
+import express from "express";
+import activitiesRoutes from "./api/routes/activities-routes";
 
 const app = express();
 
@@ -8,8 +7,6 @@ const app = express();
 app.use(express.json());
 
 // Routes
-app.use('/activities', activitiesRoutes);
-
-
+app.use("/activities", activitiesRoutes);
 
 export default app;
