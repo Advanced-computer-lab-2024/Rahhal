@@ -5,11 +5,12 @@
   "type": "module",
   "main": "src/app.ts",
   "scripts": {
-    "dev": "tsx watch src/app.ts",
+    "dev": "tsx watch src/server.ts",
     "test": "vitest",
     "lint": "eslint . --fix",
     "format": "prettier . --write",
-    "pre-commit": "prettier . --write --log-level silent && eslint . --fix --quiet && vitest run --passWithNoTests"
+    "pre-commit": "prettier . --write --log-level silent && eslint . --fix --quiet && vitest run --passWithNoTests",
+    "swagger": "tsx src/api/swagger/swagger.ts"
   },
   "author": "",
   "license": "ISC",
@@ -25,6 +26,7 @@
     "vitest": "^2.1.1"
   },
   "dependencies": {
+    "api-gateway": "file:",
     "body-parser": "^1.20.2",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
