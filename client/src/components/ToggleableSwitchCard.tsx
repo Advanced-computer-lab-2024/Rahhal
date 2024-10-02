@@ -21,10 +21,10 @@ export const ToggleableSwitchCard = ({ title, description, icon }: ToggleableSwi
         <div className=" flex items-center space-x-4 rounded-md border p-4">
               {icon}
               <div className="flex-1 space-y-1">
-                <p className="text-sm font-medium leading-none">
+                <p className="text-sm text-left font-medium leading-none">
                   {title}
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-left text-muted-foreground">
                 {description}
             </p>
           </div>
