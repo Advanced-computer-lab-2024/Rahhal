@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import { Button } from "./ui/button";
 import { useRef } from "react";
 
-interface ModalPictureCardProps {
+interface PictureCardProps {
   title: string;
   description: string;
   imageSources: string[];
@@ -28,11 +28,17 @@ const openFileUploadDialog = (pictureUploadFieldRef: React.RefObject<HTMLInputEl
 }
 
 
-const ModalPictureCard = ({
+const PictureCard = ({
   title,
   description,
   imageSources,
-}: ModalPictureCardProps) => {
+}: PictureCardProps) => {
+
+  // CONSTANTS
+  const MIN_NUMBER_OF_IMAGES: number = 0; // Minimum number of images
+  const MAX_NUMBER_OF_IMAGES: number = 3; // Maximum number of images
+
+
   const pictureUploadFieldRef: React.RefObject<HTMLInputElement> = useRef(null); // Picture upload field reference to open the file dialog when the plus icon is clicked
 
   const thumbnailImages: string[] = imageSources.slice(0, 3); // Thumbnail images
@@ -41,7 +47,7 @@ const ModalPictureCard = ({
   let plusIconRotation: string = ""; // Rotation of the plus icon
 
   // set the rotation of the plus icon based on the number of images
-  if (numberOfImages >= 0 && numberOfImages <= 2) {
+  if (numberOfImages >= MIN_NUMBER_OF_IMAGES && numberOfImages < MAX_NUMBER_OF_IMAGES) {
     plusIconRotation = "rotate-0";
   } else {
     plusIconRotation = "rotate-3";
@@ -111,4 +117,4 @@ const ModalPictureCard = ({
   );
 };
 
-export default ModalPictureCard;
+export default PictureCard;
