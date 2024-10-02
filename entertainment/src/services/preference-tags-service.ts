@@ -1,22 +1,26 @@
 import * as preferenceTagsRepository from '../repositories/preference-tags-repository';
 
-export const getPreferenceTags= async ()=>{ 
+
+export async function getPreferenceTags() {
   return await preferenceTagsRepository.getPreferenceTags();
 }
 
-export const getPreferenceTag= async (id: string) => {
+export async function getPreferenceTag(id: string) {
   return await preferenceTagsRepository.getPreferenceTag(id);
 }
 
-export const createPreferenceTag= async (name: string) => {
+export async function getPreferenceTagByName(name: string) {
+  return await preferenceTagsRepository.getPreferenceTagByName(name);
+}
+
+export async function createPreferenceTag(name: string) {
   return await preferenceTagsRepository.createPreferenceTag(name);
 }
 
-export const updatePreferenceTag = async (id: string, name:string) => {
+export async function updatePreferenceTag(id: string, name: string) {
   return await preferenceTagsRepository.updatePreferenceTag(id, name);
 }
 
-export const deletePreferenceTag = async (id: string) => {
+export async function deletePreferenceTag(id: string) {
   return await preferenceTagsRepository.deletePreferenceTag(id);
 }
-
