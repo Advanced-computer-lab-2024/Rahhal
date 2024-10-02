@@ -1,5 +1,4 @@
-import  PreferenceTag  from "../models/PreferenceTag";
-
+import PreferenceTag from "@/database/models/PreferenceTag";
 
 export async function getPreferenceTags() {
   return await PreferenceTag.find();
@@ -18,7 +17,7 @@ export async function createPreferenceTag(name: string) {
 }
 
 export async function updatePreferenceTag(id: string, name: string) {
-  return await PreferenceTag.findByIdAndUpdate(id, {name}, { new: true, runValidators: true });
+  return await PreferenceTag.findByIdAndUpdate(id, { name }, { new: true, runValidators: true });
 }
 
 export async function deletePreferenceTag(id: string) {
