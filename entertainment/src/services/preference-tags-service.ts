@@ -1,5 +1,4 @@
-import * as preferenceTagsRepository from '../repositories/preference-tags-repository';
-
+import * as preferenceTagsRepository from "@/database/repositories/preference-tags-repository";
 
 export async function getPreferenceTags() {
   return await preferenceTagsRepository.getPreferenceTags();
