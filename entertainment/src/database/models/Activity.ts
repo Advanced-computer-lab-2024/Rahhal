@@ -56,16 +56,18 @@ const activitySchema = new mongoose.Schema<IActivity>({
 // Validate price format to be a number or an object { min: number, max: number } and to be greater than or equal to 0
 function validatePrice(price: number | { min: number; max: number }) {
   if (typeof price === "number") {
-    return price >= 0;
+    return price >= CONSTANTS.ZERO;
   } else if (typeof price === "object") {
-    return price.min >= 0 && price.max > price.min;
+    return price.min >= CONSTANTS.ZERO && price.max > price.min;
   }
   return false;
 }
 
 // Validate rating format to be a number between 0 and 5
-function validateRating(rating: number) {
-  return rating >= CONSTANTS.MIN_RATING && rating <= CONSTANTS.MAX_RATING;
+function validateRating(ratings: number[]) {
+  return ratings.every(rating => 
+    rating >= CONSTANTS.MIN_RATING && rating <= CONSTANTS.MAX_RATING
+  );
 }
 
 const Activity = mongoose.model<IActivity>("Activity", activitySchema);

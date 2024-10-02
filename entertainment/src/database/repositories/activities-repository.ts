@@ -1,5 +1,5 @@
 import Activity from "../models/Activity";
-import { IActivity } from "../models/Activity";
+import type { IActivity } from "../models/Activity";
 
 // Get all activities
 export async function getAllActivities() {

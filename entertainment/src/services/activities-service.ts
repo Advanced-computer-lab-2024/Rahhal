@@ -1,4 +1,4 @@
-import { IActivity } from "../database/models/Activity";
+import type { IActivity } from "../database/models/Activity";
 import * as activitiesRepository from "../database/repositories/activities-repository";
 
 // Get all activities
