@@ -1,5 +1,5 @@
-import mongoose, { Schema, Types } from 'mongoose';
-
+import mongoose, { Schema, Types } from "mongoose";
+import userValidators from '../../validators/user-validators';
 enum Role {
   admin = "admin",
   tourist = "tourist",
@@ -44,7 +44,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role !== Role.advertiser;
       },
       validate: {
-        validator: validateFirstName,
+        validator: userValidators.validateFirstName,
         message: "Invalid first name entry",
       },
     },
@@ -56,7 +56,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role !== Role.advertiser;
       },
       validate: {
-        validator: validateLastName,
+        validator: userValidators.validateLastName,
         message: "Invalid last name entry",
       },
     },
@@ -65,7 +65,7 @@ const userSchema: Schema = new Schema<IUser>(
       unique: true,
       required: true,
       validate: {
-        validator: validateUsername,
+        validator: userValidators.validateUsername,
         message: "Invalid username entry",
       },
     },
@@ -74,7 +74,7 @@ const userSchema: Schema = new Schema<IUser>(
       unique: true,
       required: true,
       validate: {
-        validator: validateEmail,
+        validator: userValidators.validateEmail,
         message: "Invalid email entry",
       },
     },
@@ -82,7 +82,7 @@ const userSchema: Schema = new Schema<IUser>(
       type: String,
       required: true,
       validate: {
-        validator: validatePassword,
+        validator: userValidators.validatePassword,
         message: "Invalid password entry, must be at least 8 characters long",
       },
     },
@@ -103,7 +103,7 @@ const userSchema: Schema = new Schema<IUser>(
         );
       },
       validate: {
-        validator: validateApproved,
+        validator: userValidators.validateApproved,
         message: "Invalid approved value entry",
       },
     },
@@ -113,7 +113,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.tourist;
       },
       validate: {
-        validator: validateDOB,
+        validator: userValidators.validateDOB,
         message: "Invalid date of birth entry",
       },
     },
@@ -123,7 +123,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.tourist;
       },
       validate: {
-        validator: validateNationality,
+        validator: userValidators.validateNationality,
         message: "Invalid natiopnality entry",
       },
     },
@@ -133,7 +133,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.tourist;
       },
       validate: {
-        validator: validateJob,
+        validator: userValidators.validateJob,
         message: "Invalid job entry",
       },
     },
@@ -146,14 +146,14 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.tourGuide;
       },
       validate: {
-        validator: validatePhoneNumber,
+        validator: userValidators.validatePhoneNumber,
         message: "Invalid phone number entry",
       },
     },
     yearsOfExperience: {
       type: Number,
       validate: {
-        validator: validateYearsOfExperience,
+        validator: userValidators.validateYearsOfExperience,
         message: "Invalid number, must be a positive number entry",
       },
       required: function () {
@@ -163,7 +163,7 @@ const userSchema: Schema = new Schema<IUser>(
     previousWork: {
       type: String,
       validate: {
-        validator: validatePreviousWork,
+        validator: userValidators.validatePreviousWork,
         message: "Invalid previous work entry",
       },
       // required: function() {
@@ -176,7 +176,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.advertiser;
       },
       validate: {
-        validator: validateWebsite,
+        validator: userValidators.validateWebsite,
         message: "Invalid website entry",
       },
     },
@@ -186,7 +186,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.advertiser;
       },
       validate: {
-        validator: validateHotline,
+        validator: userValidators.validateHotline,
         message: "Invalid hotline entry",
       },
     },
@@ -196,7 +196,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.advertiser;
       },
       validate: {
-        validator: validateCompanyProfile,
+        validator: userValidators.validateCompanyProfile,
         message: "Invalid company profile entry",
       },
     },
@@ -206,7 +206,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.advertiser;
       },
       validate: {
-        validator: validateCompanyName,
+        validator: userValidators.validateCompanyName,
         message: "Invalid company name entry",
       },
     },
@@ -216,7 +216,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.seller;
       },
       validate: {
-        validator: validateDescription,
+        validator: userValidators.validateDescription,
         message: "Invalid description entry",
       },
     },
@@ -224,76 +224,6 @@ const userSchema: Schema = new Schema<IUser>(
   { timestamps: true },
 );
 
-function validateFirstName(firstName: string) {
-  return typeof firstName === "string" && firstName.length > 0;
-}
 
-function validateLastName(lastName: string) {
-  return typeof lastName === "string" && lastName.length > 0;
-}
-
-function validateUsername(username: string) {
-  return (
-    typeof username === "string" &&
-    username.length > 0 &&
-    !username.includes(" ")
-  );
-}
-
-function validateEmail(email: string) {
-  return typeof email === "string" && email.length > 0;
-}
-
-function validatePassword(password: string) {
-  return typeof password === "string" && password.length > 7;
-}
-
-function validateApproved(approved: boolean) {
-  return typeof approved === "boolean";
-}
-
-function validateDOB(dob: Date) {
-  return dob instanceof Date; // && !isNaN(dob.getTime());
-}
-
-function validateNationality(nationality: string) {
-  return typeof nationality === "string" && nationality.length > 0;
-}
-function validateJob(job: string) {
-  return typeof job === "string" && job.length > 0;
-}
-function validatePhoneNumber(phoneNumber: string) {
-  return typeof phoneNumber === "string" && phoneNumber.length > 0;
-}
-function validateYearsOfExperience(yearsOfExperience: number) {
-  if (yearsOfExperience >= 0) {
-    return true;
-  }
-  return false;
-}
-
-function validatePreviousWork(previousWork: string) {
-  return typeof previousWork === "string" && previousWork.length > 0;
-}
-
-function validateWebsite(website: string) {
-  return typeof website === "string" && website.length > 0;
-}
-
-function validateHotline(hotline: string) {
-  return typeof hotline === "string" && hotline.length > 0;
-}
-
-function validateCompanyProfile(companyProfile: string) {
-  return typeof companyProfile === "string" && companyProfile.length > 0;
-}
-
-function validateCompanyName(companyName: string) {
-  return typeof companyName === "string" && companyName.length > 0;
-}
-
-function validateDescription(description: string) {
-  return typeof description === "string" && description.length > 0;
-}
 const User = mongoose.model<IUser>("User", userSchema);
 export default User;
