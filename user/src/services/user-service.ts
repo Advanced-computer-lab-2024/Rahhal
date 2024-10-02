@@ -1,12 +1,15 @@
-import * as userRepository from "../repositories/user-repository";
-import { IUser } from "../models/User";
-// This file is responsible for handling the business logic.
+import * as userRepository from "../database/repositories/user-repository";
+import { IUser } from "../database/models/User";
 
 export async function createUser(userData: IUser) {
-  //check if the user already exists
-  if(userData.username && userData.email && userData.password && userData.role){
+  if (
+    userData.username &&
+    userData.email &&
+    userData.password &&
+    userData.role
+  ) {
     const user = await userRepository.getUserByUsername(userData.username);
-  
+
     const email = await userRepository.getUserByEmail(userData.email);
     if (user) {
       throw new Error("Username already exists");
@@ -14,8 +17,7 @@ export async function createUser(userData: IUser) {
     if (email) {
       throw new Error("This email is registered by another user");
     }
-
-  } else{
+  } else {
     throw new Error("Please provide all the required fields");
   }
 
@@ -24,12 +26,7 @@ export async function createUser(userData: IUser) {
 
 //check if the user already exists
 export async function deleteUser(userId: string) {
-  
-  
   return await userRepository.deleteUser(userId);
-
-  // const deletedUser = await userRepository.deleteUser(userId);
-  // return deletedUser;
 }
 
 //get specific user by username
@@ -69,4 +66,3 @@ export async function updateUserById(
 ): Promise<IUser | null> {
   return await userRepository.updateUserById(userId, updatedUser);
 }
-
