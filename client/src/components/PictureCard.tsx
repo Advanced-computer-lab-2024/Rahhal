@@ -41,7 +41,7 @@ const PictureCard = ({
 
   const pictureUploadFieldRef: React.RefObject<HTMLInputElement> = useRef(null); // Picture upload field reference to open the file dialog when the plus icon is clicked
 
-  const thumbnailImages: string[] = imageSources.slice(0, 3); // Thumbnail images
+  const thumbnailImages: string[] = imageSources.slice(MIN_NUMBER_OF_IMAGES, MAX_NUMBER_OF_IMAGES); // Thumbnail images
   const numberOfImages: number = imageSources.length; // Number of images
 
   let plusIconRotation: string = ""; // Rotation of the plus icon
