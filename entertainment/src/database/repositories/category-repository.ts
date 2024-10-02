@@ -1,11 +1,10 @@
-import { Category } from "../models/Category";
+import Category from "../models/Category";
 
-export const updateCategory = async (id: string, name: string) => {
+export async function updateCategory(id: string, name: string){
     return Category.findByIdAndUpdate(id, { name}, { new: true });
-  
   }
 
-export const deleteCategory = async (id: string) => {
+export async function deleteCategory(id: string){
     return Category.findByIdAndDelete(id);
 }
 

@@ -1,14 +1,16 @@
-import * as categoryRepository from '../repositories/category-repository';
+import { ICategory } from '../database/models/Category';
+import * as categoryRepository from '../database/repositories/category-repository';
 
-export const updateCategory = async (id: string, name:string) => {
-    return await categoryRepository.updateCategory(id, name);
+export async function updateCategory(id: string, categoryName:string){
+    return await categoryRepository.updateCategory(id, categoryName.trim());
   }
 
-export const deleteCategory = async (id: string) => {
+export async function deleteCategory (id: string){
     return await categoryRepository.deleteCategory(id);
   }
 
-export async function createCategory(category: any){
+export async function createCategory(category: ICategory){
+    category.name = category.name.trim();
     return await categoryRepository.createCategory(category);
 }
 

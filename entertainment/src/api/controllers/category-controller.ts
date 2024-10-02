@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
-import * as Category from "../services/category-service";
-import { STATUS_CODES } from "../utils/constants";
+import * as categorySerivce from "../../services/category-service";
+import { STATUS_CODES } from "../../utils/constants";
 
 
-export const updateCategory = async (req: Request, res: Response) => {
+export async function updateCategory(req: Request, res: Response){
 
     try{
         const id  = req.params.id;
         const newCategory = req.body.name;
-        const result = await Category.updateCategory(id, newCategory);
+        const result = await categorySerivce.updateCategory(id, newCategory);
         if(result){
             res.status(STATUS_CODES.STATUS_OK).json(result);
         }
@@ -22,10 +22,10 @@ export const updateCategory = async (req: Request, res: Response) => {
     }
 }
 
-export const deleteCategory = async(req:Request, res:Response)=>{
+export async function deleteCategory(req:Request, res:Response){
     try{
         const id = req.params.id;
-        const result = await Category.deleteCategory(id)
+        const result = await categorySerivce.deleteCategory(id)
         if(result){
             res.status(STATUS_CODES.STATUS_OK).json(result);
 
@@ -41,7 +41,7 @@ export const deleteCategory = async(req:Request, res:Response)=>{
 export async function createCategory(req:Request, res:Response){
     try{
         const category = req.body;
-        const result = await Category.createCategory(category);
+        const result = await categorySerivce.createCategory(category);
         res.status(STATUS_CODES.CREATED).json(result);
     }
     catch(error){
@@ -52,7 +52,7 @@ export async function createCategory(req:Request, res:Response){
 
 export async function getCategories(req:Request, res:Response){
     try{
-        const result = await Category.getCategories();
+        const result = await categorySerivce.getCategories();
         res.status(STATUS_CODES.STATUS_OK).json(result);
     }
     catch(error){

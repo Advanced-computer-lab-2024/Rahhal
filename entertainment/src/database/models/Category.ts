@@ -1,19 +1,22 @@
 import mongoose from 'mongoose';
+import validateCategoryName from '../validators/category-validator';
 
-const CategorySchema = new mongoose.Schema({
+export interface ICategory{
+  name: string;
+}
+
+const CategorySchema = new mongoose.Schema<ICategory>({
   name: {
     type: String,
     unique: true,
     lowercase: true,
     required:[true, 'Name is required'],
     validate: {
-      validator: (name: string) => {
-        return typeof name === 'string' && name.trim().length > 0;
-      }
+      validator:validateCategoryName
     },
   }
 });
 
 const Category = mongoose.model('Category', CategorySchema);
 
-export { Category };
+ export default Category;
