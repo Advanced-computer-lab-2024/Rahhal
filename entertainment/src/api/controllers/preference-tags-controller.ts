@@ -1,6 +1,6 @@
-import express from 'express';
-import * as preferenceTagsService from '../services/preference-tags-service';
-import STATUS_CODES from '../utils/constants';
+import express from "express";
+import * as preferenceTagsService from "../services/preference-tags-service";
+import STATUS_CODES from "../utils/constants";
 
 const getPreferenceTags = async (req: express.Request, res: express.Response) => {
     try {
@@ -19,9 +19,10 @@ const getPreferenceTag = async (req: express.Request, res: express.Response) => 
         if(!preferenceTag) {
             res.status(STATUS_CODES.NOT_FOUND).json({ error: 'Preference Tag not found' });
         }
-        res.status(STATUS_CODES.STATUS_OK).json(preferenceTag);
-    }
-    catch (error: any) {
+        else{
+            res.status(STATUS_CODES.STATUS_OK).json(preferenceTag);
+        }
+    } catch (error: any) {
         res.status(STATUS_CODES.NOT_FOUND).json({ error: error.message });
     }
 }
@@ -29,10 +30,15 @@ const getPreferenceTag = async (req: express.Request, res: express.Response) => 
 const createPreferenceTag = async (req: express.Request, res: express.Response) => {
     try {
         const name = req.body.name;
-        const preferenceTag = await preferenceTagsService.createPreferenceTag(name);
-        res.status(STATUS_CODES.CREATED).json(preferenceTag);
-    }
-    catch (error: any) {
+        const prefTag = await preferenceTagsService.getPreferenceTagByName(name);
+        if(prefTag){
+           res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Preference Tag already exists" });
+        }
+        else{
+            const preferenceTag = await preferenceTagsService.createPreferenceTag(name);
+            res.status(STATUS_CODES.CREATED).json(preferenceTag);
+        }
+    } catch (error: any) {
         res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
     }
 }
