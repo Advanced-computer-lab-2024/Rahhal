@@ -21,5 +21,5 @@ export default tseslint.config(
       "@typescript-eslint/no-magic-numbers": "off",
       // Add any other test-specific rule adjustments here
     },
-  }
+  },
 );

@@ -1,30 +1,45 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import EntertainmentCard from "@/components/entertainment-card/EntertainmentCard";
+import Pyramid from "./assets/pyramids.webp";
+import felluca from "./assets/aswan2.webp";
+import ski from "./assets/ski egypt.jpg";
+
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
+    <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <EntertainmentCard
+          image={Pyramid}
+          rating={5}
+          title={"Great Pyramids Of Giza"}
+          location="Giza"
+          price={200}
+          openingTime="Sunday-Saturday 7AM-5PM"
+        />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+
+      <div>
+        <EntertainmentCard
+          image={ski}
+          rating={4.8}
+          title={"Ski Egypt"}
+          location={"6th Of October"}
+          price={200}
+          availability={true}
+        />
       </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+      <div>
+        <EntertainmentCard
+          image={felluca}
+          rating={4.3}
+          title={"Felluca Ride in Nile Aswan"}
+          location="Aswan"
+          price={300}
+          language={["English", "Arabic", "Italian"]}
+        />
+      </div>
+    </div>
   );
 }
 
