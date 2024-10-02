@@ -8,6 +8,7 @@ export const STATUS_CODES = {
 
 export const CONSTANTS = {
     MIN_RATING: 0,
-    MAX_RATING: 5
+    MAX_RATING: 5,
+    ZERO: 0
 };
 

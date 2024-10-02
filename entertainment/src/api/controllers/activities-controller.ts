@@ -1,10 +1,10 @@
-import express from "express";
+import type { Request, Response } from "express";
 import * as activitiesService from "../../services/activities-service";
 import { STATUS_CODES } from "../../utils/constants";
 
 export async function getAllActivities(
-  req: express.Request,
-  res: express.Response,
+  req: Request,
+  res: Response,
 ) {
   try {
     const activities = await activitiesService.getAllActivities();
@@ -18,8 +18,8 @@ export async function getAllActivities(
 }
 
 export async function getActivityById(
-  req: express.Request,
-  res: express.Response,
+  req: Request,
+  res: Response,
 ) {
   try {
     const activity = await activitiesService.getActivityById(req.params.id);
@@ -39,8 +39,8 @@ export async function getActivityById(
 }
 
 export async function createActivity(
-  req: express.Request,
-  res: express.Response,
+  req: Request,
+  res: Response,
 ) {
   try {
     const activity = await activitiesService.createActivity(req.body);
@@ -54,8 +54,8 @@ export async function createActivity(
 }
 
 export async function updateActivity(
-  req: express.Request,
-  res: express.Response,
+  req: Request,
+  res: Response,
 ) {
   try {
     const activity = await activitiesService.updateActivity(
@@ -78,8 +78,8 @@ export async function updateActivity(
 }
 
 export async function deleteActivity(
-  req: express.Request,
-  res: express.Response,
+  req: Request,
+  res: Response,
 ) {
   try {
     const activity = await activitiesService.deleteActivity(req.params.id);
