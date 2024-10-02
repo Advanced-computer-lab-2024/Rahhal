@@ -6,7 +6,7 @@ interface SliderProps {
     onValueChange: (value: number[]) => void;
 }
 
-function Slider({values, onValueChange}: SliderProps) {
+function MinMaxRangeSlider({values, onValueChange}: SliderProps) {
   const min = useRef(values[0]);
   const max = useRef(values[1]);
 
@@ -56,4 +56,4 @@ function Slider({values, onValueChange}: SliderProps) {
     </div>
   );
 }
-export default Slider;
+export default MinMaxRangeSlider;
