@@ -32,8 +32,7 @@ const activitySchema = new mongoose.Schema<IActivity>({
     required: true,
     validate: {
       validator: validatePrice,
-      message:
-        "Invalid price format, must be a number or an object { min: number, max: number }",
+      message: "Invalid price format, must be a number or an object { min: number, max: number }",
     },
   },
   category: { type: String, required: true },
@@ -65,8 +64,8 @@ function validatePrice(price: number | { min: number; max: number }) {
 
 // Validate rating format to be a number between 0 and 5
 function validateRating(ratings: number[]) {
-  return ratings.every(rating => 
-    rating >= CONSTANTS.MIN_RATING && rating <= CONSTANTS.MAX_RATING
+  return ratings.every(
+    (rating) => rating >= CONSTANTS.MIN_RATING && rating <= CONSTANTS.MAX_RATING,
   );
 }
 
