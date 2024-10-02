@@ -38,15 +38,13 @@ const userSchema: Schema = new Schema<IUser>(
   {
     firstName: {
       type: String,
-      //not required for advertiser since he registers with name of company 
+      //not required for advertiser since he registers with name of company
       //(may be also required if(company representative name is needed)
-      required: function() {
+      required: function () {
         return this.role !== Role.advertiser;
       },
       validate: {
-        validator: function(firstName:string){
-          return typeof firstName === 'string' && firstName.length > 0;
-        },
+        validator: validateFirstName,
         message: "Invalid first name entry",
       },
     },
@@ -54,13 +52,11 @@ const userSchema: Schema = new Schema<IUser>(
       type: String,
       //not required for advertiser since he registers with name of company
       //(may be also required if(company representative name is needed)
-      required: function() {
+      required: function () {
         return this.role !== Role.advertiser;
       },
       validate: {
-        validator: function(lastName:string){
-          return typeof lastName === 'string' && lastName.length > 0;
-        },
+        validator: validateLastName,
         message: "Invalid last name entry",
       },
     },
@@ -69,9 +65,7 @@ const userSchema: Schema = new Schema<IUser>(
       unique: true,
       required: true,
       validate: {
-        validator: function(username:string){
-          return typeof username === 'string' && username.length > 0 && !username.includes(" ");
-        },
+        validator: validateUsername,
         message: "Invalid username entry",
       },
     },
@@ -80,20 +74,15 @@ const userSchema: Schema = new Schema<IUser>(
       unique: true,
       required: true,
       validate: {
-        validator: function(email:string){
-          return typeof email === 'string' && email.length > 0 ;
-        },
+        validator: validateEmail,
         message: "Invalid email entry",
       },
-      // immutable: true,
     },
     password: {
       type: String,
       required: true,
       validate: {
-        validator: function(password:string){
-          return typeof password === 'string' && password.length > 7;
-        },
+        validator: validatePassword,
         message: "Invalid password entry, must be at least 8 characters long",
       },
     },
@@ -105,52 +94,46 @@ const userSchema: Schema = new Schema<IUser>(
     },
     approved: {
       type: Boolean,
-      default: function() {
+      default: function () {
         //tourism governor is added by admin so approved by default
-        return this.role === Role.tourist || this.role === Role.tourismGovernor || this.role === Role.admin;
+        return (
+          this.role === Role.tourist ||
+          this.role === Role.tourismGovernor ||
+          this.role === Role.admin
+        );
       },
       validate: {
-        validator: function(approved:boolean){
-          return typeof approved === 'boolean';
-        },
+        validator: validateApproved,
         message: "Invalid approved value entry",
       },
     },
-    // May add conditional required (eg: required if role is tourist)
     dob: {
       type: Date,
-      required: function() {
+      required: function () {
         return this.role === Role.tourist;
       },
       validate: {
-        validator: function(dob:Date){
-          return dob instanceof Date;// && !isNaN(dob.getTime());
-        },
+        validator: validateDOB,
         message: "Invalid date of birth entry",
       },
     },
     nationality: {
       type: String,
-      required: function() {
+      required: function () {
         return this.role === Role.tourist;
       },
       validate: {
-        validator: function(nationality:string){
-          return typeof nationality === 'string' && nationality.length > 0;
-        },
+        validator: validateNationality,
         message: "Invalid natiopnality entry",
       },
-
     },
     job: {
       type: String,
-      required: function() {
+      required: function () {
         return this.role === Role.tourist;
       },
       validate: {
-        validator: function(job:string){
-          return typeof job === 'string'&&  job.length > 0;
-        },
+        validator: validateJob,
         message: "Invalid job entry",
       },
     },
@@ -159,13 +142,11 @@ const userSchema: Schema = new Schema<IUser>(
     },
     phoneNumber: {
       type: String,
-      required: function() {
+      required: function () {
         return this.role === Role.tourGuide;
       },
       validate: {
-        validator: function(phoneNumber:string){
-          return typeof phoneNumber === 'string' && phoneNumber.length > 0;
-        },
+        validator: validatePhoneNumber,
         message: "Invalid phone number entry",
       },
     },
@@ -173,20 +154,17 @@ const userSchema: Schema = new Schema<IUser>(
       type: Number,
       validate: {
         validator: validateYearsOfExperience,
-        message:
-          "Invalid number, must be a positive number entry",
+        message: "Invalid number, must be a positive number entry",
       },
-      required: function() {
+      required: function () {
         return this.role === Role.tourGuide;
-      }
+      },
     },
     previousWork: {
       type: String,
       validate: {
-        validator: function(previousWork:string){
-          return typeof previousWork === 'string'&& previousWork.length > 0  ;
-        },
-        message: "Invalid previous work entry"
+        validator: validatePreviousWork,
+        message: "Invalid previous work entry",
       },
       // required: function() {
       //   return this.role === Role.tourGuide;
@@ -194,75 +172,128 @@ const userSchema: Schema = new Schema<IUser>(
     },
     website: {
       type: String,
-      required: function() {
+      required: function () {
         return this.role === Role.advertiser;
       },
       validate: {
-        validator: function(website:string){
-          return typeof website === 'string' && website.length > 0;
-        },
-        message: "Invalid website entry"
+        validator: validateWebsite,
+        message: "Invalid website entry",
       },
     },
     hotline: {
       type: String,
-      required: function() {
+      required: function () {
         return this.role === Role.advertiser;
       },
       validate: {
-        validator: function(hotline:string){
-          return typeof hotline === 'string' && hotline.length > 0;
-        },
-        message: "Invalid hotline entry"
+        validator: validateHotline,
+        message: "Invalid hotline entry",
       },
     },
     companyProfile: {
       type: String,
-      required: function() {
+      required: function () {
         return this.role === Role.advertiser;
       },
       validate: {
-        validator: function(companyProfile:string){
-          return typeof companyProfile === 'string' && companyProfile.length > 0 ;
-        },
-        message: "Invalid company profile entry"
+        validator: validateCompanyProfile,
+        message: "Invalid company profile entry",
       },
     },
     companyName: {
       type: String,
-      required: function() {
+      required: function () {
         return this.role === Role.advertiser;
       },
       validate: {
-        validator: function(companyName:string){
-          return  typeof companyName === 'string'&&companyName.length > 0;
-        },
-        message: "Invalid company name entry"
+        validator: validateCompanyName,
+        message: "Invalid company name entry",
       },
     },
     description: {
       type: String,
-      required: function() {
+      required: function () {
         return this.role === Role.seller;
       },
       validate: {
-        validator: function(description:string){
-          return typeof description === 'string' && description.length > 0;
-        },
-        message: "Invalid description entry"
+        validator: validateDescription,
+        message: "Invalid description entry",
       },
     },
   },
   { timestamps: true },
 );
 
-// Validate price format to be a number or an object { min: number, max: number } and to be greater than or equal to 0
+function validateFirstName(firstName: string) {
+  return typeof firstName === "string" && firstName.length > 0;
+}
+
+function validateLastName(lastName: string) {
+  return typeof lastName === "string" && lastName.length > 0;
+}
+
+function validateUsername(username: string) {
+  return (
+    typeof username === "string" &&
+    username.length > 0 &&
+    !username.includes(" ")
+  );
+}
+
+function validateEmail(email: string) {
+  return typeof email === "string" && email.length > 0;
+}
+
+function validatePassword(password: string) {
+  return typeof password === "string" && password.length > 7;
+}
+
+function validateApproved(approved: boolean) {
+  return typeof approved === "boolean";
+}
+
+function validateDOB(dob: Date) {
+  return dob instanceof Date; // && !isNaN(dob.getTime());
+}
+
+function validateNationality(nationality: string) {
+  return typeof nationality === "string" && nationality.length > 0;
+}
+function validateJob(job: string) {
+  return typeof job === "string" && job.length > 0;
+}
+function validatePhoneNumber(phoneNumber: string) {
+  return typeof phoneNumber === "string" && phoneNumber.length > 0;
+}
 function validateYearsOfExperience(yearsOfExperience: number) {
-  if(yearsOfExperience >= 0) {
+  if (yearsOfExperience >= 0) {
     return true;
   }
   return false;
 }
 
+function validatePreviousWork(previousWork: string) {
+  return typeof previousWork === "string" && previousWork.length > 0;
+}
+
+function validateWebsite(website: string) {
+  return typeof website === "string" && website.length > 0;
+}
+
+function validateHotline(hotline: string) {
+  return typeof hotline === "string" && hotline.length > 0;
+}
+
+function validateCompanyProfile(companyProfile: string) {
+  return typeof companyProfile === "string" && companyProfile.length > 0;
+}
+
+function validateCompanyName(companyName: string) {
+  return typeof companyName === "string" && companyName.length > 0;
+}
+
+function validateDescription(description: string) {
+  return typeof description === "string" && description.length > 0;
+}
 const User = mongoose.model<IUser>("User", userSchema);
 export default User;
