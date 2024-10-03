@@ -1,11 +1,13 @@
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import EntertainmentCard from "@/components/entertainment-card/EntertainmentCard";
 import Pyramid from "./assets/pyramids.webp";
 import felluca from "./assets/aswan2.webp";
 import ski from "./assets/ski egypt.jpg";
+import NonTouristView from "@/components/non-tourist/NonTouristView";
 
 import "./App.css";
 
-function App() {
+function TouristAttractions() {
   return (
     <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
       <div>
@@ -40,6 +42,19 @@ function App() {
         />
       </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <div>
+        <Routes>
+          <Route path="/" element={<TouristAttractions />} />
+          <Route path="/non-tourist" element={<NonTouristView />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
