@@ -1,5 +1,5 @@
-import * as activitiesValidator from "@/database/validators/activities-validator";
 import mongoose from "mongoose";
+import { CONSTANTS } from "../../utils/constants";
 
 // Define the schema for the activities collection
 export interface IActivity {
@@ -31,7 +31,7 @@ const activitySchema = new mongoose.Schema<IActivity>({
     type: mongoose.Schema.Types.Mixed,
     required: true,
     validate: {
-      validator: activitiesValidator.validatePrice,
+      validator: validatePrice,
       message: "Invalid price format, must be a number or an object { min: number, max: number }",
     },
   },
@@ -44,11 +44,30 @@ const activitySchema = new mongoose.Schema<IActivity>({
     type: [Number],
     required: true,
     validate: {
-      validator: activitiesValidator.validateRating,
+      validator: validateRating,
       message: "Invalid rating format, must be a number between 0 and 5",
     },
   },
 });
+
+// Validators
+
+// Validate price format to be a number or an object { min: number, max: number } and to be greater than or equal to 0
+function validatePrice(price: number | { min: number; max: number }) {
+  if (typeof price === "number") {
+    return price >= CONSTANTS.ZERO;
+  } else if (typeof price === "object") {
+    return price.min >= CONSTANTS.ZERO && price.max > price.min;
+  }
+  return false;
+}
+
+// Validate rating format to be a number between 0 and 5
+function validateRating(ratings: number[]) {
+  return ratings.every(
+    (rating) => rating >= CONSTANTS.MIN_RATING && rating <= CONSTANTS.MAX_RATING,
+  );
+}
 
 const Activity = mongoose.model<IActivity>("Activity", activitySchema);
 
