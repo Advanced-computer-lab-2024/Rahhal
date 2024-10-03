@@ -1,7 +1,7 @@
-import { DataTableDemo } from "./DataTable";
+import { DataTable } from "./DataTable";
 
 function NonTouristView() {
-  return <DataTableDemo />;
+  return <DataTable />;
 }
 
 export default NonTouristView;

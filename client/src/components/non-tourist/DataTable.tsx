@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
 import { DataTableViewOptions } from "./DataTableViewOptions";
 import { DataTablePagination } from "./DataTablePagination";
 
-export function DataTableDemo() {
+export function DataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -79,7 +79,7 @@ export function DataTableDemo() {
                   {row.getVisibleCells().map((cell, index) => (
                     <TableCell
                       key={cell.id}
-                        // Apply rounded corners to the first and last cell in the row as a workaround since border-radius does not apply on <tr> elements
+                      // Apply rounded corners to the first and last cell in the row as a workaround since border-radius does not apply on <tr> elements
                       className={cn({
                         "rounded-tr-xl rounded-br-xl": index === row.getVisibleCells().length - 1,
                         "rounded-tl-xl rounded-bl-xl": index === 0,
