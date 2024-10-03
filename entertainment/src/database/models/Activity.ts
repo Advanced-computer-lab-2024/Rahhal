@@ -50,8 +50,6 @@ const activitySchema = new mongoose.Schema<IActivity>({
   },
 });
 
-// Validators
-
 // Validate price format to be a number or an object { min: number, max: number } and to be greater than or equal to 0
 function validatePrice(price: number | { min: number; max: number }) {
   if (typeof price === "number") {
@@ -68,7 +66,6 @@ function validateRating(ratings: number[]) {
     (rating) => rating >= CONSTANTS.MIN_RATING && rating <= CONSTANTS.MAX_RATING,
   );
 }
-
 const Activity = mongoose.model<IActivity>("Activity", activitySchema);
 
 export default Activity;
