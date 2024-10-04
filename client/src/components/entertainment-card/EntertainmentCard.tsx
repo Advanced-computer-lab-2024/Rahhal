@@ -40,20 +40,28 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
         <div className={CardStyles["entertainment-card-container__details"]}>
           <div className={CardStyles["entertainment-card-container__title-location"]}>
             {/* title and location goes here */}
-            <h3>{title}</h3>
+            <h3 style={{ fontWeight: "bold", fontSize: "1.1rem" }}>{title}</h3>
             {location !== undefined && (
-              <p>
-                {" "}
-                <FaLocationDot style={{ fontSize: "0.8rem" }} /> {location}
+              <p
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <FaLocationDot style={{ fontSize: "0.8rem", marginRight: "5px" }} /> {location}
               </p>
             )}
           </div>
+
           <div className={CardStyles["entertainment-card-container__rating"]}>
             {/* rating goes here */}
             <IoMdStar style={{ fontSize: "0.8rem" }} />
 
             <p>{rating?.toPrecision(2)}</p>
           </div>
+
           <div className={CardStyles["entertainment-card-container__language-time"]}>
             {/* language and opening time and availability goes here */}
 
@@ -71,17 +79,7 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
             )}
 
             {availability !== undefined &&
-              (availability ? (
-                <p>
-                  <br />
-                  Available Book NOW!
-                </p>
-              ) : (
-                <p>
-                  <br />
-                  Booking Closed!
-                </p>
-              ))}
+              (availability ? <p>Available Book NOW!</p> : <p>Booking Closed!</p>)}
 
             {seller !== undefined && (
               <p>
