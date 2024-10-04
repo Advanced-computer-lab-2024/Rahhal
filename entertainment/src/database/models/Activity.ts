@@ -6,6 +6,7 @@ export interface IActivity {
   name: string;
   date: Date;
   time: Date;
+  images: string[];
   location: { longitude: number; latitude: number };
   price: number | { min: number; max: number };
   category: string;
@@ -20,6 +21,7 @@ const activitySchema = new mongoose.Schema<IActivity>({
   name: { type: String, required: true },
   date: { type: Date, required: true },
   time: { type: Date, required: true },
+  images: { type: [String], required: true },
   location: {
     type: {
       longitude: { type: Number, required: true },
