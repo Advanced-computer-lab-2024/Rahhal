@@ -15,5 +15,5 @@ export async function getHistoricalTagById(id: string) {
 }
 
 export async function getHistoricalTagsByName(name: string) {
-  return await HistoricalTagsModel.find({ name });
+  return await HistoricalTagsModel.findOne({ name });
 }
