@@ -8,7 +8,6 @@ import {
   Circle,
   HelpCircle,
   LucideIcon,
-  Search,
   XCircle,
 } from "lucide-react"
 import {
@@ -25,6 +24,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
+
 interface SearchIconProps {
   className: string
 }
@@ -40,6 +40,7 @@ interface SearchPartProps {
 
 // SearchBar component
 export default function SearchBar() {
+
     // State to manage searchbar outline
     const [focusIndex, setFocusIndex] = useState(0)
     const [hoverIndex, setHoverIndex] = useState(0)
@@ -64,17 +65,23 @@ export default function SearchBar() {
               />
               </div>
               </div>
-
+              {focusIndex == 0 && <div className="border-l border-gray-300 h-8" />}
         {numberOfSearchParts.map((value, index) => (
-          <SearchPart setFocusIndex={setFocusIndex} focusIndex={focusIndex} index={index+2} placeholder={value} hoverIndex={hoverIndex} setHoverIndex={setHoverIndex}/>)
+          <>
+          <SearchPart setFocusIndex={setFocusIndex} focusIndex={focusIndex} index={index+2} placeholder={value} hoverIndex={hoverIndex} setHoverIndex={setHoverIndex}/>
+          {index == 0 && focusIndex == 0 && <div className="border-l border-gray-300 h-8" />}
+          </>
+        )
+          
         )}
-        <Button
+        {focusIndex == 0 && <Button
   variant="default"
   size="default"
-  className="absolute right-1 w-9 h-9 bg-[#ff585f] hover:bg-[#ff585f] hover:bg-gradient-to-r hover:from-[#ff111c] to hover:to-[#ff1151]  rounded-full px-2 py-0 transition duration-300"
+  //bg-[#ff585f] hover:bg-[#ff585f] hover:bg-gradient-to-r hover:from-[#ff111c] to hover:to-[#ff1151]
+  className="absolute right-1 w-9 h-9 rounded-full px-2 py-0 transition duration-300"
   >
       <SearchIcon className="w-6 h-6"/>
-        </Button>
+        </Button>}
       </div>
     )
   }
@@ -85,9 +92,10 @@ export default function SearchBar() {
     SearchPartProps.focusIndex === 1 && SearchPartProps.hoverIndex === 2 ? 
     SearchPartProps.index === 1  ? "bg-gray-200/65" : SearchPartProps.index === 2 ? "bg-gray-200/65 rounded-r-full" : "" : SearchPartProps.focusIndex === 3 && SearchPartProps.hoverIndex === 2 ? SearchPartProps.index === 3  ? "bg-gray-200/65" : SearchPartProps.index === 2 ? "bg-gray-200/65 rounded-l-full" : "" : SearchPartProps.focusIndex === 2 && SearchPartProps.hoverIndex === 1 ? SearchPartProps.index === 1 ? "bg-gray-200/65" : SearchPartProps.index === 2 ? "bg-gray-200/65 rounded-r-full" : "" :
     SearchPartProps.focusIndex === 2 && SearchPartProps.hoverIndex === 3 ? SearchPartProps.index === 3 ? "bg-gray-200/65" : SearchPartProps.index === 2 ? "bg-gray-200/65 rounded-l-full" : "" : "" )}>
-            <div className={cn("rounded-full ",SearchPartProps.focusIndex != SearchPartProps.index ? "hover:bg-gray-200/65" : SearchPartProps.focusIndex === SearchPartProps.index ? "bg-background shadow-sm" : "")}>
+              <div className={cn("rounded-full focus-within:bg-background focus-within:shadow-sm h-11 flex items-center",SearchPartProps.focusIndex != SearchPartProps.index ? "hover:bg-gray-200/65" : SearchPartProps.focusIndex === SearchPartProps.index ? "bg-background shadow-sm" : "")}
+    >
              <ComboboxPopover {...SearchPartProps} />
-            </div>
+             </div>
       </div>
     )
   }
@@ -155,69 +163,114 @@ const statuses: Status[] = [
   },
 ]
 
-function ComboboxPopover(SearchPartProps : SearchPartProps) {
-  const [open, setOpen] = useState(false)
-  const [selectedStatus, setSelectedStatus] = useState<Status | null>(
-    null
-  )
+function ComboboxPopover(SearchPartProps: SearchPartProps) {
+  const [open, setOpen] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<Status | null>(null);
+
+  const handleTriggerClick = (value : string) => {
+    if (selectedStatus === statuses.find((status) => status.value === value)) {
+      setSelectedStatus(null);
+    } else {
+      setSelectedStatus(
+        statuses.find((priority) => priority.value === value) ||
+          null
+      );
+    }
+  };
+
+  if (!open && SearchPartProps.focusIndex === SearchPartProps.index) {
+    SearchPartProps.setFocusIndex(0); // Reset focus when the popover closes
+  } else if (open && SearchPartProps.focusIndex !== SearchPartProps.index) {
+    SearchPartProps.setFocusIndex(SearchPartProps.index); // Set focus when the popover opens
+  }
   return (
     <>
-    <div className="flex items-start bg-transparent ">
-      <Popover open={open} onOpenChange={setOpen} >
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            size="lg"
-            className={cn("border-0 focus-visible:outline-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent bg-transparent hover:bg-transparent flex justify-start items-center px-2 w-40 py-0  " , selectedStatus ? "text-foreground" : "text-muted-foreground hover:text-muted-foreground")}
-            onMouseEnter={() => SearchPartProps.setHoverIndex(SearchPartProps.index)}
-                onMouseLeave={() => SearchPartProps.setHoverIndex(0)}
+      <div className="flex items-start bg-transparent relative">
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              size="lg"
+              className={cn(
+                "border-0 focus-visible:outline-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent bg-transparent hover:bg-transparent flex justify-start items-center px-2 w-40 py-0 relative",
+                selectedStatus
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-muted-foreground"
+              )}
+              onMouseEnter={() => SearchPartProps.setHoverIndex(SearchPartProps.index)}
+              onMouseLeave={() => SearchPartProps.setHoverIndex(0)}
+            >
+              {selectedStatus ? (
+                <>
+                  <selectedStatus.icon className="mr-2 h-4 w-4 shrink-0" />
+                  {selectedStatus.label}
+                </>
+              ) : (
+                <>{SearchPartProps.placeholder}</>
+              )}
+            </Button>
+          </PopoverTrigger>
+          {/* {selectedStatus && SearchPartProps.focusIndex == SearchPartProps.index &&(
+            <button
+              onClick={() => setSelectedStatus(null)}
+              className="absolute right-0 bottom-0 -translate-x-[calc(50%-4px)] -translate-y-[calc(50%-4px)] p-1 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none focus:ring focus:ring-gray-400"
+              aria-label="Reset selection"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-4 h-4 text-gray-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          )} */}
+
+          <PopoverContent
+            className="p-0"
+            side="bottom"
+            align="start"
           >
-            {selectedStatus ? (
-              <>
-                <selectedStatus.icon className="mr-2 h-4 w-4 shrink-0" />
-                {selectedStatus.label}
-              </>
-            ) : (
-              <>{SearchPartProps.placeholder}</>
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="p-0" side="bottom" align="start" onFocus={() => {SearchPartProps.setFocusIndex(SearchPartProps.index)}} onBlur={() => SearchPartProps.setFocusIndex(0)}>
-          <Command>
-            <CommandInput placeholder="Change status..." />
-            <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
-              <CommandGroup>
-                {statuses.map((status) => (
-                  <CommandItem
-                    key={status.value}
-                    value={status.value}
-                    onSelect={(value) => {
-                      setSelectedStatus(
-                        statuses.find((priority) => priority.value === value) ||
-                          null
-                      )
-                      setOpen(false)
-                    }}
-                  >
-                    <status.icon
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        status.value === selectedStatus?.value
-                          ? "opacity-100"
-                          : "opacity-40"
-                      )}
-                    />
-                    <span>{status.label}</span>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-    </div>
+            <Command>
+              <CommandInput placeholder="Change status..." />
+              <CommandList>
+                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandGroup>
+                  {statuses.map((status) => (
+                    <CommandItem
+                      key={status.value}
+                      value={status.value}
+                      onSelect={(value) => {
+                        handleTriggerClick(value);
+                
+                        
+                      }}
+                    >
+                      <status.icon
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          status.value === selectedStatus?.value
+                            ? "opacity-100"
+                            : "opacity-40"
+                        )}
+                      />
+                      <span>{status.label}</span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
     </>
-  )
+  );
 }
 
