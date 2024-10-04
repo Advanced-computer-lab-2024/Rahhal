@@ -36,27 +36,42 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
         <div className={CardStyles["entertainment-card-container__details"]}>
           <div className={CardStyles["entertainment-card-container__title-location"]}>
             {/* title and location goes here */}
-            <h3>{title}</h3>
+            <h3 style={{ fontWeight: "bold", fontSize: "1.1rem" }}>{title}</h3>
             {location !== undefined && (
-              <p>
-                {" "}
-                <FaLocationDot style={{ fontSize: "0.8rem" }} /> {location}
+              <p
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <FaLocationDot style={{ fontSize: "0.8rem", marginRight: "5px" }} /> {location}
               </p>
             )}
           </div>
+
           <div className={CardStyles["entertainment-card-container__rating"]}>
             {/* rating goes here */}
             <IoMdStar style={{ fontSize: "0.8rem" }} />
 
             <p>{rating?.toPrecision(2)}</p>
           </div>
+
           <div className={CardStyles["entertainment-card-container__language-time"]}>
             {/* language and opening time and availability goes here */}
 
             {language !== undefined && (
-              <p>
-                <br />
-                <GrLanguage /> {language?.join("/")}
+              <p
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <GrLanguage style={{ fontSize: "0.8rem", marginRight: "5px" }} />{" "}
+                {language?.join("/")}
               </p>
             )}
 
@@ -67,17 +82,7 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
             )}
 
             {availability !== undefined &&
-              (availability ? (
-                <p>
-                  <br />
-                  Available Book NOW!
-                </p>
-              ) : (
-                <p>
-                  <br />
-                  Booking Closed!
-                </p>
-              ))}
+              (availability ? <p>Available Book NOW!</p> : <p>Booking Closed!</p>)}
 
             {seller !== undefined && (
               <p>
@@ -90,8 +95,8 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
           <div className={CardStyles["entertainment-card-container__price"]}>
             {/* price goes here */}
             {/* for activities waiting for model to decide whether it is a number or string */}
-            {seller === undefined && <h5>From {price} EGP</h5>}
-            {seller !== undefined && <h5>{price} EGP</h5>}
+            {seller === undefined && <p>From {price} EGP</p>}
+            {seller !== undefined && <p>From {price} EGP</p>}
           </div>
         </div>
       </div>

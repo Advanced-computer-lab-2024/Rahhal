@@ -6,6 +6,11 @@
   justify-content: center;
   width: 100%;
   cursor: pointer;
+  transition: filter 0.3s ease;
+}
+
+.entertainment-card-container:hover {
+  filter: brightness(0.85);
 }
 
 .entertainment-card-container__image {
@@ -45,6 +50,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: start;
+  text-wrap: nowrap;
 }
 
 .entertainment-card-container__title-location h3 {
@@ -71,12 +77,13 @@
   align-items: flex-end;
 }
 
-.entertainment-card-container__price h5 {
+.entertainment-card-container__price p {
   margin: 0;
   padding: 0;
-
+  font-size: 1.01rem;
+  font-weight: 500;
   overflow: hidden;
-  text-overflow: ellipsis; /* This adds the "..." when the text is too long */
+  text-wrap: nowrap;
   max-width: 100%; /* Ensure it respects the parent's width */
 }
 
