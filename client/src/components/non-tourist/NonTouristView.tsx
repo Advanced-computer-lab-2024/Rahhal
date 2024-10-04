@@ -1,7 +1,13 @@
-import { DataTable } from "./DataTable";
+import MyMap from "../google-maps/GoogleMap";
 
 function NonTouristView() {
-  return <DataTable />;
+  return (
+    <>
+      {/* <DataTable /> */}
+      <MyMap />
+      {/* <DatePickerWithRange /> */}
+    </>
+  );
 }
 
 export default NonTouristView;
