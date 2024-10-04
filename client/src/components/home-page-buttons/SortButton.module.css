@@ -67,6 +67,7 @@
   
   .dropdown-list li:hover {
     background-color: #f2f2f2;
+    text-decoration: underline;
   }
   
   @media (max-width: 600px) {
