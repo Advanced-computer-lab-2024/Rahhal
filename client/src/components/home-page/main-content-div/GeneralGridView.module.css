@@ -5,8 +5,8 @@
 
 .general-grid-view__filter-container {
   display: flex;
-  justify-content: center; /* Center the entire icons container */
   align-items: center;
+  justify-content: space-between;
   background-color: #fff; /* White background */
   position: fixed;
   width: 100%;
@@ -16,9 +16,10 @@
 
 .general-grid-view__filter-container__icons {
   display: flex;
-  justify-content: space-between; /* Evenly space the icons */
+ 
   align-items: center;
   width: 26%; /* Adjust width based on your design */
+  justify-content: space-between; /* Center the icons horizontally */
 }
 
 /* Wrapper for each icon */
