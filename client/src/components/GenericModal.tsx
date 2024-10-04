@@ -27,9 +27,7 @@ export function GenericModal({ title, description, dialogTrigger, children }: Ge
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <div className="flex-1 py-4 overflow-auto">
-          {children.map((child) => (
-            <div className="grid items-center">{child}</div>
-          ))}
+          {children && children.map((child) => <div className="grid items-center">{child}</div>)}
         </div>
         <DialogFooter>
           <Button type="submit">Save changes</Button>
