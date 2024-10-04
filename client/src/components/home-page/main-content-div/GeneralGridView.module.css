@@ -5,8 +5,8 @@
 
 .general-grid-view__filter-container {
   display: flex;
+  justify-content: center; /* Center the entire icons container */
   align-items: center;
-  justify-content: space-between;
   background-color: #fff; /* White background */
   position: fixed;
   width: 100%;
@@ -16,10 +16,9 @@
 
 .general-grid-view__filter-container__icons {
   display: flex;
- 
+  justify-content: space-between; /* Evenly space the icons */
   align-items: center;
-  width: 22%; /* Adjust width based on your design */
-  justify-content: space-between; /* Center the icons horizontally */
+  width: 26%; /* Adjust width based on your design */
 }
 
 /* Wrapper for each icon */
@@ -133,6 +132,7 @@
     width: 76%; /* Adjust width based on your design */
   }
 }
+<<<<<<< HEAD
 
 
 .filter-sort-buttons__container{
@@ -145,3 +145,5 @@
   justify-content: center;
 
 }
+=======
+>>>>>>> d81d875 (feat(homepage): create grid view styling for cards and filter functionality)
