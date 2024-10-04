@@ -18,7 +18,7 @@
   display: flex;
  
   align-items: center;
-  width: 26%; /* Adjust width based on your design */
+  width: 22%; /* Adjust width based on your design */
   justify-content: space-between; /* Center the icons horizontally */
 }
 
