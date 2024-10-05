@@ -4,7 +4,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import DetailsPage from "./components/home-page/DetailsPage.tsx"
 import TouristHomePage from "./TouristHomePage/TouristHomePage.tsx"
 import SignupSelector from "./components/forms/SignupSelector.tsx"
-
+import SettingsView from "@/components/user-settings/SettingsView";
+import ProfileForm from "./components/user-settings/ProfileForm";
+import AccountForm from "./components/user-settings/AccountForm";
 export default function App() {
   const queryClient = new QueryClient ();
   return (
@@ -18,6 +20,10 @@ export default function App() {
           <Route path="/signup" element={<SignupSelector />}/>
           <Route path="/signin" element={<></>} />
           <Route path="/details/:id" element={<DetailsPage />} />
+          <Route path="/user-settings" element={<SettingsView />}>
+            <Route index element={<ProfileForm />} />
+            <Route path="/user-settings/account" element={<AccountForm />} />
+          </Route>
         </Routes>
       </Router>
     </QueryClientProvider>
