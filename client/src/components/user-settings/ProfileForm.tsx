@@ -38,7 +38,7 @@ const profileFormSchema = z.object({
     .max(30, {
       message: "Last Name must not be longer than 30 characters.",
     }),
-  role: z.string().min(2).max(30),
+  role: z.string().min(2).max(30).optional(),
   description: z.string().max(160).min(4),
   previousWork: z.string().max(160).min(4),
   job: z.string().max(160).min(4),
@@ -54,7 +54,7 @@ const profileFormSchema = z.object({
     .regex(/^\+?[1-9]\d{1,14}$/, { message: "Please enter a valid hotline." }),
   website: z.string().url(),
   companyProfile: z.string().url(),
-  addresses: z.string().array().min(1,{message: "Please enter at least one address."}),
+  addresses: z.string().array().min(1, { message: "Please enter at least one address." }),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
