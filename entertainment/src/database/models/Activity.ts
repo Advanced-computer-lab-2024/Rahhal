@@ -9,11 +9,11 @@ export interface IActivity {
   images: string[];
   location: { longitude: number; latitude: number };
   price: number | { type: string; price: number }[];
-  category: string;
+  category: mongoose.Schema.Types.ObjectId;
   tags: string[];
   specialDiscount: number;
   isBookingOpen: boolean;
-  preferenceTags: string[];
+  preferenceTags: mongoose.Schema.Types.ObjectId[];
   ratings: number[];
   owner: string;
 }
