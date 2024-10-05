@@ -8,8 +8,8 @@ export interface IItinerary {
   locations: [{ longitude: number; latitude: number }];
   timeline: string;
   duarationOfActivities: string[];
-  language: string;
-  tourPrice: number | { min: number; max: number };
+  languages: string[];
+  price: number | { min: number; max: number };
   availableDatesTime: { Date: Date; Time: Date }[];
   accessibility: string;
   pickUpLocation: { longitude: number; latitude: number };
@@ -39,8 +39,8 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
   },
   timeline: { type: String, required: true },
   duarationOfActivities: { type: [String], required: true },
-  language: { type: String, required: true },
-  tourPrice: {
+  languages: { type: [String], required: true },
+  price: {
     type: mongoose.Schema.Types.Mixed,
     required: true,
     validate: {
