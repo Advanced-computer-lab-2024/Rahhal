@@ -134,6 +134,9 @@
   }
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 0a0047e (feat(client): add props to card component to view details page)
 
 
 .filter-sort-buttons__container{
@@ -145,6 +148,10 @@
   align-items: center;
   justify-content: center;
 
+<<<<<<< HEAD
 }
 =======
 >>>>>>> d81d875 (feat(homepage): create grid view styling for cards and filter functionality)
+=======
+}
+>>>>>>> 0a0047e (feat(client): add props to card component to view details page)
