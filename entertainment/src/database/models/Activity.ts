@@ -10,7 +10,7 @@ export interface IActivity {
   date: Date;
   time: Date;
   images: string[];
-  location: { longitude: number; latitude: number };
+  location: { longitude: number; latitude: number; placeId?: string };
   price: number | { type: string; price: number }[];
   category?: mongoose.Schema.Types.ObjectId;
   tags?: string[];
@@ -31,6 +31,7 @@ const activitySchema = new mongoose.Schema<IActivity>({
     type: {
       longitude: { type: Number, required: true },
       latitude: { type: Number, required: true },
+      placeId: { type: String },
     },
     required: true,
   },
@@ -45,7 +46,7 @@ const activitySchema = new mongoose.Schema<IActivity>({
   },
   category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
   tags: { type: [String] },
-  specialDiscount: { type: Number},
+  specialDiscount: { type: Number },
   isBookingOpen: { type: Boolean, required: true },
   preferenceTags: { type: [mongoose.Schema.Types.ObjectId], ref: "PreferenceTag" },
   ratings: {

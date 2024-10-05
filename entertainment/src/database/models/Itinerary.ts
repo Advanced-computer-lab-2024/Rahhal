@@ -7,15 +7,15 @@ export interface IItinerary {
   name: string;
   description: string;
   activities: string[];
-  locations: [{ longitude: number; latitude: number }];
+  locations: [{ longitude: number; latitude: number; placeId?: string }];
   timeline: string;
   duarationOfActivities: string[];
   languages: string[];
   price: number | { min: number; max: number };
   availableDatesTime: { Date: Date; Time: Date }[];
   accessibility: string;
-  pickUpLocation: { longitude: number; latitude: number };
-  dropOffLocation: { longitude: number; latitude: number };
+  pickUpLocation: { longitude: number; latitude: number; placeId?: string };
+  dropOffLocation: { longitude: number; latitude: number; placeId?: string };
   ratings?: IRating[];
   preferenceTags?: mongoose.Schema.Types.ObjectId[];
   category?: mongoose.Schema.Types.ObjectId;
@@ -31,6 +31,7 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
       {
         longitude: { type: Number, required: true },
         latitude: { type: Number, required: true },
+        placeId: { type: String },
       },
     ],
     required: true,
@@ -64,6 +65,7 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
     type: {
       longitude: { type: Number, required: true },
       latitude: { type: Number, required: true },
+      placeId: { type: String },
     },
     required: true,
   },
@@ -71,6 +73,7 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
     type: {
       longitude: { type: Number, required: true },
       latitude: { type: Number, required: true },
+      placeId: { type: String },
     },
     required: true,
   },
@@ -82,7 +85,7 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
     },
   },
   preferenceTags: { type: [mongoose.Schema.Types.ObjectId], ref: "PreferenceTag" },
-  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category"},
+  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
   owner: { type: String, required: true },
 });
 
