@@ -8,13 +8,13 @@ export interface IHistoricalPlace {
   description: string;
   location: { longitude: number; latitude: number };
   openingHours: { open: string; close: string };
-  ticketPrice: { foreigner: number, native: number, student: number};
+  price: { foreigner: number, native: number, student: number};
   images: string[];
-  tagIds?: string[];
-  ratings: IRating[];
-  preferenceTagIds?: string[];
-  assigneeId: string;
-  categoryId?: string;
+  tags?:  mongoose.Schema.Types.ObjectId[];
+  ratings?: IRating[];
+  preferenceTags?:  mongoose.Schema.Types.ObjectId[][];
+  owner: string;
+  category?:  mongoose.Schema.Types.ObjectId;
 }
 
 const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
@@ -48,7 +48,7 @@ const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
     },
     required: true,
   },
-  ticketPrice: {
+  price: {
     type: {
       foreigner: { type: Number, required: true },
       native: { type: Number, required: true },
@@ -57,13 +57,12 @@ const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
     required: true,
   },
   images: { type: [String], required: true },
-  tagIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "HistoricalTag"}],
-  preferenceTagIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "PreferenceTag"}],
-  categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "Category"},
-  assigneeId: { type: String, required: true },
+  tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "HistoricalTag"}],
+  preferenceTags: [{ type: mongoose.Schema.Types.ObjectId, ref: "PreferenceTag"}],
+  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category"},
+  owner: { type: String, required: true },
   ratings: {
     type: [ratingSchema],
-    required: true,
     validate: {
       validator: validateRatings,
       message: "Invalid rating format, must be a number between 0 and 5",

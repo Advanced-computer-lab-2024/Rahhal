@@ -1,5 +1,7 @@
+import { Schema } from 'mongoose';
+import { CONSTANTS } from '../utils/constants';
 export interface IRating {
-  userId: string;
+  user: string;
   rating: number;
   review?: string;
 }
@@ -12,6 +14,6 @@ export const ratingSchema = new Schema<IRating>({
 
 export function validateRatings(ratings: IRating[]) {
   return ratings.every(
-    (rating) => rating >= CONSTANTS.MIN_RATING && rating <= CONSTANTS.MAX_RATING,
+    (rating) => rating.rating >= CONSTANTS.MIN_RATING && rating.rating <= CONSTANTS.MAX_RATING,
   );
 }
