@@ -17,7 +17,7 @@ const user = {
   firstName: "Yousef",
   lastName: "Elbrolosy",
   companyName: "German University in Cairo",
-  role: "tourGuide",
+  role: "advertiser",
   description: "I sell qubits",
   previousWork: "I worked at Quantum",
   job: "developer",
@@ -56,7 +56,7 @@ const profileFormSchema = z.object({
     }),
   role: z.string().min(2).max(30).optional(),
   description: z.string().max(160).min(4),
-  previousWork: z.string().max(160).min(4),
+  previousWork: z.string().max(160).optional(),
   job: z.string().max(160).min(4),
   yearsOfExperience: z.number().min(0).max(100),
   phoneNumber: z
@@ -83,7 +83,7 @@ export default function ProfileForm() {
   });
 
   function onSubmit(data: ProfileFormValues) {
-    console.log(data)
+    console.log(data);
   }
 
   return (
@@ -102,56 +102,64 @@ export default function ProfileForm() {
             className="shrink-0 bg-border h-[1px] w-full"
           ></div>
           {/* First/Last Name */}
-          <div className="grid grid-cols-12 gap-4">
-            {/* First Name */}
-            <div className="col-span-6 space-y-2">
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>First Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="john" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            {/* Last Name */}
-            <div className="col-span-6 space-y-2">
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Last Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="doe" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
+          {user.role != "advertiser" && (
+            <>
+              <div className="grid grid-cols-12 gap-4">
+                {/* First Name */}
+                <div className="col-span-6 space-y-2">
+                  <FormField
+                    control={form.control}
+                    name="firstName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>First Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="john" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                {/* Last Name */}
+                <div className="col-span-6 space-y-2">
+                  <FormField
+                    control={form.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Last Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="doe" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            </>
+          )}
           {/* Company Name */}
-          <div className="space-y-2">
-            <FormField
-              control={form.control}
-              name="companyName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Company Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Resala" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          {user.role == "advertiser" && (
+            <>
+              <div className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="companyName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Resala" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </>
+          )}
           {/* Role */}
           <div className="space-y-2">
             <FormField
@@ -169,243 +177,277 @@ export default function ProfileForm() {
             />
           </div>
           {/* Phone Number */}
-          <div className="space-y-2">
-            <FormField
-              control={form.control}
-              name="phoneNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="20123456789"
-                      {...field}
-                      maxLength={20}
-                      onKeyDown={(e) => {
-                        if (!/[0-9+]/.test(e.key) && e.key !== "Backspace") {
-                          e.preventDefault();
-                        }
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          {user.role == "tourGuide" && (
+            <>
+              <div className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="phoneNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="20123456789"
+                          {...field}
+                          maxLength={20}
+                          onKeyDown={(e) => {
+                            if (!/[0-9+]/.test(e.key) && e.key !== "Backspace") {
+                              e.preventDefault();
+                            }
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </>
+          )}
           {/* Hotline */}
-          <div className="space-y-2">
-            <FormField
-              control={form.control}
-              name="hotline"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Hotline</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="19991"
-                      {...field}
-                      maxLength={5}
-                      onKeyDown={(e) => {
-                        if (!/[0-9+]/.test(e.key) && e.key !== "Backspace") {
-                          e.preventDefault();
-                        }
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          {user.role == "advertiser" && (
+            <>
+              <div className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="hotline"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Hotline</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="19991"
+                          {...field}
+                          maxLength={5}
+                          onKeyDown={(e) => {
+                            if (!/[0-9+]/.test(e.key) && e.key !== "Backspace") {
+                              e.preventDefault();
+                            }
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </>
+          )}
           {/* Description */}
-          <div className="space-y-2">
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <textarea
-                      className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
-                      placeholder="I sell tomatoes"
-                      {...field}
-                      name="description"
-                    ></textarea>
-                  </FormControl>
-                  <FormDescription>
-                    Please describe what you are type of company you are and what you are selling
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          {user.role == "seller" && (
+            <>
+              <div className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <textarea
+                          className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                          placeholder="I sell tomatoes"
+                          {...field}
+                          name="description"
+                        ></textarea>
+                      </FormControl>
+                      <FormDescription>
+                        Please describe what you are type of company you are and what you are
+                        selling
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </>
+          )}
           {/* Job */}
-          <div className="space-y-2">
-            <FormField
-              control={form.control}
-              name="job"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Job</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e:g developer" {...field} />
-                  </FormControl>
-                  <FormDescription>Please state your job</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          {user.role == "tourist" && (
+            <>
+              <div className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="job"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Job</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e:g developer" {...field} />
+                      </FormControl>
+                      <FormDescription>Please state your job</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </>
+          )}
           {/* Previous Work */}
-          <div className="space-y-2">
-            <FormField
-              control={form.control}
-              name="previousWork"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Previous Work</FormLabel>
-                  <FormControl>
-                    <textarea
-                      className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
-                      placeholder="I worked at Second Cup"
-                      {...field}
-                      name="previousWork"
-                    ></textarea>
-                  </FormControl>
-                  <FormDescription>Please describe your previous work</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          {user.role == "tourGuide" && (
+            <>
+              <div className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="previousWork"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Previous Work</FormLabel>
+                      <FormControl>
+                        <textarea
+                          className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                          placeholder="I worked at Second Cup"
+                          {...field}
+                          name="previousWork"
+                        ></textarea>
+                      </FormControl>
+                      <FormDescription>Please describe your previous work</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </>
+          )}
           {/* Years Of Experience */}
-          <div className="space-y-2">
-            <FormField
-              control={form.control}
-              name="yearsOfExperience"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Years Of Experience</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
-                      {...field}
-                      type="number"
-                      placeholder="Enter your years of experience"
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          {user.role == "tourGuide" && (
+            <>
+              <div className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="yearsOfExperience"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Years Of Experience</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                          {...field}
+                          type="number"
+                          placeholder="Enter your years of experience"
+                          onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </>
+          )}
           {/* Addresses */}
-          <div className="space-y-2">
-            <FormField
-              control={form.control}
-              name="addresses"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Addresses</FormLabel>
-                  <FormControl>
-                    <div>
-                      {(field.value || user.addresses).map((address, index) => (
-                        <div key={index} className="flex items-center space-x-2 mb-4">
-                          <Input
-                            placeholder={`Address ${index + 1}`}
-                            value={address}
-                            onChange={(e) => {
-                              const newAddresses = [...(field.value || user.addresses)];
-                              newAddresses[index] = e.target.value;
-                              field.onChange(newAddresses);
-                            }}
-                          />
+          {user.role == "tourist" && (
+            <>
+              <div className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="addresses"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Addresses</FormLabel>
+                      <FormControl>
+                        <div>
+                          {(field.value || user.addresses).map((address, index) => (
+                            <div key={index} className="flex items-center space-x-2 mb-4">
+                              <Input
+                                placeholder={`Address ${index + 1}`}
+                                value={address}
+                                onChange={(e) => {
+                                  const newAddresses = [...(field.value || user.addresses)];
+                                  newAddresses[index] = e.target.value;
+                                  field.onChange(newAddresses);
+                                }}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newAddresses = (field.value || user.addresses).filter(
+                                    (_, i) => i !== index,
+                                  );
+                                  field.onChange(newAddresses);
+                                }}
+                                className="text-red-500"
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          ))}
                           <button
                             type="button"
-                            onClick={() => {
-                              const newAddresses = (field.value || user.addresses).filter(
-                                (_, i) => i !== index,
-                              );
-                              field.onChange(newAddresses);
-                            }}
-                            className="text-red-500"
+                            onClick={() => field.onChange([...(field.value || user.addresses), ""])}
+                            className="mt-2 text-blue-500"
                           >
-                            Remove
+                            Add Address
                           </button>
                         </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => field.onChange([...(field.value || user.addresses), ""])}
-                        className="mt-2 text-blue-500"
-                      >
-                        Add Address
-                      </button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </>
+          )}
           {/* URLs */}
-          <div className="space-y-2">
-            <label
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              htmlFor=":Rmeflpukv9u6ja:-form-item"
-            >
-              URLs
-            </label>
-            <p
-              id=":Rmeflpukv9u6ja:-form-item-description"
-              className="text-[0.8rem] text-muted-foreground"
-            >
-              Add link to your website
-            </p>
-            <FormField
-              control={form.control}
-              name="website"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                      placeholder="https://shadcn.com"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <p
-              id=":Rmeflpukv9u6ja:-form-item-description"
-              className="text-[0.8rem] text-muted-foreground"
-            >
-              Add link to your Company Profile
-            </p>
-
-            <FormField
-              control={form.control}
-              name="companyProfile"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                      placeholder="https://shadcn.com"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          {/* Website */}
+          {user.role == "advertiser" && (
+            <>
+              <div className="space-y-2">
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor=":Rmeflpukv9u6ja:-form-item"
+                >
+                  URLs
+                </label>
+                <p
+                  id=":Rmeflpukv9u6ja:-form-item-description"
+                  className="text-[0.8rem] text-muted-foreground"
+                >
+                  Add link to your website
+                </p>
+                <FormField
+                  control={form.control}
+                  name="website"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                          placeholder="https://shadcn.com"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <p
+                  id=":Rmeflpukv9u6ja:-form-item-description"
+                  className="text-[0.8rem] text-muted-foreground"
+                >
+                  Add link to your Company Profile
+                </p>
+                {/* Company Profile */}
+                <FormField
+                  control={form.control}
+                  name="companyProfile"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                          placeholder="https://shadcn.com"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </>
+          )}
           <button
             className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
             type="submit"

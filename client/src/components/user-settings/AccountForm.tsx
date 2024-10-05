@@ -22,11 +22,11 @@ const user = {
 
 const passwordValidator = z.object({
   oldPassword: z
-  .string()
-  .refine((val) => val === user.password, {
-    message: "Old password does not match.",
-  })
-  .optional(),
+    .string()
+    .refine((val) => val === user.password, {
+      message: "Old password does not match.",
+    })
+    .optional(),
 });
 
 const accountFormSchema = z.object({
