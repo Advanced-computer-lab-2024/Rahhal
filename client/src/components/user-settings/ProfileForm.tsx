@@ -1,134 +1,358 @@
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@/hooks/use-toast";
+
+const profileFormSchema = z.object({
+  firstName: z
+    .string()
+    .min(2, {
+      message: "First Name must be at least 2 characters.",
+    })
+    .max(30, {
+      message: "First Name must not be longer than 30 characters.",
+    }),
+  lastName: z
+    .string()
+    .min(2, {
+      message: "Last Name must be at least 2 characters.",
+    })
+    .max(30, {
+      message: "Last Name must not be longer than 30 characters.",
+    }),
+  companyName: z
+    .string()
+    .min(2, {
+      message: "Last Name must be at least 2 characters.",
+    })
+    .max(30, {
+      message: "Last Name must not be longer than 30 characters.",
+    }),
+  role: z.string().min(2).max(30),
+  description: z.string().max(160).min(4),
+  previousWork: z.string().max(160).min(4),
+  job: z.string().max(160).min(4),
+  yearsOfExperience: z.number().min(0).max(100),
+  phoneNumber: z
+    .string()
+    .min(13, { message: "Phone number minimum length must be 13 digits." })
+    .max(20, { message: "Phone number maximum length must be 20 digits." })
+    .regex(/^\+?[1-9]\d{1,14}$/, { message: "Please enter a valid phone number." }),
+  hotline: z
+    .string()
+    .min(5, { message: "Hotline minimum length must be 5 digits." })
+    .regex(/^\+?[1-9]\d{1,14}$/, { message: "Please enter a valid hotline." }),
+  website: z.string().url(),
+  companyProfile: z.string().url(),
+  addresses: z.string().array(),
+});
+
+type ProfileFormValues = z.infer<typeof profileFormSchema>;
+
 export default function ProfileForm() {
+  const form = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileFormSchema),
+    mode: "onChange",
+  });
+
+  function onSubmit(data: ProfileFormValues) {
+    toast({
+      title: "You submitted the following values:",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    });
+  }
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium">Profile</h3>
-        <p className="text-sm text-muted-foreground">
-          This is how others will see you on the site.
-        </p>
-      </div>
-      <div
-        data-orientation="horizontal"
-        role="none"
-        className="shrink-0 bg-border h-[1px] w-full"
-      ></div>
-      <form className="space-y-8">
-        <div className="space-y-2">
-          <label
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            htmlFor=":Ruflpukv9u6ja:-form-item"
-          >
-            Username
-          </label>
-          <input
-            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-            placeholder="shadcn"
-            id=":Ruflpukv9u6ja:-form-item"
-            aria-describedby=":Ruflpukv9u6ja:-form-item-description"
-            aria-invalid="false"
-            name="username"
-          />
-          <p
-            id=":Ruflpukv9u6ja:-form-item-description"
-            className="text-[0.8rem] text-muted-foreground"
-          >
-            This is your public display name. It can be your real name or a pseudonym. You can only
-            change this once every 30 days.
-          </p>
-        </div>
-        <div className="space-y-2">
-          <label
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            htmlFor=":R1eflpukv9u6ja:-form-item"
-          >
-            Email
-          </label>
-          <button
-            type="button"
-            role="combobox"
-            aria-controls="radix-:Rleflpukv9u6ja:"
-            aria-expanded="false"
-            aria-autocomplete="none"
-            dir="ltr"
-            data-state="closed"
-            data-placeholder=""
-            className="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&amp;>span]:line-clamp-1"
-            id=":R1eflpukv9u6ja:-form-item"
-            aria-describedby=":R1eflpukv9u6ja:-form-item-description"
-            aria-invalid="false"
-          >
-            <span style={{ pointerEvents: "none" }}>Select a verified email to display</span>
-            <svg
-              width="15"
-              height="15"
-              viewBox="0 0 15 15"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 opacity-50"
-              aria-hidden="true"
-            >
-              <path
-                d="M4.93179 5.43179C4.75605 5.60753 4.75605 5.89245 4.93179 6.06819C5.10753 6.24392 5.39245 6.24392 5.56819 6.06819L7.49999 4.13638L9.43179 6.06819C9.60753 6.24392 9.89245 6.24392 10.0682 6.06819C10.2439 5.89245 10.2439 5.60753 10.0682 5.43179L7.81819 3.18179C7.73379 3.0974 7.61933 3.04999 7.49999 3.04999C7.38064 3.04999 7.26618 3.0974 7.18179 3.18179L4.93179 5.43179ZM10.0682 9.56819C10.2439 9.39245 10.2439 9.10753 10.0682 8.93179C9.89245 8.75606 9.60753 8.75606 9.43179 8.93179L7.49999 10.8636L5.56819 8.93179C5.39245 8.75606 5.10753 8.75606 4.93179 8.93179C4.75605 9.10753 4.75605 9.39245 4.93179 9.56819L7.18179 11.8182C7.35753 11.9939 7.64245 11.9939 7.81819 11.8182L10.0682 9.56819Z"
-                fill="currentColor"
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
-          </button>
-          <select
-            aria-hidden="true"
-            tabIndex={-1}
-            style={{
-              position: "absolute",
-              border: "0px",
-              width: "1px",
-              height: "1px",
-              padding: "0px",
-              margin: "-1px",
-              overflow: "hidden",
-              clip: "rect(0px, 0px, 0px, 0px)",
-              whiteSpace: "nowrap",
-              overflowWrap: "normal",
-            }}
-          >
-            <option value=""></option>
-            <option value="m@example.com">m@example.com</option>
-            <option value="m@google.com">m@google.com</option>
-            <option value="m@support.com">m@support.com</option>
-          </select>
-          <p
-            id=":R1eflpukv9u6ja:-form-item-description"
-            className="text-[0.8rem] text-muted-foreground"
-          >
-            You can manage verified email addresses in your{" "}
-            <a href="/examples/forms">email settings</a>.
-          </p>
-        </div>
-        <div className="space-y-2">
-          <label
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            htmlFor=":R1uflpukv9u6ja:-form-item"
-          >
-            Bio
-          </label>
-          <textarea
-            className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
-            placeholder="Tell us a little bit about yourself"
-            name="bio"
-            id=":R1uflpukv9u6ja:-form-item"
-            aria-describedby=":R1uflpukv9u6ja:-form-item-description"
-            aria-invalid="false"
-          >
-            I own a computer.
-          </textarea>
-          <p
-            id=":R1uflpukv9u6ja:-form-item-description"
-            className="text-[0.8rem] text-muted-foreground"
-          >
-            You can <span>@mention</span> other users and organizations to link to them.
-          </p>
-        </div>
-        <div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-medium">Profile</h3>
+            <p className="text-sm text-muted-foreground">
+              This is how others will see you on the site.
+            </p>
+          </div>
+          <div
+            data-orientation="horizontal"
+            role="none"
+            className="shrink-0 bg-border h-[1px] w-full"
+          ></div>
+          {/* First/Last Name */}
+          <div className="grid grid-cols-12 gap-4">
+            {/* First Name */}
+            <div className="col-span-6 space-y-2">
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>First Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="john" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            {/* Last Name */}
+            <div className="col-span-6 space-y-2">
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+          {/* Company Name */}
+          <div className="space-y-2">
+            <FormField
+              control={form.control}
+              name="companyName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Company Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Resala" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {/* Role */}
+          <div className="space-y-2">
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <FormControl>
+                    <Input placeholder="tourist" disabled {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {/* Phone Number */}
+          <div className="space-y-2">
+            <FormField
+              control={form.control}
+              name="phoneNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="+20123456789"
+                      {...field}
+                      maxLength={20}
+                      onKeyDown={(e) => {
+                        if (!/[0-9+]/.test(e.key) && e.key !== "Backspace") {
+                          e.preventDefault();
+                        }
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {/* Hotline */}
+          <div className="space-y-2">
+            <FormField
+              control={form.control}
+              name="hotline"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Hotline</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="19991"
+                      {...field}
+                      maxLength={5}
+                      onKeyDown={(e) => {
+                        if (!/[0-9+]/.test(e.key) && e.key !== "Backspace") {
+                          e.preventDefault();
+                        }
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {/* Description */}
+          <div className="space-y-2">
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <textarea
+                      className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                      placeholder="I sell tomatoes"
+                      {...field}
+                      name="description"
+                    ></textarea>
+                    {/* <Input
+                  placeholder="I sell tomatoes"
+                  {...field}
+                  /> */}
+                  </FormControl>
+                  <FormDescription>
+                    Please describe what you are type of company you are and what you are selling
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {/* Job */}
+          <div className="space-y-2">
+            <FormField
+              control={form.control}
+              name="job"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Job</FormLabel>
+                  <FormControl>
+                    <Input placeholder="developer" {...field} />
+                    {/* <Input
+                  placeholder="I sell tomatoes"
+                  {...field}
+                  /> */}
+                  </FormControl>
+                  <FormDescription>Please state your job</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {/* Previous Work */}
+          <div className="space-y-2">
+            <FormField
+              control={form.control}
+              name="previousWork"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Previous Work</FormLabel>
+                  <FormControl>
+                    <textarea
+                      className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                      placeholder="I worked at Second Cup"
+                      {...field}
+                      name="previousWork"
+                    ></textarea>
+                    {/* <Input
+                  placeholder="I sell tomatoes"
+                  {...field}
+                  /> */}
+                  </FormControl>
+                  <FormDescription>Please describe your previous work</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {/* Years Of Experience */}
+          <div className="space-y-2">
+            <FormField
+              control={form.control}
+              name="yearsOfExperience"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Years Of Experience</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                      {...field}
+                      type="number"
+                      defaultValue={0}
+                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {/* Addresses */}
+          <div className="space-y-2">
+            <FormField
+              control={form.control}
+              name="addresses"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Addresses</FormLabel>
+                  <FormControl>
+                    <div>
+                      {(field.value || []).map((address, index) => (
+                        <div key={index} className="flex items-center space-x-2 mb-4">
+                          <Input
+                            placeholder={`Address ${index + 1}`}
+                            value={address}
+                            onChange={(e) => {
+                              const newAddresses = [...field.value];
+                              newAddresses[index] = e.target.value;
+                              field.onChange(newAddresses);
+                            }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newAddresses = field.value.filter((_, i) => i !== index);
+                              field.onChange(newAddresses);
+                            }}
+                            className="text-red-500"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => field.onChange([...(field.value || []), ""])}
+                        className="mt-2 text-blue-500"
+                      >
+                        Add Address
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {/* URLs */}
           <div className="space-y-2">
             <label
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -140,53 +364,56 @@ export default function ProfileForm() {
               id=":Rmeflpukv9u6ja:-form-item-description"
               className="text-[0.8rem] text-muted-foreground"
             >
-              Add links to your website, blog, or social media profiles.
+              Add link to your website
             </p>
-            <input
-              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-              id=":Rmeflpukv9u6ja:-form-item"
-              aria-describedby=":Rmeflpukv9u6ja:-form-item-description"
-              aria-invalid="false"
-              name="urls.0.value"
-              value="https://shadcn.com"
+            <FormField
+              control={form.control}
+              name="website"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                      placeholder="https://shadcn.com"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="space-y-2">
-            <label
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sr-only"
-              htmlFor=":R16eflpukv9u6ja:-form-item"
-            >
-              URLs
-            </label>
             <p
-              id=":R16eflpukv9u6ja:-form-item-description"
-              className="text-[0.8rem] text-muted-foreground sr-only"
+              id=":Rmeflpukv9u6ja:-form-item-description"
+              className="text-[0.8rem] text-muted-foreground"
             >
-              Add links to your website, blog, or social media profiles.
+              Add link to your Company Profile
             </p>
-            <input
-              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-              id=":R16eflpukv9u6ja:-form-item"
-              aria-describedby=":R16eflpukv9u6ja:-form-item-description"
-              aria-invalid="false"
-              name="urls.1.value"
-              value="http://twitter.com/shadcn"
+
+            <FormField
+              control={form.control}
+              name="companyProfile"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                      placeholder="https://shadcn.com"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
           </div>
           <button
-            type="button"
-            className="inline-flex items-center justify-center whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3 text-xs mt-2"
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
+            type="submit"
           >
-            Add URL
+            Update profile
           </button>
         </div>
-        <button
-          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
-          type="submit"
-        >
-          Update profile
-        </button>
       </form>
-    </div>
+    </Form>
   );
 }
