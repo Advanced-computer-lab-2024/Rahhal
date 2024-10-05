@@ -1,5 +1,7 @@
-import * as activitiesValidator from "@/database/validators/activities-validator";
 import mongoose from "mongoose";
+import type { IRating } from "@/database/shared";
+import { ratingSchema, validateRatings } from "@/database/shared";
+import * as activitiesValidator from "@/database/validators/activities-validator";
 
 // Define the schema for the activities collection
 export interface IActivity {
@@ -11,11 +13,11 @@ export interface IActivity {
   location: { longitude: number; latitude: number };
   price: number | { type: string; price: number }[];
   category: mongoose.Schema.Types.ObjectId;
-  tags: string[];
+  tags?: string[];
   specialDiscount: number;
   isBookingOpen: boolean;
   preferenceTags: mongoose.Schema.Types.ObjectId[];
-  ratings: number[];
+  ratings?: IRating[];
   owner: string;
 }
 
@@ -47,10 +49,9 @@ const activitySchema = new mongoose.Schema<IActivity>({
   isBookingOpen: { type: Boolean, required: true },
   preferenceTags: { type: [mongoose.Schema.Types.ObjectId], ref: "PreferenceTag", required: true },
   ratings: {
-    type: [Number],
-    required: true,
+    type: [ratingSchema],
     validate: {
-      validator: activitiesValidator.validateRating,
+      validator: validateRatings,
       message: "Invalid rating format, must be a number between 0 and 5",
     },
   },
