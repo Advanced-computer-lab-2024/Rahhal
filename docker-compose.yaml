@@ -5,11 +5,11 @@ services:
       - "5173:5173"
     volumes:
       - ./client:/usr/src/app
-      - /usr/src/app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=${CHOKIDAR_USEPOLLING:-false}
-    depends_on:
+    depends_on: 
       - backend
+    command : tail -f /dev/null
   backend:
     build: ./api-gateway
     ports:
