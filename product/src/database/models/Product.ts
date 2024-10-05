@@ -3,7 +3,7 @@ import * as productValidator from "../validators/products-validator";
 import { CONSTANTS } from "../../utils/constants";
 
 export interface IProduct {
-  product_name: string;
+  name: string;
   picture: string;
   price: number;
   description: string;
@@ -13,7 +13,7 @@ export interface IProduct {
 }
 
 const productSchema = new mongoose.Schema<IProduct>({
-  product_name: { type: String, required: true },
+  name: { type: String, required: true },
   picture: { type: String, required: true },
   price: {
     type: Number,
