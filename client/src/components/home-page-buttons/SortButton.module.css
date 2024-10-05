@@ -11,7 +11,7 @@
     border-radius: 5px;
     cursor: pointer;
     font-size: 1.0rem;
-    max-width: 200px;
+    min-width: 140px;
     text-align: center;
     font-weight: 500;
   }
@@ -20,9 +20,16 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
+
   }
   
 
+  .dropdown-container button:hover{
+    background-color: #f2f2f2;
+    border-radius: 5px;
+  }
+  
   
   .dropdown-list {
     position: absolute;
@@ -53,13 +60,13 @@
     padding: 10px;
     cursor: pointer;
     text-align: left;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     line-height: 0.9;
 
   }
   
   .dropdown-list li:hover {
-    text-decoration: underline;
+    background-color: #f2f2f2;
   }
   
   @media (max-width: 600px) {
