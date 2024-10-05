@@ -8,7 +8,7 @@ export interface IActivity {
   time: Date;
   images: string[];
   location: { longitude: number; latitude: number };
-  price: number | { min: number; max: number };
+  price: number | { type: string; price: number }[];
   category: string;
   tags: string[];
   specialDiscounts: string[];
@@ -35,7 +35,8 @@ const activitySchema = new mongoose.Schema<IActivity>({
     required: true,
     validate: {
       validator: activitiesValidator.validatePrice,
-      message: "Invalid price format, must be a number or an object { min: number, max: number }",
+      message:
+        "Invalid price format, must be a number or an array of objects with a type and price",
     },
   },
   category: { type: String, required: true },
