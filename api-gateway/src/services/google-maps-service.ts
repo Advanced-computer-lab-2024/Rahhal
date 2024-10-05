@@ -33,7 +33,7 @@ export async function getPlaceDetails(placeId: string) {
   console.log(data.results[FIRST_RESULT]);
   const { formatted_address, geometry } = data.results[FIRST_RESULT];
   return {
-    formattedAddress: formatted_address,
+    description: formatted_address,
     location: geometry.location,
   };
 }
