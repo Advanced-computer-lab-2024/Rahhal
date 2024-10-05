@@ -42,7 +42,7 @@ const activitySchema = new mongoose.Schema<IActivity>({
   tags: { type: [String], required: true },
   specialDiscounts: { type: [String], required: true },
   isBookingOpen: { type: Boolean, required: true },
-  preferenceTags: { type: [String], required: true },
+  preferenceTags: { type: [String], required: false },
   ratings: {
     type: [Number],
     required: true,
@@ -51,7 +51,7 @@ const activitySchema = new mongoose.Schema<IActivity>({
       message: "Invalid rating format, must be a number between 0 and 5",
     },
   },
-  owner: { type: String, required: true },
+  owner: { type: mongoose.Schema.Types.ObjectId, required: true },
 });
 
 const Activity = mongoose.model<IActivity>("Activity", activitySchema);
