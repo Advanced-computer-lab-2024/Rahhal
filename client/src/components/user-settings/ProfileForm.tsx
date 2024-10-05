@@ -54,7 +54,7 @@ const profileFormSchema = z.object({
     .regex(/^\+?[1-9]\d{1,14}$/, { message: "Please enter a valid hotline." }),
   website: z.string().url(),
   companyProfile: z.string().url(),
-  addresses: z.string().array().min(1, { message: "Please enter at least one address." }),
+  addresses: z.string().array().optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -321,7 +321,7 @@ export default function ProfileForm() {
                             placeholder={`Address ${index + 1}`}
                             value={address}
                             onChange={(e) => {
-                              const newAddresses = [...field.value];
+                              const newAddresses = [...(field.value || [])];
                               newAddresses[index] = e.target.value;
                               field.onChange(newAddresses);
                             }}
@@ -329,7 +329,7 @@ export default function ProfileForm() {
                           <button
                             type="button"
                             onClick={() => {
-                              const newAddresses = field.value.filter((_, i) => i !== index);
+                              const newAddresses = (field.value || []).filter((_, i) => i !== index);
                               field.onChange(newAddresses);
                             }}
                             className="text-red-500"
