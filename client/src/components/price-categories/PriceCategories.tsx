@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { Plus, Trash2, Edit2, Check, X } from 'lucide-react';
+import  { useState } from 'react';
+import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import PriceCategoryEdit from './PriceCategoryEdit';
+import PriceCategoryNonEdit from './PriceCategoryNonEdit';
 
 const PriceCategories = () => {
   const [ticketTypes, setTicketTypes] = useState([
@@ -62,36 +64,18 @@ const PriceCategories = () => {
           {ticketTypes.map((ticket) => (
             <div key={ticket.id} className="flex justify-between items-center">
               {editingId === ticket.id ? (
-                <>
-                  <Input
-                    value={editType}
-                    onChange={(e) => setEditType(e.target.value)}
-                    className="w-1/3 mr-2"
-                  />
-                  <Input
-                    type="number"
-                    value={editPrice}
-                    onChange={(e) => setEditPrice(e.target.value)}
-                    className="w-1/3 mr-2"
-                  />
-                  <Button variant="ghost" size="icon" onClick={saveEdit}>
-                    <Check className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" onClick={cancelEditing}>
-                    <X className="h-4 w-4" />
-                  </Button>
-                </>
+                
+                  <PriceCategoryEdit
+                    editType={editType}
+                    setEditType={setEditType}
+                    editPrice={editPrice}
+                    setEditPrice={setEditPrice}
+                    saveEdit={saveEdit}
+                    cancelEditing={cancelEditing} />
+                
               ) : (
                 <>
-                  <span>{ticket.type}: ${ticket.price.toFixed(2)}</span>
-                  <div>
-                    <Button variant="ghost" size="icon" onClick={() => startEditing(ticket)}>
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => removeTicketType(ticket.id)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  <PriceCategoryNonEdit ticket={ticket} startEditing={startEditing} removeTicketType={removeTicketType} />
                 </>
               )}
             </div>
