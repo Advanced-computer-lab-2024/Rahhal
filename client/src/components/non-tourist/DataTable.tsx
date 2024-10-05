@@ -11,7 +11,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { columns, data } from "@/components/non-tourist/example-population";
+import { ColumnDef } from "@tanstack/react-table";
 
 import {
   Table,
@@ -25,7 +25,12 @@ import { cn } from "@/lib/utils";
 import { DataTableViewOptions } from "./DataTableViewOptions";
 import { DataTablePagination } from "./DataTablePagination";
 
-export function DataTable() {
+interface DataTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+}
+
+export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
