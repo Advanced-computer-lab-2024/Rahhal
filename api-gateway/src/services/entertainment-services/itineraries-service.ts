@@ -10,21 +10,21 @@ const axiosInstance = axios.create({
 
 // Itineraries service calls
 export async function getAllItineraries() {
-  return await axiosInstance.get("/itinerary");
+  return await axiosInstance.get("/itineraries");
 }
 
 export async function getItineraryById(id: string) {
-  return await axiosInstance.get(`/itinerary/${id}`);
+  return await axiosInstance.get(`/itineraries/${id}`);
 }
 
 export async function createItinerary(body: string) {
-  return await axiosInstance.post("/itinerary", body);
+  return await axiosInstance.post("/itineraries", body);
 }
 
 export async function updateItinerary(id: string, body: string) {
-  return await axiosInstance.patch(`/itinerary/${id}`, body);
+  return await axiosInstance.patch(`/itineraries/${id}`, body);
 }
 
 export async function deleteItinerary(id: string) {
-  return await axiosInstance.delete(`/itinerary/${id}`);
+  return await axiosInstance.delete(`/itineraries/${id}`);
 }

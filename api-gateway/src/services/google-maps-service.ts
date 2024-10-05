@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { STATUS_CODES } from '@/utils/constants'
 import dotenv from "dotenv";
 
 dotenv.config();
