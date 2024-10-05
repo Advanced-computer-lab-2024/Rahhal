@@ -3,12 +3,12 @@ import type { IItinerary } from "../models/Itinerary";
 
 // Get all itineraries
 export async function getAllItineraries() {
-  return await Itinary.find();
+  return await Itinary.find().populate("owner");
 }
 
 // Get itinerary by id
 export async function getItineraryById(id: string) {
-  return await Itinary.findById(id);
+  return await Itinary.findById(id).populate("owner");
 }
 
 // Create a new itinerary

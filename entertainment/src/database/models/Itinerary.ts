@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import * as itineraryValidator from "../validators/itineraries-validator";
 
 export interface IItinerary {
@@ -17,6 +17,7 @@ export interface IItinerary {
   ratings: number[];
   preferenceTags: string[];
   category: string;
+  owner: Schema.Types.ObjectId;
 }
 
 const itinerarySchema = new mongoose.Schema<IItinerary>({
@@ -81,6 +82,8 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
   },
   preferenceTags: { type: [String], required: true },
   category: { type: String, required: true },
+  owner: { type: Schema.Types.ObjectId,ref: 'User', required: true },
+  
 });
 
 const Itinerary = mongoose.model<IItinerary>("Itinerary", itinerarySchema);
