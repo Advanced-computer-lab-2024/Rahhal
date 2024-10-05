@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 import * as itineraryValidator from "../validators/itineraries-validator";
 
 export interface IItinerary {
@@ -80,7 +80,7 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
       message: "Invalid rating format, must be a number between 0 and 5",
     },
   },
-  preferenceTags: { type: [mongoose.Types.ObjectId], ref: "PreferenceTag", required: false},
+  preferenceTags: { type: [mongoose.Types.ObjectId], ref: "PreferenceTag", required: false },
   category: { type: mongoose.Types.ObjectId, ref: "Category", required: true },
   owner: { type: String, required: true },
 });
