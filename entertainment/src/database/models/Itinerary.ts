@@ -7,15 +7,16 @@ export interface IItinerary {
   activities: string[];
   locations: [{ longitude: number; latitude: number }];
   timeline: string;
-  duaration_of_activities: string[];
+  duarationOfActivities: string[];
   language: string;
-  tour_price: number | { min: number; max: number };
-  available_dates_time: { Date: Date; Time: Date }[];
+  tourPrice: number | { min: number; max: number };
+  availableDatesTime: { Date: Date; Time: Date }[];
   accessibility: string;
-  pick_up_location: { longitude: number; latitude: number };
-  drop_off_location: { longitude: number; latitude: number };
+  pickUpLocation: { longitude: number; latitude: number };
+  dropOffLocation: { longitude: number; latitude: number };
   ratings: number[];
-  preference_tags: string[];
+  preferenceTags: string[];
+  category: string;
 }
 
 const itinerarySchema = new mongoose.Schema<IItinerary>({
@@ -36,9 +37,9 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
     ],
   },
   timeline: { type: String, required: true },
-  duaration_of_activities: { type: [String], required: true },
+  duarationOfActivities: { type: [String], required: true },
   language: { type: String, required: true },
-  tour_price: {
+  tourPrice: {
     type: mongoose.Schema.Types.Mixed,
     required: true,
     validate: {
@@ -46,7 +47,7 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
       message: "Invalid price format, must be a number or an object { min: number, max: number }",
     },
   },
-  available_dates_time: {
+  availableDatesTime: {
     type: [
       {
         Date: { type: Date, required: true },
@@ -56,14 +57,14 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
     required: true,
   },
   accessibility: { type: String, required: true },
-  pick_up_location: {
+  pickUpLocation: {
     type: {
       longitude: { type: Number, required: true },
       latitude: { type: Number, required: true },
     },
     required: true,
   },
-  drop_off_location: {
+  dropOffLocation: {
     type: {
       longitude: { type: Number, required: true },
       latitude: { type: Number, required: true },
@@ -78,7 +79,8 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
       message: "Invalid rating format, must be a number between 0 and 5",
     },
   },
-  preference_tags: { type: [String], required: true },
+  preferenceTags: { type: [String], required: true },
+  category: { type: String, required: true },
 });
 
 const Itinerary = mongoose.model<IItinerary>("Itinerary", itinerarySchema);
