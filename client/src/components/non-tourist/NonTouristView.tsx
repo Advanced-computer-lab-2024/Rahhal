@@ -1,14 +1,7 @@
-import GoogleMap from "@/components/google-maps/GoogleMap";
-import PlacesAutoComplete from "@/components/google-maps/PlacesAutoComplete";
+import LocationMap from "@/components/google-maps/LocationMap";
 
 function NonTouristView() {
-  return (
-    <>
-      {/* <DataTable /> */}
-      <PlacesAutoComplete />
-      <GoogleMap />
-    </>
-  );
+  return <LocationMap />;
 }
 
 export default NonTouristView;

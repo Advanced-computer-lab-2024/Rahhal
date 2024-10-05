@@ -32,14 +32,16 @@ export default function PlacesAutoComplete() {
 
   useEffect(() => {
     const fetchPredictions = async () => {
-      const predictions = await fetchData(debouncedInput);
-      setPredictions(predictions ?? []);
+      if (debouncedInput) {
+        const predictions = await fetchData(debouncedInput);
+        setPredictions(predictions ?? []);
+      }
     };
     fetchPredictions();
   }, [debouncedInput]);
 
   return (
-    <Command className="rounded-lg border shadow-md md:min-w-[450px]">
+    <Command className="rounded-lg border shadow-md w-80 m-1">
       <CommandInput
         placeholder="Start typing to search..."
         value={input}

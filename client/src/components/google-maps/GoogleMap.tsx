@@ -9,6 +9,45 @@ import {
 } from "@vis.gl/react-google-maps";
 import { MapPin } from "lucide-react";
 import { useState } from "react";
+import PlacesAutoComplete from "./PlacesAutoComplete";
+
+interface GoogleMapProps {
+  isEditable: boolean;
+  initialLocation: { lat: number; lng: number };
+}
+
+function GoogleMap({ isEditable, initialLocation }: GoogleMapProps) {
+  const [location, setLocation] = useState(initialLocation);
+
+  return (
+    <APIProvider apiKey="AIzaSyDH66WmNegr3ISHqJMqAFGfmg9eP3jI59g" language="en">
+      <Map
+        className="h-96"
+        defaultZoom={13}
+        defaultCenter={{ lat: -33.860664, lng: 151.208138 }}
+        onCameraChanged={(ev: MapCameraChangedEvent) => {
+          setLocation(ev.detail.center);
+        }}
+        gestureHandling={isEditable ? "greedy" : "none"}
+        clickableIcons={isEditable}
+        streetViewControl={false}
+        mapTypeControl={false}
+      >
+        <Marker position={location} />
+        {isEditable && (
+          <>
+            <MapControl position={ControlPosition.TOP_RIGHT}>
+              <CurrentLocationControl />
+            </MapControl>
+            <MapControl position={ControlPosition.TOP_LEFT}>
+              <PlacesAutoComplete />
+            </MapControl>
+          </>
+        )}
+      </Map>
+    </APIProvider>
+  );
+}
 
 function CurrentLocationControl() {
   const map = useMap();
@@ -40,31 +79,6 @@ function CurrentLocationControl() {
     >
       <MapPin className="w-8 h-8 text-gray-500" />
     </button>
-  );
-}
-
-function GoogleMap() {
-  const [cords, setCords] = useState({ lat: -33.860664, lng: 151.208138 });
-
-  return (
-    <APIProvider apiKey="AIzaSyDH66WmNegr3ISHqJMqAFGfmg9eP3jI59g" language="en">
-      <Map
-        style={{ width: "100%", height: "100%" }}
-        defaultZoom={13}
-        defaultCenter={{ lat: -33.860664, lng: 151.208138 }}
-        onCameraChanged={(ev: MapCameraChangedEvent) => {
-          setCords(ev.detail.center);
-        }}
-        gestureHandling={"greedy"}
-        streetViewControl={false}
-        mapTypeControl={false}
-      >
-        <Marker position={cords} />
-        <MapControl position={ControlPosition.TOP_RIGHT}>
-          <CurrentLocationControl />
-        </MapControl>
-      </Map>
-    </APIProvider>
   );
 }
 
