@@ -12,4 +12,4 @@ const HistoricalTagsSchema = new mongoose.Schema({
   }
 });
 
-export const HistoricalTagsModel = mongoose.model<IHistoricalTag>("HistoricalTags",HistoricalTagsSchema);
+export const HistoricalTagsModel = mongoose.model<IHistoricalTag>("HistoricalTag",HistoricalTagsSchema);
