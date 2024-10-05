@@ -12,11 +12,11 @@ export interface IActivity {
   images: string[];
   location: { longitude: number; latitude: number };
   price: number | { type: string; price: number }[];
-  category: mongoose.Schema.Types.ObjectId;
+  category?: mongoose.Schema.Types.ObjectId;
   tags?: string[];
-  specialDiscount: number;
+  specialDiscount?: number;
   isBookingOpen: boolean;
-  preferenceTags: mongoose.Schema.Types.ObjectId[];
+  preferenceTags?: mongoose.Schema.Types.ObjectId[];
   ratings?: IRating[];
   owner: string;
 }
@@ -43,11 +43,11 @@ const activitySchema = new mongoose.Schema<IActivity>({
         "Invalid price format, must be a number or an array of objects with a type and price",
     },
   },
-  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
-  tags: { type: [String], required: true },
-  specialDiscount: { type: Number, required: true },
+  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
+  tags: { type: [String] },
+  specialDiscount: { type: Number},
   isBookingOpen: { type: Boolean, required: true },
-  preferenceTags: { type: [mongoose.Schema.Types.ObjectId], ref: "PreferenceTag", required: true },
+  preferenceTags: { type: [mongoose.Schema.Types.ObjectId], ref: "PreferenceTag" },
   ratings: {
     type: [ratingSchema],
     validate: {

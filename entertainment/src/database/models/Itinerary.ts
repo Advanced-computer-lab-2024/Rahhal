@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import type { IRating } from "@/database/shared";
-import { ratingSchema, validateRatings } from "@/database/shared";
+import type { IRating } from "../../database/shared";
+import { ratingSchema, validateRatings } from "../../database/shared";
 import * as itineraryValidator from "../validators/itineraries-validator";
 
 export interface IItinerary {
@@ -17,8 +17,8 @@ export interface IItinerary {
   pickUpLocation: { longitude: number; latitude: number };
   dropOffLocation: { longitude: number; latitude: number };
   ratings?: IRating[];
-  preferenceTags: mongoose.Schema.Types.ObjectId[];
-  category: mongoose.Schema.Types.ObjectId;
+  preferenceTags?: mongoose.Schema.Types.ObjectId[];
+  category?: mongoose.Schema.Types.ObjectId;
   owner: string;
 }
 
@@ -81,8 +81,8 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
       message: "Invalid rating format, must be a number between 0 and 5",
     },
   },
-  preferenceTags: { type: [mongoose.Schema.Types.ObjectId], ref: "PreferenceTag", required: false },
-  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
+  preferenceTags: { type: [mongoose.Schema.Types.ObjectId], ref: "PreferenceTag" },
+  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category"},
   owner: { type: String, required: true },
 });
 
