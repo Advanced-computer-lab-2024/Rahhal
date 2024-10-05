@@ -1,8 +1,8 @@
 import express from "express";
-import morgan from 'morgan';
+import morgan from "morgan";
 import userRoutes from "@/api/routes/user-routes";
 import productRoutes from "@/api/routes/product-routes";
-import googleMapsRoutes from "@/api/routes/google-maps-routes"
+import googleMapsRoutes from "@/api/routes/google-maps-routes";
 import entertainmentRoutes from "@/api/routes/enterainment-routes";
 
 const app = express();
