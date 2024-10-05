@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { ChevronRight } from "lucide-react";
+import { ArrowUpDown, ChevronRight } from "lucide-react";
 import { ActivitiesModal } from "@/components/non-tourist/ActivityModal";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 
 // Activity type
@@ -10,15 +9,9 @@ import { Badge } from "@/components/ui/badge";
 export type Activity = {
   id: string;
   name: string;
-  date: Date;
-  time: Date;
-  location: { longitude: number; latitude: number };
   price: number | { min: number; max: number };
   category: string;
   tags: string[];
-  specialDiscounts: string[];
-  isBookingOpen: boolean;
-  preferenceTags: string[];
   ratings: number[];
 };
 
@@ -36,7 +29,17 @@ export const activitiesColumns: ColumnDef<Activity>[] = [
   },
   {
     accessorKey: "price",
-    header: "price",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Price
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => <div className="capitalize">{row.getValue("price")}</div>,
   },
   {
@@ -52,32 +55,20 @@ export const activitiesColumns: ColumnDef<Activity>[] = [
       </div>
     ),
   },
-  {
-    accessorKey: "specialDiscounts",
-    header: "specialDiscounts",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("specialDiscounts")}</div>,
-  },
-  {
-    accessorKey: "isBookingOpen",
-    header: "isBookingOpen",
-    cell: ({ row }) => <Checkbox checked={row.getValue("isBookingOpen")} />,
-  },
-  {
-    accessorKey: "preferenceTags",
-    header: "preferenceTags",
-    cell: ({ row }) => (
-      <div>
-        {(row.getValue("preferenceTags") as string[]).map((tag) => (
-          <Badge key={tag} variant="default" className="mr-1">
-            {tag}
-          </Badge>
-        ))}
-      </div>
-    ),
-  },
+
   {
     accessorKey: "ratings",
-    header: "ratings",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Ratings
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => <div className="capitalize">{row.getValue("ratings")}</div>,
   },
   {
