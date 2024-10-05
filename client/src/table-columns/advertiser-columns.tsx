@@ -9,7 +9,13 @@ import { Badge } from "@/components/ui/badge";
 export type Activity = {
   id: string;
   name: string;
-  price: number | { min: number; max: number };
+  time: Date;
+  date: Date;
+  location: { longitude: number; latitude: number };
+  specialDiscounts: string[];
+  preferenceTags: string[];
+  isBookingOpen: boolean;
+  price: number | { type: string; price: number }[];
   category: string;
   tags: string[];
   ratings: number[];

@@ -3,6 +3,9 @@ import { DataTable } from "./DataTable";
 import { activitiesColumns, Activity } from "../../table-columns/advertiser-columns";
 import axios from "axios";
 
+import DataTableAddButton from "./DataTableAddButton";
+import { ActivitiesModal } from "./ActivityModal";
+
 const ENTERTAINMENT_SERVICE_URL = "http://localhost:3003/activities";
 
 // fetch data from the server
@@ -20,7 +23,13 @@ function AdvertiserView() {
 
   return (
     <>
-      <DataTable data={activities} columns={activitiesColumns} />
+      <DataTable
+        data={activities}
+        columns={activitiesColumns}
+        newRowModal={
+          <ActivitiesModal activityData={undefined} dialogTrigger={<DataTableAddButton />} />
+        }
+      />
     </>
   );
 }
