@@ -21,7 +21,7 @@ export function GenericModal({ title, description, dialogTrigger, children }: Ge
   return (
     <Dialog>
       <DialogTrigger asChild>{dialogTrigger}</DialogTrigger>
-      <DialogContent className="width-full max-h-[80%] rounded-md border p-4">
+      <DialogContent className="width-full max-h-[80%] rounded-md border p-4 overflow-auto">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
