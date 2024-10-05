@@ -2,18 +2,22 @@ import CardStyles from "./EntertainmentCard.module.css";
 import { IoMdStar } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
 import { GrLanguage } from "react-icons/gr";
+
+
 interface EntertainmentCardProps {
   image: string;
   title: string;
-  price?: number;
+  price: number | { min: number; max: number };
   rating: number;
-  location?: string;
+  location?: { longitude: number; latitude: number };
   language?: string[];
   openingTime?: string;
   availability?: boolean;
   seller?: string;
 }
-
+const isPriceRange = (price: number | { min: number; max: number }): price is { min: number; max: number } => {
+  return typeof price === 'object' && price !== null && 'min' in price && 'max' in price;
+};
 const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
   image,
   title,
@@ -46,7 +50,7 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
                   alignItems: "center",
                 }}
               >
-                <FaLocationDot style={{ fontSize: "0.8rem", marginRight: "5px" }} /> {location}
+                <FaLocationDot style={{ fontSize: "0.8rem", marginRight: "5px" }} /> {location.latitude + " " + location.longitude}
               </p>
             )}
           </div>
@@ -56,6 +60,7 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
             <IoMdStar style={{ fontSize: "0.8rem" }} />
 
             <p>{rating?.toPrecision(2)}</p>
+            {/*fix this*/}
           </div>
 
           <div className={CardStyles["entertainment-card-container__language-time"]}>
@@ -95,8 +100,8 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
           <div className={CardStyles["entertainment-card-container__price"]}>
             {/* price goes here */}
             {/* for activities waiting for model to decide whether it is a number or string */}
-            {seller === undefined && <p>From {price} EGP</p>}
-            {seller !== undefined && <p>From {price} EGP</p>}
+            {<p>From {typeof price === 'number' ? price : (price as { min: number; max: number }).min} EGP</p> }
+            {(isPriceRange(price) && <p>To {(price as { min: number; max: number }).min} </p> )}
           </div>
         </div>
       </div>
