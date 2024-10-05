@@ -16,7 +16,9 @@ interface EntertainmentCardProps {
   seller?: string;
   onClick?: () => void;
 }
-
+const isPriceRange = (price: number | { min: number; max: number }): price is { min: number; max: number } => {
+  return typeof price === 'object' && price !== null && 'min' in price && 'max' in price;
+};
 const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
   image,
   title,
@@ -50,7 +52,7 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
                   alignItems: "center",
                 }}
               >
-                <FaLocationDot style={{ fontSize: "0.8rem", marginRight: "5px" }} /> {location}
+                <FaLocationDot style={{ fontSize: "0.8rem", marginRight: "5px" }} /> {location.latitude + " " + location.longitude}
               </p>
             )}
           </div>
@@ -60,6 +62,7 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
             <IoMdStar style={{ fontSize: "0.8rem" }} />
 
             <p>{rating?.toPrecision(2)}</p>
+            {/*fix this*/}
           </div>
 
           <div className={CardStyles["entertainment-card-container__language-time"]}>
