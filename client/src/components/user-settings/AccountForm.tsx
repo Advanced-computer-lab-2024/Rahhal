@@ -35,11 +35,9 @@ const accountFormSchema = z.object({
       required_error: "Please select an email to display.",
     })
     .email(),
-  oldPassword: z
-    .string()
-    .refine((val) => val === user.password, {
-      message: "Old password does not match.",
-    }),
+  oldPassword: z.string().refine((val) => val === user.password, {
+    message: "Old password does not match.",
+  }),
   newPassword: z
     .string()
     .min(8, {
@@ -60,6 +58,7 @@ export default function AccountForm() {
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
     mode: "onChange",
+    defaultValues: user
   });
 
   function onSubmit(data: AccountFormValues) {
@@ -99,7 +98,7 @@ export default function AccountForm() {
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input defaultValue={user.username} placeholder="shadcn" {...field} />
+                      <Input placeholder="shadcn" {...field} />
                     </FormControl>
                     <FormDescription>
                       This is your public display name. It can be your real name or a pseudonym. You
@@ -119,7 +118,7 @@ export default function AccountForm() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input defaultValue={user.email} placeholder="johndoe@gmail.com" {...field} />
+                      <Input placeholder="johndoe@gmail.com" {...field} />
                     </FormControl>
                     <FormDescription>
                       Your email address is not displayed publicly and is used to log in.
@@ -159,8 +158,7 @@ export default function AccountForm() {
                         <FormControl>
                           <Input type="password" placeholder="Enter your new Password" {...field} />
                         </FormControl>
-                        <FormDescription>
-                        </FormDescription>
+                        <FormDescription></FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
