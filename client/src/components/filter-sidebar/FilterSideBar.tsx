@@ -11,6 +11,7 @@ import {
 function FilterSideBar({ isOpen, sideBarItems }: { isOpen: boolean, sideBarItems: { title: string, content: React.ReactNode }[] }) {
 
   useStore(useSideBarToggle, (state: { isOpen: boolean }) => state.isOpen);
+  const [firstItem, ...restItems] = sideBarItems;
 
   return (
     <aside
@@ -20,22 +21,30 @@ function FilterSideBar({ isOpen, sideBarItems }: { isOpen: boolean, sideBarItems
       )}
     >
       {isOpen && (
-        <Accordion
-          type="multiple"
-          className="w-full p-5"
-          defaultValue={sideBarItems.map((item) => item.title)}
-        >
-          {sideBarItems.map((item) => (
-            <AccordionItem key={item.title} value={item.title}>
-              <AccordionTrigger className="ml-2 hover:no-underline">
-                {item.title}
-              </AccordionTrigger>
-              <AccordionContent className="flex justify-center items-center">
-                {item.content}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        <>
+          <div className="m-4">
+            <div className="flex justify-center items-center">
+              {firstItem.content}
+            </div>
+          </div>
+
+          <Accordion
+            type="multiple"
+            className="w-full p-3"
+            defaultValue={restItems.map((item) => item.title)}
+          >
+            {restItems.map((item) => (
+              <AccordionItem key={item.title} value={item.title}>
+                <AccordionTrigger className="ml-2 hover:no-underline">
+                  {item.title}
+                </AccordionTrigger>
+                <AccordionContent className="flex justify-center items-center mt-2">
+                  {item.content}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </>
       )}
     </aside>
   );

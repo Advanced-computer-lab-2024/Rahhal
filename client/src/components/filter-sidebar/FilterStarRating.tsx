@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Checkbox from "@/components/ui/CheckBox";
 import { StarIcon } from "lucide-react";
 
@@ -10,6 +10,10 @@ export default function FilterStarRating({
   onValueChange: (values: number[]) => void;
 }) {
   const [selectedRatings, setSelectedRatings] = useState<number[]>(values);
+
+  useEffect(() => {
+    setSelectedRatings(values);
+  }, [values]);
 
   const handleStarRatingChange = (rating: number) => {
     let updatedRatings;
@@ -38,12 +42,10 @@ export default function FilterStarRating({
               className="text-primary"
             />
             <div className="flex items-center gap-0.5 text-primary">
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              {Array.from({ length: rating }).map((_) => (
+              {Array.from({ length: rating }).map((_, ) => (
                 <StarIcon className="w-5 h-5 fill-current" />
               ))}
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              {Array.from({ length: 5 - rating }).map((_) => (
+              {Array.from({ length: 5 - rating }).map((_, ) => (
                 <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
               ))}
             </div>
