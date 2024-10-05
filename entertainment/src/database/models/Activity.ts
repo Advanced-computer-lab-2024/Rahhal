@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 // Define the schema for the activities collection
 export interface IActivity {
   name: string;
+  description: string;
   date: Date;
   time: Date;
   images: string[];
@@ -20,6 +21,7 @@ export interface IActivity {
 
 const activitySchema = new mongoose.Schema<IActivity>({
   name: { type: String, required: true },
+  description: { type: String, required: true },
   date: { type: Date, required: true },
   time: { type: Date, required: true },
   images: { type: [String], required: true },
@@ -52,7 +54,7 @@ const activitySchema = new mongoose.Schema<IActivity>({
       message: "Invalid rating format, must be a number between 0 and 5",
     },
   },
-  owner: { type: mongoose.Schema.Types.ObjectId, required: true },
+  owner: { type: String, required: true },
 });
 
 const Activity = mongoose.model<IActivity>("Activity", activitySchema);

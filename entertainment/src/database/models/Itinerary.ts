@@ -3,7 +3,7 @@ import * as itineraryValidator from "../validators/itineraries-validator";
 
 export interface IItinerary {
   name: string;
-  details: string;
+  description: string;
   activities: string[];
   locations: [{ longitude: number; latitude: number }];
   timeline: string;
@@ -22,7 +22,7 @@ export interface IItinerary {
 
 const itinerarySchema = new mongoose.Schema<IItinerary>({
   name: { type: String, required: true },
-  details: { type: String, required: true },
+  description: { type: String, required: true },
   activities: { type: [String], required: true },
   locations: {
     type: [
