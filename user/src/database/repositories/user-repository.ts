@@ -1,5 +1,5 @@
-import User, { IUser } from "../models/User";
-// This file is responsible for handling the database operations.
+import type { IUser } from "../models/User";
+import User from "../models/User";
 
 //get specific user
 export async function getUserByUsername(

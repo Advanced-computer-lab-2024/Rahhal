@@ -1,4 +1,5 @@
-import mongoose, { Schema, Types } from "mongoose";
+import type { Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import userValidators from '../../validators/user-validators';
 enum Role {
   admin = "admin",
@@ -166,9 +167,6 @@ const userSchema: Schema = new Schema<IUser>(
         validator: userValidators.validatePreviousWork,
         message: "Invalid previous work entry",
       },
-      // required: function() {
-      //   return this.role === Role.tourGuide;
-      // }
     },
     website: {
       type: String,

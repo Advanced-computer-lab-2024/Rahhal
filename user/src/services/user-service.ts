@@ -1,5 +1,5 @@
 import * as userRepository from "../database/repositories/user-repository";
-import { IUser } from "../database/models/User";
+import type { IUser } from "../database/models/User";
 
 export async function createUser(userData: IUser) {
   if (
