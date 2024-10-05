@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import * as productValidator from "../validators/products-validator";
-import { CONSTANTS } from "../../utils/constants";
+import type { IRating } from "@/database/rating";
+import { ratingSchema, validateRatings } from "@/database/rating";
 
 export interface IProduct {
   name: string;
@@ -8,7 +9,7 @@ export interface IProduct {
   price: number;
   description: string;
   seller: string;
-  rating: number;
+  ratings: IRating[];
   reviews: { user: string; rating: number; comment: string }[];
 }
 
@@ -25,24 +26,12 @@ const productSchema = new mongoose.Schema<IProduct>({
   },
   description: { type: String, required: true },
   seller: { type: String, required: true },
-  rating: {
-    type: Number,
-    required: true,
-    min: CONSTANTS.MIN_RATING,
-    max: CONSTANTS.MAX_RATING,
+  ratings: {
+    type: [ratingSchema],
     validate: {
-      validator: productValidator.validateRating,
-      message: "Invalid rating, must be a number between 0 and 5",
+      validator: validateRatings,
+      message: "Invalid rating format, must be a number between 0 and 5",
     },
-  },
-  reviews: {
-    type: [
-      {
-        user: { type: String, required: true },
-        rating: { type: Number, required: true, min: CONSTANTS.MIN_RATING, max: CONSTANTS.MAX_RATING },
-        comment: { type: String },
-      },
-    ],
   },
 });
 
