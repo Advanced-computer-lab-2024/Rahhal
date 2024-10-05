@@ -1,5 +1,5 @@
-import { useRef } from "react";
 import { DualRangeSlider } from "../ui/DualRangeSlider";
+import { useRef } from "react";
 
 interface SliderProps {
   values: number[];
@@ -29,7 +29,7 @@ function MinMaxRangeSlider({ values, onValueChange }: SliderProps) {
     }
   };
   return (
-    <div className="mt-8 w-[90%]">
+    <div>
       <DualRangeSlider
         min={min.current}
         max={max.current}
