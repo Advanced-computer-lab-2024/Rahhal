@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import * as productValidator from "../validators/products-validator";
+import { CONSTANTS } from "../../utils/constants";
 
 export interface IProduct {
   product_name: string;
@@ -27,8 +28,8 @@ const productSchema = new mongoose.Schema<IProduct>({
   rating: {
     type: Number,
     required: true,
-    min: 0,
-    max: 5,
+    min: CONSTANTS.MIN_RATING,
+    max: CONSTANTS.MAX_RATING,
     validate: {
       validator: productValidator.validateRating,
       message: "Invalid rating, must be a number between 0 and 5",
@@ -38,7 +39,7 @@ const productSchema = new mongoose.Schema<IProduct>({
     type: [
       {
         user: { type: String, required: true },
-        rating: { type: Number, required: true, min: 0, max: 5 },
+        rating: { type: Number, required: true, min: CONSTANTS.MIN_RATING, max: CONSTANTS.MAX_RATING },
         comment: { type: String },
       },
     ],

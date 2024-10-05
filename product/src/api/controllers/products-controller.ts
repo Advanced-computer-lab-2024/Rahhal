@@ -6,10 +6,12 @@ export async function getAllProducts(req: express.Request, res: express.Response
     try {
         const products = await productsService.getAllProducts();
         res.status(STATUS_CODES.STATUS_OK).json(products);
-    } catch (error: unknown) {
-        res.status(STATUS_CODES.SERVER_ERROR).json({
-            message: error instanceof Error ? error.message : "An unknown error occurred",
-        });
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
+        } else {
+            res.status(STATUS_CODES.SERVER_ERROR).json({ message: "An unknown error occurred" });
+        }
     }
 }
 
@@ -22,10 +24,12 @@ export async function getProductById(req: express.Request, res: express.Response
             res.status(STATUS_CODES.STATUS_OK).json(product);
         }
     }
-    catch (error: unknown) {
-        res.status(STATUS_CODES.SERVER_ERROR).json({
-            message: error instanceof Error ? error.message : "An unknown error occurred",
-        });
+    catch (error) {
+        if (error instanceof Error) {
+            res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
+        } else {
+            res.status(STATUS_CODES.SERVER_ERROR).json({ message: "An unknown error occurred" });
+        }
     }
 }
 
@@ -34,10 +38,12 @@ export async function createProduct(req: express.Request, res: express.Response)
         const product = await productsService.createProduct(req.body);
         res.status(STATUS_CODES.CREATED).json(product);
     }
-    catch (error: unknown) {
-        res.status(STATUS_CODES.SERVER_ERROR).json({
-            message: error instanceof Error ? error.message : "An unknown error occurred",
-        });
+    catch (error) {
+        if (error instanceof Error) {
+            res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
+        } else {
+            res.status(STATUS_CODES.SERVER_ERROR).json({ message: "An unknown error occurred" });
+        }
     }
 }
 
@@ -49,10 +55,12 @@ export async function updateProduct(req: express.Request, res: express.Response)
         } else {
             res.status(STATUS_CODES.STATUS_OK).json(product);
         }
-    } catch (error: unknown) {
-        res.status(STATUS_CODES.SERVER_ERROR).json({
-            message: error instanceof Error ? error.message : "An unknown error occurred",
-        });
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
+        } else {
+            res.status(STATUS_CODES.SERVER_ERROR).json({ message: "An unknown error occurred" });
+        }
     }
 }
 
@@ -64,10 +72,12 @@ export async function deleteProduct(req: express.Request, res: express.Response)
         } else {
             res.status(STATUS_CODES.STATUS_OK).json(product);
         }
-    } catch (error: unknown) {
-        res.status(STATUS_CODES.SERVER_ERROR).json({
-            message: error instanceof Error ? error.message : "An unknown error occurred",
-        });
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
+        } else {
+            res.status(STATUS_CODES.SERVER_ERROR).json({ message: "An unknown error occurred" });
+        }
     }
 }
 
