@@ -2,6 +2,7 @@
   "recommendations": [
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
-    "Postman.postman-for-vscode"
+    "Postman.postman-for-vscode",
+    "github.copilot"
   ]
 }
