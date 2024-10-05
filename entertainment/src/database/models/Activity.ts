@@ -11,7 +11,7 @@ export interface IActivity {
   price: number | { type: string; price: number }[];
   category: string;
   tags: string[];
-  specialDiscounts: string[];
+  specialDiscount: number;
   isBookingOpen: boolean;
   preferenceTags: string[];
   ratings: number[];
@@ -41,7 +41,7 @@ const activitySchema = new mongoose.Schema<IActivity>({
   },
   category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
   tags: { type: [String], required: true },
-  specialDiscounts: { type: [String], required: true },
+  specialDiscount: { type: Number, required: true },
   isBookingOpen: { type: Boolean, required: true },
   preferenceTags: { type: [mongoose.Schema.Types.ObjectId], ref: "PreferenceTag", required: true },
   ratings: {
