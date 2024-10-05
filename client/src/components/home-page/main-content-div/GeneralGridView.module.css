@@ -133,3 +133,15 @@
     width: 76%; /* Adjust width based on your design */
   }
 }
+
+
+.filter-sort-buttons__container{
+  display: flex;
+  flex-direction: row;
+
+  padding: 10px 20px;
+  background-color: #fff;
+  align-items: center;
+  justify-content: center;
+
+}

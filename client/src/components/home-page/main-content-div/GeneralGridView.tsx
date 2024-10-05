@@ -11,8 +11,11 @@ import { useEffect, useState } from "react";
 import SearchBar from "../../shadcn/SearchBar";
 import SortButton from "../../home-page-buttons/SortButton";
 import {useQuery} from '@tanstack/react-query'
+import { useNavigate } from "react-router-dom";
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {Skeleton} from "@/components/ui/skeleton";
+import FilterButton from "../../home-page-buttons/FilterButton";
 
 type Filter = "itinerary" | "place" | "activity";
 type SortOption = "price-high-low" | "price-low-high" | "rating-high-low" | "rating-low-high";
@@ -118,6 +121,13 @@ const GeneralGridView = () => {
   // const {data: places} = useQuery('places', fetchPlaces);
 
 
+
+  const navigate = useNavigate();
+  
+  const handleCardClick = (item: Itinerary | Activity | Place) => {
+      // Navigate to detail page, pass the item data via state
+      navigate(`/details/${item.id}`, { state: { item } });
+    };
 
   //fetching data
   useEffect(() => {
@@ -299,7 +309,8 @@ const GeneralGridView = () => {
           </TooltipProvider>
         </div>
 
-        <div style={{ padding: "10px" }}>
+        <div className={GeneralGridStyle['filter-sort-buttons__container']}>
+          <FilterButton/>
           <SortButton onSort={handleSort} />
         </div>
       </div>
