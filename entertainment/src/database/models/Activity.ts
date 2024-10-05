@@ -15,6 +15,7 @@ export interface IActivity {
   isBookingOpen: boolean;
   preferenceTags: string[];
   ratings: number[];
+  owner: string;
 }
 
 const activitySchema = new mongoose.Schema<IActivity>({
@@ -50,6 +51,7 @@ const activitySchema = new mongoose.Schema<IActivity>({
       message: "Invalid rating format, must be a number between 0 and 5",
     },
   },
+  owner: { type: String, required: true },
 });
 
 const Activity = mongoose.model<IActivity>("Activity", activitySchema);
