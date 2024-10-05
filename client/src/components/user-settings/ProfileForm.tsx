@@ -54,7 +54,7 @@ const profileFormSchema = z.object({
     .regex(/^\+?[1-9]\d{1,14}$/, { message: "Please enter a valid hotline." }),
   website: z.string().url(),
   companyProfile: z.string().url(),
-  addresses: z.string().array(),
+  addresses: z.string().array().min(1,{message: "Please enter at least one address."}),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -151,7 +151,7 @@ export default function ProfileForm() {
                 <FormItem>
                   <FormLabel>Role</FormLabel>
                   <FormControl>
-                    <Input placeholder="tourist" disabled {...field} />
+                    <Input defaultValue="tourist" placeholder="toursit" disabled {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
