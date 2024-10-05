@@ -15,8 +15,8 @@ export interface IItinerary {
   pickUpLocation: { longitude: number; latitude: number };
   dropOffLocation: { longitude: number; latitude: number };
   ratings: number[];
-  preferenceTags: mongoose.Types.ObjectId[];
-  category: mongoose.Types.ObjectId;
+  preferenceTags: mongoose.Schema.Types.ObjectId[];
+  category: mongoose.Schema.Types.ObjectId;
   owner: string;
 }
 
@@ -80,8 +80,8 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
       message: "Invalid rating format, must be a number between 0 and 5",
     },
   },
-  preferenceTags: { type: [mongoose.Types.ObjectId], ref: "PreferenceTag", required: false },
-  category: { type: mongoose.Types.ObjectId, ref: "Category", required: true },
+  preferenceTags: { type: [mongoose.Schema.Types.ObjectId], ref: "PreferenceTag", required: false },
+  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
   owner: { type: String, required: true },
 });
 
