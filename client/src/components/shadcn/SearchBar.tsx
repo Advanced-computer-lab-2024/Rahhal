@@ -2,7 +2,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { ArrowUpCircle, CheckCircle2, Circle, HelpCircle, LucideIcon, XCircle } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -16,6 +15,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 interface SearchIconProps {
   className: string;
 }
+interface SearchPartHandler {
+  state: string[];
+  setState: (value: string) => void;
+}
 
 interface SearchPartProps {
   setFocusIndex: (focusIndex: number) => void;
@@ -24,32 +27,23 @@ interface SearchPartProps {
   hoverIndex: number;
   index: number;
   placeholder: string;
- 
+  values: string[];
+  handler: SearchPartHandler;
 }
-interface SearchBar{
+interface SearchBar {
   onSearch: (query: string) => void;
+  searchParts?: string[];
+  searchPartsValues?: string[][];
+  searchPartsHandlers?: SearchPartHandler[];
 }
-
-
 
 // SearchBar component
 export default function SearchBar(props: SearchBar) {
-
-  //used for search functionality
-  const [search, setSearch] = useState("");
-  
-  const handleSearch = (e : React.ChangeEvent<HTMLInputElement> ) => {
-      setSearch(e.target.value);
-      props.onSearch(e.target.value); //used for the parent component
-  }
-
-
-
   // State to manage searchbar outline
   const [focusIndex, setFocusIndex] = useState(0);
   const [hoverIndex, setHoverIndex] = useState(0);
-  const numberOfSearchParts = ["Category", "Tag"];
   const index = 1;
+
   return (
     <div
       className={cn(
@@ -62,29 +56,13 @@ export default function SearchBar(props: SearchBar) {
         className={cn(
           "bg-transparent flex items-center px-0 group relative overflow-hidden h-max",
           focusIndex === 1 && hoverIndex === 2
-            ? index === 1
-              ? "bg-gray-200/65"
-              : index === 2
-                ? "bg-gray-200/65 rounded-r-full"
-                : ""
+            ? "bg-gray-200/65"
             : focusIndex === 3 && hoverIndex === 2
-              ? index === 3
-                ? "bg-gray-200/65"
-                : index === 2
-                  ? "bg-gray-200/65 rounded-l-full"
-                  : ""
+              ? "bg-gray-200/65"
               : focusIndex === 2 && hoverIndex === 1
-                ? index === 1
-                  ? "bg-gray-200/65"
-                  : index === 2
-                    ? "bg-gray-200/65 rounded-r-full"
-                    : ""
+                ? "bg-gray-200/65"
                 : focusIndex === 2 && hoverIndex === 3
-                  ? index === 3
-                    ? "bg-gray-200/65"
-                    : index === 2
-                      ? "bg-gray-200/65 rounded-l-full"
-                      : ""
+                  ? "bg-gray-200/65"
                   : "",
         )}
       >
@@ -106,21 +84,25 @@ export default function SearchBar(props: SearchBar) {
             onBlur={() => setFocusIndex(0)}
             onMouseEnter={() => setHoverIndex(1)}
             onMouseLeave={() => setHoverIndex(0)}
-            onChange={handleSearch}
+            onChange={(e) => props.onSearch(e.target.value)}
           />
         </div>
       </div>
       {focusIndex == 0 && <div className="border-l border-gray-300 h-8" />}
-      {numberOfSearchParts.map((value, index) => (
+      {props.searchParts?.map((value, index) => (
         <>
-          <SearchPart
-            setFocusIndex={setFocusIndex}
-            focusIndex={focusIndex}
-            index={index + 2}
-            placeholder={value}
-            hoverIndex={hoverIndex}
-            setHoverIndex={setHoverIndex}
-          />
+          {props.searchPartsValues && props.searchPartsHandlers && (
+            <SearchPart
+              setFocusIndex={setFocusIndex}
+              focusIndex={focusIndex}
+              index={index + 2}
+              placeholder={value}
+              hoverIndex={hoverIndex}
+              setHoverIndex={setHoverIndex}
+              values={props.searchPartsValues[index]}
+              handler={props.searchPartsHandlers[index]}
+            />
+          )}
           {index == 0 && focusIndex == 0 && <div className="border-l border-gray-300 h-8" />}
         </>
       ))}
@@ -217,51 +199,8 @@ function SearchIcon(props: SearchIconProps) {
   );
 }
 
-type Status = {
-  value: string;
-  label: string;
-  icon: LucideIcon;
-};
-
-const statuses: Status[] = [
-  {
-    value: "test1",
-    label: "test1",
-    icon: HelpCircle,
-  },
-  {
-    value: "test2",
-    label: "test2",
-    icon: Circle,
-  },
-  {
-    value: "test3",
-    label: "test3",
-    icon: ArrowUpCircle,
-  },
-  {
-    value: "test4",
-    label: "test4",
-    icon: CheckCircle2,
-  },
-  {
-    value: "test5",
-    label: "test5",
-    icon: XCircle,
-  },
-];
-
 function ComboboxPopover(SearchPartProps: SearchPartProps) {
   const [open, setOpen] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState<Status | null>(null);
-
-  const handleTriggerClick = (value: string) => {
-    if (selectedStatus === statuses.find((status) => status.value === value)) {
-      setSelectedStatus(null);
-    } else {
-      setSelectedStatus(statuses.find((priority) => priority.value === value) || null);
-    }
-  };
 
   if (!open && SearchPartProps.focusIndex === SearchPartProps.index) {
     SearchPartProps.setFocusIndex(0); // Reset focus when the popover closes
@@ -278,20 +217,21 @@ function ComboboxPopover(SearchPartProps: SearchPartProps) {
               size="lg"
               className={cn(
                 "border-0 focus-visible:outline-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent bg-transparent hover:bg-transparent flex justify-start items-center px-2 w-40 py-0 relative",
-                selectedStatus
+                SearchPartProps.handler.state
                   ? "text-foreground"
                   : "text-muted-foreground hover:text-muted-foreground",
               )}
               onMouseEnter={() => SearchPartProps.setHoverIndex(SearchPartProps.index)}
               onMouseLeave={() => SearchPartProps.setHoverIndex(0)}
             >
-              {selectedStatus ? (
-                <>
-                  <selectedStatus.icon className="mr-2 h-4 w-4 shrink-0" />
-                  {selectedStatus.label}
-                </>
-              ) : (
+              {SearchPartProps.handler.state.length === 0 ? (
                 <>{SearchPartProps.placeholder}</>
+              ) : (
+                <>
+                  {SearchPartProps.handler.state.join(",").length < 18
+                    ? SearchPartProps.handler.state.join(", ")
+                    : SearchPartProps.handler.state.join(", ").substring(0, 17).concat("...")}
+                </>
               )}
             </Button>
           </PopoverTrigger>
@@ -324,21 +264,22 @@ function ComboboxPopover(SearchPartProps: SearchPartProps) {
               <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
-                  {statuses.map((status) => (
+                  {SearchPartProps.values.map((status) => (
                     <CommandItem
-                      key={status.value}
-                      value={status.value}
-                      onSelect={(value) => {
-                        handleTriggerClick(value);
+                      key={status}
+                      value={status}
+                      onSelect={(value: string) => {
+                        SearchPartProps.handler.setState(value);
                       }}
                     >
-                      <status.icon
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          status.value === selectedStatus?.value ? "opacity-100" : "opacity-40",
-                        )}
-                      />
-                      <span>{status.label}</span>
+                      <span
+                        className={
+                          SearchPartProps.handler.state.includes(status) ? "font-bold" : ""
+                        }
+                      >
+                        {SearchPartProps.handler.state.includes(status) ? "✓ " : ""}
+                        {status}
+                      </span>
                     </CommandItem>
                   ))}
                 </CommandGroup>
