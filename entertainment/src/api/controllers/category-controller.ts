@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import * as categorySerivce from "../../services/category-service";
 import { STATUS_CODES } from "../../utils/constants";
 
