@@ -2,7 +2,7 @@ import express from "express";
 import activitiesRoutes from "./api/routes/activities-routes";
 import ItinerariesRoutes from "./api/routes/itineraries-routes";
 import preferenceTagRoutes from "./api/routes/preference-tags-routes";
-import categoryRoutes from './api/routes/category-router';
+import categoryRoutes from './api/routes/category-routes';
 import swaggerUi from "swagger-ui-express";
 import swaggerFile from "./api/swagger/swagger-output.json";
 
