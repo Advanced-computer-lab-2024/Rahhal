@@ -14,6 +14,7 @@ interface EntertainmentCardProps {
   openingTime?: string;
   availability?: boolean;
   seller?: string;
+  onclick?: () => void;
 }
 const isPriceRange = (price: number | { min: number; max: number }): price is { min: number; max: number } => {
   return typeof price === 'object' && price !== null && 'min' in price && 'max' in price;
@@ -28,10 +29,11 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
   openingTime,
   availability,
   seller,
+  onclick,
 }) => {
   return (
     <>
-      <div className={CardStyles["entertainment-card-container"]}>
+      <div onClick={onclick} className={CardStyles["entertainment-card-container"]}>
         <div className={CardStyles["entertainment-card-container__image"]}>
           {/* image and bookmark goes here */}
           <img src={image} alt="entertainment" />
