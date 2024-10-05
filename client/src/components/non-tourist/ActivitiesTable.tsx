@@ -6,7 +6,7 @@ import axios from "axios";
 import DataTableAddButton from "./DataTableAddButton";
 import { ActivitiesModal } from "./ActivityModal";
 
-const ENTERTAINMENT_SERVICE_URL = "http://localhost:3003/activities";
+export const ENTERTAINMENT_SERVICE_URL = "http://localhost:3003/activities";
 
 // fetch data from the server
 export const fetchActivities = async () => {
