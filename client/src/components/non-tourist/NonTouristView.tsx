@@ -1,11 +1,12 @@
-import MyMap from "../google-maps/GoogleMap";
+import GoogleMap from "@/components/google-maps/GoogleMap";
+import PlacesAutoComplete from "@/components/google-maps/PlacesAutoComplete";
 
 function NonTouristView() {
   return (
     <>
       {/* <DataTable /> */}
-      <MyMap />
-      {/* <DatePickerWithRange /> */}
+      <PlacesAutoComplete />
+      <GoogleMap />
     </>
   );
 }
