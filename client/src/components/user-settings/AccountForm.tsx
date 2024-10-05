@@ -11,7 +11,6 @@ import {
 import { Input } from "../ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Button } from "../ui/button";
 
@@ -20,6 +19,15 @@ const user = {
   email: "yousefelbrolosy8@gmail.com",
   password: "Yousef123",
 };
+
+const passwordValidator = z.object({
+  oldPassword: z
+  .string()
+  .refine((val) => val === user.password, {
+    message: "Old password does not match.",
+  })
+  .optional(),
+});
 
 const accountFormSchema = z.object({
   username: z
@@ -35,10 +43,8 @@ const accountFormSchema = z.object({
       required_error: "Please select an email to display.",
     })
     .email(),
-  oldPassword: z.string().refine((val) => val === user.password, {
-    message: "Old password does not match.",
-  }),
-  newPassword: z
+
+  password: z
     .string()
     .min(8, {
       message: "Password must be at least 8 characters.",
@@ -48,28 +54,29 @@ const accountFormSchema = z.object({
     })
     .regex(/[0-9]/, {
       message: "Password must contain at least one number.",
-    }),
+    })
+    .refine((val) => val !== user.password, {
+      message: "New password must be different from the old password.",
+    })
+    .optional(),
 });
 
 type AccountFormValues = z.infer<typeof accountFormSchema>;
-
+type passwordValidatorValue = z.infer<typeof passwordValidator>;
 export default function AccountForm() {
   const [changePassword, setChangePassword] = useState(false);
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
     mode: "onChange",
-    defaultValues: user
+    defaultValues: user,
+  });
+  const oldPasswordForm = useForm<passwordValidatorValue>({
+    resolver: zodResolver(passwordValidator),
+    mode: "onChange",
   });
 
   function onSubmit(data: AccountFormValues) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    console.log(data);
   }
 
   return (
@@ -134,7 +141,7 @@ export default function AccountForm() {
                 {/* Old Password */}
                 <div className="space-y-2">
                   <FormField
-                    control={form.control}
+                    control={oldPasswordForm.control}
                     name="oldPassword"
                     render={({ field }) => (
                       <FormItem>
@@ -151,7 +158,7 @@ export default function AccountForm() {
                 <div className="space-y-2">
                   <FormField
                     control={form.control}
-                    name="newPassword"
+                    name="password"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>New Password</FormLabel>
