@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { CONSTANTS } from "@/utils/constants";
+import * as historicalPlaceValidator from "@/database/validators/historical-places-validator";
 
 export interface IHistoricalPlace {
   name: string;
@@ -28,7 +28,7 @@ const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
         type: String, 
         required: true, 
         validate: {
-          validator: validateTime, 
+          validator: historicalPlaceValidator.validateTime, 
           message: "Invalid timing format, must be in form 00:00"
         } 
       },
@@ -36,7 +36,7 @@ const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
         type: String, 
         required: true, 
         validate: {
-          validator: validateTime, 
+          validator: historicalPlaceValidator.validateTime, 
           message: "Invalid timing format, must be in form 00:00"
         } 
       },
@@ -57,21 +57,11 @@ const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
     type: [Number],
     required: true,
     validate: {
-      validator: validateRating,
+      validator: historicalPlaceValidator.validateRating,
       message: "Invalid rating format, must be a number between 0 and 5",
     },
   },
 });
-
-function validateTime(time: string) {
-  return time.match(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/);
-}
-
-function validateRating(ratings: number[]) {
-  return ratings.every(rating => 
-    rating >= CONSTANTS.MIN_RATING && rating <= CONSTANTS.MAX_RATING
-  );
-}
 
 const HistoricalPlace = mongoose.model<IHistoricalPlace>("HistoricalPlace", historicalPlaceSchema);
 
