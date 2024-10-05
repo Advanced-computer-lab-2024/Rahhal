@@ -15,9 +15,10 @@ interface GenericModalProps {
   description: string;
   dialogTrigger: React.ReactNode;
   children: React.ReactNode[];
+  onSubmit: () => void;
 }
 
-export function GenericModal({ title, description, dialogTrigger, children }: GenericModalProps) {
+export function GenericModal({ title, description, dialogTrigger, children, onSubmit }: GenericModalProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>{dialogTrigger}</DialogTrigger>
@@ -30,7 +31,7 @@ export function GenericModal({ title, description, dialogTrigger, children }: Ge
           {children && children.map((child) => <div className="grid items-center">{child}</div>)}
         </div>
         <DialogFooter>
-          <Button type="submit">Save changes</Button>
+          <Button onSubmit={onSubmit}>Save changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
