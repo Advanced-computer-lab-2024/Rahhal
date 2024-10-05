@@ -8,8 +8,11 @@ export interface IHistoricalPlace {
   openingHours: { open: string; close: string };
   ticketPrice: { foreigner: number, native: number, student: number};
   images: string[];
-  tags: string[];
+  tags?: string[];
   ratings: number[];
+  preferenceTags?: string[];
+  assignee: string;
+  category?: string;
 }
 
 const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
@@ -52,7 +55,10 @@ const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
     required: true,
   },
   images: { type: [String], required: true },
-  tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "HistoricalTags"}],
+  tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "HistoricalTag"}],
+  preferenceTags: [{ type: mongoose.Schema.Types.ObjectId, ref: "PreferenceTag"}],
+  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category"},
+  assignee: { type: String, required: true },
   ratings: {
     type: [Number],
     required: true,
