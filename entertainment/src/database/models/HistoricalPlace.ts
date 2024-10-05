@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import * as historicalPlaceValidator from "@/database/validators/historical-places-validator";
+import type { IRating } from "@/database/shared";
+import { ratingSchema, validateRatings } from "@/database/shared";
 
 export interface IHistoricalPlace {
   name: string;
@@ -8,11 +10,11 @@ export interface IHistoricalPlace {
   openingHours: { open: string; close: string };
   ticketPrice: { foreigner: number, native: number, student: number};
   images: string[];
-  tags?: string[];
-  ratings: number[];
-  preferenceTags?: string[];
-  assignee: string;
-  category?: string;
+  tagIds?: string[];
+  ratings: IRating[];
+  preferenceTagIds?: string[];
+  assigneeId: string;
+  categoryId?: string;
 }
 
 const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
@@ -55,15 +57,15 @@ const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
     required: true,
   },
   images: { type: [String], required: true },
-  tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "HistoricalTag"}],
-  preferenceTags: [{ type: mongoose.Schema.Types.ObjectId, ref: "PreferenceTag"}],
-  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category"},
-  assignee: { type: String, required: true },
+  tagIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "HistoricalTag"}],
+  preferenceTagIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "PreferenceTag"}],
+  categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "Category"},
+  assigneeId: { type: String, required: true },
   ratings: {
-    type: [Number],
+    type: [ratingSchema],
     required: true,
     validate: {
-      validator: historicalPlaceValidator.validateRating,
+      validator: validateRatings,
       message: "Invalid rating format, must be a number between 0 and 5",
     },
   },
