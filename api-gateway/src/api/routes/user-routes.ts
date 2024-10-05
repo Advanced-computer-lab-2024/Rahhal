@@ -2,12 +2,12 @@ import express from 'express'
 import * as userContoller from "@/api/controllers/user-controller"
 
 
-const router =  express.Router();
+const router = express.Router();
 
-router.get("/",userContoller.getAllUsers);
-router.get("/:id",userContoller.getUserById);
-router.post("/",userContoller.createUser);
-router.patch("/:id",userContoller.updateUser);
-router.delete("/:id",userContoller.deleteUser);
+router.get("/users", userContoller.getAllUsers);
+router.get("/users/:id", userContoller.getUserById);
+router.post("/users", userContoller.createUser);
+router.patch("/users/:id", userContoller.updateUser);
+router.delete("/users/:id", userContoller.deleteUser);
 
-export default router
+export default router;
