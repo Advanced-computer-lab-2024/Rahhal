@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 import * as productValidator from "../validators/products-validator";
-import type { IRating } from "@/database/rating";
-import { ratingSchema, validateRatings } from "@/database/rating";
-
+import type { IRating } from "../rating";
+import { ratingSchema, validateRatings } from "../rating";
 export interface IProduct {
   name: string;
   picture: string;
