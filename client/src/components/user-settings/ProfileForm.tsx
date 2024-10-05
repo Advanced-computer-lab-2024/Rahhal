@@ -13,6 +13,23 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "@/hooks/use-toast";
 
+//from api
+const user = {
+  firstName: "Yousef",
+  lastName: "Elbrolosy",
+  companyName: "German University in Cairo",
+  role: "tourGuide",
+  description: "I sell qubits",
+  previousWork: "I worked at Quantum",
+  job: "developer",
+  yearsOfExperience: 0,
+  phoneNumber: "+201010777507",
+  hotline: "15540",
+  website: "https://yousef.com",
+  companyProfile: "https://www.linkedin.com/in/yousefelbrolosy/",
+  addresses: ["Banfseg 6", "Nasr City"],
+};
+
 const profileFormSchema = z.object({
   firstName: z
     .string()
@@ -102,7 +119,11 @@ export default function ProfileForm() {
                   <FormItem>
                     <FormLabel>First Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="john" {...field} />
+                      <Input
+                        defaultValue={user.firstName}
+                        placeholder="john"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -118,7 +139,11 @@ export default function ProfileForm() {
                   <FormItem>
                     <FormLabel>Last Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="doe" {...field} />
+                      <Input
+                        defaultValue={user.lastName}
+                        placeholder="doe"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -135,7 +160,11 @@ export default function ProfileForm() {
                 <FormItem>
                   <FormLabel>Company Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Resala" {...field} />
+                    <Input
+                      defaultValue={user.companyName}
+                      placeholder="Resala"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -151,7 +180,12 @@ export default function ProfileForm() {
                 <FormItem>
                   <FormLabel>Role</FormLabel>
                   <FormControl>
-                    <Input defaultValue="tourist" placeholder="toursit" disabled {...field} />
+                    <Input
+                      defaultValue={user.role}
+                      placeholder="e:g tourist"
+                      disabled
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -168,7 +202,8 @@ export default function ProfileForm() {
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="+20123456789"
+                      defaultValue={user.phoneNumber}
+                      placeholder="20123456789"
                       {...field}
                       maxLength={20}
                       onKeyDown={(e) => {
@@ -193,6 +228,7 @@ export default function ProfileForm() {
                   <FormLabel>Hotline</FormLabel>
                   <FormControl>
                     <Input
+                      defaultValue={user.hotline}
                       placeholder="19991"
                       {...field}
                       maxLength={5}
@@ -219,6 +255,7 @@ export default function ProfileForm() {
                   <FormControl>
                     <textarea
                       className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                      defaultValue={user.description}
                       placeholder="I sell tomatoes"
                       {...field}
                       name="description"
@@ -245,7 +282,11 @@ export default function ProfileForm() {
                 <FormItem>
                   <FormLabel>Job</FormLabel>
                   <FormControl>
-                    <Input placeholder="developer" {...field} />
+                    <Input
+                      defaultValue={user.job}
+                      placeholder="e:g developer"
+                      {...field}
+                    />
                     {/* <Input
                   placeholder="I sell tomatoes"
                   {...field}
@@ -268,14 +309,11 @@ export default function ProfileForm() {
                   <FormControl>
                     <textarea
                       className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                      defaultValue={user.previousWork}
                       placeholder="I worked at Second Cup"
                       {...field}
                       name="previousWork"
                     ></textarea>
-                    {/* <Input
-                  placeholder="I sell tomatoes"
-                  {...field}
-                  /> */}
                   </FormControl>
                   <FormDescription>Please describe your previous work</FormDescription>
                   <FormMessage />
@@ -296,7 +334,8 @@ export default function ProfileForm() {
                       className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
                       {...field}
                       type="number"
-                      defaultValue={0}
+                      defaultValue={user.yearsOfExperience}
+                      placeholder="Enter your years of experience"
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                   </FormControl>
@@ -306,52 +345,54 @@ export default function ProfileForm() {
             />
           </div>
           {/* Addresses */}
-          <div className="space-y-2">
+            <div className="space-y-2">
             <FormField
               control={form.control}
               name="addresses"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Addresses</FormLabel>
-                  <FormControl>
-                    <div>
-                      {(field.value || []).map((address, index) => (
-                        <div key={index} className="flex items-center space-x-2 mb-4">
-                          <Input
-                            placeholder={`Address ${index + 1}`}
-                            value={address}
-                            onChange={(e) => {
-                              const newAddresses = [...(field.value || [])];
-                              newAddresses[index] = e.target.value;
-                              field.onChange(newAddresses);
-                            }}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const newAddresses = (field.value || []).filter((_, i) => i !== index);
-                              field.onChange(newAddresses);
-                            }}
-                            className="text-red-500"
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => field.onChange([...(field.value || []), ""])}
-                        className="mt-2 text-blue-500"
-                      >
-                        Add Address
-                      </button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+              <FormItem>
+                <FormLabel>Addresses</FormLabel>
+                <FormControl>
+                <div>
+                  {(field.value || user.addresses).map((address, index) => (
+                  <div key={index} className="flex items-center space-x-2 mb-4">
+                    <Input
+                    placeholder={`Address ${index + 1}`}
+                    value={address}
+                    onChange={(e) => {
+                      const newAddresses = [...(field.value || user.addresses)];
+                      newAddresses[index] = e.target.value;
+                      field.onChange(newAddresses);
+                    }}
+                    />
+                    <button
+                    type="button"
+                    onClick={() => {
+                      const newAddresses = (field.value || user.addresses).filter(
+                      (_, i) => i !== index,
+                      );
+                      field.onChange(newAddresses);
+                    }}
+                    className="text-red-500"
+                    >
+                    Remove
+                    </button>
+                  </div>
+                  ))}
+                  <button
+                  type="button"
+                  onClick={() => field.onChange([...(field.value || user.addresses), ""])}
+                  className="mt-2 text-blue-500"
+                  >
+                  Add Address
+                  </button>
+                </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
               )}
             />
-          </div>
+            </div>
           {/* URLs */}
           <div className="space-y-2">
             <label
@@ -375,6 +416,7 @@ export default function ProfileForm() {
                     <Input
                       className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                       placeholder="https://shadcn.com"
+                      defaultValue={user.website}
                       {...field}
                     />
                   </FormControl>
@@ -398,6 +440,7 @@ export default function ProfileForm() {
                     <Input
                       className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                       placeholder="https://shadcn.com"
+                      defaultValue={user.companyProfile}
                       {...field}
                     />
                   </FormControl>

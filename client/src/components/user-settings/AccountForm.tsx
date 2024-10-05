@@ -14,6 +14,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Button } from "../ui/button";
+
+const user = {
+  username: "YousefElbrolosy",
+  email: "yousefelbrolosy8@gmail.com",
+  password: "Yousef123",
+};
+
 const accountFormSchema = z.object({
   username: z
     .string()
@@ -29,10 +36,11 @@ const accountFormSchema = z.object({
     })
     .email(),
   oldPassword: z
-    //equal to password from getAPI
-    .string(),
+    .string()
+    .refine((val) => val === user.password, {
+      message: "Old password does not match.",
+    }),
   newPassword: z
-    //equal to password from getAPI
     .string()
     .min(8, {
       message: "Password must be at least 8 characters.",
@@ -91,7 +99,7 @@ export default function AccountForm() {
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="shadcn" {...field} />
+                      <Input defaultValue={user.username} placeholder="shadcn" {...field} />
                     </FormControl>
                     <FormDescription>
                       This is your public display name. It can be your real name or a pseudonym. You
@@ -111,7 +119,7 @@ export default function AccountForm() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="johndoe@gmail.com" {...field} />
+                      <Input defaultValue={user.email} placeholder="johndoe@gmail.com" {...field} />
                     </FormControl>
                     <FormDescription>
                       Your email address is not displayed publicly and is used to log in.
@@ -133,7 +141,7 @@ export default function AccountForm() {
                       <FormItem>
                         <FormLabel>Please Re-enter your Old Password</FormLabel>
                         <FormControl>
-                          <Input type="password" {...field} />
+                          <Input placeholder="Enter your Old Password" type="password" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -152,7 +160,6 @@ export default function AccountForm() {
                           <Input type="password" placeholder="Enter your new Password" {...field} />
                         </FormControl>
                         <FormDescription>
-                          Your password must be at least 8 characters long.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
