@@ -39,11 +39,11 @@ const activitySchema = new mongoose.Schema<IActivity>({
         "Invalid price format, must be a number or an array of objects with a type and price",
     },
   },
-  category: { type: String, required: true },
+  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
   tags: { type: [String], required: true },
   specialDiscounts: { type: [String], required: true },
   isBookingOpen: { type: Boolean, required: true },
-  preferenceTags: { type: [String], required: false },
+  preferenceTags: { type: [mongoose.Schema.Types.ObjectId], ref: "PreferenceTag", required: true },
   ratings: {
     type: [Number],
     required: true,
