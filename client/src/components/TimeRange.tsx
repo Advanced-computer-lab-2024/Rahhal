@@ -15,7 +15,7 @@ const TimeRange: React.FC<TimeRangeProps> = ({
   onSave,
 }) => {
   const defaultTime = new Date();
-  defaultTime.setHours(0, 0, 0); 
+  defaultTime.setHours(0, 0, 0);
 
   const [checkInTime, setCheckInTime] = useState<Date>(initialCheckInTime || defaultTime);
   const [checkOutTime, setCheckOutTime] = useState<Date>(initialCheckOutTime || defaultTime);
@@ -65,7 +65,7 @@ const TimeRange: React.FC<TimeRangeProps> = ({
       <div
         className={`border rounded-md p-2 transition-all duration-200 bg-transparent`}
         onKeyDown={(e) => handleKeyDown(e, true)}
-        style={{ minHeight: "100px", width: "500px" }} 
+        style={{ minHeight: "100px", width: "500px" }}
       >
         <div className="flex justify-between items-center mb-2">
           <div className="text-sm font-medium">Check-in</div>
@@ -83,7 +83,7 @@ const TimeRange: React.FC<TimeRangeProps> = ({
           {isEditingCheckIn ? (
             <TimePicker
               date={checkInTime}
-              onChange={(newTime) => handleTimeChange(newTime!, true)} 
+              onChange={(newTime) => handleTimeChange(newTime!, true)}
               hourCycle={12}
               granularity="minute"
             />
@@ -117,7 +117,7 @@ const TimeRange: React.FC<TimeRangeProps> = ({
           {isEditingCheckOut ? (
             <TimePicker
               date={checkOutTime}
-              onChange={(newTime) => handleTimeChange(newTime!, false)} 
+              onChange={(newTime) => handleTimeChange(newTime!, false)}
               hourCycle={12}
               granularity="minute"
             />
