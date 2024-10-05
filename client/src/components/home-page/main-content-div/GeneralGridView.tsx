@@ -180,6 +180,13 @@ const GeneralGridView = () => {
       navigate(`/details/${item._id}`, { state: { item } });
   };
 
+  const navigate = useNavigate();
+  
+  const handleCardClick = (item: Itinerary | Activity | Place) => {
+      // Navigate to detail page, pass the item data via state
+      navigate(`/details/${item.id}`, { state: { item } });
+    };
+
   //fetching data
   useEffect(() => {
     setFinishedLoading(!isLoadingActivities && !isLoadingItenaries && !isPreferenceTags && !isLoadingCategories && !isHistoricalPlaces && !isHistoricalTags)
