@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
 import validateCategoryName from '../validators/category-validator';
 
+export interface ICategory {
+  name: string;
+}
+
 const CategorySchema = new mongoose.Schema({
   name: {
     type: String,
