@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Pen, Save } from "lucide-react";
+import EditSaveButton from "./EditSaveButton";
 
 interface ShortTextProps {
   placeholder: string;
@@ -27,8 +28,7 @@ const ShortText = forwardRef<ShortTextRef, ShortTextProps>(({
   const [isDisabled, setIsDisabled] = useState(initialDisabled);
   const [fieldValue, setFieldValue] = useState(initialValue);
 
-  const EDIT_MODE = "Edit";
-  const SAVE_MODE = "Save";
+
 
   useImperativeHandle(ref, () => ({
     get isDisabled() {
@@ -58,9 +58,9 @@ const ShortText = forwardRef<ShortTextRef, ShortTextProps>(({
   };
 
   return (
-    <div className="flex flex-col">
-      <Label>{title}</Label>
-      <div className="flex items-center mt-2">
+    <div className="flex flex-col m-5 mx-6">
+      <Label className="mb-2">{title}</Label>
+      <div className="flex items-center">
         <Input
           type="text"
           placeholder={placeholder}
@@ -70,13 +70,7 @@ const ShortText = forwardRef<ShortTextRef, ShortTextProps>(({
           disabled={isDisabled}
           className="flex-grow"
         />
-        <Button
-          onClick={isDisabled ? toggleEditMode : saveChanges}
-          className="ml-2 p-2"
-          title={isDisabled ? EDIT_MODE : SAVE_MODE}
-        >
-          {isDisabled ? <Pen size={16} /> : <Save size={16} />}
-        </Button>
+        <EditSaveButton isDisabled={isDisabled} toggleEditMode={toggleEditMode} saveChanges={saveChanges} />
       </div>
     </div>
   );
