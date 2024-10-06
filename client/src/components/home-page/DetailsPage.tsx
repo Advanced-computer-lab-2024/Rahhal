@@ -5,8 +5,6 @@ import pyramid2 from "../../assets/pyramids2.jpg";
 import { useLocation } from "react-router-dom";
 import { FaTags } from "react-icons/fa6";
 import { IoMdStar } from "react-icons/io";
-import { getPriceValue } from "../home-page/main-content-div/GeneralGridView";
-import { Item } from "@radix-ui/react-select";
 
 const DetailsPage = () => {
   const location = useLocation();
@@ -16,19 +14,6 @@ const DetailsPage = () => {
     if (!ratings || ratings.length === 0) return 0;
     return ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
   };
-
-  // const renderSpecificDetails = () => {
-  //   switch (item.type) {
-  //     case "historical_place":
-  //       return <HistoricalPlaceDetails item={item} />;
-  //     case "activity":
-  //       return <ActivityDetails item={item} />;
-  //     case "itinerary":
-  //       return <ItineraryDetails item={item} />;
-  //     default:
-  //       return <p>No specific details available for this item type.</p>;
-  //   }
-  // };
 
   return (
     <div className={DetailsPageStyles["details-page-content-container"]}>
@@ -50,7 +35,7 @@ const DetailsPage = () => {
             {new Date(item.time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
           </p>
         ) : item.availableDatesTime && item.availableDatesTime.length > 0 ? (
-          <div style={{marginTop:"4%"}}>
+          <div style={{ marginTop: "4%" }}>
             <strong>Available Dates and Times:</strong>
             {item.availableDatesTime.map(
               (dateTime: { Date: string; Time: string }, index: number) => (
@@ -109,6 +94,33 @@ const DetailsPage = () => {
         ) : null}
 
         {/* this section is for products details to whoever is working with it */}
+
+        {item.reviews ? (
+          <div>
+            <h3>User Reviews</h3>
+            {Array.isArray(item.reviews) && item.reviews.length > 0 ? (
+              item.reviews.map(
+                (review: { user: string; rating: number; comment: string }, index: number) => (
+                  <div key={index}>
+                    <p>
+                      <strong>User:</strong> {review.user}
+                    </p>
+                    <p>
+                      <strong>Rating:</strong> {review.rating} / 5
+                    </p>
+                    <p>
+                      <strong>Comment:</strong> {review.comment}
+                    </p>
+                  </div>
+                ),
+              )
+            ) : (
+              <p>No reviews available.</p>
+            )}
+          </div>
+        ) : null}
+        {item.seller ? <p>Seller: {item.seller}</p> : null}
+        {item.seller ? <p>Seller: {item.seller}</p> : null}
       </div>
 
       <div className={DetailsPageStyles["image-grid"]}>
