@@ -9,7 +9,8 @@ export async function getCategoryById(id: string){
 }
 
 export async function createCategory(category: string){
-    return await categoryRepository.createCategory(category.trim());
+    const newCategory = {name : category.trim()};
+    return await categoryRepository.createCategory( newCategory );
 }
 
 export async function updateCategory(id: string, categoryName: string){
