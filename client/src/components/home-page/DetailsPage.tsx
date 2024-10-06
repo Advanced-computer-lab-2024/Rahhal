@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import { FaTags } from "react-icons/fa6";
 import { IoMdStar } from "react-icons/io";
 import { getPriceValue } from "../home-page/main-content-div/GeneralGridView";
+import { Item } from "@radix-ui/react-select";
 
 const DetailsPage = () => {
   const location = useLocation();
@@ -42,10 +43,29 @@ const DetailsPage = () => {
           {item.preferenceTags?.map((tag: { name: string }) => tag.name).join(", ")}
         </p>
 
-        {/* <p>
-          item.Date.is Date: {new Date(item.date).toLocaleDateString()} <br /> Time:{" "}
-          {new Date(item.time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}{" "}
-        </p> */}
+        {item.date ? (
+          <p>
+            Date: {new Date(item.date).toLocaleDateString()} <br />
+            Time:{" "}
+            {new Date(item.time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+          </p>
+        ) : item.availableDatesTime && item.availableDatesTime.length > 0 ? (
+          <div style={{marginTop:"4%"}}>
+            <strong>Available Dates and Times:</strong>
+            {item.availableDatesTime.map(
+              (dateTime: { Date: string; Time: string }, index: number) => (
+                <p key={index}>
+                  Date: {new Date(dateTime.Date).toLocaleDateString()} <br />
+                  Time:{" "}
+                  {new Date(dateTime.Time).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+              ),
+            )}
+          </div>
+        ) : null}
 
         <p>Category: {item.category.name}</p>
 
@@ -69,7 +89,6 @@ const DetailsPage = () => {
         {item.activities
           ? item.activities.map((activity: string, index: number) => {
               const duration = item.duarationOfActivities[index];
-              // Check if both the activity and its duration are available
               return activity && duration ? (
                 <p key={index}>
                   <strong>{activity}:</strong> {duration}
@@ -89,14 +108,7 @@ const DetailsPage = () => {
           </p>
         ) : null}
 
-
-
-
         {/* this section is for products details to whoever is working with it */}
-
-
-
-
       </div>
 
       <div className={DetailsPageStyles["image-grid"]}>
@@ -118,12 +130,18 @@ const DetailsPage = () => {
                   {price.type.toUpperCase()}: {price.price} EGP
                 </p>
               ))
-            ) : (
+            ) : "foreigner" in item.price ? (
               <>
                 <p>Foreigner: {item.price.foreigner} EGP</p>
                 <p>Native: {item.price.native} EGP</p>
                 <p>Student: {item.price.student} EGP</p>
               </>
+            ) : "min" in item.price ? (
+              <h1>
+                Price: {item.price.min}-{item.price.max} EGP
+              </h1>
+            ) : (
+              <h1>Price: {item.price} EGP</h1>
             )}
           </div>
         </div>
