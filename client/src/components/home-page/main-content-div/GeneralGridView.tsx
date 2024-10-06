@@ -182,10 +182,10 @@ const GeneralGridView = () => {
 
   const navigate = useNavigate();
   
-  const handleCardClick = (item: Itinerary | Activity | Place) => {
+  const handleCardClick = (item: Itinerary | Activity | HistoricalPlace) => {
       // Navigate to detail page, pass the item data via state
-      navigate(`/details/${item.id}`, { state: { item } });
-    };
+      navigate(`/details/${item._id}`, { state: { item } });
+  };
 
   //fetching data
   useEffect(() => {
