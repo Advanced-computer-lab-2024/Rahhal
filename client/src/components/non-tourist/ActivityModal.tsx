@@ -1,21 +1,44 @@
 import { GenericModal } from "../GenericModal";
-import { Activity } from "../../table-columns/advertiser-columns";
+import { TActivity, TCategory, TRating, TPrice } from "../../table-columns/advertiser-columns";
 import { ToggleableSwitchCard } from "../ToggleableSwitchCard";
 import { DoorOpen } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PictureCard from "../PictureCard";
-import { Input } from "../ui/input";
 import { ENTERTAINMENT_SERVICE_URL } from "./ActivitiesTable";
 import axios from "axios";
 import ShortText from "../ShortText";
 import PriceCategories from "../price-categories/PriceCategories";
+import TagsSelector from "./TagsSelector";
+import { GenericSelect } from "../GenericSelect";
+import ReviewDisplay from "./Ratings";
+
 
 interface ActivitiesModalProps {
-  activityData?: Activity;
+  activityData?: TActivity;
   dialogTrigger?: React.ReactNode;
 }
 
-const IMAGES = [ "src/assets/farmhouse-main.jpeg", "src/assets/farmhouse-zoom.jpeg", "src/assets/farmhouse-room.jpeg" ];
+const fetchCategories = async () => {
+  const response = await axios.get(ENTERTAINMENT_SERVICE_URL + "/categories");
+  return response.data;
+};
+
+const fetchPreferenceTags = async () => {
+  const response = await axios.get(ENTERTAINMENT_SERVICE_URL + "/preference-tags");
+  return response.data;
+};
+
+const IMAGES = [
+  "src/assets/farmhouse-main.jpeg",
+  "src/assets/farmhouse-zoom.jpeg",
+  "src/assets/farmhouse-room.jpeg",
+];
+
+const sampleReviews = [
+  { user: "John Doe", rating: 4, review: "Great product, highly recommend!" },
+  { user: "Jane Smith", rating: 5, review: "Exceeded my expectations." },
+  { user: "Bob Johnson", rating: 3 }
+];
 
 export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModalProps) {
   const isNewActivity: boolean = activityData === undefined;
@@ -23,24 +46,30 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
   const [name, setName] = useState<string>(activityData?.name ?? "");
   const [date, setDate] = useState<Date>(activityData?.date ?? new Date());
   const [time, setTime] = useState<Date>(activityData?.time ?? new Date());
-  const [price, setPrice] = useState<number>(
-    typeof activityData?.price === "number" ? activityData.price : 0
-  );
+  const [price, setPrice] = useState<TPrice>(() => activityData?.price ?? { price: [] });
   const [category, setCategory] = useState<string>(activityData?.category ?? "");
-  const [tags] = useState<string[]>(activityData?.tags ?? []);
-  const [specialDiscounts] = useState<string[]>(
-    activityData?.specialDiscounts ?? [],
-  );
-  const [preferenceTags] = useState<string[]>(
+  const [allCategories, setAllCategories] = useState<TCategory[]>([]);
+  const [tags, setTags] = useState<string[]>(activityData?.tags ?? []);
+  const [specialDiscounts] = useState<string[]>(activityData?.specialDiscounts ?? []);
+  const [preferenceTags, setPreferenceTags] = useState<string[]>(
     activityData?.preferenceTags ?? [],
   );
-  const [ratings] = useState<string[]>(activityData?.ratings?.map(String) ?? []);
+
+  const [ratings] = useState<TRating[]>(activityData?.ratings ?? []);
   const [isBookingOpen, setIsBookingOpen] = useState<boolean>(activityData?.isBookingOpen ?? false);
+
+  useEffect(() => {
+    fetchCategories().then((data) => setAllCategories(data));
+    fetchPreferenceTags().then((data) => {
+      setPreferenceTags(data);
+      setTags(data);
+    });
+  }, []);
 
   // save the activity to the server
 
   const saveActivity = async () => {
-    const activity: Activity = {
+    const activity: TActivity = {
       name,
       date,
       time,
@@ -51,15 +80,20 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
       preferenceTags,
       ratings,
       isBookingOpen,
+      location: {
+        longitude: 0,
+        latitude: 0
+      }
     };
 
-    
-
+    console.log(activity);
     if (isNewActivity) {
-      await axios.post(ENTERTAINMENT_SERVICE_URL, activity);
+      await axios.post(ENTERTAINMENT_SERVICE_URL + "/activities", activity).then((response) => {
+        console.log(response.data);
+      });
     } else {
       if (activityData) {
-        await axios.put(`${ENTERTAINMENT_SERVICE_URL}/${activityData.id}`, activity);
+        await axios.put(`${ENTERTAINMENT_SERVICE_URL}/activities/${activityData.id}`, activity);
       }
     }
   };
@@ -72,25 +106,73 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
       dialogTrigger={dialogTrigger}
       onSubmit={saveActivity}
     >
-      <ShortText title="Name" initialValue={name} onSave={(value) => setName(value)} placeholder={""} initialDisabled={!isNewActivity} />
-      <ShortText title="Date" initialValue={date.toString()} onSave={(value) => setDate(new Date(value))} placeholder={""} initialDisabled={!isNewActivity} />
-      
-      <ShortText title="Time" initialValue={time.toString()} onSave={(value) => setTime(new Date(value))} placeholder={""} initialDisabled={!isNewActivity} />
+      <ShortText
+        title="Name"
+        initialValue={name}
+        onSave={(value) => setName(value)}
+        placeholder={""}
+        initialDisabled={!isNewActivity}
+      />
+      <ShortText
+        title="Date"
+        initialValue={date.toString()}
+        onSave={(value) => setDate(new Date(value))}
+        placeholder={""}
+        initialDisabled={!isNewActivity}
+      />
+
+      <ShortText
+        title="Time"
+        initialValue={time.toString()}
+        onSave={(value) => setTime(new Date(value))}
+        placeholder={""}
+        initialDisabled={!isNewActivity}
+      />
       <div>
         {/* Location: {activityData.location.longitude}, {activityData.location.latitude} */}
       </div>
       <div>
-        
         {typeof activityData?.price === "number" ? (
-          <ShortText title="Price" initialValue={activityData.price.toString()} onSave={(value) => setPrice(parseFloat(value))} placeholder={""} initialDisabled={!isNewActivity} />
+          <ShortText
+            title="Price"
+            initialValue={activityData.price.toString()}
+            onSave={(value) => setPrice({ price: parseFloat(value) })}
+            placeholder={""}
+            initialDisabled={!isNewActivity}
+          />
         ) : (
-          <PriceCategories title="Prices" priceCategories={activityData?.price ?? []} onPriceCategoriesChange={() => {}} />
+          <PriceCategories
+            title="Prices"
+            priceCategories={Array.isArray(activityData?.price) ? activityData.price : []}
+            onPriceCategoriesChange={(value) => setPrice({ price: value })}
+          />
         )}
       </div>
-      <ShortText title="Category" initialValue={category} onSave={(value) => setCategory(value)} placeholder={""} initialDisabled={!isNewActivity} />
-      
-      <ShortText title="Tags" initialValue={tags.join(", ")} onSave={(value) => {}} placeholder={""} initialDisabled={!isNewActivity} />
-      <ShortText title="Special Discounts" initialValue={specialDiscounts.join(", ")} onSave={(value) => {}} placeholder={""}  initialDisabled={!isNewActivity} />
+      <div className="m-5 mx-6">
+        <GenericSelect
+          label="Category"
+          placeholder="Select a category"
+          options={allCategories.map((category) => ({
+            label: category.name,
+            value: category.name,
+          }))}
+          onSelect={(value) => setCategory(value)}
+        />
+      </div>
+      <div className="m-5 mx-6">
+        <TagsSelector
+          placeholder={"Select tags"}
+          options={tags.map((tag) => ({ label: tag, value: tag }))}
+          onSave={(value) => setTags(value.map((option) => option.value))}
+        />
+      </div>
+      <ShortText
+        title="Special Discounts"
+        initialValue={specialDiscounts.join(", ")}
+        onSave={(value) => {}}
+        placeholder={""}
+        initialDisabled={!isNewActivity}
+      />
       <div>
         <ToggleableSwitchCard
           title="Is Booking Open"
@@ -100,10 +182,17 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
           onToggle={() => setIsBookingOpen(!isBookingOpen)}
         />
       </div>
-      <ShortText title="Preference Tags" initialValue={preferenceTags.join(", ")} onSave={(value) => {}} placeholder={""} initialDisabled={!isNewActivity} />
-      <ShortText title="Ratings" initialValue={ratings.join(", ")} onSave={(value) => {}} placeholder={""} initialDisabled={!isNewActivity} />
+      <div className="m-5 mx-6">
+        <TagsSelector
+          placeholder={"Select preference tags"}
+          options={preferenceTags.map((tag) => ({ label: tag, value: tag }))}
+          onSave={(value) => setPreferenceTags(value.map((option) => option.value))}
+        />
+      </div>
+      
 
       <PictureCard title={"Photo Tour"} description={"Uploaded Photos"} imageSources={IMAGES} />
+      <div className="m-5 mx-6"><ReviewDisplay reviews={sampleReviews} /></div>
     </GenericModal>
   );
 }

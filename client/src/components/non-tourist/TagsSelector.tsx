@@ -19,7 +19,7 @@ function TagsSelector({ placeholder, onSave, options }: TagsSelectorProps) {
   };
 
   return (
-    <div className="w-full px-10 flex items-center">
+    <div className="w-full flex items-center">
       <div className="flex-grow">
         <MultipleSelector
           defaultOptions={options}

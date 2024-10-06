@@ -4,10 +4,30 @@ import { ArrowUpDown, ChevronRight } from "lucide-react";
 import { ActivitiesModal } from "@/components/non-tourist/ActivityModal";
 import { Badge } from "@/components/ui/badge";
 
+
+// Price type
+export type TPrice = {
+  price: number | { type: string; price: number }[];
+};
+
+// Rating type
+
+export type TRating = {
+  user: string;
+  rating: number;
+  review?: string;
+}
+
+// Category type
+
+export type TCategory = {
+  name: string;
+}
+
 // Activity type
 
-export type Activity = {
-  id: string;
+export type TActivity = {
+  id?: string;
   name: string;
   time: Date;
   date: Date;
@@ -15,14 +35,14 @@ export type Activity = {
   specialDiscounts: string[];
   preferenceTags: string[];
   isBookingOpen: boolean;
-  price: number | { type: string; price: number }[];
+  price: TPrice;
   category: string;
   tags: string[];
-  ratings: number[];
+  ratings: TRating[];
 };
 
 // Columns configuration
-export const activitiesColumns: ColumnDef<Activity>[] = [
+export const activitiesColumns: ColumnDef<TActivity>[] = [
   {
     accessorKey: "name",
     header: "name",
