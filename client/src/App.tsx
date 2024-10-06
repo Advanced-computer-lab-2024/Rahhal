@@ -5,7 +5,13 @@ export default function App() {
   return (
     <>
     <QueryClientProvider client={queryClient}>
-    <GeneralGridView/>
+      <Router>
+        <Routes>
+          {/* Define the routes for the app */}
+          <Route path="/" element={<GeneralGridView />} />
+          <Route path="/details/:id" element={<DetailsPage />} />
+        </Routes>
+      </Router>
     </QueryClientProvider>
     </>
   )
