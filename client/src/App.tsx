@@ -1,5 +1,4 @@
 import EntertainmentCard from "@/components/entertainment-card/EntertainmentCard";
-import Pyramid from "./assets/pyramids.webp";
 import felluca from "./assets/aswan2.webp";
 import ski from "./assets/ski egypt.jpg";
 import FilterSideBar from "@/components/filter-sidebar/FilterSideBar";

@@ -8,12 +8,16 @@ import historicalPlacesRoutes from "./api/routes/historical-places-routes";
 import historicalTagsRoutes from "./api/routes/historical-tags-routes";
 import swaggerUi from "swagger-ui-express";
 import swaggerFile from "./api/swagger/swagger-output.json";
+import cors from "cors";
 
 const app = express();
 
 // Middleware
 app.use(express.json());
 app.use(morgan('dev'));
+
+// CORS
+app.use(cors());
 
 // Routes
 app.use("/activities", activitiesRoutes);

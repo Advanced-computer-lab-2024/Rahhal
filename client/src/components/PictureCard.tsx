@@ -56,7 +56,7 @@ const PictureCard = ({
 
 
   return (
-    <Card>
+    <Card className="m-5 mx-6">
       <div className="p-4">
         <h2 className="text-xl font-semibold mb-2">{title}</h2>
         <p className="text-gray-600 mb-4">{description}</p>
