@@ -60,7 +60,10 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
             {languages !== undefined && (
               <p>
                 <br />
-                <GrLanguage /> {languages?.join("/")}
+                <div style={{display:"flex" ,flexDirection:"row",alignItems:"center"}}>
+                <GrLanguage style={{marginRight:"0.4rem"}}/> {languages?.join("/")}
+                </div>
+                
               </p>
             )}
 
@@ -92,7 +95,7 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
           </div>
 
           <div className={CardStyles["entertainment-card-container__price"]}>
-            {seller === undefined && <h5>From {getPriceValue(price)} EGP</h5>}
+            {seller === undefined && <p>From {getPriceValue(price)} EGP</p>}
           </div>
         </div>
       </div>
