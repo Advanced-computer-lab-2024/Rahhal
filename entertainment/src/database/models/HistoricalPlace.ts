@@ -6,15 +6,15 @@ import { ratingSchema, validateRatings } from "@/database/shared";
 export interface IHistoricalPlace {
   name: string;
   description: string;
-  location: { longitude: number; latitude: number };
+  location: { longitude: number; latitude: number; placeId?: string };
   openingHours: { open: string; close: string };
-  price: { foreigner: number, native: number, student: number};
+  price: { foreigner: number; native: number; student: number };
   images: string[];
-  tags?:  mongoose.Schema.Types.ObjectId[];
+  tags?: mongoose.Schema.Types.ObjectId[];
   ratings?: IRating[];
-  preferenceTags?:  mongoose.Schema.Types.ObjectId[][];
+  preferenceTags?: mongoose.Schema.Types.ObjectId[][];
   owner: string;
-  category?:  mongoose.Schema.Types.ObjectId;
+  category?: mongoose.Schema.Types.ObjectId;
 }
 
 const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
@@ -24,26 +24,27 @@ const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
     type: {
       longitude: { type: Number, required: true },
       latitude: { type: Number, required: true },
+      placeId: { type: String },
     },
     required: true,
   },
   openingHours: {
     type: {
-      open: { 
-        type: String, 
-        required: true, 
+      open: {
+        type: String,
+        required: true,
         validate: {
-          validator: historicalPlaceValidator.validateTime, 
-          message: "Invalid timing format, must be in form 00:00"
-        } 
+          validator: historicalPlaceValidator.validateTime,
+          message: "Invalid timing format, must be in form 00:00",
+        },
       },
-      close: { 
-        type: String, 
-        required: true, 
+      close: {
+        type: String,
+        required: true,
         validate: {
-          validator: historicalPlaceValidator.validateTime, 
-          message: "Invalid timing format, must be in form 00:00"
-        } 
+          validator: historicalPlaceValidator.validateTime,
+          message: "Invalid timing format, must be in form 00:00",
+        },
       },
     },
     required: true,
@@ -57,9 +58,9 @@ const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
     required: true,
   },
   images: { type: [String], required: true },
-  tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "HistoricalTag"}],
-  preferenceTags: [{ type: mongoose.Schema.Types.ObjectId, ref: "PreferenceTag"}],
-  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category"},
+  tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "HistoricalTag" }],
+  preferenceTags: [{ type: mongoose.Schema.Types.ObjectId, ref: "PreferenceTag" }],
+  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
   owner: { type: String, required: true },
   ratings: {
     type: [ratingSchema],
