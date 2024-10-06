@@ -7,3 +7,7 @@ export const STATUS_CODES = {
   GATEWAY_TIMEOUT: 504,
   BAD_GATEWAY: 502,
 };
+
+export const CONSTANTS = {
+  ZERO: 0,
+};

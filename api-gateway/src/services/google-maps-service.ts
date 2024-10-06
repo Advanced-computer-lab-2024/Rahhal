@@ -1,3 +1,4 @@
+import { CONSTANTS } from "@/utils/constants";
 import axios from "axios";
 import dotenv from "dotenv";
 
@@ -29,8 +30,7 @@ export async function getPlaceDetailsById(placeId: string) {
   const { data } = await axios.get(
     `https://maps.googleapis.com/maps/api/geocode/json?place_id=${placeId}&key=${GOOGLE_MAPS_API_KEY}`,
   );
-  const FIRST_RESULT = 0;
-  const { formatted_address, geometry } = data.results[FIRST_RESULT];
+  const { formatted_address, geometry } = data.results[CONSTANTS.ZERO];
   return {
     description: formatted_address,
     location: geometry.location,
@@ -41,8 +41,7 @@ export async function getPlaceDetailsByLocation(location: { lat: number; lng: nu
   const { data } = await axios.get(
     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.lat},${location.lng}&key=${GOOGLE_MAPS_API_KEY}&location_type=APPROXIMATE`,
   );
-  const FIRST_RESULT = 0;
-  const { formatted_address, place_id } = data.results[FIRST_RESULT];
+  const { formatted_address, place_id } = data.results[CONSTANTS.ZERO];
   return {
     description: formatted_address,
     placeId: place_id,
