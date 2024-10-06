@@ -21,13 +21,15 @@ function App() {
     setPriceRange([0, 500]);
     setSelectedRatings([]);
     setSelectedDates({ from: undefined, to: undefined });
-  }
+  };
   const sideBarItems = [
     {
       title: "Reset Filters",
-      content: <Button variant="outline" size="icon" onClick={resetFilters}>
-        <FilterX className="w-4 h-4" />
-      </Button>,
+      content: (
+        <Button variant="outline" size="icon" onClick={resetFilters}>
+          <FilterX className="w-4 h-4" />
+        </Button>
+      ),
     },
     {
       title: "Price Range",
@@ -135,11 +137,19 @@ function App() {
     },
   ];
 
-  const filteredData = entertainmentData.filter(item => {
+  const filteredData = entertainmentData.filter((item) => {
     const matchesPrice = item.price >= priceRange[0] && item.price <= priceRange[1];
-    const matchesRating = selectedRatings.length === 0 || selectedRatings.some(rating => item.rating >= rating && item.rating < rating + 1);
-    const adjustedToDate = selectedDates?.to ? new Date(selectedDates.to.getTime() + 86400000) : null;
-    const matchesDate = !selectedDates?.from || (item.date && selectedDates.from && adjustedToDate ? (item.date >= selectedDates.from && item.date < adjustedToDate) : true);
+    const matchesRating =
+      selectedRatings.length === 0 ||
+      selectedRatings.some((rating) => item.rating >= rating && item.rating < rating + 1);
+    const adjustedToDate = selectedDates?.to
+      ? new Date(selectedDates.to.getTime() + 86400000)
+      : null;
+    const matchesDate =
+      !selectedDates?.from ||
+      (item.date && selectedDates.from && adjustedToDate
+        ? item.date >= selectedDates.from && item.date < adjustedToDate
+        : true);
     return matchesPrice && matchesRating && matchesDate;
   });
   return (
