@@ -25,39 +25,64 @@ const PLACES_API = 'http://localhost:3000/api/entertainment/places';
 const TAGS_API = 'http://localhost:3000/api/entertainment/preference-tags';
 const CATEGORIES_API = 'http://localhost:3000/api/entertainment/categories';
 
+interface IRating {
+  userId: string;
+  rating: number;
+  review?: string;
+}
+
 interface Itinerary {
     _id: string;
     name: string;
-    details: string;
+    description: string;
     activities: string[];
     locations: [{ longitude: number; latitude: number }];
     timeline: string;
     duarationOfActivities: string[];
-    language: string;//TO DO: change to array
+    images: string[];
+    languages: string[];
     price: number | { min: number; max: number };
     availableDatesTime: { Date: Date; Time: Date }[];
     accessibility: string;
     pickUpLocation: { longitude: number; latitude: number };
     dropOffLocation: { longitude: number; latitude: number };
-    ratings: number[];
-    preferenceTags: PreferenceTag[];
-    category: Category;
+    ratings?: IRating[];
+    preferenceTags?: PreferenceTag[];
+    category?: Category;
     owner: string;
+}
+
+interface HistoricalPlace {
+  _id: string;
+  name: string;
+  description: string;
+  location: { longitude: number; latitude: number };
+  openingHours: { open: string; close: string };
+  price: { foreigner: number, native: number, student: number};
+  images: string[];
+  tags?: HistoricalTag[];
+  ratings?: IRating[];
+  preferenceTags?: PreferenceTag[];
+  owner: string;
+  category?: Category;
 }
 
 interface Activity {
   _id: string;
   name: string;
+  description: string;
   date: Date;
   time: Date;
+  images: string[];
   location: { longitude: number; latitude: number };
-  price: number | { min: number; max: number };
-  category: Category;
-  tags: string[];
-  specialDiscounts: string[];
+  price: number | { type: string; price: number }[];
+  category?: Category;
+  tags?: string[];
+  specialDiscounts?: number;
   isBookingOpen: boolean;
-  preferenceTags: PreferenceTag[];
-  ratings: number[];
+  preferenceTags?: PreferenceTag[];
+  ratings?: IRating[];
+  owner: string;
 }
 
 interface Category {
@@ -70,6 +95,11 @@ interface PreferenceTag {
   name:string;
 }
 
+interface HistoricalTag {
+  _id:string;
+  name:string;
+}
+
 
 // filter using the 3 icons on the top
 
@@ -77,7 +107,7 @@ interface PreferenceTag {
 const GeneralGridView = () => {
   const [activefilter, setActiveFilter] = useState<string[]>([]);
   const [search, setSearch] = useState<string>("");
-  const [combined, setCombined] = useState<(Itinerary | Activity)[]>([]);
+  const [combined, setCombined] = useState<(Itinerary | Activity | HistoricalPlace)[]>([]);
   const [searchPartsValues, setSearchPartsValues] = useState<string[][]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [selectedTag, setSelectedTag] = useState<string[]>([]);
@@ -96,45 +126,46 @@ const GeneralGridView = () => {
     return res.json();
   };
   
-  // const fetchPlaces = async () => {
-  //   const res = await fetch(PLACES_API);
-  //   return res.json();
-  // };
+  const fetchPlaces = async () => {
+    const res = await fetch(PLACES_API);
+    return res.json();
+  };
 
-  const fetchTags = async () => {
+  const fetchPreferenceTags = async () => {
     const res = await fetch(TAGS_API);
     return res.json();
   }
 
-  // const fetchCategories = async () => {
-  //   const res = await fetch(CATEGORIES_API);
-  //   return res.json();
-  // }
+  const fetchHistoricalTags = async () => {
+    const res = await fetch(TAGS_API);
+    return res.json();
+  }
+
+  const fetchCategories = async () => {
+    const res = await fetch(CATEGORIES_API);
+    return res.json();
+  }
 
   // useQueries
   const {data: activities, isLoading: isLoadingActivities, error: errorActivities} = useQuery({queryKey: ['entertainment','activities'], queryFn:fetchActivities});
   const {data: itenaries, isLoading: isLoadingItenaries, error: errorItenaries} = useQuery({queryKey: ['entertainment','itenaries'], queryFn:fetchItenaries});
-  // const {data: places, isLoading: isLoadingPlaces, error: errorPlaces} = useQuery({queryKey: ['entertainment','places'], queryFn:fetchPlaces});
-  const {data: tags, isLoading: isLoadingTags, error: errorTags} = useQuery({queryKey: ['entertainment','tags'], queryFn:fetchTags});
-  // const {data: categories, isLoading: isLoadingCategories, error: errorCategories} = useQuery({queryKey: ['entertainment','categories'], queryFn:fetchCategories});
-
-  // const {data: places} = useQuery('places', fetchPlaces);
-
+  const {data: places, isLoading: isLoadingPlaces, error: errorPlaces} = useQuery({queryKey: ['entertainment','places'], queryFn:fetchPlaces});
+  const {data: preferenceTags, isLoading: isPreferenceTags, error: errorPreferenceTags} = useQuery({queryKey: ['entertainment','preferenceTags'], queryFn:fetchPreferenceTags});
+  const {data: historicalTags, isLoading: isHistoricalTags, error: errorHistoricalTags} = useQuery({queryKey: ['entertainment','historicalTags'], queryFn:fetchHistoricalTags});
+  const {data: categories, isLoading: isLoadingCategories, error: errorCategories} = useQuery({queryKey: ['entertainment','categories'], queryFn:fetchCategories});
 
 
   const navigate = useNavigate();
   
-  const handleCardClick = (item: Itinerary | Activity | Place) => {
+  const handleCardClick = (item: Itinerary | Activity | HistoricalPlace) => {
       // Navigate to detail page, pass the item data via state
-      navigate(`/details/${item.id}`, { state: { item } });
-    };
+      navigate(`/details/${item._id}`, { state: { item } });
+  };
 
   //fetching data
   useEffect(() => {
-    setFinishedLoading(!isLoadingActivities && !isLoadingItenaries && !isLoadingTags)
-    console.log(activities);
-    console.log(itenaries);
-  }, [isLoadingActivities, isLoadingItenaries, isLoadingTags]);
+    setFinishedLoading(!isLoadingActivities && !isLoadingItenaries && !isPreferenceTags && !isLoadingCategories && !isLoadingPlaces && !isHistoricalTags)
+  }, [isLoadingActivities, isLoadingItenaries, isPreferenceTags, isLoadingCategories, isLoadingPlaces, isHistoricalTags]);
   
   useEffect(() => {
     if (finishedLoading) {
@@ -145,13 +176,13 @@ const GeneralGridView = () => {
   const searchParts = ["Category", "Tag"];
 
   useEffect(() => {
-    setSearchPartsValues([["Beach", "Safari", "Hiking"]]);
+    setSearchPartsValues([categories,[preferenceTags, historicalTags]]);
   }, []);
 
   useEffect(() => {
     // Combine all data into one array initially
     if(finishedLoading)
-      setCombined([...activities, ...itenaries]);
+      setCombined([...activities, ...itenaries, ...places]);
   }, [activities,itenaries,finishedLoading]);
 
   //Passing the sort option to the child component
@@ -205,13 +236,14 @@ const GeneralGridView = () => {
     })
     .filter((item) => {
       // Filter based on selected category
-      console.log(item);
-      return selectedCategory.length === 0 || selectedCategory.includes(item.category.name);
+      if(item.category)
+        return selectedCategory.length === 0 || selectedCategory.includes(item.category.name);
     })
     .filter((item) => {
       // Filter based on selected tag
       //TO DO ADD TAGS FOR PLACES
-      return selectedTag.length === 0 || selectedTag.some((tag) => item.preferenceTags.some((preferenceTag) => preferenceTag.name === tag));
+      return selectedTag.length === 0 || selectedTag.some((tag) => item.preferenceTags?.some((preferenceTag) => preferenceTag.name === tag));
+      
     });
 
     const getPriceValue = (price : number | { min: number; max: number } ) => {
@@ -227,8 +259,8 @@ const GeneralGridView = () => {
   }
   // Sort combined items
   const sortedCombinedItems = filteredCombinedItems.sort((a, b) => {
-    const aRatings = getAverageRating(a.ratings);
-    const bRatings = getAverageRating(b.ratings);
+    const aRatings = getAverageRating(a.rating);
+    const bRatings = getAverageRating(b.rating);
     const aPrice = getPriceValue(a.price);
     const bPrice = getPriceValue(b.price);
 
@@ -251,7 +283,7 @@ const GeneralGridView = () => {
            <SearchBar
             onSearch={setSearch}
             searchParts={searchParts}
-            searchPartsValues={[["Beach", "Safari", "Hiking","justcategory"],["Adventure", "Relaxation", "Culture","justtag"]]}
+            searchPartsValues={searchPartsValues}
             searchPartsHandlers={[
               { state: selectedCategory, setState: handleCategoryClick },
               { state: selectedTag, setState: handleTagClick },
@@ -342,6 +374,7 @@ const GeneralGridView = () => {
             //should be changed to an array later on
             availability={(item as Activity)?.isBookingOpen}
             // openingTime={(item as Place)?.openingTime}
+            onclick={() => handleCardClick(item)}
           />
         ))}
       </div>
