@@ -7,11 +7,12 @@ type TagsSelectorProps = {
   placeholder: string;
   onSave: (selectedOptions: Option[]) => void;
   options?: Option[];
+  initialOptions?: Option[];
 };
 
-function TagsSelector({ placeholder, onSave, options }: TagsSelectorProps) {
+function TagsSelector({ placeholder, onSave, options, initialOptions }: TagsSelectorProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<Option[]>(initialOptions ?? []);
 
   const handleSave = () => {
     onSave(selectedOptions);
