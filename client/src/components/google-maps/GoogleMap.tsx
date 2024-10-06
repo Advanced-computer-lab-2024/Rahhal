@@ -8,25 +8,23 @@ import {
   useMap,
 } from "@vis.gl/react-google-maps";
 import { MapPin } from "lucide-react";
-import { useState } from "react";
-import PlacesAutoComplete from "./PlacesAutoComplete";
+import PlacesAutocomplete from "./PlacesAutoComplete";
 
-interface GoogleMapProps {
+type GoogleMapProps = {
   isEditable: boolean;
-  initialLocation: { lat: number; lng: number };
-}
+  location: { lat: number; lng: number };
+  setLocation: (location: { lat: number; lng: number }) => void;
+};
 
-function GoogleMap({ isEditable, initialLocation }: GoogleMapProps) {
-  const [location, setLocation] = useState(initialLocation);
-
+function GoogleMap({ isEditable, location, setLocation }: GoogleMapProps) {
   return (
     <APIProvider apiKey="AIzaSyDH66WmNegr3ISHqJMqAFGfmg9eP3jI59g" language="en">
       <Map
         className="h-96"
         defaultZoom={13}
-        defaultCenter={{ lat: -33.860664, lng: 151.208138 }}
-        onCameraChanged={(ev: MapCameraChangedEvent) => {
-          setLocation(ev.detail.center);
+        center={location}
+        onCameraChanged={(event: MapCameraChangedEvent) => {
+          setLocation(event.detail.center);
         }}
         gestureHandling={isEditable ? "greedy" : "none"}
         clickableIcons={isEditable}
@@ -40,7 +38,7 @@ function GoogleMap({ isEditable, initialLocation }: GoogleMapProps) {
               <CurrentLocationControl />
             </MapControl>
             <MapControl position={ControlPosition.TOP_LEFT}>
-              <PlacesAutoComplete />
+              <PlacesAutocomplete setLocation={setLocation} />
             </MapControl>
           </>
         )}

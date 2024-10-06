@@ -10,7 +10,17 @@ import axios from "axios";
 import { useDebounce } from "use-debounce";
 import { cn } from "@/lib/utils";
 
-async function fetchData(inputValue: string) {
+type Prediction = {
+  place_id: string;
+  description: string;
+  reference: string;
+};
+
+type PlacesAutocompleteProps = {
+  setLocation: (location: { lat: number; lng: number }) => void;
+};
+
+async function fetchPlacesAutocomplete(inputValue: string) {
   const { data } = await axios.get(
     `http://localhost:3000/api/google-maps/autocomplete?input=${inputValue}`,
   );
@@ -18,13 +28,14 @@ async function fetchData(inputValue: string) {
   return data;
 }
 
-type Prediction = {
-  place_id: string;
-  description: string;
-  reference: string;
-};
+async function fetchPlaceLocation(placeId: string) {
+  const { data } = await axios.get(
+    `http://localhost:3000/api/google-maps/place-details?placeId=${placeId}`,
+  );
+  return data.location;
+}
 
-export default function PlacesAutoComplete() {
+export default function PlacesAutocomplete({ setLocation }: PlacesAutocompleteProps) {
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [input, setInput] = useState("");
   const [debouncedInput] = useDebounce(input, 500); // Debounce input value by 500ms to reduce API calls
@@ -33,7 +44,7 @@ export default function PlacesAutoComplete() {
   useEffect(() => {
     const fetchPredictions = async () => {
       if (debouncedInput) {
-        const predictions = await fetchData(debouncedInput);
+        const predictions = await fetchPlacesAutocomplete(debouncedInput);
         setPredictions(predictions ?? []);
       }
     };
@@ -56,7 +67,16 @@ export default function PlacesAutoComplete() {
       >
         <CommandGroup heading="Suggestions">
           {predictions.map((prediction) => (
-            <CommandItem key={prediction.place_id}>{prediction.description}</CommandItem>
+            <CommandItem
+              key={prediction.place_id}
+              onMouseDown={async () => {
+                setInput(prediction.description);
+                const placeLocation = await fetchPlaceLocation(prediction.place_id);
+                setLocation(placeLocation);
+              }}
+            >
+              {prediction.description}
+            </CommandItem>
           ))}
         </CommandGroup>
       </CommandList>
