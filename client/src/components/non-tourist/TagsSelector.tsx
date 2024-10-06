@@ -1,25 +1,51 @@
+import { useState } from "react";
 import MultipleSelector, { Option } from "@/components/ui/multiple-selector";
+import { Edit2, Save } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-const OPTIONS: Option[] = [
-  { label: "Family Friendly", value: "family-friendly" },
-  { label: "Religious", value: "religious" },
-  { label: "Historical", value: "historical" },
-];
+type TagsSelectorProps = {
+  placeholder: string;
+  onSave: (selectedOptions: Option[]) => void;
+  options?: Option[];
+};
 
-const TagsSelector = () => {
+function TagsSelector({ placeholder, onSave, options }: TagsSelectorProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
+
+  const handleSave = () => {
+    onSave(selectedOptions);
+    setIsEditing(false);
+  };
+
   return (
-    <div className="w-full px-10">
-      <MultipleSelector
-        defaultOptions={OPTIONS}
-        placeholder="Select frameworks you like..."
-        emptyIndicator={
-          <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-            no results found.
-          </p>
-        }
-      />
+    <div className="w-full px-10 flex items-center">
+      <div className="flex-grow">
+        <MultipleSelector
+          defaultOptions={options}
+          placeholder={placeholder}
+          emptyIndicator={
+            <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+              no results found.
+            </p>
+          }
+          disabled={!isEditing}
+          onChange={setSelectedOptions}
+        />
+      </div>
+      <div className="ml-4 flex">
+        {isEditing ? (
+          <Button variant="ghost" size="icon" onClick={handleSave} disabled={!isEditing}>
+            <Save className="h-4 w-4" />
+          </Button>
+        ) : (
+          <Button variant="ghost" size="icon" onClick={() => setIsEditing(!isEditing)}>
+            <Edit2 className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
     </div>
   );
-};
+}
 
 export default TagsSelector;
