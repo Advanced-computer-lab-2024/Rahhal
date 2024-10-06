@@ -13,7 +13,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Button } from "../ui/button";
-
+import { useContext } from "react";
+import { EditContext } from "./SettingsView";
 const user = {
   username: "YousefElbrolosy",
   email: "yousefelbrolosy8@gmail.com",
@@ -90,7 +91,7 @@ export default function AccountForm() {
       newPassword: "",
     },
   });
-
+  const editForm = useContext(EditContext);
   function onSubmit(data: AccountFormValues) {
     if (changePassword && oldPasswordForm.formState.isValid) {
       console.log({ ...data, password: oldPasswordForm.getValues().newPassword });
@@ -127,7 +128,7 @@ export default function AccountForm() {
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="shadcn" {...field} />
+                      <Input disabled={!editForm} placeholder="shadcn" {...field} />
                     </FormControl>
                     <FormDescription>
                       This is your public display name. It can be your real name or a pseudonym. You
@@ -147,7 +148,7 @@ export default function AccountForm() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="johndoe@gmail.com" {...field} />
+                      <Input disabled={!editForm} placeholder="johndoe@gmail.com" {...field} />
                     </FormControl>
                     <FormDescription>
                       Your email address is not displayed publicly and is used to log in.
@@ -198,6 +199,7 @@ export default function AccountForm() {
             <Button
               className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
               type="button"
+              disabled={!editForm}
               onClick={() => {
                 setChangePassword((prev) => !prev);
                 if (changePassword) {
@@ -207,14 +209,17 @@ export default function AccountForm() {
             >
               {changePassword ? "Cancel" : "Change password"}
             </Button>
-
             <div className="space-y-2">
-              <button
-                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
-                type="submit"
-              >
-                Update account
-              </button>
+              {editForm && (
+                <>
+                  <button
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
+                    type="submit"
+                  >
+                    Update account
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>

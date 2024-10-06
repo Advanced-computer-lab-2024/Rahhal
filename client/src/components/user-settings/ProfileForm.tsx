@@ -11,6 +11,8 @@ import {
 import { Input } from "../ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useContext } from "react";
+import { EditContext } from "./SettingsView";
 // import { useState } from "react";
 
 //from api
@@ -87,7 +89,7 @@ export default function ProfileForm() {
     console.log(data);
   }
   // const [editForm, setEditForm] = useState(false);
-  const editForm = true;
+  const editForm = useContext(EditContext);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -116,7 +118,7 @@ export default function ProfileForm() {
                       <FormItem>
                         <FormLabel>First Name</FormLabel>
                         <FormControl>
-                          <Input readOnly={!editForm} placeholder="john" {...field} />
+                          <Input disabled={!editForm} placeholder="john" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -132,7 +134,7 @@ export default function ProfileForm() {
                       <FormItem>
                         <FormLabel>Last Name</FormLabel>
                         <FormControl>
-                          <Input readOnly={!editForm} placeholder="doe" {...field} />
+                          <Input disabled={!editForm} placeholder="doe" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -153,7 +155,7 @@ export default function ProfileForm() {
                     <FormItem>
                       <FormLabel>Company Name</FormLabel>
                       <FormControl>
-                        <Input readOnly={!editForm} placeholder="Resala" {...field} />
+                        <Input disabled={!editForm} placeholder="Resala" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -171,7 +173,7 @@ export default function ProfileForm() {
                 <FormItem>
                   <FormLabel>Role</FormLabel>
                   <FormControl>
-                    <Input readOnly={!editForm} placeholder="e:g tourist" disabled {...field} />
+                    <Input placeholder="e:g tourist" disabled {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -190,7 +192,7 @@ export default function ProfileForm() {
                       <FormLabel>Phone Number</FormLabel>
                       <FormControl>
                         <Input
-                          readOnly={!editForm}
+                          disabled={!editForm}
                           placeholder="20123456789"
                           {...field}
                           maxLength={20}
@@ -220,7 +222,7 @@ export default function ProfileForm() {
                       <FormLabel>Hotline</FormLabel>
                       <FormControl>
                         <Input
-                          readOnly={!editForm}
+                          disabled={!editForm}
                           placeholder="19991"
                           {...field}
                           maxLength={5}
@@ -250,7 +252,7 @@ export default function ProfileForm() {
                       <FormLabel>Description</FormLabel>
                       <FormControl>
                         <textarea
-                          readOnly={!editForm}
+                          disabled={!editForm}
                           className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
                           placeholder="I sell tomatoes"
                           {...field}
@@ -279,7 +281,7 @@ export default function ProfileForm() {
                     <FormItem>
                       <FormLabel>Job</FormLabel>
                       <FormControl>
-                        <Input readOnly={!editForm} placeholder="e:g developer" {...field} />
+                        <Input disabled={!editForm} placeholder="e:g developer" {...field} />
                       </FormControl>
                       <FormDescription>Please state your job</FormDescription>
                       <FormMessage />
@@ -301,7 +303,7 @@ export default function ProfileForm() {
                       <FormLabel>Previous Work</FormLabel>
                       <FormControl>
                         <textarea
-                          readOnly={!editForm}
+                          disabled={!editForm}
                           className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
                           placeholder="I worked at Second Cup"
                           {...field}
@@ -328,7 +330,7 @@ export default function ProfileForm() {
                       <FormLabel>Years Of Experience</FormLabel>
                       <FormControl>
                         <Input
-                          readOnly={!editForm}
+                          disabled={!editForm}
                           className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
                           {...field}
                           type="number"
@@ -358,7 +360,7 @@ export default function ProfileForm() {
                           {(field.value || user.addresses).map((address, index) => (
                             <div key={index} className="flex items-center space-x-2 mb-4">
                               <Input
-                                readOnly={!editForm}
+                                disabled={!editForm}
                                 placeholder={`Address ${index + 1}`}
                                 value={address}
                                 onChange={(e) => {
@@ -421,7 +423,7 @@ export default function ProfileForm() {
                     <FormItem>
                       <FormControl>
                         <Input
-                          readOnly={!editForm}
+                          disabled={!editForm}
                           className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                           placeholder="https://shadcn.com"
                           {...field}
@@ -445,7 +447,7 @@ export default function ProfileForm() {
                     <FormItem>
                       <FormControl>
                         <Input
-                          readOnly={!editForm}
+                          disabled={!editForm}
                           className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                           placeholder="https://shadcn.com"
                           {...field}
