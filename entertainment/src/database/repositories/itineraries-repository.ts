@@ -3,12 +3,12 @@ import type { IItinerary } from "../models/Itinerary";
 
 // Get all itineraries
 export async function getAllItineraries() {
-  return await Itinerary.find().populate("category").populate("preferenceTags");
+  return await Itinerary.find().populate("category").populate("preferenceTags").exec();
 }
 
 // Get itinerary by id
 export async function getItineraryById(id: string) {
-  return await Itinerary.findById(id).populate("category").populate("preferenceTags");
+  return await Itinerary.findById(id).populate("category").populate("preferenceTags").exec();
 }
 
 // Create a new itinerary
