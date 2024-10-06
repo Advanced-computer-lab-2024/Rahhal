@@ -264,7 +264,7 @@ function ComboboxPopover(SearchPartProps: SearchPartProps) {
               <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
-                  {SearchPartProps.values.map((status) => (
+                  {SearchPartProps.values.length != 0 && SearchPartProps.values.map((status) => (
                     <CommandItem
                       key={status}
                       value={status}
