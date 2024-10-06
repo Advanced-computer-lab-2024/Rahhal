@@ -31,7 +31,7 @@ export function GenericModal({ title, description, dialogTrigger, children, onSu
           {children && children.map((child, index) => <div key={index} className="grid items-center">{child}</div>)}
         </div>
         <DialogFooter>
-          <Button onSubmit={onSubmit}>Save changes</Button>
+          <Button onClick={onSubmit}>Save changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

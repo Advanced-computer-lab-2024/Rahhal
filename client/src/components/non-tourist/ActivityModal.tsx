@@ -69,6 +69,7 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
   // save the activity to the server
 
   const saveActivity = async () => {
+    
     const activity: TActivity = {
       name,
       date,
@@ -86,7 +87,7 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
       }
     };
 
-    console.log(activity);
+    
     if (isNewActivity) {
       await axios.post(ENTERTAINMENT_SERVICE_URL + "/activities", activity).then((response) => {
         console.log(response.data);
