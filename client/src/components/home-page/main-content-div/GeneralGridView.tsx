@@ -21,7 +21,7 @@ type Filter = "itinerary" | "place" | "activity";
 type SortOption = "price-high-low" | "price-low-high" | "rating-high-low" | "rating-low-high";
 const ACTIVITIES_API = 'http://localhost:3000/api/entertainment/activities';
 const ITENARIES_API = 'http://localhost:3000/api/entertainment/itineraries';
-const PLACES_API = 'http://localhost:3000/api/entertainment/places';
+const HISTORICAL_PLACES_API = 'http://localhost:3000/api/entertainment/places';
 const TAGS_API = 'http://localhost:3000/api/entertainment/preference-tags';
 const CATEGORIES_API = 'http://localhost:3000/api/entertainment/categories';
 
@@ -126,8 +126,8 @@ const GeneralGridView = () => {
     return res.json();
   };
   
-  const fetchPlaces = async () => {
-    const res = await fetch(PLACES_API);
+  const fetchHistoricalPlaces = async () => {
+    const res = await fetch(HISTORICAL_PLACES_API);
     return res.json();
   };
 
@@ -149,7 +149,7 @@ const GeneralGridView = () => {
   // useQueries
   const {data: activities, isLoading: isLoadingActivities, error: errorActivities} = useQuery({queryKey: ['entertainment','activities'], queryFn:fetchActivities});
   const {data: itenaries, isLoading: isLoadingItenaries, error: errorItenaries} = useQuery({queryKey: ['entertainment','itenaries'], queryFn:fetchItenaries});
-  const {data: places, isLoading: isLoadingPlaces, error: errorPlaces} = useQuery({queryKey: ['entertainment','places'], queryFn:fetchPlaces});
+  const {data: places, isLoading: isLoadingPlaces, error: errorPlaces} = useQuery({queryKey: ['entertainment','places'], queryFn:fetchHistoricalPlaces});
   const {data: preferenceTags, isLoading: isPreferenceTags, error: errorPreferenceTags} = useQuery({queryKey: ['entertainment','preferenceTags'], queryFn:fetchPreferenceTags});
   const {data: historicalTags, isLoading: isHistoricalTags, error: errorHistoricalTags} = useQuery({queryKey: ['entertainment','historicalTags'], queryFn:fetchHistoricalTags});
   const {data: categories, isLoading: isLoadingCategories, error: errorCategories} = useQuery({queryKey: ['entertainment','categories'], queryFn:fetchCategories});
@@ -241,8 +241,9 @@ const GeneralGridView = () => {
     })
     .filter((item) => {
       // Filter based on selected tag
-      //TO DO ADD TAGS FOR PLACES
-      return selectedTag.length === 0 || selectedTag.some((tag) => item.preferenceTags?.some((preferenceTag) => preferenceTag.name === tag));
+      const preferenceTags = selectedTag.some((tag) => item.preferenceTags?.some((preferenceTag) => preferenceTag.name === tag));
+      const historicalTags = selectedTag.some((tag) => (item as HistoricalPlace).tags?.some((historicalTag) => historicalTag.name === tag));
+      return selectedTag.length === 0 || preferenceTags || historicalTags;
       
     });
 
@@ -254,13 +255,14 @@ const GeneralGridView = () => {
       }
       return 0;
     };
-  const getAverageRating = (ratings: number[]) => {
-    return ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+  const getAverageRating = (ratings: IRating[]) => {
+    if (ratings.length === 0) return 0;
+    return ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length;
   }
   // Sort combined items
   const sortedCombinedItems = filteredCombinedItems.sort((a, b) => {
-    const aRatings = getAverageRating(a.rating);
-    const bRatings = getAverageRating(b.rating);
+    const aRatings = getAverageRating(a.ratings ?? []);
+    const bRatings = getAverageRating(b.ratings ?? []);
     const aPrice = getPriceValue(a.price);
     const bPrice = getPriceValue(b.price);
 
