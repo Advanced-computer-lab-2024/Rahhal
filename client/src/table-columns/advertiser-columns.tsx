@@ -1,24 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronRight } from "lucide-react";
-import { ActivitiesModal } from "@/components/non-tourist/ActivityModal";
+import { ActivitiesModal } from "@/components/non-tourist/advertiser/ActivityModal";
 import { Badge } from "@/components/ui/badge";
 import { FaTrash } from "react-icons/fa6";
-import { deleteActivity } from "@/lib/utils";
-
-// deleteRow function
-const deleteRow = (row: any) => {
-  deleteActivity(row.original);
-  window.location.reload();
-};
-
-// Calculate average rating
-const calculateAverageRating = (ratings: TRating[]) => {
-  const totalRating = ratings.reduce((acc, rating) => acc + rating.rating, 0);
-  return totalRating / ratings.length;
-};
-
-// Rating type
+import { deleteActivity } from "@/api-calls/activities-api-calls";
 
 export type TRating = {
   user: string;
@@ -26,14 +12,10 @@ export type TRating = {
   review?: string;
 };
 
-// Category type
-
 export type TCategory = {
   _id: string;
   name: string;
 };
-
-// Activity type
 
 export type TActivity = {
   _id?: string;
@@ -50,7 +32,16 @@ export type TActivity = {
   ratings: TRating[];
 };
 
-// Columns configuration
+function deleteRow(row: any) {
+  deleteActivity(row.original);
+  window.location.reload();
+}
+
+function calculateAverageRating(ratings: TRating[]) {
+  const totalRating = ratings.reduce((acc, rating) => acc + rating.rating, 0);
+  return totalRating / ratings.length;
+}
+
 export const activitiesColumns: ColumnDef<TActivity>[] = [
   {
     accessorKey: "name",

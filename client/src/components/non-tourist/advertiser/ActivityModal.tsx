@@ -1,25 +1,21 @@
-import { GenericModal } from "../GenericModal";
-import { TActivity, TCategory, TRating, TPrice } from "../../table-columns/advertiser-columns";
-import { ToggleableSwitchCard } from "../ToggleableSwitchCard";
+import { GenericModal } from "../../GenericModal";
+import { TActivity } from "@/table-columns/advertiser-columns";
+import { ToggleableSwitchCard } from "../../ToggleableSwitchCard";
 import { DoorOpen } from "lucide-react";
 import { useEffect, useState } from "react";
-import PictureCard from "../PictureCard";
-import { ENTERTAINMENT_SERVICE_URL } from "./ActivitiesTable";
-import axios from "axios";
-import ShortText from "../ShortText";
-import PriceCategories from "../price-categories/PriceCategories";
-import TagsSelector from "./TagsSelector";
-import { GenericSelect } from "../GenericSelect";
-import ReviewDisplay from "./Ratings";
-import EditableTimePicker from "./EditableTimePicker";
-import EditableDatePicker from "./EditableDatePicker";
-import {
-  fetchCategories,
-  fetchPreferenceTags,
-  IMAGES,
-  sampleReviews,
-  submitActivity,
-} from "@/lib/utils";
+import PictureCard from "../../PictureCard";
+import ShortText from "../../ShortText";
+import PriceCategories from "../../price-categories/PriceCategories";
+import TagsSelector from "../TagsSelector";
+import { GenericSelect } from "../../GenericSelect";
+import ReviewDisplay from "../Ratings";
+import EditableTimePicker from "../EditableTimePicker";
+import EditableDatePicker from "../EditableDatePicker";
+import { IMAGES, sampleReviews } from "@/lib/utils";
+import { submitActivity } from "@/api-calls/activities-api-calls";
+import { fetchCategories } from "@/api-calls/categories-api-calls";
+import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
+import { DEFAULTS } from "@/lib/constants";
 
 interface ActivitiesModalProps {
   activityData?: TActivity;
@@ -37,29 +33,18 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
   }); // holds the data fetched from the server like categories and preference tags, etc.
 
   useEffect(() => {
-    // fetch categories and preference tags from the server
-    fetchCategories().then((data) => setModalDBData({ ...modalDBData, categories: data }));
+    const init = async () => {
+      const categories = await fetchCategories();
+      const preferenceTags = await fetchPreferenceTags();
 
-    fetchPreferenceTags().then((data) =>
-      setModalDBData({ ...modalDBData, preferenceTags: data, tags: data }),
-    );
+      setModalDBData({ ...modalDBData, categories, preferenceTags, tags: preferenceTags });
 
-    // if the activity is new, set the modal data to default values
-    if (isNewActivity) {
-      setModalActivitiesData({
-        name: "",
-        date: new Date(),
-        time: new Date(),
-        location: { longitude: 0, latitude: 0 },
-        specialDiscounts: [],
-        preferenceTags: [],
-        isBookingOpen: false,
-        price: 0,
-        category: { _id: "", category: "" },
-        tags: [],
-        ratings: [],
-      });
-    }
+      // if the activity is new, set the modal data to default values
+      if (isNewActivity) {
+        setModalActivitiesData(DEFAULTS.ACTIVITY);
+      }
+    };
+    init();
   }, []);
 
   // create generic modal with components based on data type of columns
@@ -143,12 +128,10 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
           }))}
           onSelect={(value: string) => {
             const selectedCategory = modalDBData.categories.find(
-              (category: { _id: string }) => category._id === value
+              (category: { _id: string }) => category._id === value,
             );
             setModalActivitiesData(
-              modalActivityData
-                ? { ...modalActivityData, category: selectedCategory }
-                : undefined,
+              modalActivityData ? { ...modalActivityData, category: selectedCategory } : undefined,
             );
           }}
           initalValue={modalActivityData?.category._id ?? ""}
@@ -180,6 +163,7 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
       <ShortText
         title="Special Discounts"
         initialValue={modalActivityData?.specialDiscounts.join(", ") ?? ""}
+        //TODO - do something here
         onSave={(value) => {}}
         placeholder={"Enter special discounts"}
         initialDisabled={!isNewActivity}
