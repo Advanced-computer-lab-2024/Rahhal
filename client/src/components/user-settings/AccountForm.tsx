@@ -27,6 +27,21 @@ const passwordValidator = z.object({
       message: "Old password does not match.",
     })
     .optional(),
+  newPassword: z
+    .string()
+    .min(8, {
+      message: "Password must be at least 8 characters.",
+    })
+    .regex(/[A-Z]/, {
+      message: "Password must contain at least one uppercase letter.",
+    })
+    .regex(/[0-9]/, {
+      message: "Password must contain at least one number.",
+    })
+    .refine((val) => val !== user.password, {
+      message: "New password must be different from the old password.",
+    })
+    .optional(),
 });
 
 const accountFormSchema = z.object({
@@ -55,9 +70,6 @@ const accountFormSchema = z.object({
     .regex(/[0-9]/, {
       message: "Password must contain at least one number.",
     })
-    .refine((val) => val !== user.password, {
-      message: "New password must be different from the old password.",
-    })
     .optional(),
 });
 
@@ -73,10 +85,20 @@ export default function AccountForm() {
   const oldPasswordForm = useForm<passwordValidatorValue>({
     resolver: zodResolver(passwordValidator),
     mode: "onChange",
+    defaultValues: {
+      oldPassword: "",
+      newPassword: "",
+    },
   });
 
   function onSubmit(data: AccountFormValues) {
-    console.log(data);
+    if (changePassword && oldPasswordForm.formState.isValid) {
+      console.log({ ...data, password: oldPasswordForm.getValues().newPassword });
+    } else if (changePassword && !oldPasswordForm.formState.isValid) {
+      oldPasswordForm.trigger();
+    } else {
+      console.log(data);
+    }
   }
 
   return (
@@ -135,9 +157,8 @@ export default function AccountForm() {
                 )}
               />
             </div>
-
             {changePassword && (
-              <>
+              <Form {...oldPasswordForm}>
                 {/* Old Password */}
                 <div className="space-y-2">
                   <FormField
@@ -157,8 +178,8 @@ export default function AccountForm() {
                 {/* newPassword */}
                 <div className="space-y-2">
                   <FormField
-                    control={form.control}
-                    name="password"
+                    control={oldPasswordForm.control}
+                    name="newPassword"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>New Password</FormLabel>
@@ -171,16 +192,20 @@ export default function AccountForm() {
                     )}
                   />
                 </div>
-              </>
+              </Form>
             )}
+
             <Button
               className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
               type="button"
               onClick={() => {
                 setChangePassword((prev) => !prev);
+                if (changePassword) {
+                  oldPasswordForm.reset();
+                }
               }}
             >
-              {changePassword ? "Cancel" : "Update password"}
+              {changePassword ? "Cancel" : "Change password"}
             </Button>
 
             <div className="space-y-2">
