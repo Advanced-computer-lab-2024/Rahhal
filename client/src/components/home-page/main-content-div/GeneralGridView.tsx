@@ -167,7 +167,7 @@ const GeneralGridView = () => {
   // useQueries
   const {data: activities, isLoading: isLoadingActivities, error: errorActivities} = useQuery({queryKey: ['entertainment','activities'], queryFn:fetchActivities});
   const {data: itenaries, isLoading: isLoadingItenaries, error: errorItenaries} = useQuery({queryKey: ['entertainment','itenaries'], queryFn:fetchItenaries});
-  const {data: places, isLoading: isLoadingPlaces, error: errorPlaces} = useQuery({queryKey: ['entertainment','places'], queryFn:fetchHistoricalPlaces});
+  const {data: historicalPlaces, isLoading: isHistoricalPlaces, error: errorHistorical} = useQuery({queryKey: ['entertainment','historicalPlaces'], queryFn:fetchHistoricalPlaces});
   const {data: preferenceTags, isLoading: isPreferenceTags, error: errorPreferenceTags} = useQuery({queryKey: ['entertainment','preferenceTags'], queryFn:fetchPreferenceTags});
   const {data: historicalTags, isLoading: isHistoricalTags, error: errorHistoricalTags} = useQuery({queryKey: ['entertainment','historicalTags'], queryFn:fetchHistoricalTags});
   const {data: categories, isLoading: isLoadingCategories, error: errorCategories} = useQuery({queryKey: ['entertainment','categories'], queryFn:fetchCategories});
@@ -182,8 +182,8 @@ const GeneralGridView = () => {
 
   //fetching data
   useEffect(() => {
-    setFinishedLoading(!isLoadingActivities && !isLoadingItenaries && !isPreferenceTags && !isLoadingCategories && !isLoadingPlaces && !isHistoricalTags)
-  }, [isLoadingActivities, isLoadingItenaries, isPreferenceTags, isLoadingCategories, isLoadingPlaces, isHistoricalTags]);
+    setFinishedLoading(!isLoadingActivities && !isLoadingItenaries && !isPreferenceTags && !isLoadingCategories && !isHistoricalPlaces && !isHistoricalTags)
+  }, [isLoadingActivities, isLoadingItenaries, isPreferenceTags, isLoadingCategories, isHistoricalPlaces, isHistoricalTags]);
   
   useEffect(() => {
     if (finishedLoading) {
@@ -204,8 +204,8 @@ const GeneralGridView = () => {
   useEffect(() => {
     // Combine all data into one array initially
     if(finishedLoading)
-      setCombined([...activities, ...itenaries, ...places]);
-  }, [activities,itenaries,finishedLoading]);
+      setCombined([...activities, ...itenaries, ...historicalPlaces]);
+  }, [activities,itenaries,finishedLoading,historicalPlaces]);
 
   //Passing the sort option to the child component
   const [sortOption, setSortOption] = useState<SortOption | null>(null);
@@ -271,6 +271,7 @@ const GeneralGridView = () => {
 
   const getAverageRating = (ratings?: IRating[]) => {
     if (!ratings || ratings.length === 0) return 0;
+    console.log(combined);
     return ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length;
   }
   // Sort combined items
