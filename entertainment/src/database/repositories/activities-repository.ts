@@ -3,12 +3,12 @@ import type { IActivity } from "../models/Activity";
 
 // Get all activities
 export async function getAllActivities() {
-  return await Activity.find();
+  return await Activity.find().populate("category").populate("preferenceTags").exec();
 }
 
 // Get activity by id
 export async function getActivityById(id: string) {
-  return await Activity.findById(id);
+  return await Activity.findById(id).populate("category").populate("preferenceTags").exec();
 }
 
 // Create a new activity
