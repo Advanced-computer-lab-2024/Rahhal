@@ -10,6 +10,7 @@ export interface IItinerary {
   locations: [{ longitude: number; latitude: number; placeId?: string }];
   timeline: string;
   duarationOfActivities: string[];
+  images: string[];
   languages: string[];
   price: number | { min: number; max: number };
   availableDatesTime: { Date: Date; Time: Date }[];

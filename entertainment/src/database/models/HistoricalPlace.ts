@@ -12,7 +12,7 @@ export interface IHistoricalPlace {
   images: string[];
   tags?: mongoose.Schema.Types.ObjectId[];
   ratings?: IRating[];
-  preferenceTags?: mongoose.Schema.Types.ObjectId[];
+  preferenceTags?:  mongoose.Schema.Types.ObjectId[];
   owner: string;
   category?: mongoose.Schema.Types.ObjectId;
 }
