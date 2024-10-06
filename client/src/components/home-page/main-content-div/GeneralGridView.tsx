@@ -16,7 +16,6 @@ import { useNavigate } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {Skeleton} from "@/components/ui/skeleton";
 import FilterButton from "../../home-page-buttons/FilterButton";
-import { finished } from "stream";
 
 type Filter = "itinerary" | "place" | "activity";
 type SortOption = "price-high-low" | "price-low-high" | "rating-high-low" | "rating-low-high";
@@ -172,13 +171,6 @@ const GeneralGridView = () => {
   const {data: historicalTags, isLoading: isHistoricalTags, error: errorHistoricalTags} = useQuery({queryKey: ['entertainment','historicalTags'], queryFn:fetchHistoricalTags});
   const {data: categories, isLoading: isLoadingCategories, error: errorCategories} = useQuery({queryKey: ['entertainment','categories'], queryFn:fetchCategories});
 
-
-  const navigate = useNavigate();
-  
-  const handleCardClick = (item: Itinerary | Activity | HistoricalPlace) => {
-      // Navigate to detail page, pass the item data via state
-      navigate(`/details/${item._id}`, { state: { item } });
-  };
 
   const navigate = useNavigate();
   
