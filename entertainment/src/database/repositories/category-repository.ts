@@ -13,10 +13,10 @@ export async function createCategory(category: ICategory) {
   return await newCategory.save();
 }
 
-export async function updateCategory(id: string, name: string) {
+export async function updateCategory(id: string, category: ICategory) {
   return await Category.findByIdAndUpdate(
     id,
-    { name },
+    category,
     { new: true, runValidators: true },
   );
 }
