@@ -4,25 +4,19 @@ import { ArrowUpDown, ChevronRight } from "lucide-react";
 import { ActivitiesModal } from "@/components/non-tourist/ActivityModal";
 import { Badge } from "@/components/ui/badge";
 
-
-// Price type
-export type TPrice = {
-  price: number | { type: string; price: number }[];
-};
-
 // Rating type
 
 export type TRating = {
   user: string;
   rating: number;
   review?: string;
-}
+};
 
 // Category type
 
 export type TCategory = {
   name: string;
-}
+};
 
 // Activity type
 
@@ -35,7 +29,7 @@ export type TActivity = {
   specialDiscounts: string[];
   preferenceTags: string[];
   isBookingOpen: boolean;
-  price: TPrice;
+  price: number | { type: string; price: number }[];
   category: string;
   tags: string[];
   ratings: TRating[];
