@@ -11,7 +11,7 @@ interface TimePickerDemoProps {
   setDate: (date: Date | undefined) => void;
 }
 
-export function TimePicker12Demo({ date, setDate }: TimePickerDemoProps) {
+export function TimePicker12H({ date, setDate }: TimePickerDemoProps) {
   const [period, setPeriod] = React.useState<Period>("PM");
 
   const minuteRef = React.useRef<HTMLInputElement>(null);
@@ -20,7 +20,7 @@ export function TimePicker12Demo({ date, setDate }: TimePickerDemoProps) {
   const periodRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <div className="flex items-end gap-2">
+    <div className="flex items-end gap-2 justify-center">
       <div className="grid gap-1 text-center">
         <Label htmlFor="hours" className="text-xs">
           Hours

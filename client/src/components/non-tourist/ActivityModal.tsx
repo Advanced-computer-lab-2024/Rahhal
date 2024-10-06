@@ -11,6 +11,9 @@ import PriceCategories from "../price-categories/PriceCategories";
 import TagsSelector from "./TagsSelector";
 import { GenericSelect } from "../GenericSelect";
 import ReviewDisplay from "./Ratings";
+import { TimePicker } from "../ui/TimePicker";
+import { TimePicker12H } from "../time-picker/time-picker-12hour";
+import { DateTimePickerForm } from "../time-picker/date-time-picker-form";
 
 
 interface ActivitiesModalProps {
@@ -114,21 +117,10 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
         placeholder={""}
         initialDisabled={!isNewActivity}
       />
-      <ShortText
-        title="Date"
-        initialValue={date.toString()}
-        onSave={(value) => setDate(new Date(value))}
-        placeholder={""}
-        initialDisabled={!isNewActivity}
-      />
+      <DateTimePickerForm />
 
-      <ShortText
-        title="Time"
-        initialValue={time.toString()}
-        onSave={(value) => setTime(new Date(value))}
-        placeholder={""}
-        initialDisabled={!isNewActivity}
-      />
+      <TimePicker12H date={time} setDate={(value) => setTime(value)} />
+
       <div>
         {/* Location: {activityData.location.longitude}, {activityData.location.latitude} */}
       </div>
