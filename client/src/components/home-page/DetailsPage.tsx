@@ -5,8 +5,10 @@ import pyramid2 from "../../assets/pyramids2.jpg";
 import { useLocation } from "react-router-dom";
 import { FaTags } from "react-icons/fa6";
 import { IoMdStar } from "react-icons/io";
+import TouristHomePageNavigation from "@/TouristHomePage/TouristHomePageNavigation";
 
 const DetailsPage = () => {
+
   const location = useLocation();
   const { item } = location.state || {}; // Access the passed item through state
 
@@ -16,7 +18,12 @@ const DetailsPage = () => {
   };
 
   return (
+<div>
+
+
+    <TouristHomePageNavigation/>
     <div className={DetailsPageStyles["details-page-content-container"]}>
+      
       <div className={DetailsPageStyles["item-details"]}>
         {/* details goes here */}
         <h1>{item.name} </h1>
@@ -158,6 +165,7 @@ const DetailsPage = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
