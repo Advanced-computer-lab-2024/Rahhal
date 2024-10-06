@@ -14,13 +14,12 @@ export default defineConfig({
       usePolling: true,
       interval: 1000,
     },
-    host: true, 
-    port: 5173,                 
-    strictPort: true,         
+    host: true,
+    port: 5173,
+    strictPort: true,
     hmr: {
-      host: 'localhost',        
-      port: 5173,               
+      host: "localhost",
+      port: 5173,
     },
   },
-
 });

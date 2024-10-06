@@ -10,7 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-export default function DatePickerWithRange({ values, onValuesChange }: { values: DateRange, onValuesChange: (values: DateRange) => void}) {
+export default function DatePickerWithRange({
+  values,
+  onValuesChange,
+}: {
+  values: DateRange;
+  onValuesChange: (values: DateRange) => void;
+}) {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: values.from || new Date(),
     to: values.to || addDays(new Date(), 30),

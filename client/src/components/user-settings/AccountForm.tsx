@@ -94,7 +94,9 @@ export default function AccountForm() {
   const editForm = useContext(EditContext);
   function onSubmit(data: AccountFormValues) {
     if (changePassword && oldPasswordForm.formState.isValid) {
-      console.log({ ...data, password: oldPasswordForm.getValues().newPassword });
+      console.log(
+        JSON.stringify({ ...data, password: oldPasswordForm.getValues().newPassword }, null, 2),
+      );
     } else if (changePassword && !oldPasswordForm.formState.isValid) {
       oldPasswordForm.trigger();
     } else {
