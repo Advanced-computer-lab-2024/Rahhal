@@ -16,20 +16,23 @@ import { useNavigate } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {Skeleton} from "@/components/ui/skeleton";
 import FilterButton from "../../home-page-buttons/FilterButton";
+import { finished } from "stream";
 
 type Filter = "itinerary" | "place" | "activity";
 type SortOption = "price-high-low" | "price-low-high" | "rating-high-low" | "rating-low-high";
 const ACTIVITIES_API = 'http://localhost:3000/api/entertainment/activities';
 const ITENARIES_API = 'http://localhost:3000/api/entertainment/itineraries';
-const HISTORICAL_PLACES_API = 'http://localhost:3000/api/entertainment/places';
-const TAGS_API = 'http://localhost:3000/api/entertainment/preference-tags';
+const HISTORICAL_PLACES_API = 'http://localhost:3000/api/entertainment/historical-places';
+const PREFERENCE_TAGS_API = 'http://localhost:3000/api/entertainment/preference-tags';
+const HISTORICAL_TAGS_API = 'http://localhost:3000/api/entertainment/historical-tags';
 const CATEGORIES_API = 'http://localhost:3000/api/entertainment/categories';
 
-interface IRating {
+export interface IRating {
   userId: string;
   rating: number;
   review?: string;
 }
+
 
 interface Itinerary {
     _id: string;
@@ -101,14 +104,29 @@ interface HistoricalTag {
 }
 
 
-// filter using the 3 icons on the top
+export const getPriceValue = (price : number | { min: number; max: number } | { foreigner: number, native: number, student: number} | { type: string; price: number }[] ) => {
+  if (typeof price === 'number') {
+    return price;
+
+  } else if ('min' in price && 'max' in price) {
+    return price.min;
+
+  } else if ('foreigner' in price && 'native' in price && 'student' in price) {
+    return Math.min(price.foreigner, price.native, price.student);
+
+  } else if (Array.isArray(price)) {
+    return price.length > 0 ? Math.min(...price.map(p => p.price)) : 0;
+  }
+
+  return 0;
+};
 
 // Fetching logic from the database
 const GeneralGridView = () => {
   const [activefilter, setActiveFilter] = useState<string[]>([]);
   const [search, setSearch] = useState<string>("");
   const [combined, setCombined] = useState<(Itinerary | Activity | HistoricalPlace)[]>([]);
-  const [searchPartsValues, setSearchPartsValues] = useState<string[][]>([]);
+  const [searchPartsValues, setSearchPartsValues] = useState<string[][]>([[],[]]);
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [selectedTag, setSelectedTag] = useState<string[]>([]);
   const [skeleton, setSkeleton] = useState<boolean>(true);
@@ -132,12 +150,12 @@ const GeneralGridView = () => {
   };
 
   const fetchPreferenceTags = async () => {
-    const res = await fetch(TAGS_API);
+    const res = await fetch(PREFERENCE_TAGS_API);
     return res.json();
   }
 
   const fetchHistoricalTags = async () => {
-    const res = await fetch(TAGS_API);
+    const res = await fetch(HISTORICAL_TAGS_API);
     return res.json();
   }
 
@@ -174,10 +192,14 @@ const GeneralGridView = () => {
   }, [finishedLoading]);
 
   const searchParts = ["Category", "Tag"];
-
   useEffect(() => {
-    setSearchPartsValues([categories,[preferenceTags, historicalTags]]);
-  }, []);
+    if(finishedLoading){
+      const categoryNames = categories.map((category : Category) => category.name);
+      const preferenceTagsNames = preferenceTags.map((preferenceTag : PreferenceTag) => preferenceTag.name);
+      const historicalTagsNames = historicalTags.map((historicalTag : HistoricalTag) => historicalTag.name);
+      setSearchPartsValues([categoryNames,[...preferenceTagsNames, ...historicalTagsNames]]);
+    }
+  }, [finishedLoading]);
 
   useEffect(() => {
     // Combine all data into one array initially
@@ -219,44 +241,36 @@ const GeneralGridView = () => {
 
   //Searching first, then result is filter  then result is sorted
   const filteredCombinedItems = combined
-    .filter((item) => {
-      // Filter based on search
-      if (search) {
-        return item.name.toLowerCase().includes(search.toLowerCase());
-      }
-      return true;
-    })
-    .filter((item) => {
-      // Filter based on active filters
-      if (activefilter.length === 0) return true; // No filters applied, show all
-      if (activefilter.includes("itinerary") && "language" in item) return true;
-      if (activefilter.includes("activity") && "isBookingOpen" in item) return true;
-      if (activefilter.includes("place") && "openingTime" in item) return true;
-      return false;
-    })
-    .filter((item) => {
-      // Filter based on selected category
-      if(item.category)
-        return selectedCategory.length === 0 || selectedCategory.includes(item.category.name);
-    })
-    .filter((item) => {
-      // Filter based on selected tag
-      const preferenceTags = selectedTag.some((tag) => item.preferenceTags?.some((preferenceTag) => preferenceTag.name === tag));
-      const historicalTags = selectedTag.some((tag) => (item as HistoricalPlace).tags?.some((historicalTag) => historicalTag.name === tag));
-      return selectedTag.length === 0 || preferenceTags || historicalTags;
-      
-    });
+  .filter((item) => {
+    // Filter based on search
+    if (search) {
+      return item.name.toLowerCase().includes(search.toLowerCase());
+    }
+    return true;
+  })
+  .filter((item) => {
+    // Filter based on active filters
+    if (activefilter.length === 0) return true; // No filters applied, show all
+    if (activefilter.includes("itinerary") && "language" in item) return true;
+    if (activefilter.includes("activity") && "isBookingOpen" in item) return true;
+    if (activefilter.includes("place") && "openingTime" in item) return true;
+    return false;
+  })
+  .filter((item) => {
+    // Filter based on selected category
+    if(item.category)
+      return selectedCategory.length === 0 || selectedCategory.includes(item.category.name);
+  })
+  .filter((item) => {
+    // Filter based on selected tag
+    const preferenceTags = selectedTag.some((tag) => item.preferenceTags?.some((preferenceTag) => preferenceTag.name === tag));
+    const historicalTags = selectedTag.some((tag) => (item as HistoricalPlace).tags?.some((historicalTag) => historicalTag.name === tag));
+    return selectedTag.length === 0 || preferenceTags || historicalTags;
+    
+  });
 
-    const getPriceValue = (price : number | { min: number; max: number } ) => {
-      if (typeof price === 'number') {
-        return price;
-      } else if (price && typeof price === 'object') {
-        return price.min; 
-      }
-      return 0;
-    };
-  const getAverageRating = (ratings: IRating[]) => {
-    if (ratings.length === 0) return 0;
+  const getAverageRating = (ratings?: IRating[]) => {
+    if (!ratings || ratings.length === 0) return 0;
     return ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length;
   }
   // Sort combined items
@@ -282,15 +296,15 @@ const GeneralGridView = () => {
     <div className={GeneralGridStyle["general-grid-view"]}>
       <div className={GeneralGridStyle["general-grid-view__filter-container"]}>
         <div style={{ padding: "10px" }}>
-           <SearchBar
-            onSearch={setSearch}
-            searchParts={searchParts}
-            searchPartsValues={searchPartsValues}
-            searchPartsHandlers={[
-              { state: selectedCategory, setState: handleCategoryClick },
-              { state: selectedTag, setState: handleTagClick },
-            ]}
-          />
+           {finishedLoading && <SearchBar
+              onSearch={setSearch}
+              searchParts={searchParts}
+              searchPartsValues={searchPartsValues}
+              searchPartsHandlers={[
+                { state: selectedCategory, setState: handleCategoryClick },
+                { state: selectedTag, setState: handleTagClick },
+              ]}
+          />}
         </div>
 
         <div className={GeneralGridStyle["general-grid-view__filter-container__icons"]}>
@@ -372,11 +386,11 @@ const GeneralGridView = () => {
             title={item.name}
             // location={(item as Activity) ? (item as Activity).location : (item as Itinerary).locations[0]}
             price={item.price}
-            language={ [(item as Itinerary)?.language] } 
-            //should be changed to an array later on
+            languages={ (item as Itinerary)?.languages } 
             availability={(item as Activity)?.isBookingOpen}
-            // openingTime={(item as Place)?.openingTime}
-            onclick={() => handleCardClick(item)}
+            //openingTime={(item as HistoricalPlace)?.openingHours}
+            //TODO fix later
+            onClick={() => handleCardClick(item)}
           />
         ))}
       </div>
