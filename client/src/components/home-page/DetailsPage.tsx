@@ -9,33 +9,33 @@ const DetailsPage = () => {
   const location = useLocation();
   const { item } = location.state || {};
 
+  const getAverageRating = (ratings: number[]) => {
+    return ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+  }
+
   return (
     <div className={DetailsPageStyles["details-page-content-container"]}>
       <div className={DetailsPageStyles["item-details"]}>
         {/* details goes here */}
-        <h1>{item.title} </h1>
+        <h1>{item.name} </h1>
         <h3>
-          {item.rating}
-          The Pyramids of Giza are one of the Seven Wonders of the Ancient World and the last one
-          standing. These iconic structures were built as tombs for Egypt's pharaohs and have stood
-          the test of time for over 4,500 years
+          {item.details}
         </h3>
 
         <p>
           <FaTags style={{ marginRight: "10px" }} />
-          Historical Site, World Wonder, Ancient Egypt
+          {item.preferenceTags}
         </p>
         <p>
-          Date of Construction: 2580-2560 BC <br></br> Time: 20 years
+          {item.date} <br></br> {item.time}
         </p>
-        <p>Category</p>
-        <p>special discount</p>
-        <p>is booking open</p>
-        <p>ratings</p>
-        <p>preference tag</p>
-        <p>tour Price</p>
-        <p>language</p>
-        <p>Accessibility</p>
+        <p>{item.category}</p>
+        <p>{item.timeline}</p>
+        <p>{item.duarationOfActivities}</p>
+        <p>Rating:{item.rating}</p>
+        <p>{item.accessibility}</p>
+        <p>{item.language}</p>
+ 
       </div>
 
       <div className={DetailsPageStyles["image-grid"]}>
@@ -50,7 +50,7 @@ const DetailsPage = () => {
           <img src={pyramid2} />
         </div>
         <div className={DetailsPageStyles["price-section"]}>
-          <h2>Tour Price:500 EGP </h2>
+          <h2>Tour Price:{item.price}  </h2>
         </div>
       </div>
     </div>
