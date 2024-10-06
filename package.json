@@ -4,5 +4,8 @@
   },
   "scripts": {
     "prepare": "husky"
+  },
+  "dependencies": {
+    "react-hook-form": "^7.53.0"
   }
 }
