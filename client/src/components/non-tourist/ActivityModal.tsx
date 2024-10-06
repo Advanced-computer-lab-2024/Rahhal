@@ -7,11 +7,15 @@ import PictureCard from "../PictureCard";
 import { Input } from "../ui/input";
 import { ENTERTAINMENT_SERVICE_URL } from "./ActivitiesTable";
 import axios from "axios";
+import ShortText from "../ShortText";
+import PriceCategories from "../price-categories/PriceCategories";
 
 interface ActivitiesModalProps {
   activityData?: Activity;
   dialogTrigger?: React.ReactNode;
 }
+
+const IMAGES = [ "src/assets/farmhouse-main.jpeg", "src/assets/farmhouse-zoom.jpeg", "src/assets/farmhouse-room.jpeg" ];
 
 export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModalProps) {
   const isNewActivity: boolean = activityData === undefined;
@@ -68,31 +72,25 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
       dialogTrigger={dialogTrigger}
       onSubmit={saveActivity}
     >
-      <div>
-        Name: <Input value={name} onChange={(e) => setName(e.target.value)} />
-      </div>
-      <div>
-        Date: <Input value={date} onChange={(e) => setDate(e.target.value)} />
-      </div>
-      <div>
-        Time: <Input value={time} onChange={(e) => setTime(e.target.value)} />
-      </div>
+      <ShortText title="Name" initialValue={name} onSave={(value) => setName(value)} placeholder={""} initialDisabled={!isNewActivity} />
+      <ShortText title="Date" initialValue={date.toString()} onSave={(value) => setDate(new Date(value))} placeholder={""} initialDisabled={!isNewActivity} />
+      
+      <ShortText title="Time" initialValue={time.toString()} onSave={(value) => setTime(new Date(value))} placeholder={""} initialDisabled={!isNewActivity} />
       <div>
         {/* Location: {activityData.location.longitude}, {activityData.location.latitude} */}
       </div>
       <div>
-        Price:{" "}
+        
         {typeof activityData?.price === "number" ? (
-          <Input value={price} onChange={(e) => setPrice(e.target.value)} />
+          <ShortText title="Price" initialValue={activityData.price.toString()} onSave={(value) => setPrice(parseFloat(value))} placeholder={""} initialDisabled={!isNewActivity} />
         ) : (
-          activityData?.price.map((price) => `${price.type}: ${price.price}`).join(", ")
+          <PriceCategories title="Prices" priceCategories={activityData?.price ?? []} onPriceCategoriesChange={() => {}} />
         )}
       </div>
-      <div>
-        Category: <Input value={category} onChange={(e) => setCategory(e.target.value)} />
-      </div>
-      <div>Tags: {activityData?.tags.join(", ") ?? ""}</div>
-      <div>Special Discounts: {activityData?.specialDiscounts.join(", ") ?? ""}</div>
+      <ShortText title="Category" initialValue={category} onSave={(value) => setCategory(value)} placeholder={""} initialDisabled={!isNewActivity} />
+      
+      <ShortText title="Tags" initialValue={tags.join(", ")} onSave={(value) => {}} placeholder={""} initialDisabled={!isNewActivity} />
+      <ShortText title="Special Discounts" initialValue={specialDiscounts.join(", ")} onSave={(value) => {}} placeholder={""}  initialDisabled={!isNewActivity} />
       <div>
         <ToggleableSwitchCard
           title="Is Booking Open"
@@ -102,10 +100,10 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
           onToggle={() => setIsBookingOpen(!isBookingOpen)}
         />
       </div>
-      <div>Preference Tags: {activityData?.preferenceTags.join(", ") ?? ""}</div>
-      <div>Ratings: {activityData?.ratings.join(", ") ?? ""}</div>
+      <ShortText title="Preference Tags" initialValue={preferenceTags.join(", ")} onSave={(value) => {}} placeholder={""} initialDisabled={!isNewActivity} />
+      <ShortText title="Ratings" initialValue={ratings.join(", ")} onSave={(value) => {}} placeholder={""} initialDisabled={!isNewActivity} />
 
-      <PictureCard title={"Photo Tour"} description={"Uploaded Photos"} imageSources={[]} />
+      <PictureCard title={"Photo Tour"} description={"Uploaded Photos"} imageSources={IMAGES} />
     </GenericModal>
   );
 }
