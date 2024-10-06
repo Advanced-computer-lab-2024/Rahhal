@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "src/app.ts",
+  "main": "src/server.ts",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "test": "vitest",
@@ -20,6 +20,7 @@
     "@types/express": "^5.0.0",
     "eslint": "^9.11.1",
     "prettier": "^3.3.3",
+    "swagger-autogen": "^2.23.7",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2",
     "typescript-eslint": "^8.7.0",
