@@ -22,19 +22,21 @@ export default function LocationMap({
 }) {
   const [isEditable, setIsEditable] = useState(false);
   const [location, setLocation] = useState(initialLocation);
-  const [debouncedLocation] = useDebounce(location, 500);
   const [description, setDescription] = useState("Loading...");
 
+  // Creates a debounced version of the 'location' state that updates only after 500ms of no changes.
+  // Debouncing limits the number of times a function is called by waiting until no new inputs are made within a specified delay period.
+  const [debouncedLocation] = useDebounce(location, 500);
+
   useEffect(() => {
-    const fetchPlaceDetails = async () => {
-      const placeDetails = await fetchLocationDetails(debouncedLocation);
-      const placeDescription = placeDetails?.description;
+    const updateLocation = async () => {
+      const locationDetails = await fetchLocationDetails(debouncedLocation);
+      const locationDescription = locationDetails?.description;
 
       //TODO - Later, let's handle this by viewing an error toast
-      setDescription(placeDescription || "Undefined");
+      setDescription(locationDescription ?? "Undefined");
     };
-    console.log("fetching place details");
-    fetchPlaceDetails();
+    updateLocation();
   }, [debouncedLocation]);
 
   return (

@@ -36,10 +36,13 @@ async function fetchPlaceLocation(placeId: string) {
 }
 
 export default function PlacesAutocomplete({ setLocation }: PlacesAutocompleteProps) {
-  const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [input, setInput] = useState("");
-  const [debouncedInput] = useDebounce(input, 500); // Debounce input value by 500ms to reduce API calls
   const [isFocused, setIsFocused] = useState(false);
+  const [predictions, setPredictions] = useState<Prediction[]>([]);
+
+  // Creates a debounced version of the 'input' state that updates only after 500ms of no changes.
+  // Debouncing limits the number of times a function is called by waiting until no new inputs are made within a specified delay period.
+  const [debouncedInput] = useDebounce(input, 500);
 
   useEffect(() => {
     const fetchPredictions = async () => {
