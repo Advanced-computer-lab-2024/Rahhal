@@ -2,16 +2,18 @@ import CardStyles from "./EntertainmentCard.module.css";
 import { IoMdStar } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
 import { GrLanguage } from "react-icons/gr";
+import { getPriceValue } from "../home-page/main-content-div/GeneralGridView";
 interface EntertainmentCardProps {
   image: string;
   title: string;
-  price?: number;
+  price: number | { min: number; max: number } | { foreigner: number, native: number, student: number} | { type: string; price: number }[];
   rating: number;
   location?: string;
-  language?: string[];
-  openingTime?: string;
+  languages?: string[];
+  openingTime?: {open: string; close: string};
   availability?: boolean;
   seller?: string;
+  onClick?: () => void;
 }
 
 const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
@@ -20,14 +22,15 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
   price,
   rating,
   location,
-  language,
+  languages,
   openingTime,
   availability,
   seller,
+  onClick,
 }) => {
   return (
     <>
-      <div className={CardStyles["entertainment-card-container"]}>
+      <div className={CardStyles["entertainment-card-container"]} onClick={onClick}>
         <div className={CardStyles["entertainment-card-container__image"]}>
           {/* image and bookmark goes here */}
           <img src={image} alt="entertainment" />
@@ -53,16 +56,19 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
           <div className={CardStyles["entertainment-card-container__language-time"]}>
             {/* language and opening time and availability goes here */}
 
-            {language !== undefined && (
+            {languages !== undefined && (
               <p>
                 <br />
-                <GrLanguage /> {language?.join("/")}
+                <div style={{display:"flex" ,flexDirection:"row",alignItems:"center"}}>
+                <GrLanguage style={{marginRight:"0.4rem"}}/> {languages?.join("/")}
+                </div>
+                
               </p>
             )}
 
             {openingTime !== undefined && (
               <p>
-                Opening Hours: <br /> {openingTime}
+                Opening Hours: <br /> {openingTime.open}-{openingTime.close}
               </p>
             )}
 
@@ -88,10 +94,7 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
           </div>
 
           <div className={CardStyles["entertainment-card-container__price"]}>
-            {/* price goes here */}
-            {/* for activities waiting for model to decide whether it is a number or string */}
-            {seller === undefined && <h5>From {price} EGP</h5>}
-            {seller !== undefined && <h5>{price} EGP</h5>}
+            {seller === undefined && <p>From {getPriceValue(price)} EGP</p>}
           </div>
         </div>
       </div>

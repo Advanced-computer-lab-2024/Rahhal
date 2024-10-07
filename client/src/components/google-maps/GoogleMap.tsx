@@ -14,13 +14,14 @@ type GoogleMapProps = {
   isEditable: boolean;
   location: { lat: number; lng: number };
   setLocation: (location: { lat: number; lng: number }) => void;
+  className?: string;
 };
 
-function GoogleMap({ isEditable, location, setLocation }: GoogleMapProps) {
+function GoogleMap({ isEditable, location, setLocation,className }: GoogleMapProps) {
   return (
     <APIProvider apiKey="AIzaSyDH66WmNegr3ISHqJMqAFGfmg9eP3jI59g" language="en">
       <Map
-        className="h-96"
+         className={`h-96 ${className || ""}`}  
         defaultZoom={13}
         center={location}
         onCameraChanged={(event: MapCameraChangedEvent) => {

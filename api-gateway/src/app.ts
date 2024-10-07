@@ -5,7 +5,6 @@ import productRoutes from "@/api/routes/product-routes";
 import googleMapsRoutes from "@/api/routes/google-maps-routes";
 import entertainmentRoutes from "@/api/routes/enterainment-routes";
 import cors from "cors";
-
 const app = express();
 
 // Middleware

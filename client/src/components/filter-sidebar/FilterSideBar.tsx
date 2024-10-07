@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
-import { useStore } from "@/hooks/use-store";
-import { useSideBarToggle } from "@/hooks/use-sidebar-toggle";
+import { useSideBarToggle } from "@/global-states/use-sidebar-toggle";
 import {
   Accordion,
   AccordionContent,
@@ -8,24 +7,25 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-function FilterSideBar({ isOpen, sideBarItems }: { isOpen: boolean, sideBarItems: { title: string, content: React.ReactNode }[] }) {
-
-  useStore(useSideBarToggle, (state: { isOpen: boolean }) => state.isOpen);
+function FilterSideBar({
+  sideBarItems,
+}: {
+  sideBarItems: { title: string; content: React.ReactNode }[];
+}) {
+  const { isOpen } = useSideBarToggle();
   const [firstItem, ...restItems] = sideBarItems;
 
   return (
     <aside
       className={cn(
-        "z-20 h-screen ease-in-out duration-300 border border-gray-400",
-        isOpen === false ? "w-0 overflow-hidden" : "w-72"
+        "z-10 h-screen ease-in-out duration-300 border border-r-gray-400 overflow-y-scroll h-[700px]",
+        isOpen === false ? "w-0 overflow-hidden" : "w-[433px]",
       )}
     >
       {isOpen && (
         <>
           <div className="m-4">
-            <div className="flex justify-center items-center">
-              {firstItem.content}
-            </div>
+            <div className="flex justify-center items-center">{firstItem.content}</div>
           </div>
 
           <Accordion
@@ -38,7 +38,7 @@ function FilterSideBar({ isOpen, sideBarItems }: { isOpen: boolean, sideBarItems
                 <AccordionTrigger className="ml-2 hover:no-underline">
                   {item.title}
                 </AccordionTrigger>
-                <AccordionContent className="flex justify-center items-center mt-2">
+                <AccordionContent className="flex justify-center items-center mt-7">
                   {item.content}
                 </AccordionContent>
               </AccordionItem>

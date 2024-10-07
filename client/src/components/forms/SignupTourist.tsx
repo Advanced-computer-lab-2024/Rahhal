@@ -1,16 +1,18 @@
 import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import AutoForm , {AutoFormSubmit} from "./auto-form/src/components/ui/auto-form";
+import AutoForm, { AutoFormSubmit } from "@/components/ui/auto-form";
 import { useState } from "react";
-import { DependencyType } from "./auto-form/src/components/ui/auto-form/types";
+import { DependencyType } from "@/components/ui/auto-form/types";
 import axios from 'axios';
 import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface SignupTouristProps {
     onBack: () => void;
 }
 
 function SignupTourist({ onBack }: SignupTouristProps) {
+    const navigate = useNavigate();
     enum countries {
         "Afghanistan" = "Afghanistan",
         "Albania" = "Albania",
@@ -312,8 +314,9 @@ function SignupTourist({ onBack }: SignupTouristProps) {
 
         try{
             const response = await createUser(reqBody);
-            console.log(response);
             alert("User created successfully");
+            console.log(response);
+            navigate('/' + response._id);
         }
         catch(error){
             if (axios.isAxiosError(error) && error.response) {
