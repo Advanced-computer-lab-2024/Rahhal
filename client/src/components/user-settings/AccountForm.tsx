@@ -17,7 +17,9 @@ import { useContext } from "react";
 import { EditContext } from "./SettingsView";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast"
 export default function AccountForm() {
+  const { toast } = useToast();
   const { editForm, user } = useContext(EditContext);
   // const user = {
   //   username: "YousefElbrolosy",
@@ -109,10 +111,20 @@ export default function AccountForm() {
     const USER_SERVICE_URL = `http://localhost:3000/api/user/users/${id}`;
     try {
       const response = await axios.patch(USER_SERVICE_URL, data);
-      console.log(response);
-      console.log(data);
+      toast({
+        title: "Update "+response.statusText,
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
-      console.error(error);
+      toast({
+        title: "Error: "+error,
+        variant: "destructive" 
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     }
   }
   async function onSubmit(data: AccountFormValues) {
@@ -123,14 +135,12 @@ export default function AccountForm() {
         updateUser({ ...data, password: oldPasswordForm.getValues().newPassword });
         setChangePassword(false);
         oldPasswordForm.reset();
-        // Reload the page
-        window.location.reload();
+
       } else {
         console.log("Form errors:", oldPasswordForm.formState.errors);
       }
     } else {
       updateUser(data);
-      window.location.reload();
     }
   }
 

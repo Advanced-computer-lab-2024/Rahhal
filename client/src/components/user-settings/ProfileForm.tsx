@@ -15,8 +15,9 @@ import { useContext, useEffect } from "react";
 import { EditContext } from "./SettingsView";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-
+import { useToast } from "@/hooks/use-toast"
 export default function ProfileForm() {
+  const { toast } = useToast();
   const { id } = useParams();
   const { editForm, user } = useContext(EditContext);
 
@@ -99,15 +100,24 @@ export default function ProfileForm() {
     const USER_SERVICE_URL = `http://localhost:3000/api/user/users/${id}`;
     try {
       const response = await axios.patch(USER_SERVICE_URL, data);
-      console.log(response);
-      console.log(data);
+      toast({
+        title: "Update "+response.statusText,
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
-      console.error(error);
+      toast({
+        title: "Error: "+error,
+        variant: "destructive" 
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     }
   }
   function onSubmit(data: ProfileFormValues) {
     updateUser(data);
-    window.location.reload();
   }
   // const [editForm, setEditForm] = useState(false);
   return (
@@ -397,7 +407,8 @@ export default function ProfileForm() {
                                   );
                                   field.onChange(newAddresses);
                                 }}
-                                className="text-red-500"
+                                className={`mt-2 ${editForm ? "text-red-500" : "text-red-300"}`}
+                                disabled={!editForm}
                               >
                                 Remove
                               </button>
