@@ -58,7 +58,7 @@ export async function updateUserByUsername(
 ): Promise<IUser | null> {
   if(updatedUser.email){
     const email = await userRepository.getUserByEmail(updatedUser.email);
-    if(email){
+    if(email && email.email != updatedUser.email){
       throw new Error("This email is registered to another user");
     }
   }
@@ -72,7 +72,7 @@ export async function updateUserById(
 ): Promise<IUser | null> {
   if(updatedUser.email){
     const email = await userRepository.getUserByEmail(updatedUser.email);
-    if(email){
+    if(email && email.email != updatedUser.email){
       throw new Error("This email is registered to another user");
     }
   }
@@ -88,6 +88,9 @@ export async function loginUser(username: string, password: string){
   }
   if(user.password !== password){
     throw new Error("Username or Password is incorrect");
+  }
+  if(user.approved == false){
+    throw new Error("Your account is not verified by website yet");
   }
   return user;
 }

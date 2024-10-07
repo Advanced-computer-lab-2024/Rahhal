@@ -12,7 +12,7 @@ export default function SideBar() {
 
   const sideBarElements = [
     { title: "Profile", to: `/user-settings/${id}` },
-    { title: "Account", to: `/user-settings/${id}/account` },
+    { title: "Account", to: `/user-settings/account/${id}` },
   ];
 
   return (
