@@ -1,15 +1,17 @@
 import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import AutoForm , {AutoFormSubmit} from "./auto-form/src/components/ui/auto-form";
+import AutoForm, { AutoFormSubmit } from "@/components/ui/auto-form";
 import { useState } from "react";
 import axios from 'axios';
 import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface SignupAdvertiserProps {
     onBack: () => void;
 }
 
 function SignupAdvertiser({ onBack }: SignupAdvertiserProps){
+    const navigate = useNavigate();
     const advertiserSchema = z.object({
         companyName: z.string().optional(),
         email: z.string().email({message: "Invalid email address"}).optional(),
@@ -93,7 +95,10 @@ function SignupAdvertiser({ onBack }: SignupAdvertiserProps){
         try{
             const response = await createUser(reqBody);
             console.log(response);
-            alert("User created successfully");
+            alert("User created successfully, awaiting approval");
+            setTimeout(() => {
+                navigate("/");
+            }, 3000);
         }
         catch(error){
             if (axios.isAxiosError(error) && error.response) {
