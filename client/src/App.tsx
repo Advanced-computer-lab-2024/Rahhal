@@ -42,6 +42,7 @@ export default function App() {
           <Route path="/admin" element={<AdminHomepage />} />
           <Route path="/admin/categories" element={<CategoryView />}/>
           <Route path="/admin/users" element={<UserView />} />
+          <Route path="/tour-guide" element={<TourGuideView />} />
           </Routes>
         </Router>
       </QueryClientProvider>
