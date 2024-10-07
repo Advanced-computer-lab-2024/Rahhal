@@ -316,7 +316,7 @@ function SignupTourist({ onBack }: SignupTouristProps) {
             const response = await createUser(reqBody);
             alert("User created successfully");
             console.log(response);
-            navigate('/' + response._id);
+            navigate('/entertainment/' + response._id);
         }
         catch(error){
             if (axios.isAxiosError(error) && error.response) {

@@ -99,7 +99,7 @@ function SignupTourGuide({ onBack }: SignupTourGuides) {
             console.log(response);
             alert("User created successfully, awaiting approval");
             setTimeout(() => {
-                navigate("/");
+                navigate("/tour-guide/" + response._id);
             }, 3000);
         }
         catch(error){
