@@ -35,7 +35,25 @@ export function Login() {
             setDisabled(true);
             await new Promise((resolve) => setTimeout(resolve,3000));
             setDisabled(false);
-            navigate(`/${response._id}`);
+            if(response.role === "admin") {
+              navigate(`/admin/${response._id}`);
+            }
+            else if(response.role === "tourGuide"){
+              navigate(`/tour-guide/${response._id}`);
+            }
+            else if(response.role === "tourist"){
+              navigate(`/${response._id}`);
+            }
+            else if(response.role === "advertiser"){
+              navigate(`/advertiser/${response._id}`);
+            }
+            else if(response.role === "tourismGovernor"){
+              navigate(`/tourism-governor/${response._id}`);
+            }
+            else if(response.role === "seller"){
+              navigate(`/seller/${response._id}`);
+            }
+            
         }
         catch (error) {
             console.log(error);
@@ -96,13 +114,6 @@ export function Login() {
         </div>
       </div>
       <div className="hidden bg-muted lg:block">
-        {/* <Image
-          src="/placeholder.svg"
-          alt="Image"
-          width="1920"
-          height="1080"
-          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-        /> */}
       </div>
     </div>
   )
