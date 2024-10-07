@@ -52,7 +52,7 @@ export function GenericModal({
           </div>
         </ScrollArea>
         <DialogFooter>
-          <Button onClick={onSubmit}>Save changes</Button>
+          <Button onClick={handleSubmit}>Save changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
