@@ -26,10 +26,16 @@ export function GenericModal({
   children,
   onSubmit,
 }: GenericModalProps) {
+
+  const handleSubmit = () => {
+    onSubmit();
+    window.location.reload();
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>{dialogTrigger}</DialogTrigger>
-      {/* <DialogContent className="width-full max-h-[80%] rounded-md border p-4 overflow-auto"> */}
+      
       <DialogContent className="max-w-[90vw] max-h-[90vh] w-1/2 h-full flex flex-col">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
@@ -46,7 +52,7 @@ export function GenericModal({
           </div>
         </ScrollArea>
         <DialogFooter>
-          <Button onClick={onSubmit}>Save changes</Button>
+          <Button onClick={handleSubmit}>Save changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
