@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils';
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 interface ButtonProps{
     navigation: number,
     setNavigation: (index: number) => void,
@@ -26,12 +27,23 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
                 ))}
             </div>
             <div className=" w-full h-full flex justify-end">
-                <div className="flex space-x-4 items-center pr-3">
-                    <Button className="text-white bg-red-400 rounded-xl hover:bg-red-500">Sign In</Button>
+                { !NavigationProps.loggedIn && <div className="flex space-x-4 items-center pr-3">
+                    <Link to="/signin">
+                        <Button className="text-white bg-red-400 rounded-xl hover:bg-red-500">Sign In</Button>
+                    </Link>
                     <Link to="/signup">
                         <Button className="text-white bg-red-400 rounded-xl hover:bg-red-500">Sign Up</Button>
                     </Link>
-                </div>
+                </div>}
+                { NavigationProps.loggedIn &&
+                    <div className="flex items-center pr-3">
+                    <Link to="/profile">
+                        <Avatar className="h-10 w-10">
+                            <AvatarFallback>US</AvatarFallback>
+                        </Avatar>
+                    </Link>
+                    </div>
+                }
             </div>
         </div>
         )
