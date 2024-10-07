@@ -42,7 +42,7 @@ export function Login() {
               navigate(`/tour-guide/${response._id}`);
             }
             else if(response.role === "tourist"){
-              navigate(`/tourist/${response._id}`);
+              navigate(`/entertainment/${response._id}`);
             }
             else if(response.role === "advertiser"){
               navigate(`/advertiser/${response._id}`);
