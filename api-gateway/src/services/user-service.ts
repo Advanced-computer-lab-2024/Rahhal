@@ -56,5 +56,5 @@ export async function deleteUser(id: string) {
 }
 
 export async function loginUser(body: string) {
-  return await axiosInstance.post("/users/login", body);
+  return await userAxiosInstance.post("/users/login", body);
 }
