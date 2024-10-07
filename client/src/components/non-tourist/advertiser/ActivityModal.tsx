@@ -15,16 +15,17 @@ import { IMAGES, sampleReviews } from "@/lib/utils";
 import { createActivity, updateActivity } from "@/api-calls/activities-api-calls";
 import { fetchCategories } from "@/api-calls/categories-api-calls";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
-import { DEFAULTS, TEMP_USER_ID } from "@/lib/constants";
+import { DEFAULTS } from "@/lib/constants";
 import LocationMap from "@/components/google-maps/LocationMap";
 import LongText from "@/components/LongText";
 
 interface ActivitiesModalProps {
   activityData?: TActivity;
   dialogTrigger?: React.ReactNode;
+  userId: string;
 }
 
-export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModalProps) {
+export function ActivitiesModal({ activityData, dialogTrigger, userId }: ActivitiesModalProps) {
   const isNewActivity: boolean = activityData === undefined; // check if the activity is new or existing
   const [modalActivityData, setModalActivitiesData] = useState<TActivity | undefined>(activityData); // current activity data present in the modal
 
@@ -56,7 +57,7 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
         // TODO - should be removed later when we settle down on its removal
         tags: preferenceTagsIds,
       };
-      await createActivity(newActivity, TEMP_USER_ID);
+      await createActivity(newActivity, userId);
     } else await updateActivity(modalActivityData!);
     window.location.reload();
   };

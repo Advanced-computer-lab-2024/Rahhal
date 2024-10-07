@@ -25,3 +25,7 @@ export async function updateHistoricalPlace(id: string, historicalPlaceData: IHi
 export async function deleteHistoricalPlace(id: string) {
   return historicalPlacesRepository.deleteHistoricalPlace(id);
 }
+
+export async function getHistoricalPlacesByOwner(ownerId: string) {
+  return historicalPlacesRepository.getHistoricalPlacesByOwner(ownerId);
+}

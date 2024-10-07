@@ -1,5 +1,6 @@
 export const SERVICES_URLS = {
   ENTERTAINMENT: "http://localhost:3000/api/entertainment",
+  USER: "http://localhost:3000/api/user",
 };
 
 export const TEMP_USER_ID = "67032b20ffa86f21339f6cad";

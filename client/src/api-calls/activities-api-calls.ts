@@ -3,7 +3,13 @@ import { SERVICES_URLS } from "@/lib/constants";
 import { TActivity, TNewActivity } from "@/table-columns/advertiser-columns";
 
 export const fetchActivities = async () => {
-  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + "/activities");
+  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/activities`);
+  return response.data;
+};
+
+// TODO - later it should be by owner and some other type of handling
+export const fetchUserActivities = async (userId: string) => {
+  const response = await axios.get(SERVICES_URLS.USER + `/users/${userId}/activities`);
   return response.data;
 };
 

@@ -15,7 +15,7 @@ import TimeRange from "@/components/TimeRange";
 import LocationMap from "@/components/google-maps/LocationMap";
 import { GenericSelect } from "@/components/GenericSelect";
 import TagsSelector from "../TagsSelector";
-import { DEFAULTS, TEMP_USER_ID } from "@/lib/constants";
+import { DEFAULTS } from "@/lib/constants";
 import { fetchHistoricalTags } from "@/api-calls/historical-tags-api-calls";
 import LongText from "@/components/LongText";
 import PriceCategories from "@/components/price-categories/PriceCategories";
@@ -23,11 +23,13 @@ import PriceCategories from "@/components/price-categories/PriceCategories";
 interface HistoricalPlacesModalProps {
   historicalPlacesData?: THistoricalPlace;
   dialogTrigger?: React.ReactNode;
+  userId: string;
 }
 
 export function HistoricalPlacesModal({
   historicalPlacesData,
   dialogTrigger,
+  userId,
 }: HistoricalPlacesModalProps) {
   const isNewHistoricalPlace: boolean = historicalPlacesData === undefined;
   const [modalHistoricalPlaceData, setModalHistoricalPlaceData] = useState<
@@ -63,7 +65,7 @@ export function HistoricalPlacesModal({
         preferenceTags: preferenceTagsIds,
         tags: tagsIds,
       };
-      await createHistoricalPlace(newHistoricalPlace, TEMP_USER_ID);
+      await createHistoricalPlace(newHistoricalPlace, userId);
     } else await updateHistoricalPlace(modalHistoricalPlaceData!);
     window.location.reload();
   };
