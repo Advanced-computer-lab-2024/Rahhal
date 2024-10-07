@@ -1,15 +1,18 @@
 import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import AutoForm , {AutoFormSubmit} from "./auto-form/src/components/ui/auto-form";
+import AutoForm, { AutoFormSubmit } from "@/components/ui/auto-form";
 import { useState } from "react";
 import axios from 'axios';
 import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface SignupSellerProps {
     onBack: () => void;
 }
 
 function SignupSeller({ onBack }: SignupSellerProps) {
+    const navigate = useNavigate();
+
     const sellerSchema = z.object({
         firstName: z.string().optional(),
         lastName: z.string().optional(),
@@ -87,8 +90,10 @@ function SignupSeller({ onBack }: SignupSellerProps) {
 
         try{
             const response = await createUser(reqBody);
-            console.log(response);
-            alert("User created successfully");
+            alert("User created successfully, awaiting approval");
+            setTimeout(() => {
+                navigate("/");
+            }, 3000);
         }
         catch(error){
             if (axios.isAxiosError(error) && error.response) {
@@ -108,7 +113,7 @@ function SignupSeller({ onBack }: SignupSellerProps) {
                 </Button>
                 <CardTitle className="text-xl font-bold">Seller Sign Up</CardTitle>
             </CardHeader>
-                    <CardContent className="flex overflow-y-auto h-[80vh]">
+                    <CardContent className="flex overflow-y-auto">
                         <AutoForm
                             formSchema={sellerSchema as any}
                             values={values}
