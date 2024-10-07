@@ -15,14 +15,26 @@ interface GenericSelectProps {
   placeholder: string;
   options: { label: string; value: string }[];
   onSelect: (value: string) => void;
-  initalValue?: string;
+  initialValue?: string;
 }
 
-export function GenericSelect({ label, placeholder, options, onSelect }: GenericSelectProps) {
-  const [selectedValue, setSelectedValue] = React.useState<string | undefined>(undefined);
+export function GenericSelect({
+  label,
+  placeholder,
+  options,
+  onSelect,
+  initialValue,
+}: GenericSelectProps) {
+  const [selectedValue, setSelectedValue] = React.useState<string | undefined>(initialValue);
+
+  // Update both the local state and notify the parent component
+  const handleValueChange = (value: string) => {
+    setSelectedValue(value);
+    onSelect(value);
+  };
 
   return (
-    <Select onSelect={(e) => onSelect(e)}>
+    <Select value={selectedValue} onValueChange={handleValueChange}>
       <SelectTrigger className="w-full">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
@@ -30,11 +42,7 @@ export function GenericSelect({ label, placeholder, options, onSelect }: Generic
         <SelectGroup>
           <SelectLabel>{label}</SelectLabel>
           {options.map((option) => (
-            <SelectItem
-              key={option.value}
-              value={option.value}
-              selected={selectedValue === option.value}
-            >
+            <SelectItem key={option.value} value={option.value}>
               {option.label}
             </SelectItem>
           ))}

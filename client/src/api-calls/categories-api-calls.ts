@@ -4,8 +4,8 @@ import { TCategory } from "@/table-columns/categories-columns";
 
 // fetch available categories from categories endpoint
 export const fetchCategories = async () => {
-  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + "/categories");
-  return response.data;
+  const { data } = await axios.get(SERVICES_URLS.ENTERTAINMENT + "/categories");
+  return data;
 };
 
 // delete category by id

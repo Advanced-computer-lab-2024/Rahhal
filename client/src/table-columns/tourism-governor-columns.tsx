@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronRight } from "lucide-react";
-import { ActivitiesModal } from "@/components/non-tourist/advertiser/ActivityModal";
 import { Badge } from "@/components/ui/badge";
 import { FaTrash } from "react-icons/fa6";
-import { deleteActivity } from "@/api-calls/activities-api-calls";
+import { HistoricalPlacesModal } from "@/components/non-tourist/tourist-governor/HistoricalPlacesModal";
+import { deleteHistoricalPlace } from "@/api-calls/historical-places-api-calls";
 
 export type TRating = {
   user: string;
@@ -17,24 +17,26 @@ export type TCategory = {
   name: string;
 };
 
-export type TActivity = {
-  _id?: string;
+export type THistoricalPlace = {
+  _id: string;
   name: string;
   description: string;
-  time: Date;
-  date: Date;
-  location: { longitude: number; latitude: number };
-  specialDiscount: number;
-  preferenceTags: { _id: string; name: string }[];
-  isBookingOpen: boolean;
+  location: { longitude: number; latitude: number; placeId?: string };
+  openingHours: { open: Date; close: Date };
   price: Record<string, number>;
+  images: string[];
+  preferenceTags: { _id: string; name: string }[];
+  owner: string;
   category: { _id: string; name: string };
   tags: { _id: string; name: string }[];
   ratings: TRating[];
-  owner: string;
 };
-// Derive TNewActivity from TActivity
-export type TNewActivity = Omit<TActivity, "preferenceTags" | "category" | "tags" | "_id"> & {
+
+// Derive TNewHistoricalPlace from THistoricalPlace
+export type TNewHistoricalPlace = Omit<
+  THistoricalPlace,
+  "preferenceTags" | "category" | "tags" | "_id"
+> & {
   // Each representing the id(s) of the omitted fields so that they can directly be inserted in the db
   preferenceTags: string[];
   category: string;
@@ -42,7 +44,7 @@ export type TNewActivity = Omit<TActivity, "preferenceTags" | "category" | "tags
 };
 
 function deleteRow(row: any) {
-  deleteActivity(row.original);
+  deleteHistoricalPlace(row.original);
   window.location.reload();
 }
 
@@ -51,7 +53,7 @@ function calculateAverageRating(ratings: TRating[]) {
   return totalRating / ratings.length;
 }
 
-export const activitiesColumns: ColumnDef<TActivity>[] = [
+export const historicalPlacesColumns: ColumnDef<THistoricalPlace>[] = [
   {
     accessorKey: "name",
     header: "name",
@@ -67,9 +69,9 @@ export const activitiesColumns: ColumnDef<TActivity>[] = [
     header: "tags",
     cell: ({ row }) => (
       <div>
-        {row.original.preferenceTags.map((preferenceTag) => (
-          <Badge key={preferenceTag._id} variant="default" className="mr-1">
-            {preferenceTag.name}
+        {row.original.tags.map((tag) => (
+          <Badge key={tag._id} variant="default" className="mr-1">
+            {tag.name}
           </Badge>
         ))}
       </div>
@@ -90,7 +92,7 @@ export const activitiesColumns: ColumnDef<TActivity>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="capitalize">{calculateAverageRating(row.getValue("ratings"))}</div>
+      <div className="capitalize">{calculateAverageRating(row.original.ratings)}</div>
     ),
   },
   {
@@ -103,8 +105,8 @@ export const activitiesColumns: ColumnDef<TActivity>[] = [
             <span className="sr-only">Delete</span>
             <FaTrash className="h-4 w-4" />
           </Button>
-          <ActivitiesModal
-            activityData={row.original}
+          <HistoricalPlacesModal
+            historicalPlacesData={row.original}
             dialogTrigger={
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
