@@ -21,7 +21,7 @@ const DetailsPage = () => {
 <div>
 
 
-    <TouristHomePageNavigation/>
+    <TouristHomePageNavigation loggedIn={true}/>
     <div className={DetailsPageStyles["details-page-content-container"]}>
       
       <div className={DetailsPageStyles["item-details"]}>
