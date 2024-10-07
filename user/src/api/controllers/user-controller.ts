@@ -21,7 +21,7 @@ const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await userService.getAllUsers();
     if (!users) {
-      res.status(STATUS_CODES.NOT_FOUND).json({ message: "No users found" });
+      res.status(STATUS_CODES.NOT_FOUND).json({ error: "No users found" });
     } else {
       res.status(STATUS_CODES.STATUS_OK).json(users);
     }
@@ -36,12 +36,14 @@ const getUserById = async (req: Request, res: Response) => {
     const userId = req.params.id;
     const user = await userService.getUserById(userId);
     if (!user) {
-      res.status(STATUS_CODES.NOT_FOUND).json({ message: "User not found" });
+      res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
     } else {
       res.status(STATUS_CODES.STATUS_OK).json(user);
     }
   } catch (error) {
-    res.status(STATUS_CODES.SERVER_ERROR).send(error);
+    if (error instanceof Error) {
+      res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
+    }
   }
 };
 
@@ -51,12 +53,14 @@ const getUserByEmail = async (req: Request, res: Response) => {
     const email = req.body.email;
     const user = await userService.getUserByEmail(email);
     if (!user) {
-      res.status(STATUS_CODES.NOT_FOUND).json({ message: "User not found" });
+      res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
     } else {
       res.status(STATUS_CODES.STATUS_OK).json(user);
     }
   } catch (error) {
-    res.status(STATUS_CODES.SERVER_ERROR).send(error);
+    if (error instanceof Error) {
+      res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
+    }
   }
 };
 
@@ -67,12 +71,14 @@ const updateUserByUsername = async (req: Request, res: Response) => {
     const updatedUser = req.body;
     const user = await userService.updateUserByUsername(username, updatedUser);
     if (!user) {
-      res.status(STATUS_CODES.NOT_FOUND).json({ message: "User not found" });
+      res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
     } else {
       res.status(STATUS_CODES.STATUS_OK).json(user);
     }
   } catch (error) {
-    res.status(STATUS_CODES.SERVER_ERROR).send(error);
+    if (error instanceof Error) {
+      res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
+    }
   }
 };
 
@@ -83,12 +89,14 @@ const updateUserById = async (req: Request, res: Response) => {
     const updatedUser = req.body;
     const user = await userService.updateUserById(userId, updatedUser);
     if (!user) {
-      res.status(STATUS_CODES.NOT_FOUND).json({ message: "User not found" });
+      res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
     } else {
       res.status(STATUS_CODES.STATUS_OK).json(user);
     }
   } catch (error) {
-    res.status(STATUS_CODES.SERVER_ERROR).send(error);
+    if (error instanceof Error) {
+      res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
+    }
   }
 };
 
@@ -109,7 +117,7 @@ const deleteUser = async (req: Request, res: Response) => {
     const userId = req.params.id;
     const user = await userService.getUserById(userId);
     if (!user) {
-      res.status(STATUS_CODES.NOT_FOUND).json({ message: "User not found" });
+      res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
     } else {
       const deletedUser = await userService.deleteUser(userId);
       res.status(STATUS_CODES.STATUS_OK).json(deletedUser);
@@ -121,6 +129,20 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+const loginUser = async (req: Request, res: Response) => {
+  try{
+    const {username, password} = req.body;
+    const user = await userService.loginUser(username, password);
+    res.status(STATUS_CODES.STATUS_OK).json(user);
+  }
+  catch(error){
+    if (error instanceof Error) {
+      res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
+    }
+  }
+}
+
+
 export default {
   getUserByUsername,
   getAllUsers,
@@ -130,4 +152,5 @@ export default {
   getUserById,
   updateUserById,
   getUserByEmail,
-};
+  loginUser
+}
