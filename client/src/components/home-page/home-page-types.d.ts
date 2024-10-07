@@ -73,6 +73,16 @@ export interface HistoricalTag {
   name: string;
 }
 
+export interface Product {
+  _id: string;
+  name: string;
+  description: string;
+  pictures: string[];  // changed from picture: string in the schema to pictures: string[]
+  price: number;
+  seller: string;
+  ratings: IRating[];
+}
+
 export type SortOption =
   | "price-high-low"
   | "price-low-high"

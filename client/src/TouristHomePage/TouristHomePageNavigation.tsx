@@ -8,6 +8,7 @@ interface ButtonProps{
     setNavigation: (index: number) => void,
     index: number
     buttonName: string
+    path: string
 }
 
 interface NavigationProps{
@@ -17,6 +18,7 @@ interface NavigationProps{
 export default function TouristHomePageNavigation(NavigationProps: NavigationProps){
     const [navigation,setNavigation] = useState(1);
     const buttonNames = ["Experiences","Stays","Travel","Shop"];
+    const paths = ["/entertainment","/entertainment","/entertainment","/shop"];
     const { id } = useParams();
     return(
         
@@ -24,7 +26,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
             <div className= " w-full h-full"></div>
             <div className="flex justify-center relative z-10 space-x-12  h-16 pt-2 items-center">
                 {buttonNames.map((buttonName,index) => (
-                        <NavigationButton index={index+1} navigation={navigation} setNavigation={setNavigation} buttonName={buttonName} />  
+                        <NavigationButton index={index+1} navigation={navigation} setNavigation={setNavigation} path={paths[index]} buttonName={buttonName} />  
                 ))}
             </div>
             <div className=" w-full h-full flex justify-end">
@@ -52,8 +54,10 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
 
 function NavigationButton(ButtonProps : ButtonProps){
     return( 
+      <Link to= {ButtonProps.path}>
         <div className="rounded-full hover:bg-gray-300/60 flex justify-center">
-        <Button className={cn("rounded-none rounded-t-md relative w-[7%] text-foreground bg-transparent hover:bg-transparent", ButtonProps.navigation == ButtonProps.index ? "font-semibold" : "text-muted-foreground")} onClick={() => ButtonProps.setNavigation(ButtonProps.index)}> {ButtonProps.buttonName} </Button>
+          <Button className={cn("rounded-none rounded-t-md relative w-[7%] text-foreground bg-transparent hover:bg-transparent", ButtonProps.navigation == ButtonProps.index ? "font-semibold" : "text-muted-foreground")} onClick={() => ButtonProps.setNavigation(ButtonProps.index)}> {ButtonProps.buttonName} </Button>
         </div>
-    )
+      </Link>
+    );
 }
