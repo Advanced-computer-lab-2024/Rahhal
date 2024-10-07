@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "src/app.ts",
+  "main": "src/server.ts",
   "scripts": {
-    "dev": "tsx watch src/app.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint . --fix"
+    "dev": "tsx watch src/server.ts",
+    "test": "vitest",
+    "lint": "eslint . --fix",
+    "format": "prettier . --write",
+    "pre-commit": "prettier . --write --log-level silent && eslint . --fix --quiet && vitest run --passWithNoTests",
+    "swagger": "tsx src/api/swagger/swagger.ts"
   },
   "author": "",
   "license": "ISC",
@@ -15,19 +18,24 @@
     "@eslint/js": "^9.11.1",
     "@types/eslint__js": "^8.42.3",
     "@types/express": "^5.0.0",
-    "@types/mongoose": "^5.11.96",
+    "@types/morgan": "^1.9.9",
     "eslint": "^9.11.1",
+    "prettier": "^3.3.3",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2",
-    "typescript-eslint": "^8.7.0"
+    "typescript-eslint": "^8.7.0",
+    "vitest": "^2.1.1"
   },
   "dependencies": {
+    "@types/swagger-ui-express": "^4.1.6",
     "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
     "dotenv": "^16.3.1",
+    "entertainment": "file:",
     "express": "^4.18.2",
     "mongoose": "^7.6.8",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.15"
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1"
   }
 }
-
