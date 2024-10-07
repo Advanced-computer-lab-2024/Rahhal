@@ -5,6 +5,8 @@ const router = express.Router();
 
 router.get("/users", userContoller.getAllUsers);
 router.get("/users/:id", userContoller.getUserById);
+router.get("/users/:id/activities", userContoller.getUserActivities);
+router.get("/users/:id/historical-places", userContoller.getUserHistoricalPlaces);
 router.post("/users", userContoller.createUser);
 router.patch("/users/:id", userContoller.updateUser);
 router.delete("/users/:id", userContoller.deleteUser);

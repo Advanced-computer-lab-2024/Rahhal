@@ -46,7 +46,7 @@ const PictureCard = ({ title, description, imageSources }: PictureCardProps) => 
   }
 
   return (
-    <Card className="m-5 mx-6">
+    <Card>
       <div className="p-4">
         <h2 className="text-xl font-semibold mb-2">{title}</h2>
         <p className="text-gray-600 mb-4">{description}</p>

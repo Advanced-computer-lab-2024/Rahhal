@@ -1,10 +1,16 @@
 import type { Request, Response } from "express";
-import * as activitiesService from "../../services/activities-service";
-import { STATUS_CODES } from "../../utils/constants";
+import * as activitiesService from "@/services/activities-service";
+import { STATUS_CODES } from "@/utils/constants";
 
 export async function getAllActivities(req: Request, res: Response) {
   try {
-    const activities = await activitiesService.getAllActivities();
+    const ownerId = req.query.ownerId as string;
+    let activities;
+    if (ownerId) {
+      activities = await activitiesService.getActivitiesByOwner(ownerId);
+    } else {
+      activities = await activitiesService.getAllActivities();
+    }
     res.status(STATUS_CODES.STATUS_OK).json(activities);
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({

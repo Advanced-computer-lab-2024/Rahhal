@@ -11,6 +11,13 @@ export async function getActivityById(id: string) {
   return await Activity.findById(id).populate("category").populate("preferenceTags").exec();
 }
 
+export async function getActivitiesByOwner(ownerId: string) {
+  return await Activity.find({ owner: ownerId })
+    .populate("category")
+    .populate("preferenceTags")
+    .exec();
+}
+
 // Create a new activity
 export async function createActivity(activitiesData: IActivity) {
   const newActivity = new Activity(activitiesData);

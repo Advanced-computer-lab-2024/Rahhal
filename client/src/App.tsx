@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DetailsPage from "./components/home-page/DetailsPage.tsx";
 import TouristHomePage from "./TouristHomePage/TouristHomePage.tsx";
 import SignupSelector from "./components/forms/SignupSelector.tsx";
+import TourismGovernorView from "./components/non-tourist/tourist-governor/TourismGovernorView.tsx";
+import AdvertiserView from "./components/non-tourist/advertiser/AdvertiserView.tsx";
 import SettingsView from "@/components/user-settings/SettingsView";
 import ProfileForm from "./components/user-settings/ProfileForm";
 import AccountForm from "./components/user-settings/AccountForm";
@@ -23,6 +25,8 @@ export default function App() {
               <Route index element={<ProfileForm />} />
               <Route path="account" element={<AccountForm />} />
             </Route>
+            <Route path="/advertiser/:id" element={<AdvertiserView />} />
+            <Route path="/tourism-governor/:id" element={<TourismGovernorView />} />
           </Routes>
         </Router>
       </QueryClientProvider>

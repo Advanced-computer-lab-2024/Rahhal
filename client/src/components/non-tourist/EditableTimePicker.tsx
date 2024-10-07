@@ -1,6 +1,8 @@
 import { TimePicker12H } from "../time-picker/time-picker-12hour";
 import EditSaveButton from "../EditSaveButton";
 import { useState } from "react";
+import { Card } from "../ui/card";
+import { Label } from "../ui/label";
 
 interface EditableTimePickerProps {
   time: Date | undefined;
@@ -16,14 +18,19 @@ function EditableTimePicker({
   const [isDisabled, setIsDisabled] = useState(initialIsDisabled);
 
   return (
-    <div className="flex flex-row items-end m-5 mx-6">
-      <TimePicker12H date={time} setDate={onTimeChange} disabled={isDisabled} />
-      <EditSaveButton
-        isDisabled={isDisabled}
-        toggleEditMode={() => setIsDisabled(false)}
-        saveChanges={() => setIsDisabled(true)}
-      />
-    </div>
+    <Card className="flex flex-col p-4">
+      <div className="flex justify-between items-center">
+        <Label>Time</Label>
+        <EditSaveButton
+          isDisabled={isDisabled}
+          toggleEditMode={() => setIsDisabled(false)}
+          saveChanges={() => setIsDisabled(true)}
+        />
+      </div>
+      <div className="flex items-center">
+        <TimePicker12H date={time} setDate={onTimeChange} disabled={isDisabled} />
+      </div>
+    </Card>
   );
 }
 

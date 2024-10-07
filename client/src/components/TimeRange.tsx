@@ -2,40 +2,37 @@ import React, { useState, KeyboardEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { TimePicker } from "@/components/ui/TimePicker";
 import { Edit2, Save } from "lucide-react";
+import { Card } from "./ui/card";
 
 interface TimeRangeProps {
   initialCheckInTime?: Date;
   initialCheckOutTime?: Date;
-  onSave?: (checkInTime: Date | undefined, checkOutTime: Date | undefined) => void;
+  onSave?: (startTime: Date | undefined, endTime: Date | undefined) => void;
+  labels: { startTimeLabel: string; endTimeLabel: string };
+  isEditingInitially?: boolean;
 }
 
 const TimeRange: React.FC<TimeRangeProps> = ({
   initialCheckInTime,
   initialCheckOutTime,
   onSave,
+  labels,
+  isEditingInitially = false,
 }) => {
   const defaultTime = new Date();
   defaultTime.setHours(0, 0, 0);
 
   const [checkInTime, setCheckInTime] = useState<Date>(initialCheckInTime || defaultTime);
   const [checkOutTime, setCheckOutTime] = useState<Date>(initialCheckOutTime || defaultTime);
-  const [isEditingCheckIn, setIsEditingCheckIn] = useState(false);
-  const [isEditingCheckOut, setIsEditingCheckOut] = useState(false);
+  const [isEditingCheckIn, setIsEditingCheckIn] = useState(isEditingInitially);
+  const [isEditingCheckOut, setIsEditingCheckOut] = useState(isEditingInitially);
 
   const handleEdit = (isCheckIn: boolean) => {
-    if (isCheckIn) {
-      setIsEditingCheckIn(true);
-    } else {
-      setIsEditingCheckOut(true);
-    }
+    isCheckIn ? setIsEditingCheckIn(true) : setIsEditingCheckOut(true);
   };
 
   const handleSave = (isCheckIn: boolean) => {
-    if (isCheckIn) {
-      setIsEditingCheckIn(false);
-    } else {
-      setIsEditingCheckOut(false);
-    }
+    isCheckIn ? setIsEditingCheckIn(false) : setIsEditingCheckOut(false);
     if (onSave) {
       onSave(checkInTime, checkOutTime);
     }
@@ -48,87 +45,57 @@ const TimeRange: React.FC<TimeRangeProps> = ({
   };
 
   const handleTimeChange = (newTime: Date, isCheckIn: boolean) => {
-    if (isCheckIn) {
-      setCheckInTime(newTime);
-    } else {
-      setCheckOutTime(newTime);
-    }
+    isCheckIn ? setCheckInTime(newTime) : setCheckOutTime(newTime);
   };
 
   const formatTime = (time: Date) => {
     return time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
   };
 
-  return (
-    <div className={`space-y-4 p-4 rounded-lg transition-all duration-200 bg-white shadow-md`}>
-      {}
-      <div
-        className={`border rounded-md p-2 transition-all duration-200 bg-transparent`}
-        onKeyDown={(e) => handleKeyDown(e, true)}
-        style={{ minHeight: "100px", width: "500px" }}
-      >
-        <div className="flex justify-between items-center mb-2">
-          <div className="text-sm font-medium">Check-in</div>
-          <Button
-            onClick={() => (isEditingCheckIn ? handleSave(true) : handleEdit(true))}
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-          >
-            {isEditingCheckIn ? <Save className="h-4 w-4" /> : <Edit2 className="h-4 w-4" />}
-          </Button>
-        </div>
-        {}
-        <div style={{ width: "100%" }}>
-          {isEditingCheckIn ? (
-            <TimePicker
-              date={checkInTime}
-              onChange={(newTime) => handleTimeChange(newTime!, true)}
-              hourCycle={12}
-              granularity="minute"
-            />
-          ) : (
-            <div className="text-gray-500 min-h-[40px] flex items-center justify-center">
-              {formatTime(checkInTime)} {}
-            </div>
-          )}
-        </div>
-      </div>
+  const TimePickerBox = ({ isCheckIn }: { isCheckIn: boolean }) => {
+    const time = isCheckIn ? checkInTime : checkOutTime;
+    const isEditing = isCheckIn ? isEditingCheckIn : isEditingCheckOut;
+    const title = isCheckIn ? labels.startTimeLabel : labels.endTimeLabel;
 
-      {}
+    return (
       <div
-        className={`border rounded-md p-2 transition-all duration-200 bg-transparent`}
-        onKeyDown={(e) => handleKeyDown(e, false)}
-        style={{ minHeight: "100px", width: "500px" }}
+        className="border rounded-md p-4 transition-all duration-200 bg-transparent flex-1 mr-4 last:mr-0"
+        onKeyDown={(e) => handleKeyDown(e, isCheckIn)}
       >
-        <div className="flex justify-between items-center mb-2">
-          <div className="text-sm font-medium">Check-out</div>
+        <div className="flex justify-between items-center mb-4">
+          <div className="text-sm font-medium">{title}</div>
           <Button
-            onClick={() => (isEditingCheckOut ? handleSave(false) : handleEdit(false))}
+            onClick={() => (isEditing ? handleSave(isCheckIn) : handleEdit(isCheckIn))}
             variant="ghost"
             size="icon"
             className="h-8 w-8"
           >
-            {isEditingCheckOut ? <Save className="h-4 w-4" /> : <Edit2 className="h-4 w-4" />}
+            {isEditing ? <Save className="h-4 w-4" /> : <Edit2 className="h-4 w-4" />}
           </Button>
         </div>
-        {}
-        <div style={{ width: "100%" }}>
-          {isEditingCheckOut ? (
+        <div className="w-full">
+          {isEditing ? (
             <TimePicker
-              date={checkOutTime}
-              onChange={(newTime) => handleTimeChange(newTime!, false)}
+              date={time}
+              onChange={(newTime) => handleTimeChange(newTime!, isCheckIn)}
               hourCycle={12}
               granularity="minute"
             />
           ) : (
-            <div className="text-gray-500 min-h-[40px] flex items-center justify-center">
-              {formatTime(checkOutTime)} {}
+            <div className="text-gray-500 h-10 flex items-center justify-center">
+              {formatTime(time)}
             </div>
           )}
         </div>
       </div>
-    </div>
+    );
+  };
+
+  return (
+    <Card className="flex p-4">
+      <TimePickerBox isCheckIn={true} />
+      <TimePickerBox isCheckIn={false} />
+    </Card>
   );
 };
 

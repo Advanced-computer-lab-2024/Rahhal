@@ -14,6 +14,7 @@ function EditSaveButton({ isDisabled, toggleEditMode, saveChanges }: EditSaveBut
   return (
     <Button
       onClick={isDisabled ? toggleEditMode : saveChanges}
+      variant={"ghost"}
       className="ml-2 p-2"
       title={isDisabled ? EDIT_MODE : SAVE_MODE}
     >

@@ -1,8 +1,17 @@
 import axios from "axios";
 import { STATUS_CODES } from "@/utils/constants";
+import axios from "axios";
+import { STATUS_CODES } from "@/utils/constants";
 
-const axiosInstance = axios.create({
+const userAxiosInstance = axios.create({
   baseURL: "http://user:3000",
+  validateStatus: (status) => {
+    return status < STATUS_CODES.GATEWAY_TIMEOUT;
+  },
+});
+
+const entertainmentAxiosInstance = axios.create({
+  baseURL: "http://entertainment:3000",
   validateStatus: (status) => {
     return status < STATUS_CODES.GATEWAY_TIMEOUT;
   },
@@ -10,21 +19,29 @@ const axiosInstance = axios.create({
 
 // users service calls
 export async function getAllUsers() {
-  return await axiosInstance.get("/users");
+  return await userAxiosInstance.get("/users");
 }
 
 export async function getUserById(id: string) {
-  return await axiosInstance.get(`/users/${id}`);
+  return await userAxiosInstance.get(`/users/${id}`);
+}
+
+export async function getUserActivities(userId: string) {
+  return await entertainmentAxiosInstance.get(`/activities?ownerId=${userId}`);
+}
+
+export async function getUserHistoricalPlaces(userId: string) {
+  return await entertainmentAxiosInstance.get(`/historical-places?ownerId=${userId}`);
 }
 
 export async function createUser(body: string) {
-  return await axiosInstance.post("/users", body);
+  return await userAxiosInstance.post("/users", body);
 }
 
 export async function updateUser(id: string, body: string) {
-  return await axiosInstance.patch(`/users/${id}`, body);
+  return await userAxiosInstance.patch(`/users/${id}`, body);
 }
 
 export async function deleteUser(id: string) {
-  return await axiosInstance.delete(`/users/:${id}`);
+  return await userAxiosInstance.delete(`/users/:${id}`);
 }
