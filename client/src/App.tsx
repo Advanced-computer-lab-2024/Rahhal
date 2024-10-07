@@ -8,6 +8,9 @@ import AdvertiserView from "./components/non-tourist/advertiser/AdvertiserView.t
 import SettingsView from "@/components/user-settings/SettingsView";
 import ProfileForm from "./components/user-settings/ProfileForm";
 import AccountForm from "./components/user-settings/AccountForm";
+import AdminHomepage from "./components/non-tourist/admin/AdminHomepage.tsx"
+import CategoryView from "./components/non-tourist/admin/CategoriesTable.tsx"
+
 export default function App() {
   const queryClient = new QueryClient();
   return (
@@ -27,6 +30,8 @@ export default function App() {
             </Route>
             <Route path="/advertiser/:id" element={<AdvertiserView />} />
             <Route path="/tourism-governor/:id" element={<TourismGovernorView />} />
+          <Route path="/admin" element={<AdminHomepage />} />
+          <Route path="/admin/categories" element={<CategoryView />}/>
           </Routes>
         </Router>
       </QueryClientProvider>
