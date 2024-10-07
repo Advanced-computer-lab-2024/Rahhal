@@ -35,6 +35,7 @@ interface User {
   companyProfile?: string;
   companyName?: string;
   description?: string;
+  wallet?: number;
 }
 export const EditContext = createContext<{
   editForm: boolean;
