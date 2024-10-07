@@ -5,7 +5,7 @@ import { fetchCategories } from "@/api-calls/categories-api-calls";
 import DataTableAddButton from "../DataTableAddButton";
 import { CategoryModal } from "./CategoryModal";
 
-function AdminView() {
+function CategoryView() {
     const [categories, setCategories] = useState<TCategory[]>([]);
 
     useEffect(() => {
@@ -25,4 +25,4 @@ function AdminView() {
     );
 }
 
-export default AdminView;
+export default CategoryView;
