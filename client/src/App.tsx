@@ -8,13 +8,14 @@ import AdvertiserView from "./components/non-tourist/advertiser/AdvertiserView.t
 import SettingsView from "@/components/user-settings/SettingsView";
 import ProfileForm from "./components/user-settings/ProfileForm";
 import AccountForm from "./components/user-settings/AccountForm";
-import AdminHomepage from "./components/non-tourist/admin/AdminHomepage.tsx"
+import AdminHomepage from "./components/non-tourist/admin/AdminHomepage.tsx";
 import UserView from "./components/non-tourist/admin/UserTable.tsx";
-import CategoryView from "./components/non-tourist/admin/CategoriesTable.tsx"
+import CategoryView from "./components/non-tourist/admin/CategoriesTable.tsx";
 import GeneralGridView from "./components/home-page/main-content-div/GeneralGridView.tsx";
 import ProductGridView from "./components/home-page/Products-grid/ProductsGridView.tsx";
 import TourGuideView from "./components/non-tourist/tour-guide/ItinerariesTable.tsx";
 
+import SellerView from "./components/non-tourist/seller/SellerView.tsx";
 export default function App() {
   const queryClient = new QueryClient();
   return (
@@ -22,14 +23,14 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         <Router>
           <Routes>
-          <Route element={<TouristHomePage loggedIn={false} />}>
-            <Route path="/entertainment" element={<GeneralGridView />} />
-            <Route path="/shop" element={<ProductGridView />} />
-          </Route>
-          <Route element={<TouristHomePage loggedIn={true} />}>
-            <Route path="/entertainment/:id" element={<GeneralGridView />} />
-            <Route path="/shop/:id" element={<ProductGridView />} />
-          </Route>
+            <Route element={<TouristHomePage loggedIn={false} />}>
+              <Route path="/entertainment" element={<GeneralGridView />} />
+              <Route path="/shop" element={<ProductGridView />} />
+            </Route>
+            <Route element={<TouristHomePage loggedIn={true} />}>
+              <Route path="/entertainment/:id" element={<GeneralGridView />} />
+              <Route path="/shop/:id" element={<ProductGridView />} />
+            </Route>
             <Route path="/profile/:id" element={<></>} />
             <Route path="/signup" element={<SignupSelector />} />
             <Route path="/signin" element={<></>} />
@@ -40,10 +41,11 @@ export default function App() {
             </Route>
             <Route path="/advertiser/:id" element={<AdvertiserView />} />
             <Route path="/tourism-governor/:id" element={<TourismGovernorView />} />
-          <Route path="/admin" element={<AdminHomepage />} />
-          <Route path="/admin/categories" element={<CategoryView />}/>
-          <Route path="/admin/users" element={<UserView />} />
-          <Route path="/tour-guide" element={<TourGuideView />} />
+            <Route path="/admin" element={<AdminHomepage />} />
+            <Route path="/admin/categories" element={<CategoryView />} />
+            <Route path="/admin/users" element={<UserView />} />
+            <Route path="/tour-guide" element={<TourGuideView />} />
+            <Route path="seller/:id" element={<SellerView />} />
           </Routes>
         </Router>
       </QueryClientProvider>
