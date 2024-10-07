@@ -19,8 +19,8 @@ const ItineraryAvailableDatesAndTimesNonEdit: React.FC<ItineraryAvailableDatesAn
       ) : (
         availableDatesTime.map((entry, index) => (
           <div key={index} className="flex justify-between items-center">
-            <span>{entry.Date.toLocaleDateString()}</span>
-            <span>{entry.Time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            <span>{entry.Date.toString()}</span>
+            <span>{entry.Time.toString([], { hour: '2-digit', minute: '2-digit' })}</span>
           </div>
         ))
       )}

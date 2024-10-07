@@ -7,6 +7,6 @@ export const fetchHistoricalTags = async () => {
 };
 
 export const fetchUserHistoricalTags = async (userId: string) => {
-  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/historical-tags/${userId}`);
+  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/historical-tags`);
   return response.data;
 }

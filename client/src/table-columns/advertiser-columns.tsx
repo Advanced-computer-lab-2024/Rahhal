@@ -46,7 +46,31 @@ function deleteRow(row: any) {
   window.location.reload();
 }
 
+function displayMinMaxPrice(price: Record<string, number>) {
+
+  const prices = Object.values(price);
+
+  if (prices.length === 0) {
+    return 0;
+  }
+  
+  let minPrice = Math.min(...prices);
+  let maxPrice = Math.max(...prices);
+
+  if (minPrice === maxPrice) {
+    return minPrice;
+  } else {
+    return `${minPrice} - ${maxPrice}`;
+  }
+
+}
+
 function calculateAverageRating(ratings: TRating[]) {
+
+  if (ratings.length === 0) {
+    return 0;
+  }
+
   const totalRating = ratings.reduce((acc, rating) => acc + rating.rating, 0);
   return totalRating / ratings.length;
 }
@@ -60,7 +84,7 @@ export const activitiesColumns: ColumnDef<TActivity>[] = [
   {
     accessorKey: "category",
     header: "category",
-    cell: ({ row }) => <div className="capitalize">{row.original.category.category}</div>,
+    cell: ({ row }) => <div className="capitalize">{row.original.category.name}</div>,
   },
   {
     accessorKey: "price",
@@ -75,7 +99,7 @@ export const activitiesColumns: ColumnDef<TActivity>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="capitalize">{row.getValue("price")}</div>,
+    cell: ({ row }) => <div className="capitalize">{typeof row.original.price == "object" ? displayMinMaxPrice(row.original.price) : row.original.price}</div>,
   },
   {
     accessorKey: "tags",

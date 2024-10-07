@@ -30,7 +30,7 @@ export function CategoryModal({ categoryData, dialogTrigger }: CategoryModalProp
             dialogTrigger={dialogTrigger}
             onSubmit={() => {
                 submitCategory(modalCategoryData, isNewCategory);
-                window.location.reload();
+                setTimeout(() => window.location.reload(), 5000);
             }}
         >
             <ShortText

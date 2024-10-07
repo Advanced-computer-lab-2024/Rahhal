@@ -29,7 +29,10 @@ export function GenericModal({
 
   const handleSubmit = () => {
     onSubmit();
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 5000);
+
   }
 
   return (

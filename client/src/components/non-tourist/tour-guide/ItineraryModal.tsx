@@ -19,6 +19,7 @@ import MultipleSelector from "@/components/ui/multiple-selector";
 import ItineraryActivities from "@/components/itinerary-activities/ItineratyActivities";
 import ItineraryAvailableDatesAndTimes from "@/components/itinerary-available-dates-times/ItineraryAvailableDatesAndTimes";
 import ItineraryLocations from "@/components/itinerary-locations/ItineraryLocations";
+import { useParams } from "react-router-dom";
 
 interface ItinerariesModalProps {
     itineraryData?: TItinerary;
@@ -27,12 +28,15 @@ interface ItinerariesModalProps {
     }
 
 export function ItinerariesModal({ itineraryData, dialogTrigger, userId }: ItinerariesModalProps) {
+    const { id } = useParams();
     const isNewItinerary: boolean = itineraryData === undefined;
-    const [modalItineraryData, setModalItinerariesData] = useState<TItinerary | undefined>(itineraryData); 
+    const [modalItineraryData, setModalItinerariesData] = useState<TItinerary | undefined>((itineraryData) ?? DEFAULTS.ITINERARY);
     const [modalDBData, setModalDBData] = useState<{ [key: string]: any }>({
         categories: [],
         preferenceTags: [],
-    }); 
+    });
+    const [activitiesWithDurations, setActivitiesWithDurations] = useState<{ name: string; duration: string }[]>([]);
+    
 
     const extractIds = (data: ({ _id: string } & Record<string, any>)[]) => {
       const ids = data.map(({ _id }) => _id);
@@ -42,6 +46,8 @@ export function ItinerariesModal({ itineraryData, dialogTrigger, userId }: Itine
     };
   
     const handleSubmit = async () => {
+      
+      console.log(id);
       if (isNewItinerary) {
         // For fields that are referenced in the database by ids, we need to extract them first
         // since the database will only accept for these field an id or list of ids
@@ -52,11 +58,12 @@ export function ItinerariesModal({ itineraryData, dialogTrigger, userId }: Itine
           ...rest,
           category: categoryId,
           preferenceTags: preferenceTagsIds,
+          owner: id,
         };
-        // I am sure that userId is not null when the modal open from table add button
-        // otherwise it opens from an edit action and in that situation userId is not null
-        // and already stored in the database and it's not needed in updates
-        await createItinerary(newItinerary, userId!);
+        
+        console.log(newItinerary);
+       
+        await createItinerary(newItinerary, id);
       } else await updateItinerary(modalItineraryData!);
       window.location.reload();
     };
@@ -76,10 +83,29 @@ export function ItinerariesModal({ itineraryData, dialogTrigger, userId }: Itine
         init();
     }, []);
 
-    const activitiesWithDurations = modalItineraryData?.activities.map((activity, index) => ({
-        name: activity,
-        duration: modalItineraryData.durationOfActivities[index] || 0
-    })) || [];
+    useEffect(() => {
+        if (!modalItineraryData) return;
+        if (!modalItineraryData.activities) return;
+        if (!modalItineraryData.durationOfActivities) return;
+        
+        console.log(modalItineraryData);
+
+        let newActivities = [];
+        let newDurations = [];
+
+        for (let i = 0; i < modalItineraryData.activities.length; i++) {
+            newActivities.push(modalItineraryData.activities[i]);
+            
+        }
+
+        for (let i = 0; i < modalItineraryData.durationOfActivities.length; i++) {
+            newDurations.push(modalItineraryData.durationOfActivities[i]);
+        }
+
+        setActivitiesWithDurations(newActivities.map((activity, index) => ({ name: activity, duration: newDurations[index] })));
+
+
+  }, [modalItineraryData]);
 return (
     <GenericModal
       title={itineraryData?.name ?? "New Itinerary"}
@@ -88,16 +114,13 @@ return (
       onSubmit={handleSubmit}
       >
         <ShortText
-            title="Name"
-            initialValue={modalItineraryData?.name ?? ""}
-            onSave={(value) =>
-                setModalItinerariesData(
-                modalItineraryData ? { ...modalItineraryData, name: value } : undefined,
-            )
-            }
-            placeholder="Enter itinerary name"
-            initialDisabled={!isNewItinerary}
-        />
+        title="Name"
+        initialValue={modalItineraryData?.name ?? ""}
+        onSave={(value) => setModalItinerariesData(
+          modalItineraryData ? { ...modalItineraryData, name: value } : undefined
+        )}
+        placeholder="Enter itinerary name"
+        initialDisabled={!isNewItinerary} type={"text"}        />
           <PictureCard title={"Photo Tour"} description={"Uploaded Photos"} imageSources={IMAGES} />
         <LongText
             title="Description"
@@ -114,11 +137,16 @@ return (
             title="Activities"
             itineraryActivities={activitiesWithDurations.map(activity => ({ type: activity.name, duration: activity.duration.toString() }))}
             onItineraryActivityChange={(activities) => {
-                setModalItinerariesData(
-                    modalItineraryData ? { ...modalItineraryData, activities: activities.map((activity) => activity.type), durationOfActivities: activities.map((activity) => activity.duration) } : undefined
-                );
-            }}
-
+                setModalItinerariesData((prevData) => {
+                    const data = prevData || { ...DEFAULTS.ITINERARY };
+                    return {
+                        ...data,
+                        activities: activities.map(activity => activity.type),
+                        durationOfActivities: activities.map(activity => activity.duration),
+                    };
+                });
+              }
+            }
         />
    <ItineraryLocations
   locations={modalItineraryData?.locations.map(location => ({
@@ -177,7 +205,7 @@ return (
             {label: "Russian", value: "russian"}, {label: "Arabic", value: "arabic"},
         ]}
         placeholder="Select languages"
-        value={modalItineraryData?.languages.map(lang => ({ label: lang, value: lang })) ?? []}
+        value={modalItineraryData?.languages?.map(lang => ({ label: lang, value: lang })) ?? []}
         onChange={(options: { label: string; value: string }[]) =>
             setModalItinerariesData(
             modalItineraryData ? { ...modalItineraryData, languages: options.map(option => option.value) } : undefined,
@@ -186,7 +214,7 @@ return (
         />
         <ShortText
             title="Price"
-            initialValue={modalItineraryData?.price.toString() ?? ""}
+            initialValue={modalItineraryData?.price?.toString() ?? ""}
             onSave={(value) => setModalItinerariesData(
                 modalItineraryData ? { ...modalItineraryData, price: parseFloat(value) } : undefined
             )} 
@@ -224,7 +252,7 @@ return (
               modalItineraryData ? { ...modalItineraryData, category: selectedCategory } : undefined,
             );
           }}
-          initalValue={modalItineraryData?.category._id ?? ""}
+          initalValue={modalItineraryData?.category?._id ?? ""}
         />
       <div className="m-5 mx-6">
     <div className="mb-2">
@@ -232,7 +260,7 @@ return (
     </div>
     <TagsSelector
         placeholder={"Select preference tags"}
-        options={modalDBData?.preferenceTags.map((tag: any) => ({
+        options={modalDBData?.preferenceTags?.map((tag: any) => ({
           label: tag.name,
           value: tag._id,
         }))}

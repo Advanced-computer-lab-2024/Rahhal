@@ -58,7 +58,6 @@ export default function App() {
             <Route path="/admin/categories" element={<CategoryView />} />
             <Route path="/admin/users" element={<UserView />} />
             <Route path="/admin/products" element={<AdminProductsView />} />
-            <Route path="/tour-guide" element={<TourGuideView />} />
             <Route path="seller/:id" element={<SellerView />} />
             <Route path="/admin" element={<AdminHomepage />} />
             <Route path="/admin/categories" element={<CategoryView />} />
