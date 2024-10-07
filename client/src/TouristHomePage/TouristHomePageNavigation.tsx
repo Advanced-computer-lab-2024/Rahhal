@@ -40,7 +40,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
                 </div>}
                 { NavigationProps.loggedIn &&
                     <div className="flex items-center pr-3">
-                    <Link to={`/profile/${id}`}>
+                    <Link to={`/user-settings/${id}`}>
                         <Avatar className="h-10 w-10">
                             <AvatarFallback>US</AvatarFallback>
                         </Avatar>

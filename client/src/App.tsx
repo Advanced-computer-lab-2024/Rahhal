@@ -35,6 +35,10 @@ export default function App() {
             <Route path="/signup" element={<SignupSelector />} />
             <Route path="/signin" element={<Login/>}/>
             <Route path="/details/:id" element={<DetailsPage />} />
+            <Route  element={<SettingsView />}>
+            <Route path="/user-settings/:id" element={<ProfileForm />} />
+            <Route path="/user-settings/account/:id" element={<AccountForm />} />
+          </Route>
             <Route path="/user-settings/:id" element={<SettingsView />}>
               <Route index element={<ProfileForm />} />
               <Route path="account" element={<AccountForm />} />
