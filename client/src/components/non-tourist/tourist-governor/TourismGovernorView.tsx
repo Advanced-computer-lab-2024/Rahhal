@@ -38,7 +38,7 @@ function TourismGovernorView() {
           newRowModal={
             <HistoricalPlacesModal
               userId={id}
-              historicalPlacesData={undefined}
+              historicalPlaceData={undefined}
               dialogTrigger={<DataTableAddButton />}
             />
           }

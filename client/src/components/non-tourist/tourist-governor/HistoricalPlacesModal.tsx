@@ -21,20 +21,20 @@ import LongText from "@/components/LongText";
 import PriceCategories from "@/components/price-categories/PriceCategories";
 
 interface HistoricalPlacesModalProps {
-  historicalPlacesData?: THistoricalPlace;
+  historicalPlaceData?: THistoricalPlace;
   dialogTrigger?: React.ReactNode;
-  userId: string;
+  userId?: string;
 }
 
 export function HistoricalPlacesModal({
-  historicalPlacesData,
+  historicalPlaceData,
   dialogTrigger,
   userId,
 }: HistoricalPlacesModalProps) {
-  const isNewHistoricalPlace: boolean = historicalPlacesData === undefined;
+  const isNewHistoricalPlace: boolean = historicalPlaceData === undefined;
   const [modalHistoricalPlaceData, setModalHistoricalPlaceData] = useState<
     THistoricalPlace | undefined
-  >(historicalPlacesData); // current activity data present in the modal
+  >(historicalPlaceData); // current activity data present in the modal
 
   const [modalDBData, setModalDBData] = useState<{ [key: string]: any }>({
     categories: [],
@@ -65,7 +65,10 @@ export function HistoricalPlacesModal({
         preferenceTags: preferenceTagsIds,
         tags: tagsIds,
       };
-      await createHistoricalPlace(newHistoricalPlace, userId);
+      // I am sure that userId is not null when the modal open from table add button
+      // otherwise it opens from an edit action and in that situation userId is not null
+      // and already stored in the database and it's not needed in updates
+      await createHistoricalPlace(newHistoricalPlace, userId!);
     } else await updateHistoricalPlace(modalHistoricalPlaceData!);
     window.location.reload();
   };
@@ -88,7 +91,7 @@ export function HistoricalPlacesModal({
   // create generic modal with components based on data type of columns
   return (
     <GenericModal
-      title={historicalPlacesData?.name ?? "New Historical Place"}
+      title={historicalPlaceData?.name ?? "New Historical Place"}
       description="Historical Place Details"
       dialogTrigger={dialogTrigger}
       onSubmit={handleSubmit}

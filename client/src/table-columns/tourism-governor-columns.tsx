@@ -106,7 +106,7 @@ export const historicalPlacesColumns: ColumnDef<THistoricalPlace>[] = [
             <FaTrash className="h-4 w-4" />
           </Button>
           <HistoricalPlacesModal
-            historicalPlacesData={row.original}
+            historicalPlaceData={row.original}
             dialogTrigger={
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>

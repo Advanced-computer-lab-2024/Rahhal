@@ -1,5 +1,4 @@
 import type { Request, Response } from "express";
-import type { Request, Response } from "express";
 import { STATUS_CODES } from "@/utils/constants";
 import * as userService from "@/services/user-service";
 
@@ -37,6 +36,16 @@ export async function getUserHistoricalPlaces(req: Request, res: Response) {
   try {
     const historicalPlaces = await userService.getUserHistoricalPlaces(userId);
     res.status(historicalPlaces.status).json(historicalPlaces.data);
+  } catch (error) {
+    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
+  }
+}
+
+export async function getUserProducts(req: Request, res: Response) {
+  const userId = req.params.id;
+  try {
+    const products = await userService.getUserProducts(userId);
+    res.status(products.status).json(products.data);
   } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }

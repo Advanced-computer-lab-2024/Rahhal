@@ -22,7 +22,7 @@ import LongText from "@/components/LongText";
 interface ActivitiesModalProps {
   activityData?: TActivity;
   dialogTrigger?: React.ReactNode;
-  userId: string;
+  userId?: string;
 }
 
 export function ActivitiesModal({ activityData, dialogTrigger, userId }: ActivitiesModalProps) {
@@ -57,7 +57,10 @@ export function ActivitiesModal({ activityData, dialogTrigger, userId }: Activit
         // TODO - should be removed later when we settle down on its removal
         tags: preferenceTagsIds,
       };
-      await createActivity(newActivity, userId);
+      // I am sure that userId is not null when the modal open from table add button
+      // otherwise it opens from an edit action and in that situation userId is not null
+      // and already stored in the database and it's not needed in updates
+      await createActivity(newActivity, userId!);
     } else await updateActivity(modalActivityData!);
     window.location.reload();
   };

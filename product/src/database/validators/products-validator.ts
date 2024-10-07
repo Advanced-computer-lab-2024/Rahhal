@@ -12,3 +12,7 @@ export function validatePrice(price: number) {
 export function validateRating(ratings: number) {
   return ratings >= CONSTANTS.MIN_RATING && ratings <= CONSTANTS.MAX_RATING;
 }
+
+export function validateQuantity(quantity: number) {
+  return quantity >= CONSTANTS.ZERO;
+}

@@ -1,7 +1,5 @@
 import axios from "axios";
 import { STATUS_CODES } from "@/utils/constants";
-import axios from "axios";
-import { STATUS_CODES } from "@/utils/constants";
 
 const userAxiosInstance = axios.create({
   baseURL: "http://user:3000",
@@ -12,6 +10,13 @@ const userAxiosInstance = axios.create({
 
 const entertainmentAxiosInstance = axios.create({
   baseURL: "http://entertainment:3000",
+  validateStatus: (status) => {
+    return status < STATUS_CODES.GATEWAY_TIMEOUT;
+  },
+});
+
+const productAxiosInstance = axios.create({
+  baseURL: "http://product:3000",
   validateStatus: (status) => {
     return status < STATUS_CODES.GATEWAY_TIMEOUT;
   },
@@ -32,6 +37,10 @@ export async function getUserActivities(userId: string) {
 
 export async function getUserHistoricalPlaces(userId: string) {
   return await entertainmentAxiosInstance.get(`/historical-places?ownerId=${userId}`);
+}
+
+export async function getUserProducts(userId: string) {
+  return await productAxiosInstance.get(`/products?sellerId=${userId}`);
 }
 
 export async function createUser(body: string) {

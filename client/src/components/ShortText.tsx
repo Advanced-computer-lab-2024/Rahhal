@@ -70,7 +70,13 @@ const ShortText = forwardRef<ShortTextRef, ShortTextProps>(
             type={type}
             placeholder={placeholder}
             value={fieldValue}
-            onChange={handleFieldChange}
+            onChange={(event) => {
+              if (type === "number" && Number(event.target.value) < 0) {
+                setFieldValue("0");
+              } else {
+                handleFieldChange(event);
+              }
+            }}
             onKeyDown={handleKeyPress}
             disabled={isDisabled}
             className="flex-grow"
