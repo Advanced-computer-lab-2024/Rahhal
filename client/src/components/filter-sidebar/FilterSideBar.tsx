@@ -18,7 +18,7 @@ function FilterSideBar({
   return (
     <aside
       className={cn(
-        "z-20 h-screen ease-in-out duration-300 border border-r-gray-400 overflow-y-scroll h-[700px]",
+        "z-10 h-screen ease-in-out duration-300 border border-r-gray-400 overflow-y-scroll h-[700px]",
         isOpen === false ? "w-0 overflow-hidden" : "w-[433px]",
       )}
     >
