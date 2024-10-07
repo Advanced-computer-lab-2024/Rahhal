@@ -9,7 +9,6 @@ import { CiGlobe } from "react-icons/ci";
 import TouristHomePageNavigation from "@/TouristHomePage/TouristHomePageNavigation";
 import GoogleMap from "../google-maps/GoogleMap";
 
-
 const DetailsPage = () => {
   const location = useLocation();
   const { item }: { item: any } = location.state || {}; // Access the passed item through state
@@ -45,6 +44,11 @@ const DetailsPage = () => {
             {item.preferenceTags?.map((tag: { name: string }) => tag.name).join(", ")}
           </p>
 
+          
+          {item.specialDiscount?(<p>Special Discounts: {item.specialDiscount}</p>):null}
+          
+        
+
           {item.date ? (
             <p>
               Date: {new Date(item.date).toLocaleDateString()} <br />
@@ -71,7 +75,13 @@ const DetailsPage = () => {
 
           <p>Category: {item.category.name}</p>
           {console.log(item.isBookingOpen)}
-          {"isBookingOpen" in item ?(item.isBookingOpen===true?<p>Available to Book NOW!</p>:<p>Booking Closed!</p>):null}
+          {"isBookingOpen" in item ? (
+            item.isBookingOpen === true ? (
+              <p>Available to Book NOW!</p>
+            ) : (
+              <p>Booking Closed!</p>
+            )
+          ) : null}
 
           <p>
             Rating: {getAverageRating(item.ratings.rating)}{" "}
@@ -115,53 +125,57 @@ const DetailsPage = () => {
             </p>
           ) : null}
 
-      
           {item.pickUpLocation ? (
             <div>
-              <p><strong>Pick Up Location:</strong></p>
+              <p>
+                <strong>Pick Up Location:</strong>
+              </p>
               {getLocationOnMap(item.pickUpLocation)}
 
-              <p><strong>Drop Off Location:</strong></p>
+              <p>
+                <strong>Drop Off Location:</strong>
+              </p>
               {getLocationOnMap(item.dropOffLocation)}
-              </div>
+            </div>
           ) : null}
 
           {item.location ? (
-            <>
+            <div>
               <p>
                 <strong>Location:</strong>
               </p>
               {getLocationOnMap(item.location)}
-            </>
+            </div>
           ) : null}
 
           {/* this section is for products details to whoever is working with it */}
 
-          {item.reviews ? (
+          {item.ratings && item.ratings.length > 0 ? (
             <div>
-              <h3>User Reviews</h3>
-              {Array.isArray(item.reviews) && item.reviews.length > 0 ? (
-                item.reviews.map(
-                  (review: { user: string; rating: number; comment: string }, index: number) => (
-                    <div key={index}>
+              <p><strong>User Reviews:</strong></p>
+              <ul>
+                {item.ratings.map(
+                  (rating: { user: string; rating: number; review?: string }, index: number) => (
+                    <li key={index}>
                       <p>
-                        <strong>User:</strong> {review.user}
+                        <strong>User ID:</strong> {rating.user}
                       </p>
                       <p>
-                        <strong>Rating:</strong> {review.rating} / 5
+                        <strong>Rating:</strong> {rating.rating} / 5
                       </p>
-                      <p>
-                        <strong>Comment:</strong> {review.comment}
-                      </p>
-                    </div>
+                      {rating.review && (
+                        <p>
+                          <strong>Review:</strong> {rating.review}
+                        </p>
+                      )}
+                    </li>
                   ),
-                )
-              ) : (
-                <p>No reviews available.</p>
-              )}
+                )}
+              </ul>
             </div>
-          ) : null}
-
+          ) : (
+            <p>No reviews available.</p>
+          )}
           {item.seller ? <p>Seller: {item.seller}</p> : null}
         </div>
 
