@@ -8,6 +8,11 @@ export async function fetchUserProducts(userId: string) {
   return response.data;
 }
 
+export async function fetchProducts() {
+  const response = await axios.get(SERVICES_URLS.PRODUCT + "/products");
+  return response.data;
+}
+
 export async function createProduct(newProductData: TNewProduct, userId: string) {
   newProductData.seller = userId;
   newProductData.ratings = [{ rating: Math.floor(Math.random() * 5) + 1, userId: userId }];

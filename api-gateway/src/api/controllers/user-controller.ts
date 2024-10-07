@@ -81,3 +81,13 @@ export async function deleteUser(req: Request, res: Response) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
 }
+
+export async function loginUser(req: Request, res: Response) {
+  const userData = req.body;
+  try {
+    const user = await userService.loginUser(userData);
+    res.status(user.status).json(user.data);
+  } catch (error) {
+    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
+  }
+}
