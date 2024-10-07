@@ -2,7 +2,6 @@ import CardStyles from "./EntertainmentCard.module.css";
 import { IoMdStar } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
 import { GrLanguage } from "react-icons/gr";
-import { IRating  } from "../home-page/main-content-div/GeneralGridView";
 import { getPriceValue } from "../home-page/main-content-div/GeneralGridView";
 interface EntertainmentCardProps {
   image: string;
@@ -11,7 +10,7 @@ interface EntertainmentCardProps {
   rating: number;
   location?: string;
   languages?: string[];
-  openingTime?: string;
+  openingTime?: {open: string; close: string};
   availability?: boolean;
   seller?: string;
   onClick?: () => void;
@@ -69,7 +68,7 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
 
             {openingTime !== undefined && (
               <p>
-                Opening Hours: <br /> {openingTime}
+                Opening Hours: <br /> {openingTime.open}-{openingTime.close}
               </p>
             )}
 
