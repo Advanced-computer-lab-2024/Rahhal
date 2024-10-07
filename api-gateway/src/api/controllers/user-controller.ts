@@ -8,7 +8,6 @@ export async function getAllUsers(req: Request, res: Response) {
     const users = await userService.getAllUsers();
     res.status(users.status).json(users.data);
   } catch (error) {
-  } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
 }
@@ -49,7 +48,6 @@ export async function createUser(req: Request, res: Response) {
     const user = await userService.createUser(userData);
     res.status(user.status).json(user.data);
   } catch (error) {
-  } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
 }
@@ -61,7 +59,6 @@ export async function updateUser(req: Request, res: Response) {
     const user = await userService.updateUser(userId, userData);
     res.status(user.status).json(user.data);
   } catch (error) {
-  } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
 }
@@ -71,7 +68,6 @@ export async function deleteUser(req: Request, res: Response) {
   try {
     const user = await userService.deleteUser(userId);
     res.status(user.status).json(user.data);
-  } catch (error) {
   } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
