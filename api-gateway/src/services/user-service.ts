@@ -1,14 +1,12 @@
-import axios from 'axios'
-import { STATUS_CODES } from '@/utils/constants'
+import axios from "axios";
+import { STATUS_CODES } from "@/utils/constants";
 
-const axiosInstance = axios.create(
-  {
-    baseURL: "http://user:3000",
-    validateStatus: (status) => {
-      return status < STATUS_CODES.GATEWAY_TIMEOUT;
-    }
-  }
-)
+const axiosInstance = axios.create({
+  baseURL: "http://user:3000",
+  validateStatus: (status) => {
+    return status < STATUS_CODES.GATEWAY_TIMEOUT;
+  },
+});
 
 // users service calls
 export async function getAllUsers() {
@@ -24,7 +22,7 @@ export async function createUser(body: string) {
 }
 
 export async function updateUser(id: string, body: string) {
-  return await axiosInstance.patch(`/users/${id}`, body)
+  return await axiosInstance.patch(`/users/${id}`, body);
 }
 
 export async function deleteUser(id: string) {

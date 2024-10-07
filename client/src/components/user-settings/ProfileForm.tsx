@@ -11,85 +11,103 @@ import {
 import { Input } from "../ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { EditContext } from "./SettingsView";
 // import { useState } from "react";
-
-//from api
-const user = {
-  firstName: "Yousef",
-  lastName: "Elbrolosy",
-  companyName: "German University in Cairo",
-  role: "advertiser",
-  description: "I sell qubits",
-  previousWork: "I worked at Quantum",
-  job: "developer",
-  yearsOfExperience: 0,
-  phoneNumber: "+201010777507",
-  hotline: "15540",
-  website: "https://yousef.com",
-  companyProfile: "https://www.linkedin.com/in/yousefelbrolosy/",
-  addresses: ["Banfseg 6", "Nasr City"],
-};
-
-const profileFormSchema = z.object({
-  firstName: z
-    .string()
-    .min(2, {
-      message: "First Name must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "First Name must not be longer than 30 characters.",
-    }),
-  lastName: z
-    .string()
-    .min(2, {
-      message: "Last Name must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "Last Name must not be longer than 30 characters.",
-    }),
-  companyName: z
-    .string()
-    .min(2, {
-      message: "Last Name must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "Last Name must not be longer than 30 characters.",
-    }),
-  role: z.string().min(2).max(30).optional(),
-  description: z.string().max(160).min(4),
-  previousWork: z.string().max(160).optional(),
-  job: z.string().max(160).min(4),
-  yearsOfExperience: z.number().min(0).max(100),
-  phoneNumber: z
-    .string()
-    .min(13, { message: "Phone number minimum length must be 13 digits." })
-    .max(20, { message: "Phone number maximum length must be 20 digits." })
-    .regex(/^\+?[1-9]\d{1,14}$/, { message: "Please enter a valid phone number." }),
-  hotline: z
-    .string()
-    .min(5, { message: "Hotline minimum length must be 5 digits." })
-    .regex(/^\+?[1-9]\d{1,14}$/, { message: "Please enter a valid hotline." }),
-  website: z.string().url(),
-  companyProfile: z.string().url(),
-  addresses: z.string().array().optional(),
-});
-
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
+// export default function updateUser(){
+//   const USER_SERVICE_URL = `http://localhost:3000/api/user/users/${id}`;
+//   useEffect(() => {
+//     axios
+//       .patch(USER_SERVICE_URL)
+//       .then((response) => {
+//         setUser(response.data);
+//       })
+//       .catch((error) => {
+//         console.error(error);
+//       });
+//   }, []);
+// }
 
 export default function ProfileForm() {
+  const { editForm, user } = useContext(EditContext);
+  //from api
+  // const user = {
+  //   firstName: "Yousef",
+  //   lastName: "Elbrolosy",
+  //   companyName: "German University in Cairo",
+  //   role: "advertiser",
+  //   description: "I sell qubits",
+  //   previousWork: "I worked at Quantum",
+  //   job: "developer",
+  //   yearsOfExperience: 0,
+  //   phoneNumber: "+201010777507",
+  //   hotline: "15540",
+  //   website: "https://yousef.com",
+  //   companyProfile: "https://www.linkedin.com/in/yousefelbrolosy/",
+  //   addresses: ["Banfseg 6", "Nasr City"],
+  // };
+
+  const profileFormSchema = z.object({
+    firstName: z
+      .string()
+      .min(2, {
+        message: "First Name must be at least 2 characters.",
+      })
+      .max(30, {
+        message: "First Name must not be longer than 30 characters.",
+      }),
+    lastName: z
+      .string()
+      .min(2, {
+        message: "Last Name must be at least 2 characters.",
+      })
+      .max(30, {
+        message: "Last Name must not be longer than 30 characters.",
+      }),
+    companyName: z
+      .string()
+      .min(2, {
+        message: "Last Name must be at least 2 characters.",
+      })
+      .max(30, {
+        message: "Last Name must not be longer than 30 characters.",
+      }),
+    role: z.string().min(2).max(30).optional(),
+    description: z.string().max(160).min(4),
+    previousWork: z.string().max(160).optional(),
+    job: z.string().max(160).min(4),
+    yearsOfExperience: z.number().min(0).max(100),
+    phoneNumber: z
+      .string()
+      .min(13, { message: "Phone number minimum length must be 13 digits." })
+      .max(20, { message: "Phone number maximum length must be 20 digits." })
+      .regex(/^\+?[1-9]\d{1,14}$/, { message: "Please enter a valid phone number." }),
+    hotline: z
+      .string()
+      .min(5, { message: "Hotline minimum length must be 5 digits." })
+      .regex(/^\+?[1-9]\d{1,14}$/, { message: "Please enter a valid hotline." }),
+    website: z.string().url(),
+    companyProfile: z.string().url(),
+    addresses: z.string().array().optional(),
+  });
+
+  type ProfileFormValues = z.infer<typeof profileFormSchema>;
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     mode: "onChange",
     defaultValues: user,
   });
 
+  useEffect(() => {
+    form.reset(user);
+  }, [user, form]);
+
   function onSubmit(data: ProfileFormValues) {
     console.log(data);
   }
   // const [editForm, setEditForm] = useState(false);
-  const editForm = useContext(EditContext);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -357,14 +375,14 @@ export default function ProfileForm() {
                       <FormLabel>Addresses</FormLabel>
                       <FormControl>
                         <div>
-                          {(field.value || user.addresses).map((address, index) => (
+                          {(field.value || user.addresses || []).map((address, index) => (
                             <div key={index} className="flex items-center space-x-2 mb-4">
                               <Input
                                 disabled={!editForm}
                                 placeholder={`Address ${index + 1}`}
                                 value={address}
                                 onChange={(e) => {
-                                  const newAddresses = [...(field.value || user.addresses)];
+                                  const newAddresses = [...(field.value ?? user.addresses ?? [])];
                                   newAddresses[index] = e.target.value;
                                   field.onChange(newAddresses);
                                 }}
@@ -372,7 +390,7 @@ export default function ProfileForm() {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  const newAddresses = (field.value || user.addresses).filter(
+                                  const newAddresses = (field.value || user.addresses || []).filter(
                                     (_, i) => i !== index,
                                   );
                                   field.onChange(newAddresses);
@@ -385,7 +403,9 @@ export default function ProfileForm() {
                           ))}
                           <button
                             type="button"
-                            onClick={() => field.onChange([...(field.value || user.addresses), ""])}
+                            onClick={() =>
+                              field.onChange([...(field.value ?? user.addresses ?? []), ""])
+                            }
                             className="mt-2 text-blue-500"
                           >
                             Add Address

@@ -1,6 +1,5 @@
-import express from 'express'
-import * as userContoller from "@/api/controllers/user-controller"
-
+import express from "express";
+import * as userContoller from "@/api/controllers/user-controller";
 
 const router = express.Router();
 

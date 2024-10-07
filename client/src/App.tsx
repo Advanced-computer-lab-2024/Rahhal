@@ -20,9 +20,9 @@ export default function App() {
           <Route path="/signup" element={<SignupSelector />}/>
           <Route path="/signin" element={<></>} />
           <Route path="/details/:id" element={<DetailsPage />} />
-          <Route path="/user-settings" element={<SettingsView />}>
+          <Route path="/user-settings/:id" element={<SettingsView />}>
             <Route index element={<ProfileForm />} />
-            <Route path="/user-settings/account" element={<AccountForm />} />
+            <Route path="account" element={<AccountForm />} />
           </Route>
         </Routes>
       </Router>

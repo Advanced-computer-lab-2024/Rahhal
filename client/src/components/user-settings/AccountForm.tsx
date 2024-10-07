@@ -11,72 +11,74 @@ import {
 import { Input } from "../ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { useContext } from "react";
 import { EditContext } from "./SettingsView";
-const user = {
-  username: "YousefElbrolosy",
-  email: "yousefelbrolosy8@gmail.com",
-  password: "Yousef123",
-};
-
-const passwordValidator = z.object({
-  oldPassword: z
-    .string()
-    .refine((val) => val === user.password, {
-      message: "Old password does not match.",
-    })
-    .optional(),
-  newPassword: z
-    .string()
-    .min(8, {
-      message: "Password must be at least 8 characters.",
-    })
-    .regex(/[A-Z]/, {
-      message: "Password must contain at least one uppercase letter.",
-    })
-    .regex(/[0-9]/, {
-      message: "Password must contain at least one number.",
-    })
-    .refine((val) => val !== user.password, {
-      message: "New password must be different from the old password.",
-    })
-    .optional(),
-});
-
-const accountFormSchema = z.object({
-  username: z
-    .string()
-    .min(2, {
-      message: "Username must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "Username must not be longer than 30 characters.",
-    }),
-  email: z
-    .string({
-      required_error: "Please select an email to display.",
-    })
-    .email(),
-
-  password: z
-    .string()
-    .min(8, {
-      message: "Password must be at least 8 characters.",
-    })
-    .regex(/[A-Z]/, {
-      message: "Password must contain at least one uppercase letter.",
-    })
-    .regex(/[0-9]/, {
-      message: "Password must contain at least one number.",
-    })
-    .optional(),
-});
-
-type AccountFormValues = z.infer<typeof accountFormSchema>;
-type passwordValidatorValue = z.infer<typeof passwordValidator>;
 export default function AccountForm() {
+  const { editForm, user } = useContext(EditContext);
+  // const user = {
+  //   username: "YousefElbrolosy",
+  //   email: "yousefelbrolosy8@gmail.com",
+  //   password: "Yousef123",
+  // };
+
+  const passwordValidator = z.object({
+    oldPassword: z
+      .string()
+      .refine((val) => val === user.password, {
+        message: "Old password does not match.",
+      })
+      .optional(),
+    newPassword: z
+      .string()
+      .min(8, {
+        message: "Password must be at least 8 characters.",
+      })
+      .regex(/[A-Z]/, {
+        message: "Password must contain at least one uppercase letter.",
+      })
+      .regex(/[0-9]/, {
+        message: "Password must contain at least one number.",
+      })
+      .refine((val) => val !== user.password, {
+        message: "New password must be different from the old password.",
+      })
+      .optional(),
+  });
+
+  const accountFormSchema = z.object({
+    username: z
+      .string()
+      .min(2, {
+        message: "Username must be at least 2 characters.",
+      })
+      .max(30, {
+        message: "Username must not be longer than 30 characters.",
+      }),
+    email: z
+      .string({
+        required_error: "Please select an email to display.",
+      })
+      .email(),
+
+    password: z
+      .string()
+      .min(8, {
+        message: "Password must be at least 8 characters.",
+      })
+      .regex(/[A-Z]/, {
+        message: "Password must contain at least one uppercase letter.",
+      })
+      .regex(/[0-9]/, {
+        message: "Password must contain at least one number.",
+      })
+      .optional(),
+  });
+
+  type AccountFormValues = z.infer<typeof accountFormSchema>;
+  type passwordValidatorValue = z.infer<typeof passwordValidator>;
+
   const [changePassword, setChangePassword] = useState(false);
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
@@ -91,7 +93,10 @@ export default function AccountForm() {
       newPassword: "",
     },
   });
-  const editForm = useContext(EditContext);
+  useEffect(() => {
+    form.reset(user);
+  }, [user, form]);
+
   function onSubmit(data: AccountFormValues) {
     if (changePassword && oldPasswordForm.formState.isValid) {
       console.log(

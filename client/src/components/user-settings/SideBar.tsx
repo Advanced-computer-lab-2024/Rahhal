@@ -1,24 +1,25 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 export default function SideBar() {
   const location = useLocation();
   const [currentPath, setCurrentPath] = useState("");
+  const { id } = useParams();
 
   useEffect(() => {
     setCurrentPath(location.pathname);
   }, [location.pathname]);
 
   const sideBarElements = [
-    { title: "Profile", to: "/user-settings" },
-    { title: "Account", to: "/user-settings/account" },
+    { title: "Profile", to: `/user-settings/${id}` },
+    { title: "Account", to: `/user-settings/${id}/account` },
   ];
 
   return (
     <aside className="-mx-4 lg:w-1/5" style={{ minWidth: "100%" }}>
       <nav className="flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1">
         {sideBarElements.map((element, index) => {
-          // Check if the current path matches the element's to
+          // Check if the current path is exactly the element's to
           const isActive = currentPath === element.to;
 
           return (
