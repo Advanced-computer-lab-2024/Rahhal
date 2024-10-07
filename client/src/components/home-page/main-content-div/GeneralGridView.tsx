@@ -29,7 +29,7 @@ import {
   SortOption,
   Filter,
 } from "../home-page-types";
-import { match } from "assert";
+
 import { isWithinInterval } from "date-fns";
 
 const ACTIVITIES_API = "http://localhost:3000/api/entertainment/activities";
@@ -75,9 +75,19 @@ const GeneralGridView = () => {
   const [selectedLanguages, setSelectedLanguages] = useState<Option[]>([]);
   const [selectedHistoricalTags, setSelectedHistoricalTags] = useState<Option[]>([]);
   // Fetching funcitons
+
+  const ACTIVITIES_API = "http://localhost:3000/api/entertainment/activities";
+  const ITENARIES_API = "http://localhost:3000/api/entertainment/itineraries";
+  const HISTORICAL_PLACES_API = "http://localhost:3000/api/entertainment/historical-places";
+  const PREFERENCE_TAGS_API = "http://localhost:3000/api/entertainment/preference-tags";
+  const HISTORICAL_TAGS_API = "http://localhost:3000/api/entertainment/historical-tags";
+  const CATEGORIES_API = "http://localhost:3000/api/entertainment/categories";
+
   const fetchActivities = async () => {
     const res = await fetch(ACTIVITIES_API);
+    console.log("fetching activities")
     return res.json();
+    
   };
 
   const fetchItenaries = async () => {
@@ -151,7 +161,7 @@ const GeneralGridView = () => {
         !isLoadingItenaries &&
         !isPreferenceTags &&
         !isLoadingCategories &&
-        !isLoadingPlaces &&
+        !isHistoricalPlaces &&
         !isHistoricalTags,
     );
   }, [
@@ -159,7 +169,7 @@ const GeneralGridView = () => {
     isLoadingItenaries,
     isPreferenceTags,
     isLoadingCategories,
-    isLoadingPlaces,
+    isHistoricalPlaces,
     isHistoricalTags,
   ]);
 
