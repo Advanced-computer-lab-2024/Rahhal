@@ -1,3 +1,5 @@
+
+
 .details-page-content-container {
   display: flex;
   justify-content: space-evenly;
@@ -16,6 +18,9 @@
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin-top: 2%;
+  height: 700px;
+  overflow-y: auto;
+
 }
 .item-details p {
   display: flex;
