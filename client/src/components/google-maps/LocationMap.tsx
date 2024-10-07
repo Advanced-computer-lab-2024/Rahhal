@@ -9,6 +9,7 @@ type LocationMapProps = {
   initialLocation: { lat: number; lng: number };
   onSave: (location: { lat: number; lng: number }) => void;
   isEditingInitially?: boolean;
+  title?: string;
 };
 
 async function fetchLocationDetails(location: { lat: number; lng: number }) {
@@ -22,6 +23,8 @@ export default function LocationMap({
   initialLocation,
   isEditingInitially = false,
   onSave,
+
+  title,
 }: LocationMapProps) {
   const [isEditable, setIsEditable] = useState(isEditingInitially);
   const [location, setLocation] = useState(initialLocation);
@@ -50,7 +53,7 @@ export default function LocationMap({
   return (
     <Card className="w-full m-auto">
       <CardHeader className="flex-row justify-between items-center">
-        <CardTitle>Location</CardTitle>
+        <CardTitle>{title? title : "Location"}</CardTitle>
         <EditSaveButton
           saveChanges={handleSave}
           isDisabled={!isEditable}

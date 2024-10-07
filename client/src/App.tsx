@@ -13,6 +13,7 @@ import UserView from "./components/non-tourist/admin/UserTable.tsx";
 import CategoryView from "./components/non-tourist/admin/CategoriesTable.tsx"
 import GeneralGridView from "./components/home-page/main-content-div/GeneralGridView.tsx";
 import ProductGridView from "./components/home-page/Products-grid/ProductsGridView.tsx";
+import TourGuideView from "./components/non-tourist/tour-guide/ItinerariesTable.tsx";
 
 export default function App() {
   const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ export default function App() {
           <Route path="/admin" element={<AdminHomepage />} />
           <Route path="/admin/categories" element={<CategoryView />}/>
           <Route path="/admin/users" element={<UserView />} />
+          <Route path="/tour-guide" element={<TourGuideView />} />
           </Routes>
         </Router>
       </QueryClientProvider>
