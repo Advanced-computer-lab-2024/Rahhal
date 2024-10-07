@@ -21,11 +21,6 @@ import { useToast } from "@/hooks/use-toast";
 export default function AccountForm() {
   const { toast } = useToast();
   const { editForm, user } = useContext(EditContext);
-  // const user = {
-  //   username: "YousefElbrolosy",
-  //   email: "yousefelbrolosy8@gmail.com",
-  //   password: "Yousef123",
-  // };
 
   const passwordValidator = z.object({
     oldPassword: z
@@ -70,15 +65,6 @@ export default function AccountForm() {
 
     password: z
       .string()
-      // .min(8, {
-      //   message: "Password must be at least 8 characters.",
-      // })
-      // .regex(/[A-Z]/, {
-      //   message: "Password must contain at least one uppercase letter.",
-      // })
-      // .regex(/[0-9]/, {
-      //   message: "Password must contain at least one number.",
-      // })
       .optional(),
   });
 

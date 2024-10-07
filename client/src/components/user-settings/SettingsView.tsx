@@ -5,6 +5,8 @@ import { Button } from "../ui/button";
 import { useState, createContext, useEffect } from "react";
 import axios from "axios";
 import { Toaster } from "../ui/toaster";
+import { useToast } from "@/hooks/use-toast";
+
 enum Role {
   admin = "admin",
   tourist = "tourist",
@@ -48,6 +50,7 @@ export const EditContext = createContext<{
   },
 });
 export default function SettingsView() {
+  const { toast } = useToast();
   const { id } = useParams();
   const [editForm, setEditForm] = useState(false);
   const USER_SERVICE_URL = `http://localhost:3000/api/user/users/${id}`;
@@ -65,6 +68,13 @@ export default function SettingsView() {
         setUser(response.data);
       })
       .catch((error) => {
+        toast({
+          title: "Error: " + error,
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
         console.error(error);
       });
   }, []);
