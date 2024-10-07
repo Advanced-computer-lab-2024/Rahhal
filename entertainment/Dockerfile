@@ -6,9 +6,8 @@ WORKDIR /usr/src/app
 
 COPY package.json .
 RUN npm install
-RUN npm install --save-dev swagger-autogen
 COPY . .
 
 EXPOSE 3000
 
-CMD npm install && npm run dev
+CMD npm run dev
