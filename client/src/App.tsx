@@ -15,6 +15,7 @@ import GeneralGridView from "./components/home-page/main-content-div/GeneralGrid
 import ProductGridView from "./components/home-page/Products-grid/ProductsGridView.tsx";
 import TourGuideView from "./components/non-tourist/tour-guide/ItinerariesTable.tsx";
 import { Login } from "./components/Login.tsx"
+import PreferenceTagsAdminView from "./components/non-tourist/admin/PreferenceTagsTable.tsx";
 
 import SellerView from "./components/non-tourist/seller/SellerView.tsx";
 export default function App() {
@@ -50,6 +51,11 @@ export default function App() {
             <Route path="/admin/users" element={<UserView />} />
             <Route path="/tour-guide" element={<TourGuideView />} />
             <Route path="seller/:id" element={<SellerView />} />
+            <Route path="/admin" element={<AdminHomepage />} />
+            <Route path="/admin/categories" element={<CategoryView />} />
+            <Route path="/admin/users" element={<UserView />} />
+            <Route path="/tour-guide" element={<TourGuideView />} />
+            <Route path="/admin/preference-tags" element={<PreferenceTagsAdminView />} />
           </Routes>
         </Router>
       </QueryClientProvider>
