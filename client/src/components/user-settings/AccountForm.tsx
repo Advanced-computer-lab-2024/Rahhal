@@ -156,11 +156,11 @@ export default function AccountForm() {
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input disabled={!editForm} placeholder="shadcn" {...field} />
+                      <Input disabled placeholder="shadcn" {...field} />
                     </FormControl>
                     <FormDescription>
                       This is your public display name. It can be your real name or a pseudonym. You
-                      can only change this once every 30 days.
+                      cannot change this.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
