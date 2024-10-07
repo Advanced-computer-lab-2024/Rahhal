@@ -5,14 +5,14 @@ import { TUser } from "@/table-columns/user-columns";
 
 // fetch data from the server
 export const fetchUsers = async () => {
-  const response = await axios.get(SERVICES_URLS.USERS + "/users");
+  const response = await axios.get(SERVICES_URLS.USER + "/users");
   return response.data;
 };
 
 // delete user from users endpoint
 export const deleteUser = async (user: TUser) => {
     
-    await axios.delete(`${SERVICES_URLS.USERS}/users/${user._id}`);
+    await axios.delete(`${SERVICES_URLS.USER}/users/${user._id}`);
 };
 
 // submit user to the users endpoint
@@ -26,16 +26,16 @@ export const submitUser = async (user: TUser | undefined, isNewUser: boolean) =>
       username: user?.username,
       password: user?.password,
       role: user?.role,
-      approved: user?.approved,
+      approved: true,
     }
 
-    await axios.post(SERVICES_URLS.USERS + "/users", newUser).then((response) => {
+    await axios.post(SERVICES_URLS.USER + "/users", newUser).then((response) => {
       console.log(response.data);
     });
   } else {
     if (user) {
       await axios.patch(
-        `${SERVICES_URLS.USERS}/users/${user._id}`,
+        `${SERVICES_URLS.USER}/users/${user._id}`,
         user,
       ).then((response) => {
         console.log(response.data);

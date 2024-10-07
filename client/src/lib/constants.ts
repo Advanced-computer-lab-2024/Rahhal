@@ -44,6 +44,10 @@ export const DEFAULTS = {
     _id: "",
     name: "",
   },
+  HISTORICAL_TAG: {
+    _id: "",
+    name: "",
+  },
   PRODUCT: {
     _id: "",
     name: "",
