@@ -36,6 +36,7 @@ export function CategoryModal({ categoryData, dialogTrigger }: CategoryModalProp
             <ShortText
                 title="Name"
                 initialValue={modalCategoryData?.name ?? ""}
+                type="text"
                 onSave={(value) =>
                     setModalCategoryData(
                         modalCategoryData ? { ...modalCategoryData, name: value } : undefined,
