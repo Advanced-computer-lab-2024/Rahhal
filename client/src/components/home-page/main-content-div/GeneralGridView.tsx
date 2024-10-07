@@ -37,8 +37,8 @@ export const getPriceValue = (
   price:
     | number
     | { min: number; max: number }
-    | { foreigner: number; native: number; student: number }
-    | { type: string; price: number }[],
+    | { type: string; price: number }[]
+    | Record<string, number>,
 ) => {
   if (price === undefined || price === null) {
     return 0; // Return a default value (0) when price is not defined
@@ -50,8 +50,8 @@ export const getPriceValue = (
   if (Array.isArray(price)) {
     return price.length > 0 ? Math.min(...price.map((p) => p.price)) : 0;
   }
-
-  return 0;
+  
+  return Object.values(price).length > 0 ? Math.min(...Object.values(price)) : 0;
 };
 
 // Fetching logic from the database

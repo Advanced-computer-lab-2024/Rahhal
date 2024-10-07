@@ -6,6 +6,7 @@ import { IoMdStar } from "react-icons/io";
 import { CiGlobe } from "react-icons/ci";
 import TouristHomePageNavigation from "@/TouristHomePage/TouristHomePageNavigation";
 import GoogleMap from "../google-maps/GoogleMap";
+import { number } from "zod";
 
 const DetailsPage = () => {
   const location = useLocation();
@@ -189,24 +190,14 @@ const DetailsPage = () => {
           </div>
           <div className={DetailsPageStyles["price-section"]}>
             <div>
-              {Array.isArray(item.price) ? (
-                item.price.map((price: { type: string; price: number }) => (
-                  <p key={price.type}>
-                    {price.type.toUpperCase()}: {price.price} EGP
-                  </p>
-                ))
-              ) : typeof item.price == "object" && "foreigner" in item.price ? (
-                <>
-                  <p>Foreigner: {item.price.foreigner} EGP</p>
-                  <p>Native: {item.price.native} EGP</p>
-                  <p>Student: {item.price.student} EGP</p>
-                </>
-              ) : typeof item.price == "object" && "min" in item.price ? (
-                <h1>
-                  Price: {item.price.min}-{item.price.max} EGP
-                </h1>
-              ) : (
+              {typeof item.price === "number" ? (
                 <h1>Price: {item.price} EGP</h1>
+              ) : (
+                Object.entries(item.price).map(([key, value], index) => (
+                  <h1 key={index}>
+                    {key}: {value} EGP
+                  </h1>
+                ))
               )}
             </div>
           </div>
