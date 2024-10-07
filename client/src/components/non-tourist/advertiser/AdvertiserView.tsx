@@ -9,7 +9,17 @@ function AdvertiserView() {
   const [activities, setActivities] = useState<TActivity[]>([]);
 
   useEffect(() => {
-    fetchActivities().then((data) => setActivities(data));
+    const init = async () => {
+      const data = await fetchActivities();
+
+      // convert string dates fetched from the db to Date objects
+      data.forEach((activity: TActivity) => {
+        activity.time = new Date(activity.time);
+        activity.date = new Date(activity.date);
+      });
+      setActivities(data);
+    };
+    init();
   }, []);
 
   return (

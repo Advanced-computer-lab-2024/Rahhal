@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import type { IRating } from "@/database/shared";
 import { ratingSchema, validateRatings } from "@/database/shared";
-import * as activitiesValidator from "@/database/validators/activities-validator";
 
 // Define the schema for the activities collection
 export interface IActivity {
@@ -11,7 +10,7 @@ export interface IActivity {
   time: Date;
   images: string[];
   location: { longitude: number; latitude: number; placeId?: string };
-  price: number | { type: string; price: number }[];
+  price: Record<string, number>;
   category?: mongoose.Schema.Types.ObjectId;
   tags?: string[];
   specialDiscount?: number;
@@ -36,13 +35,9 @@ const activitySchema = new mongoose.Schema<IActivity>({
     required: true,
   },
   price: {
-    type: mongoose.Schema.Types.Mixed,
+    type: Map,
+    of: Number,
     required: true,
-    validate: {
-      validator: activitiesValidator.validatePrice,
-      message:
-        "Invalid price format, must be a number or an array of objects with a type and price",
-    },
   },
   category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
   tags: { type: [String] },

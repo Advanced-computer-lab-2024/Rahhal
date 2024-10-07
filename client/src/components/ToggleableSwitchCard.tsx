@@ -1,5 +1,5 @@
 import { Switch } from "@/components/ui/switch";
-import { CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 
 import React from "react";
 
@@ -18,7 +18,7 @@ export const ToggleableSwitchCard = ({
   onToggle,
 }: ToggleableSwitchCardProps) => {
   return (
-    <CardContent className="grid gap-4">
+    <Card className="grid gap-4">
       <div className=" flex items-center space-x-4 rounded-md border p-4">
         {icon}
         <div className="flex-1 space-y-1">
@@ -27,6 +27,6 @@ export const ToggleableSwitchCard = ({
         </div>
         <Switch checked={switchState} onCheckedChange={onToggle} />
       </div>
-    </CardContent>
+    </Card>
   );
 };
