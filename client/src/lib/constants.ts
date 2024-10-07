@@ -3,6 +3,7 @@ import { Role } from "@/table-columns/user-columns";
 export const SERVICES_URLS = {
   ENTERTAINMENT: "http://localhost:3003",
   USERS: "http://localhost:3000/api/user",
+  PRODUCT: "http://localhost:3000/api/product",
 };
 
 export const TEMP_USER_ID = "67032b20ffa86f21339f6cad";
