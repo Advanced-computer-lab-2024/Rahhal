@@ -13,22 +13,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useEffect } from "react";
 import { EditContext } from "./SettingsView";
-// import { useState } from "react";
-// export default function updateUser(){
-//   const USER_SERVICE_URL = `http://localhost:3000/api/user/users/${id}`;
-//   useEffect(() => {
-//     axios
-//       .patch(USER_SERVICE_URL)
-//       .then((response) => {
-//         setUser(response.data);
-//       })
-//       .catch((error) => {
-//         console.error(error);
-//       });
-//   }, []);
-// }
+import axios from "axios";
+import { useParams } from "react-router-dom";
+
 
 export default function ProfileForm() {
+  const { id } = useParams();
   const { editForm, user } = useContext(EditContext);
   //from api
   // const user = {
@@ -55,7 +45,8 @@ export default function ProfileForm() {
       })
       .max(30, {
         message: "First Name must not be longer than 30 characters.",
-      }),
+      })
+      .optional(),
     lastName: z
       .string()
       .min(2, {
@@ -63,7 +54,8 @@ export default function ProfileForm() {
       })
       .max(30, {
         message: "Last Name must not be longer than 30 characters.",
-      }),
+      })
+      .optional(),
     companyName: z
       .string()
       .min(2, {
@@ -71,24 +63,27 @@ export default function ProfileForm() {
       })
       .max(30, {
         message: "Last Name must not be longer than 30 characters.",
-      }),
+      })
+      .optional(),
     role: z.string().min(2).max(30).optional(),
-    description: z.string().max(160).min(4),
+    description: z.string().max(160).min(4).optional(),
     previousWork: z.string().max(160).optional(),
-    job: z.string().max(160).min(4),
-    yearsOfExperience: z.number().min(0).max(100),
+    job: z.string().max(160).min(4).optional(),
+    yearsOfExperience: z.number().min(0).max(100).optional(),
     phoneNumber: z
       .string()
       .min(13, { message: "Phone number minimum length must be 13 digits." })
       .max(20, { message: "Phone number maximum length must be 20 digits." })
-      .regex(/^\+?[1-9]\d{1,14}$/, { message: "Please enter a valid phone number." }),
+      .regex(/^\+?[1-9]\d{1,14}$/, { message: "Please enter a valid phone number." })
+      .optional(),
     hotline: z
       .string()
       .min(5, { message: "Hotline minimum length must be 5 digits." })
-      .regex(/^\+?[1-9]\d{1,14}$/, { message: "Please enter a valid hotline." }),
-    website: z.string().url(),
-    companyProfile: z.string().url(),
-    addresses: z.string().array().optional(),
+      .regex(/^\+?[1-9]\d{1,14}$/, { message: "Please enter a valid hotline." })
+      .optional(),
+    website: z.string().url().optional(),
+    companyProfile: z.string().url().optional(),
+    addresses: z.string().array().optional().optional(),
   });
 
   type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -96,18 +91,41 @@ export default function ProfileForm() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     mode: "onChange",
-    defaultValues: user,
+    defaultValues: {
+      firstName: user.firstName || "",
+      lastName: user.lastName || "",
+      companyName: user.companyName || "",
+      role: user.role || "",
+      description: user.description || "",
+      previousWork: user.previousWork || "",
+      job: user.job || "",
+      yearsOfExperience: user.yearsOfExperience || 0,
+      phoneNumber: user.phoneNumber || "",
+      hotline: user.hotline || "",
+      website: user.website || "",
+      companyProfile: user.companyProfile || "",
+      addresses: user.addresses || [],
+    },
   });
 
   useEffect(() => {
     form.reset(user);
   }, [user, form]);
 
+  async function updateUser(data: ProfileFormValues) {
+    const USER_SERVICE_URL = `http://localhost:3000/api/user/users/${id}`;
+    try {
+      const response = await axios.patch(USER_SERVICE_URL, data);
+      console.log(response);
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   function onSubmit(data: ProfileFormValues) {
-    console.log(data);
+    updateUser(data);
   }
   // const [editForm, setEditForm] = useState(false);
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -401,15 +419,16 @@ export default function ProfileForm() {
                               </button>
                             </div>
                           ))}
-                          <button
+                            <button
                             type="button"
+                            disabled={!editForm}
                             onClick={() =>
                               field.onChange([...(field.value ?? user.addresses ?? []), ""])
                             }
-                            className="mt-2 text-blue-500"
-                          >
+                            className={`mt-2 ${editForm ? "text-blue-500" : "text-blue-300"}`}
+                            >
                             Add Address
-                          </button>
+                            </button>
                         </div>
                       </FormControl>
                       <FormMessage />
