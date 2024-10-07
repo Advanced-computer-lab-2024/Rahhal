@@ -18,6 +18,7 @@ import { Login } from "./components/Login.tsx";
 import PreferenceTagsAdminView from "./components/non-tourist/admin/PreferenceTagsTable.tsx";
 
 import SellerView from "./components/non-tourist/seller/SellerView.tsx";
+import TouristGovernerHomepage from "./components/non-tourist/tourist-governor/TouristGovernerHomepage.tsx";
 import AdminProductsView from "./components/non-tourist/admin/AdminProductsView.tsx";
 
 export default function App() {
@@ -48,7 +49,7 @@ export default function App() {
               <Route path="account" element={<AccountForm />} />
             </Route>
             <Route path="/advertiser/:id" element={<AdvertiserView />} />
-            <Route path="/tourism-governor/:id" element={<TourismGovernorView />} />
+            <Route path="/tourism-governor/:id" element={<TouristGovernerHomepage />} />
             <Route path="/admin" element={<AdminHomepage />} />
             <Route path="/admin/categories" element={<CategoryView />} />
             <Route path="/admin/users" element={<UserView />} />

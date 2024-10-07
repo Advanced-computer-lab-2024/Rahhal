@@ -9,7 +9,7 @@ import { HistoricalPlacesModal } from "./HistoricalPlacesModal";
 import DataTableAddButton from "../DataTableAddButton";
 import { useParams } from "react-router-dom";
 
-function TourismGovernorView() {
+function HistoricalPlacesView() {
   const [historicalPlaces, setHistoricalPlaces] = useState<THistoricalPlace[]>([]);
   const { id } = useParams();
 
@@ -50,4 +50,4 @@ function TourismGovernorView() {
   );
 }
 
-export default TourismGovernorView;
+export default HistoricalPlacesView;
