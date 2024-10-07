@@ -92,7 +92,7 @@ function SignupSeller({ onBack }: SignupSellerProps) {
             const response = await createUser(reqBody);
             alert("User created successfully, awaiting approval");
             setTimeout(() => {
-                navigate("/seller/" + response._id);
+                navigate("/"); // seller still needs to be approved by admin
             }, 3000);
         }
         catch(error){
