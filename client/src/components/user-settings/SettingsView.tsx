@@ -33,8 +33,10 @@ interface User {
   companyName?: string;
   description?: string;
 }
-
-export const EditContext = createContext<{ editForm: boolean; user: User }>({
+export const EditContext = createContext<{
+  editForm: boolean;
+  user: User;
+}>({
   editForm: false,
   user: {
     username: "",

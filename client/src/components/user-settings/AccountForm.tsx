@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { useContext } from "react";
 import { EditContext } from "./SettingsView";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 export default function AccountForm() {
   const { editForm, user } = useContext(EditContext);
   // const user = {
@@ -55,24 +57,26 @@ export default function AccountForm() {
       })
       .max(30, {
         message: "Username must not be longer than 30 characters.",
-      }),
+      })
+      .optional(),
     email: z
       .string({
         required_error: "Please select an email to display.",
       })
-      .email(),
+      .email()
+      .optional(),
 
     password: z
       .string()
-      .min(8, {
-        message: "Password must be at least 8 characters.",
-      })
-      .regex(/[A-Z]/, {
-        message: "Password must contain at least one uppercase letter.",
-      })
-      .regex(/[0-9]/, {
-        message: "Password must contain at least one number.",
-      })
+      // .min(8, {
+      //   message: "Password must be at least 8 characters.",
+      // })
+      // .regex(/[A-Z]/, {
+      //   message: "Password must contain at least one uppercase letter.",
+      // })
+      // .regex(/[0-9]/, {
+      //   message: "Password must contain at least one number.",
+      // })
       .optional(),
   });
 
@@ -83,7 +87,11 @@ export default function AccountForm() {
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
     mode: "onChange",
-    defaultValues: user,
+    defaultValues: {
+      username: user.username || "",
+      email: user.email || "",
+      password: user.password || "",
+    },
   });
   const oldPasswordForm = useForm<passwordValidatorValue>({
     resolver: zodResolver(passwordValidator),
@@ -96,16 +104,32 @@ export default function AccountForm() {
   useEffect(() => {
     form.reset(user);
   }, [user, form]);
-
-  function onSubmit(data: AccountFormValues) {
-    if (changePassword && oldPasswordForm.formState.isValid) {
-      console.log(
-        JSON.stringify({ ...data, password: oldPasswordForm.getValues().newPassword }, null, 2),
-      );
-    } else if (changePassword && !oldPasswordForm.formState.isValid) {
-      oldPasswordForm.trigger();
-    } else {
+  const { id } = useParams();
+  async function updateUser(data: AccountFormValues) {
+    const USER_SERVICE_URL = `http://localhost:3000/api/user/users/${id}`;
+    try {
+      const response = await axios.patch(USER_SERVICE_URL, data);
+      console.log(response);
       console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  async function onSubmit(data: AccountFormValues) {
+    if (changePassword) {
+      const isOldPasswordValid = await oldPasswordForm.trigger();
+
+      if (isOldPasswordValid) {
+        updateUser({ ...data, password: oldPasswordForm.getValues().newPassword });
+        setChangePassword(false);
+        oldPasswordForm.reset();
+        // Reload the page
+        window.location.reload();
+      } else {
+        console.log("Form errors:", oldPasswordForm.formState.errors);
+      }
+    } else {
+      updateUser(data);
     }
   }
 

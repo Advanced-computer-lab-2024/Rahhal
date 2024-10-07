@@ -16,26 +16,10 @@ import { EditContext } from "./SettingsView";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-
 export default function ProfileForm() {
   const { id } = useParams();
   const { editForm, user } = useContext(EditContext);
-  //from api
-  // const user = {
-  //   firstName: "Yousef",
-  //   lastName: "Elbrolosy",
-  //   companyName: "German University in Cairo",
-  //   role: "advertiser",
-  //   description: "I sell qubits",
-  //   previousWork: "I worked at Quantum",
-  //   job: "developer",
-  //   yearsOfExperience: 0,
-  //   phoneNumber: "+201010777507",
-  //   hotline: "15540",
-  //   website: "https://yousef.com",
-  //   companyProfile: "https://www.linkedin.com/in/yousefelbrolosy/",
-  //   addresses: ["Banfseg 6", "Nasr City"],
-  // };
+
 
   const profileFormSchema = z.object({
     firstName: z
@@ -124,6 +108,7 @@ export default function ProfileForm() {
   }
   function onSubmit(data: ProfileFormValues) {
     updateUser(data);
+    window.location.reload();
   }
   // const [editForm, setEditForm] = useState(false);
   return (
@@ -419,16 +404,16 @@ export default function ProfileForm() {
                               </button>
                             </div>
                           ))}
-                            <button
+                          <button
                             type="button"
                             disabled={!editForm}
                             onClick={() =>
                               field.onChange([...(field.value ?? user.addresses ?? []), ""])
                             }
                             className={`mt-2 ${editForm ? "text-blue-500" : "text-blue-300"}`}
-                            >
+                          >
                             Add Address
-                            </button>
+                          </button>
                         </div>
                       </FormControl>
                       <FormMessage />
