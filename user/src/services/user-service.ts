@@ -2,12 +2,7 @@ import * as userRepository from "../database/repositories/user-repository";
 import type { IUser } from "../database/models/User";
 
 export async function createUser(userData: IUser) {
-  if (
-    userData.username &&
-    userData.email &&
-    userData.password &&
-    userData.role
-  ) {
+  if (userData.username && userData.email && userData.password && userData.role) {
     const user = await userRepository.getUserByUsername(userData.username);
 
     const email = await userRepository.getUserByEmail(userData.email);
@@ -30,9 +25,7 @@ export async function deleteUser(userId: string) {
 }
 
 //get specific user by username
-export async function getUserByUsername(
-  username: string,
-): Promise<IUser | null> {
+export async function getUserByUsername(username: string): Promise<IUser | null> {
   return await userRepository.getUserByUsername(username);
 }
 
@@ -60,9 +53,6 @@ export async function updateUserByUsername(
 }
 
 //update user and searching for the user using it id
-export async function updateUserById(
-  userId: string,
-  updatedUser: IUser,
-): Promise<IUser | null> {
+export async function updateUserById(userId: string, updatedUser: IUser): Promise<IUser | null> {
   return await userRepository.updateUserById(userId, updatedUser);
 }

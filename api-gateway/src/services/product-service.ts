@@ -1,14 +1,12 @@
-import axios from 'axios'
-import { STATUS_CODES } from '@/utils/constants'
+import axios from "axios";
+import { STATUS_CODES } from "@/utils/constants";
 
-const axiosInstance = axios.create(
-  {
-    baseURL: "http://product:3000",
-    validateStatus: (status) => {
-      return status < STATUS_CODES.GATEWAY_TIMEOUT;
-    }
-  }
-)
+const axiosInstance = axios.create({
+  baseURL: "http://product:3000",
+  validateStatus: (status) => {
+    return status < STATUS_CODES.GATEWAY_TIMEOUT;
+  },
+});
 
 // Products service calls
 export async function getAllProducts() {

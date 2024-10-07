@@ -1,10 +1,10 @@
 import express from "express";
-import * as activitiesController from '@/api/controllers/entertainment-controllers/activities-controller';
-import * as itinerariesController from '@/api/controllers/entertainment-controllers/itineraries-controller';
-import * as preferenceTagsController from '@/api/controllers/entertainment-controllers/preference-tags-controller';
-import * as historicalTagsController from '@/api/controllers/entertainment-controllers/historical-tags-controller';
-import * as historicalPlacesController from '@/api/controllers/entertainment-controllers/historical-places-controller';
-import * as categoriesController from '@/api/controllers/entertainment-controllers/categories-controller';
+import * as activitiesController from "@/api/controllers/entertainment-controllers/activities-controller";
+import * as itinerariesController from "@/api/controllers/entertainment-controllers/itineraries-controller";
+import * as preferenceTagsController from "@/api/controllers/entertainment-controllers/preference-tags-controller";
+import * as historicalTagsController from "@/api/controllers/entertainment-controllers/historical-tags-controller";
+import * as historicalPlacesController from "@/api/controllers/entertainment-controllers/historical-places-controller";
+import * as categoriesController from "@/api/controllers/entertainment-controllers/categories-controller";
 
 const router = express.Router();
 //activites routes
@@ -29,9 +29,9 @@ router.patch("/preference-tags/:id", preferenceTagsController.updatePreferenceTa
 router.delete("/preference-tags/:id", preferenceTagsController.deletePreferenceTag);
 
 //historical-tags routes
-router.get('/historical-tags', historicalTagsController.getAllHistoricalTags);
-router.get('/historical-tags/:id', historicalTagsController.getHistoricalTagById);
-router.post('/historical-tags', historicalTagsController.createHistoricalTag);
+router.get("/historical-tags", historicalTagsController.getAllHistoricalTags);
+router.get("/historical-tags/:id", historicalTagsController.getHistoricalTagById);
+router.post("/historical-tags", historicalTagsController.createHistoricalTag);
 
 //historical-places routes
 router.get("/historical-places", historicalPlacesController.getAllHistoricalPlaces);
@@ -46,6 +46,5 @@ router.get("/categories/:id", categoriesController.getCategoryById);
 router.post("/categories", categoriesController.createCategory);
 router.patch("/categories/:id", categoriesController.updateCategory);
 router.delete("/categories/:id", categoriesController.deleteCategory);
-
 
 export default router;

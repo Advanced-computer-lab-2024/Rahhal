@@ -42,10 +42,10 @@ export default function FilterStarRating({
               className="text-primary"
             />
             <div className="flex items-center gap-0.5 text-primary">
-              {Array.from({ length: rating }).map((_, ) => (
+              {Array.from({ length: rating }).map((_) => (
                 <StarIcon className="w-5 h-5 fill-current" />
               ))}
-              {Array.from({ length: 5 - rating }).map((_, ) => (
+              {Array.from({ length: 5 - rating }).map((_) => (
                 <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
               ))}
             </div>

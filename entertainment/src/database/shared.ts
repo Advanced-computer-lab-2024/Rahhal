@@ -1,5 +1,5 @@
-import { Schema } from 'mongoose';
-import { CONSTANTS } from '../utils/constants';
+import { Schema } from "mongoose";
+import { CONSTANTS } from "../utils/constants";
 export interface IRating {
   user: string;
   rating: number;

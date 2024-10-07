@@ -1,5 +1,5 @@
 import type { IHistoricalPlace } from "../database/models/HistoricalPlace";
-import * as historicalPlacesRepository from"../database/repositories/historical-places-repository";
+import * as historicalPlacesRepository from "../database/repositories/historical-places-repository";
 
 // Get all historical places
 export async function getAllHistoricalPlaces() {
