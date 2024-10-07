@@ -18,6 +18,7 @@ import { EditContext } from "./SettingsView";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import {CONNECTION_STRING} from "../../utils/constants";
 export default function AccountForm() {
   const { toast } = useToast();
   const { editForm, user } = useContext(EditContext);
@@ -94,7 +95,7 @@ export default function AccountForm() {
   }, [user, form]);
   const { id } = useParams();
   async function updateUser(data: AccountFormValues) {
-    const USER_SERVICE_URL = `http://localhost:3000/api/user/users/${id}`;
+    const USER_SERVICE_URL = CONNECTION_STRING + `${id}`;
     try {
       const response = await axios.patch(USER_SERVICE_URL, data);
       toast({

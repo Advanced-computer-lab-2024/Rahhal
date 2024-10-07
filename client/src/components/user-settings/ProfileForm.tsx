@@ -16,6 +16,8 @@ import { EditContext } from "./SettingsView";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import {CONNECTION_STRING} from "../../utils/constants";
+import {Role} from "./SettingsView";
 export default function ProfileForm() {
   const { toast } = useToast();
   const { id } = useParams();
@@ -49,7 +51,7 @@ export default function ProfileForm() {
         message: "Last Name must not be longer than 30 characters.",
       })
       .optional(),
-    role: z.string().min(2).max(30).optional(),
+    role: z.nativeEnum(Role).optional(),
     description: z.string().max(160).min(4).optional(),
     previousWork: z.string().max(160).optional(),
     job: z.string().max(160).min(4).optional(),
@@ -97,7 +99,7 @@ export default function ProfileForm() {
   }, [user, form]);
 
   async function updateUser(data: ProfileFormValues) {
-    const USER_SERVICE_URL = `http://localhost:3000/api/user/users/${id}`;
+    const USER_SERVICE_URL = CONNECTION_STRING + `${id}`;
     try {
       const response = await axios.patch(USER_SERVICE_URL, data);
       toast({

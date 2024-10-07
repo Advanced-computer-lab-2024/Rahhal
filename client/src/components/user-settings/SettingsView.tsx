@@ -6,8 +6,8 @@ import { useState, createContext, useEffect } from "react";
 import axios from "axios";
 import { Toaster } from "../ui/toaster";
 import { useToast } from "@/hooks/use-toast";
-
-enum Role {
+import {CONNECTION_STRING} from "../../utils/constants";
+export enum Role {
   admin = "admin",
   tourist = "tourist",
   tourGuide = "tourGuide",
@@ -53,7 +53,7 @@ export default function SettingsView() {
   const { toast } = useToast();
   const { id } = useParams();
   const [editForm, setEditForm] = useState(false);
-  const USER_SERVICE_URL = `http://localhost:3000/api/user/users/${id}`;
+  const USER_SERVICE_URL = CONNECTION_STRING + `${id}`;
   const [user, setUser] = useState<User>({
     username: "",
     email: "",
