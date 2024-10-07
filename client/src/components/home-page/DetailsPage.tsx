@@ -184,13 +184,13 @@ const DetailsPage = () => {
                     {price.type.toUpperCase()}: {price.price} EGP
                   </p>
                 ))
-              ) : "foreigner" in item.price ? (
+              ) : typeof item.price == "object" && "foreigner" in item.price ? (
                 <>
                   <p>Foreigner: {item.price.foreigner} EGP</p>
                   <p>Native: {item.price.native} EGP</p>
                   <p>Student: {item.price.student} EGP</p>
                 </>
-              ) : "min" in item.price ? (
+              ) : typeof item.price == "object" && "min" in item.price ? (
                 <h1>
                   Price: {item.price.min}-{item.price.max} EGP
                 </h1>
