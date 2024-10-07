@@ -32,13 +32,6 @@ import {
 
 import { isWithinInterval } from "date-fns";
 
-const ACTIVITIES_API = "http://localhost:3000/api/entertainment/activities";
-const ITENARIES_API = "http://localhost:3000/api/entertainment/itineraries";
-const HISTORICAL_PLACES_API = "http://localhost:3000/api/entertainment/historical-places";
-const PREFERENCE_TAGS_API = "http://localhost:3000/api/entertainment/preference-tags";
-const HISTORICAL_TAGS_API = "http://localhost:3000/api/entertainment/historical-tags";
-const CATEGORIES_API = "http://localhost:3000/api/entertainment/categories";
-
 export const getPriceValue = (
   price:
     | number
@@ -85,9 +78,7 @@ const GeneralGridView = () => {
 
   const fetchActivities = async () => {
     const res = await fetch(ACTIVITIES_API);
-    console.log("fetching activities")
     return res.json();
-    
   };
 
   const fetchItenaries = async () => {
@@ -258,13 +249,19 @@ const GeneralGridView = () => {
     ),
   );
   if (activefilter.includes("place")) {
+    const historicalTagsNames = historicalTags
+      .map((historicalTag: HistoricalTag) => historicalTag.name)
+      .map((tag: string) => ({ label: tag, value: tag }));
     combinedSideBarFilters = combinedSideBarFilters.concat(
-      HistoricalPlacesFilter(selectedHistoricalTags, setSelectedHistoricalTags),
+      HistoricalPlacesFilter(historicalTagsNames, setSelectedHistoricalTags),
     );
   }
   if (activefilter.includes("itinerary")) {
+    const languages = itenaries
+      .flatMap((itinerary: Itinerary) => (itinerary as Itinerary).languages)
+      .map((language: string) => ({ label: language, value: language }));
     combinedSideBarFilters = combinedSideBarFilters.concat(
-      ItinerariesFilter(selectedLanguages, setSelectedLanguages),
+      ItinerariesFilter(languages, setSelectedLanguages),
     );
   }
 
