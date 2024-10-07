@@ -1,5 +1,5 @@
 export const SERVICES_URLS = {
-  ENTERTAINMENT: "http://localhost:3003",
+  ENTERTAINMENT: "http://localhost:3000/api/entertainment",
 };
 
 export const DEFAULTS = {
