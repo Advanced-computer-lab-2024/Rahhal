@@ -39,13 +39,14 @@ export const getPriceValue = (
     | { foreigner: number; native: number; student: number }
     | { type: string; price: number }[],
 ) => {
-  if (typeof price === "number") {
-    return price;
-  } else if ("min" in price && "max" in price) {
-    return price.min;
-  } else if ("foreigner" in price && "native" in price && "student" in price) {
+  if (price === undefined || price === null) {
+    return 0; // Return a default value (0) when price is not defined
+  }
+  if (typeof price === "number") return price;
+  if ("min" in price && "max" in price) return price.min;
+  if ("foreigner" in price && "native" in price && "student" in price)
     return Math.min(price.foreigner, price.native, price.student);
-  } else if (Array.isArray(price)) {
+  if (Array.isArray(price)) {
     return price.length > 0 ? Math.min(...price.map((p) => p.price)) : 0;
   }
 
@@ -225,6 +226,8 @@ const GeneralGridView = () => {
     setSelectedPriceRange([0, 1000]);
     setSelectedRatings([]);
     setSelectedDates({ from: undefined, to: undefined });
+    setSelectedLanguages([]);
+    setSelectedHistoricalTags([]);
   };
 
   let combinedSideBarFilters = [
@@ -289,8 +292,9 @@ const GeneralGridView = () => {
     })
     .filter((item) => {
       // Filter based on selected category
-      if (item.category)
+      if (item.category) {
         return selectedCategory.length === 0 || selectedCategory.includes(item.category.name);
+      }
     })
     .filter((item) => {
       // Filter based on selected tag
@@ -410,7 +414,7 @@ const GeneralGridView = () => {
             )}
 
             {!skeleton &&
-              sortedCombinedItems.map((item) => (
+              filteredCombinedItems.map((item) => (
                 <EntertainmentCard
                   key={item._id}
                   image={"src/assets/ski egypt.jpg"}
