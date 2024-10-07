@@ -26,7 +26,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
             <div className= " w-full h-full"></div>
             <div className="flex justify-center relative z-10 space-x-12  h-16 pt-2 items-center">
                 {buttonNames.map((buttonName,index) => (
-                        <NavigationButton index={index+1} navigation={navigation} setNavigation={setNavigation} path={paths[index]} buttonName={buttonName} />  
+                        <NavigationButton index={index+1} navigation={navigation} setNavigation={setNavigation} path={paths[index]  + (!NavigationProps.loggedIn?"":`/${id}`)} buttonName={buttonName} />  
                 ))}
             </div>
             <div className=" w-full h-full flex justify-end">
