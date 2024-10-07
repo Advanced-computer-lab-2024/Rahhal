@@ -6,11 +6,14 @@ export async function createUser(userData: IUser) {
     const user = await userRepository.getUserByUsername(userData.username);
 
     const email = await userRepository.getUserByEmail(userData.email);
+    if(user && email){
+      throw new Error("Username already exists and this email is registered to another user");
+    }
     if (user) {
       throw new Error("Username already exists");
     }
     if (email) {
-      throw new Error("This email is registered by another user");
+      throw new Error("This email is registered to another user");
     }
   } else {
     throw new Error("Please provide all the required fields");
@@ -49,10 +52,38 @@ export async function updateUserByUsername(
   username: string,
   updatedUser: IUser,
 ): Promise<IUser | null> {
+  if(updatedUser.email){
+    const email = await userRepository.getUserByEmail(updatedUser.email);
+    if(email){
+      throw new Error("This email is registered to another user");
+    }
+  }
   return await userRepository.updateUserByUsername(username, updatedUser);
 }
 
 //update user and searching for the user using it id
-export async function updateUserById(userId: string, updatedUser: IUser): Promise<IUser | null> {
+export async function updateUserById(
+  userId: string,
+  updatedUser: IUser,
+): Promise<IUser | null> {
+  if(updatedUser.email){
+    const email = await userRepository.getUserByEmail(updatedUser.email);
+    if(email){
+      throw new Error("This email is registered to another user");
+    }
+  }
+
   return await userRepository.updateUserById(userId, updatedUser);
+}
+
+
+export async function loginUser(username: string, password: string){
+  const user = await userRepository.getUserByUsername(username);
+  if(!user){
+    throw new Error("Username or Password is incorrect");
+  }
+  if(user.password !== password){
+    throw new Error("Username or Password is incorrect");
+  }
+  return user;
 }
