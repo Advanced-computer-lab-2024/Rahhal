@@ -114,11 +114,11 @@ const GeneralGridView = () => {
   useEffect(() => {
     setFinishedLoading(
       !isLoadingActivities &&
-      !isLoadingItenaries &&
-      !isPreferenceTags &&
-      !isLoadingCategories &&
-      !isHistoricalPlaces &&
-      !isHistoricalTags,
+        !isLoadingItenaries &&
+        !isPreferenceTags &&
+        !isLoadingCategories &&
+        !isHistoricalPlaces &&
+        !isHistoricalTags,
     );
   }, [
     isLoadingActivities,
@@ -237,6 +237,14 @@ const GeneralGridView = () => {
   //Searching first, then result is filter  then result is sorted
   const filteredCombinedItems = combined
     .filter((item) => {
+      if ("languages" in item) {
+        const itemDates = (item as Itinerary).availableDatesTime.map((date) => new Date(date.Date));
+        return itemDates.some((date) => new Date(date) >= new Date());
+      } else if ("isBookingOpen" in item) {
+        return new Date((item as Activity).date) >= new Date();
+      } else return true;
+    })
+    .filter((item) => {
       // Filter based on search
       if (search) {
         return item.name.toLowerCase().includes(search.toLowerCase());
@@ -273,7 +281,11 @@ const GeneralGridView = () => {
       const adjustedToDate = selectedDates?.to
         ? new Date(selectedDates.to.getTime() + 86400000)
         : null;
-      const matchPrice = (selectedPriceRange[0] != -1 && itemPrice >= selectedPriceRange[0] && itemPrice <= selectedPriceRange[1]) || (selectedPriceRange[0] === -1 && selectedPriceRange[1] === -1);
+      const matchPrice =
+        (selectedPriceRange[0] != -1 &&
+          itemPrice >= selectedPriceRange[0] &&
+          itemPrice <= selectedPriceRange[1]) ||
+        (selectedPriceRange[0] === -1 && selectedPriceRange[1] === -1);
       const matchRating =
         selectedRatings.length === 0 ||
         selectedRatings.some((rating) => itemRating >= rating && itemRating < rating + 1);
