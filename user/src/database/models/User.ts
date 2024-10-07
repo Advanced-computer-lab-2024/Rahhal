@@ -55,7 +55,7 @@ const userSchema: Schema = new Schema<IUser>(
       //not required for advertiser since he registers with name of company
       //(may be also required if(company representative name is needed)
       required: function () {
-        return this.role !== Role.advertiser;
+        return this.role !== Role.advertiser && this.role !== Role.tourismGovernor && this.role !== Role.admin;
       },
       validate: {
         validator: userValidators.validateFirstName,
@@ -67,7 +67,7 @@ const userSchema: Schema = new Schema<IUser>(
       //not required for advertiser since he registers with name of company
       //(may be also required if(company representative name is needed)
       required: function () {
-        return this.role !== Role.advertiser;
+        return this.role !== Role.advertiser && this.role !== Role.tourismGovernor && this.role !== Role.admin;
       },
       validate: {
         validator: userValidators.validateLastName,
@@ -87,7 +87,9 @@ const userSchema: Schema = new Schema<IUser>(
     email: {
       type: String,
       unique: true,
-      required: true,
+      required: function () {
+        return this.role !== Role.tourismGovernor && this.role !== Role.admin;
+      },
       validate: {
         validator: userValidators.validateEmail,
         message: "Invalid email entry",

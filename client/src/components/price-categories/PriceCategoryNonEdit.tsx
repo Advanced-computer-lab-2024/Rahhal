@@ -11,9 +11,6 @@ function PriceCategoryNonEdit({
   ticket,
   startEditing,
   removeTicketType,
-  ticket,
-  startEditing,
-  removeTicketType,
 }: PriceCategoryNonEditProps) {
   return (
     <>

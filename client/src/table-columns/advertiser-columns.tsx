@@ -60,7 +60,22 @@ export const activitiesColumns: ColumnDef<TActivity>[] = [
   {
     accessorKey: "category",
     header: "category",
-    cell: ({ row }) => <div className="capitalize">{row.original.category.name}</div>,
+    cell: ({ row }) => <div className="capitalize">{row.original.category.category}</div>,
+  },
+  {
+    accessorKey: "price",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Price
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="capitalize">{row.getValue("price")}</div>,
   },
   {
     accessorKey: "tags",

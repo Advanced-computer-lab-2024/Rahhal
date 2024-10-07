@@ -37,9 +37,6 @@ const ShortText = forwardRef<ShortTextRef, ShortTextProps>(
     const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setFieldValue(event.target.value);
     };
-    const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setFieldValue(event.target.value);
-    };
 
     const toggleEditMode = () => {
       setIsDisabled(false);
@@ -51,22 +48,7 @@ const ShortText = forwardRef<ShortTextRef, ShortTextProps>(
         onSave(fieldValue, true);
       }
     };
-    const toggleEditMode = () => {
-      setIsDisabled(false);
-    };
 
-    const saveChanges = () => {
-      setIsDisabled(true);
-      if (onSave) {
-        onSave(fieldValue, true);
-      }
-    };
-
-    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === "Enter") {
-        saveChanges();
-      }
-    };
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === "Enter") {
         saveChanges();

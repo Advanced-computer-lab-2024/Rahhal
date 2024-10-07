@@ -42,7 +42,11 @@ export function GenericSelect({
         <SelectGroup>
           <SelectLabel>{label}</SelectLabel>
           {options.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
+            <SelectItem
+              key={option.value}
+              value={option.value}
+              onClick={() => setSelectedValue(option.value)}
+            >
               {option.label}
             </SelectItem>
           ))}
