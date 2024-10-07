@@ -10,8 +10,15 @@ import "./App.css";
 import { Button } from "./components/ui/button";
 import { DateRange } from "react-day-picker";
 import { FilterX } from "lucide-react";
+import SignupTourist from "./components/forms/SignupTourist";
+import SignupTourGuide from "./components/forms/SignupTourGuide";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import SignupSeller from "./components/forms/SignupSeller";
+import SignupAdvertiser from "./components/forms/SignupAdvertiser";
+import SignupSelector from "./components/forms/SignupSelector";
 
 function App() {
+  const queryClient = new QueryClient (); 
   const [isOpen, setIsOpen] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 500]);
   const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
@@ -152,15 +159,23 @@ function App() {
     return matchesPrice && matchesRating && matchesDate;
   });
   return (
-    <div className="flex flex-row gap-5">
-      <FilterSideBar isOpen={isOpen} sideBarItems={sideBarItems} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 auto-rows-fr">
-        {filteredData.map((data, index) => (
-          <EntertainmentCard key={index} {...data} />
-        ))}
-      </div>
-      <Button onClick={() => setIsOpen(!isOpen)}>Filters</Button>
-    </div>
+    // <div className="flex flex-row gap-5">
+    //    <FilterSideBar isOpen={isOpen} sideBarItems={sideBarItems} />
+    //   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 auto-rows-fr">
+    //     {filteredData.map((data, index) => (
+    //       <EntertainmentCard key={index} {...data} />
+    //     ))}
+    //   </div>
+    //   <Button onClick={() => setIsOpen(!isOpen)}>Filters</Button> 
+      
+    // </div>
+    <>
+    <QueryClientProvider client={queryClient}>
+    {/* {SignupAdvertiser()}
+     */}
+     {SignupSelector()}
+    </QueryClientProvider>
+    </>
   );
 }
 
