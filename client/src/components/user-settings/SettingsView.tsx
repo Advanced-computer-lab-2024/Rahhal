@@ -4,7 +4,7 @@ import { Outlet, useParams } from "react-router-dom";
 import { Button } from "../ui/button";
 import { useState, createContext, useEffect } from "react";
 import axios from "axios";
-import { Toaster } from "../ui/toaster"
+import { Toaster } from "../ui/toaster";
 enum Role {
   admin = "admin",
   tourist = "tourist",
@@ -91,7 +91,7 @@ export default function SettingsView() {
           <SideBar></SideBar>
         </div>
         <div className="lg:md:col-span-10" style={{ maxWidth: "70%" }}>
-        <Toaster />
+          <Toaster />
           <EditContext.Provider value={{ editForm, user }}>
             <Outlet />
           </EditContext.Provider>
