@@ -1,7 +1,7 @@
 import type { Types } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 import userValidators from "../../validators/user-validators";
-enum Role {
+export enum Role {
   admin = "admin",
   tourist = "tourist",
   tourGuide = "tourGuide",
@@ -86,7 +86,9 @@ const userSchema: Schema = new Schema<IUser>(
     },
     email: {
       type: String,
-      unique: true,
+      unique: function () {
+        return this.role !== Role.admin && this.role !== Role.tourismGovernor;
+      },
       required: function () {
         return this.role !== Role.tourismGovernor && this.role !== Role.admin;
       },

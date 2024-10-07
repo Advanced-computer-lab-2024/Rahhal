@@ -1,5 +1,5 @@
 import * as userRepository from "../database/repositories/user-repository";
-import type { IUser } from "../database/models/User";
+import { Role, type IUser } from "../database/models/User";
 
 export async function createUser(userData: IUser) {
   if (
@@ -7,16 +7,19 @@ export async function createUser(userData: IUser) {
     userData.password &&
     userData.role
   ) {
+
+    const shouldCheckEmail = userData.role !== Role.admin && userData.role !== Role.tourismGovernor;
+
     const user = await userRepository.getUserByUsername(userData.username);
 
     const email = await userRepository.getUserByEmail(userData.email);
-    if(user && email){
+    if(user && email && shouldCheckEmail){
       throw new Error("Username already exists and this email is registered to another user");
     }
     if (user) {
       throw new Error("Username already exists");
     }
-    if (email) {
+    if (email && shouldCheckEmail) {
       throw new Error("This email is registered to another user");
     }
   } else {
