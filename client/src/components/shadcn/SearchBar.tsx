@@ -15,7 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 interface SearchIconProps {
   className: string;
 }
-interface SearchPartHandler {
+export interface SearchPartHandler {
   state: string[];
   setState: (value: string) => void;
 }
