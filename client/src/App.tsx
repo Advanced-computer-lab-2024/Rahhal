@@ -9,6 +9,7 @@ import SettingsView from "@/components/user-settings/SettingsView";
 import ProfileForm from "./components/user-settings/ProfileForm";
 import AccountForm from "./components/user-settings/AccountForm";
 import AdminHomepage from "./components/non-tourist/admin/AdminHomepage.tsx"
+import UserView from "./components/non-tourist/admin/UserTable.tsx";
 import CategoryView from "./components/non-tourist/admin/CategoriesTable.tsx"
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="/tourism-governor/:id" element={<TourismGovernorView />} />
           <Route path="/admin" element={<AdminHomepage />} />
           <Route path="/admin/categories" element={<CategoryView />}/>
+          <Route path="/admin/users" element={<UserView />} />
           </Routes>
         </Router>
       </QueryClientProvider>
