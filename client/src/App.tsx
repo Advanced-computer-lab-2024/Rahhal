@@ -58,7 +58,7 @@ export default function App() {
             <Route path="/admin" element={<AdminHomepage />} />
             <Route path="/admin/categories" element={<CategoryView />} />
             <Route path="/admin/users" element={<UserView />} />
-            <Route path="/tour-guide" element={<TourGuideView />} />
+            <Route path="/tour-guide/:id" element={<TourGuideView />} />
             <Route path="/admin/preference-tags" element={<PreferenceTagsAdminView />} />
           </Routes>
         </Router>
