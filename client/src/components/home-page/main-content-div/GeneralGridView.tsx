@@ -1,10 +1,6 @@
 import GeneralGridStyle from "./GeneralGridView.module.css";
 import EntertainmentCard from "@/components/entertainment-card/EntertainmentCard";
-import felluca from "../../../assets/aswan2.webp";
-import ski from "../../../assets/ski egypt.jpg";
-import pyramid from "../../../assets/pyramids.webp";
-import aswan from "../../../assets/Aswan.webp";
-import { act, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -18,6 +14,12 @@ import { HistoricalPlacesFilter } from "@/components/home-page/filter-lists/hist
 import { DateRange } from "react-day-picker";
 import { FilterX } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { fetchActivities } from "@/api-calls/activities-api-calls";
+import { fetchCategories } from "@/api-calls/categories-api-calls";
+import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
+import { fetchHistoricalPlaces } from "@/api-calls/historical-places-api-calls";
+import { fetchHistoricalTags } from "@/api-calls/historical-tags-api-calls";
+import { fetchItineraries } from "@/api-calls/itineraries-api-calls";
 import {
   Activity,
   Category,
@@ -29,8 +31,7 @@ import {
   SortOption,
   Filter,
 } from "../home-page-types";
-
-import { isWithinInterval } from "date-fns";
+import { isWithinInterval, set } from "date-fns";
 
 export const getPriceValue = (
   price:
@@ -68,44 +69,7 @@ const GeneralGridView = () => {
   const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<Option[]>([]);
   const [selectedHistoricalTags, setSelectedHistoricalTags] = useState<Option[]>([]);
-  // Fetching funcitons
-
-  const ACTIVITIES_API = "http://localhost:3000/api/entertainment/activities";
-  const ITENARIES_API = "http://localhost:3000/api/entertainment/itineraries";
-  const HISTORICAL_PLACES_API = "http://localhost:3000/api/entertainment/historical-places";
-  const PREFERENCE_TAGS_API = "http://localhost:3000/api/entertainment/preference-tags";
-  const HISTORICAL_TAGS_API = "http://localhost:3000/api/entertainment/historical-tags";
-  const CATEGORIES_API = "http://localhost:3000/api/entertainment/categories";
-
-  const fetchActivities = async () => {
-    const res = await fetch(ACTIVITIES_API);
-    return res.json();
-  };
-
-  const fetchItenaries = async () => {
-    const res = await fetch(ITENARIES_API);
-    return res.json();
-  };
-
-  const fetchHistoricalPlaces = async () => {
-    const res = await fetch(HISTORICAL_PLACES_API);
-    return res.json();
-  };
-
-  const fetchPreferenceTags = async () => {
-    const res = await fetch(PREFERENCE_TAGS_API);
-    return res.json();
-  };
-
-  const fetchHistoricalTags = async () => {
-    const res = await fetch(HISTORICAL_TAGS_API);
-    return res.json();
-  };
-
-  const fetchCategories = async () => {
-    const res = await fetch(CATEGORIES_API);
-    return res.json();
-  };
+  const [sortOption, setSortOption] = useState<SortOption | null>(null);
 
   // useQueries
   const {
@@ -114,10 +78,10 @@ const GeneralGridView = () => {
     error: errorActivities,
   } = useQuery({ queryKey: ["entertainment", "activities"], queryFn: fetchActivities });
   const {
-    data: itenaries,
+    data: itineraries,
     isLoading: isLoadingItenaries,
     error: errorItenaries,
-  } = useQuery({ queryKey: ["entertainment", "itenaries"], queryFn: fetchItenaries });
+  } = useQuery({ queryKey: ["entertainment", "itineraries"], queryFn: fetchItineraries });
   const {
     data: historicalPlaces,
     isLoading: isHistoricalPlaces,
@@ -150,11 +114,11 @@ const GeneralGridView = () => {
   useEffect(() => {
     setFinishedLoading(
       !isLoadingActivities &&
-        !isLoadingItenaries &&
-        !isPreferenceTags &&
-        !isLoadingCategories &&
-        !isHistoricalPlaces &&
-        !isHistoricalTags,
+      !isLoadingItenaries &&
+      !isPreferenceTags &&
+      !isLoadingCategories &&
+      !isHistoricalPlaces &&
+      !isHistoricalTags,
     );
   }, [
     isLoadingActivities,
@@ -187,11 +151,8 @@ const GeneralGridView = () => {
 
   useEffect(() => {
     // Combine all data into one array initially
-    if (finishedLoading) setCombined([...activities, ...itenaries, ...historicalPlaces]);
-  }, [activities, itenaries, finishedLoading, historicalPlaces]);
-
-  //Passing the sort option to the child component
-  const [sortOption, setSortOption] = useState<SortOption | null>(null);
+    if (finishedLoading) setCombined([...activities, ...itineraries, ...historicalPlaces]);
+  }, [activities, itineraries, finishedLoading, historicalPlaces]);
 
   const handleSort = (sortOption: SortOption) => {
     setSortOption(sortOption);
@@ -260,7 +221,7 @@ const GeneralGridView = () => {
     );
   }
   if (activefilter.includes("itinerary")) {
-    const languages = itenaries
+    const languages = itineraries
       .flatMap((itinerary: Itinerary) => (itinerary as Itinerary).languages)
       .map((language: string) => ({ label: language, value: language }));
     combinedSideBarFilters = combinedSideBarFilters.concat(
@@ -312,7 +273,7 @@ const GeneralGridView = () => {
       const adjustedToDate = selectedDates?.to
         ? new Date(selectedDates.to.getTime() + 86400000)
         : null;
-      const matchPrice = itemPrice >= selectedPriceRange[0] && itemPrice <= selectedPriceRange[1];
+      const matchPrice = (selectedPriceRange[0] != -1 && itemPrice >= selectedPriceRange[0] && itemPrice <= selectedPriceRange[1]) || (selectedPriceRange[0] === -1 && selectedPriceRange[1] === -1);
       const matchRating =
         selectedRatings.length === 0 ||
         selectedRatings.some((rating) => itemRating >= rating && itemRating < rating + 1);
