@@ -1,5 +1,5 @@
-import GeneralGridView from '@/components/home-page/main-content-div/GeneralGridView';
 import TouristHomePageNavigation from './TouristHomePageNavigation';
+import { Outlet } from 'react-router-dom';
 
 interface TouristHomePageProps {
   loggedIn: boolean;
@@ -9,7 +9,7 @@ export default function TouristHomePage(TouristHomePageProps : TouristHomePagePr
   return (
     <>
       <TouristHomePageNavigation loggedIn={TouristHomePageProps.loggedIn}/>
-      <GeneralGridView />
+      <Outlet />
     </>
   );
 }

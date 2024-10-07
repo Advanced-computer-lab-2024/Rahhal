@@ -68,8 +68,8 @@ const DetailsPage = () => {
             </div>
           ) : null}
 
-          <p>Category: {item.category.name}</p>
-          {console.log(item.isBookingOpen)}
+          {item.category ? (<p>Category: {item.category.name}</p>) : null}
+
           {"isBookingOpen" in item ? (
             item.isBookingOpen === true ? (
               <p>Available to Book NOW!</p>
