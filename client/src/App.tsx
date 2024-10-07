@@ -14,6 +14,7 @@ import CategoryView from "./components/non-tourist/admin/CategoriesTable.tsx";
 import GeneralGridView from "./components/home-page/main-content-div/GeneralGridView.tsx";
 import ProductGridView from "./components/home-page/Products-grid/ProductsGridView.tsx";
 import TourGuideView from "./components/non-tourist/tour-guide/ItinerariesTable.tsx";
+import { Login } from "./components/Login.tsx"
 
 import SellerView from "./components/non-tourist/seller/SellerView.tsx";
 export default function App() {
@@ -31,9 +32,8 @@ export default function App() {
               <Route path="/entertainment/:id" element={<GeneralGridView />} />
               <Route path="/shop/:id" element={<ProductGridView />} />
             </Route>
-            <Route path="/profile/:id" element={<></>} />
             <Route path="/signup" element={<SignupSelector />} />
-            <Route path="/signin" element={<></>} />
+            <Route path="/signin" element={<Login/>}/>
             <Route path="/details/:id" element={<DetailsPage />} />
             <Route path="/user-settings/:id" element={<SettingsView />}>
               <Route index element={<ProfileForm />} />
