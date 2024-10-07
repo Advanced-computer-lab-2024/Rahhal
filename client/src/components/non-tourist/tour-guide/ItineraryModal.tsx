@@ -1,5 +1,5 @@
 import { GenericModal } from "../../GenericModal";
-import { TItinerary } from "@/table-columns/tour-guide-columns";
+import { TItinerary, TNewItinerary } from "@/table-columns/tour-guide-columns";
 import { useEffect, useState } from "react";
 import PictureCard from "../../PictureCard";
 import ShortText from "../../ShortText";
@@ -10,7 +10,8 @@ import TagsSelector from "../TagsSelector";
 import { GenericSelect } from "../../GenericSelect";
 import ReviewDisplay from "../Ratings";
 import { IMAGES, sampleReviews } from "@/lib/utils";
-import { submitItinerary } from "@/api-calls/itineraries-api-calls";
+import { createItinerary } from "@/api-calls/itineraries-api-calls";
+import { updateItinerary } from "@/api-calls/itineraries-api-calls";
 import { fetchCategories } from "@/api-calls/categories-api-calls";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { DEFAULTS } from "@/lib/constants";
@@ -22,15 +23,43 @@ import ItineraryLocations from "@/components/itinerary-locations/ItineraryLocati
 interface ItinerariesModalProps {
     itineraryData?: TItinerary;
     dialogTrigger?: React.ReactNode;
+    userId?: string;
     }
 
-export function ItinerariesModal({ itineraryData, dialogTrigger }: ItinerariesModalProps) {
+export function ItinerariesModal({ itineraryData, dialogTrigger, userId }: ItinerariesModalProps) {
     const isNewItinerary: boolean = itineraryData === undefined;
     const [modalItineraryData, setModalItinerariesData] = useState<TItinerary | undefined>(itineraryData); 
     const [modalDBData, setModalDBData] = useState<{ [key: string]: any }>({
         categories: [],
         preferenceTags: [],
     }); 
+
+    const extractIds = (data: ({ _id: string } & Record<string, any>)[]) => {
+      const ids = data.map(({ _id }) => _id);
+      const FIRST_ELEMENT = 0;
+      if (ids.length === 1) return ids[FIRST_ELEMENT];
+      return ids;
+    };
+  
+    const handleSubmit = async () => {
+      if (isNewItinerary) {
+        // For fields that are referenced in the database by ids, we need to extract them first
+        // since the database will only accept for these field an id or list of ids
+        const categoryId = extractIds([modalItineraryData!.category]) as string;
+        const preferenceTagsIds = extractIds(modalItineraryData!.preferenceTags) as string[];
+        const { _id, ...rest } = modalItineraryData!;
+        const newItinerary: TNewItinerary = {
+          ...rest,
+          category: categoryId,
+          preferenceTags: preferenceTagsIds,
+        };
+        // I am sure that userId is not null when the modal open from table add button
+        // otherwise it opens from an edit action and in that situation userId is not null
+        // and already stored in the database and it's not needed in updates
+        await createItinerary(newItinerary, userId!);
+      } else await updateItinerary(modalItineraryData!);
+      window.location.reload();
+    };
 
     useEffect(() => {
         const init = async () => {
@@ -56,7 +85,7 @@ return (
       title={itineraryData?.name ?? "New Itinerary"}
       description="Itinerary Details"
       dialogTrigger={dialogTrigger}
-      onSubmit={() => submitItinerary(modalItineraryData, isNewItinerary)}
+      onSubmit={handleSubmit}
       >
         <ShortText
             title="Name"
@@ -183,8 +212,8 @@ return (
         <GenericSelect
           label="Category"
           placeholder="Select a category"
-          options={modalDBData.categories.map((category: { category: any; _id: any }) => ({
-            label: category.category,
+          options={modalDBData.categories.map((category: { name: any; _id: any }) => ({
+            label: category.name,
             value: category._id,
           }))}
           onSelect={(value: string) => {
@@ -214,14 +243,14 @@ return (
                             ...modalItineraryData,
                             preferenceTags: value.map((option) => ({
                               _id: option.value,
-                              preferenceTag: option.label,
+                              name: option.label,
                             })),
                           }
                         : undefined,
                     )
         }
         initialOptions={modalItineraryData?.preferenceTags?.map((tag) => ({
-          label: tag.preferenceTag,
+          label: tag.name,
           value: tag._id,
         }))}
       />

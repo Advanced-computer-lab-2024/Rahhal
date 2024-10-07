@@ -1,6 +1,7 @@
 import axios from "axios";
 import { SERVICES_URLS } from "@/lib/constants";
 import { TItinerary } from "@/table-columns/tour-guide-columns";
+import { TNewItinerary } from "@/table-columns/tour-guide-columns";
 
 // fetch data from the server
 export const fetchItineraries = async () => {
@@ -15,20 +16,17 @@ export const deleteItinerary = async (itinerary: TItinerary) => {
 };
 
 // submit itinerary to the itineraries endpoint
-export const submitItinerary = async (
-  itineraryData: TItinerary | undefined,
-  isNewItinerary: boolean,
-) => {
-  if (isNewItinerary) {
-    await axios.post(SERVICES_URLS.ENTERTAINMENT + "/itineraries", itineraryData).then((response) => {
-      console.log(response.data);
-    });
-  } else {
-    if (itineraryData) {
-      await axios.patch(
-        `${SERVICES_URLS.ENTERTAINMENT}/itineraries/${itineraryData._id}`,
-        itineraryData,
-      );
-    }
-  }
-};
+export async function updateItinerary(itineraryData: TItinerary) {
+  await axios.patch(
+    `${SERVICES_URLS.ENTERTAINMENT}/itineraries/${itineraryData!._id}`,
+    itineraryData,
+  );
+}
+
+export async function createItinerary(
+  newItineraryData: TNewItinerary,
+  userId: string,
+) {
+  newItineraryData.owner = userId;
+  await axios.post(SERVICES_URLS.ENTERTAINMENT + "/itineraries", newItineraryData);
+}
