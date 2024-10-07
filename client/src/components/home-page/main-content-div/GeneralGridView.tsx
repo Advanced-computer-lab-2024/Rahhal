@@ -267,7 +267,6 @@ const GeneralGridView = () => {
 
   const getAverageRating = (ratings?: IRating[]) => {
     if (!ratings || ratings.length === 0) return 0;
-    console.log(combined);
     return ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length;
   };
 
@@ -418,12 +417,10 @@ const GeneralGridView = () => {
                   //fix later
                   rating={getAverageRating(item.ratings)}
                   title={item.name}
-                  // location={(item as Activity) ? (item as Activity).location : (item as Itinerary).locations[0]}
                   price={item.price}
                   languages={(item as Itinerary)?.languages}
                   availability={(item as Activity)?.isBookingOpen}
-                  //openingTime={(item as HistoricalPlace)?.openingHours}
-                  //TODO fix later
+                  openingTime={(item as HistoricalPlace)?.openingHours}
                   onClick={() => handleCardClick(item)}
                 />
               ))}
