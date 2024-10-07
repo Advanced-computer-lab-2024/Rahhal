@@ -25,3 +25,7 @@ export async function updateActivity(id: string, activitiesData: IActivity) {
 export async function deleteActivity(id: string) {
   return activitiesRepository.deleteActivity(id);
 }
+
+export async function getActivitiesByOwner(ownerId: string) {
+  return activitiesRepository.getActivitiesByOwner(ownerId);
+}

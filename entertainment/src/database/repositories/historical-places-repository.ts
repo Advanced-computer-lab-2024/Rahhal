@@ -8,11 +8,24 @@ export async function getAllHistoricalPlaces() {
     .populate("category")
     .populate("preferenceTags")
     .exec();
+  return await HistoricalPlace.find()
+    .populate("tags")
+    .populate("category")
+    .populate("preferenceTags")
+    .exec();
 }
 
 // Get historical place by id
 export async function getHistoricalPlaceById(id: string) {
   return await HistoricalPlace.findById(id)
+    .populate("tags")
+    .populate("category")
+    .populate("preferenceTags")
+    .exec();
+}
+
+export async function getHistoricalPlacesByOwner(ownerId: string) {
+  return await HistoricalPlace.find({ owner: ownerId })
     .populate("tags")
     .populate("category")
     .populate("preferenceTags")

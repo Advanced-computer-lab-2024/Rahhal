@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/", historicalPlacesController.getAllHistoricalPlaces);
 router.get("/:id", historicalPlacesController.getHistoricalPlaceById);
 router.post("/", historicalPlacesController.createHistoricalPlace);
-router.put("/:id", historicalPlacesController.updateHistoricalPlace);
+router.patch("/:id", historicalPlacesController.updateHistoricalPlace);
 router.delete("/:id", historicalPlacesController.deleteHistoricalPlace);
 
 export default router;

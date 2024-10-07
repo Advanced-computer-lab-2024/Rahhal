@@ -1,5 +1,5 @@
 import { GenericModal } from "../../GenericModal";
-import { TActivity } from "@/table-columns/advertiser-columns";
+import { TActivity, TNewActivity } from "@/table-columns/advertiser-columns";
 import { ToggleableSwitchCard } from "../../ToggleableSwitchCard";
 import { DoorOpen } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -12,17 +12,20 @@ import ReviewDisplay from "../Ratings";
 import EditableTimePicker from "../EditableTimePicker";
 import EditableDatePicker from "../EditableDatePicker";
 import { IMAGES, sampleReviews } from "@/lib/utils";
-import { submitActivity } from "@/api-calls/activities-api-calls";
+import { createActivity, updateActivity } from "@/api-calls/activities-api-calls";
 import { fetchCategories } from "@/api-calls/categories-api-calls";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { DEFAULTS } from "@/lib/constants";
+import LocationMap from "@/components/google-maps/LocationMap";
+import LongText from "@/components/LongText";
 
 interface ActivitiesModalProps {
   activityData?: TActivity;
   dialogTrigger?: React.ReactNode;
+  userId: string;
 }
 
-export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModalProps) {
+export function ActivitiesModal({ activityData, dialogTrigger, userId }: ActivitiesModalProps) {
   const isNewActivity: boolean = activityData === undefined; // check if the activity is new or existing
   const [modalActivityData, setModalActivitiesData] = useState<TActivity | undefined>(activityData); // current activity data present in the modal
 
@@ -31,6 +34,33 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
     preferenceTags: [],
     tags: [],
   }); // holds the data fetched from the server like categories and preference tags, etc.
+
+  const extractIds = (data: ({ _id: string } & Record<string, any>)[]) => {
+    const ids = data.map(({ _id }) => _id);
+    const FIRST_ELEMENT = 0;
+    if (ids.length === 1) return ids[FIRST_ELEMENT];
+    return ids;
+  };
+
+  const handleSubmit = async () => {
+    if (isNewActivity) {
+      // For fields that are referenced in the database by ids, we need to extract them first
+      // since the database will only accept for these field an id or list of ids
+      const categoryId = extractIds([modalActivityData!.category]) as string;
+      const preferenceTagsIds = extractIds(modalActivityData!.preferenceTags) as string[];
+      const { _id, ...rest } = modalActivityData!;
+      const newActivity: TNewActivity = {
+        ...rest,
+        category: categoryId,
+        preferenceTags: preferenceTagsIds,
+
+        // TODO - should be removed later when we settle down on its removal
+        tags: preferenceTagsIds,
+      };
+      await createActivity(newActivity, userId);
+    } else await updateActivity(modalActivityData!);
+    window.location.reload();
+  };
 
   useEffect(() => {
     const init = async () => {
@@ -53,10 +83,11 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
       title={activityData?.name ?? "New Activity"}
       description="Activity Details"
       dialogTrigger={dialogTrigger}
-      onSubmit={() => submitActivity(modalActivityData, isNewActivity)}
+      onSubmit={handleSubmit}
     >
       <ShortText
         title="Name"
+        type={"text"}
         initialValue={modalActivityData?.name ?? ""}
         onSave={(value) =>
           setModalActivitiesData(
@@ -66,6 +97,19 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
         placeholder={"Enter name"}
         initialDisabled={!isNewActivity}
       />
+
+      <LongText
+        title="Description"
+        initialValue={modalActivityData?.description ?? ""}
+        onSave={(value) =>
+          setModalActivitiesData(
+            modalActivityData ? { ...modalActivityData, description: value } : undefined,
+          )
+        }
+        placeholder={"Enter a detailed description"}
+        initialDisabled={!isNewActivity}
+      />
+
       <EditableDatePicker
         date={modalActivityData?.date ?? new Date()}
         onDateChange={(date) =>
@@ -84,87 +128,73 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
         }
       />
 
-      <div>
-        Location: {activityData?.location?.longitude ?? "N/A"},{" "}
-        {activityData?.location?.latitude ?? "N/A"}
-      </div>
-      <div>
-        {typeof activityData?.price === "number" ? (
-          <ShortText
-            title="Price"
-            initialValue={modalActivityData?.price.toString() ?? ""}
-            onSave={(value) =>
-              setModalActivitiesData(
-                modalActivityData ? { ...modalActivityData, price: parseFloat(value) } : undefined,
-              )
-            }
-            placeholder={"Enter price"}
-            initialDisabled={!isNewActivity}
-          />
-        ) : (
-          <PriceCategories
-            title="Prices"
-            priceCategories={Array.isArray(activityData?.price) ? activityData.price : []}
-            onPriceCategoriesChange={(value) =>
-              setModalActivitiesData(
-                modalActivityData
-                  ? {
-                      ...modalActivityData,
-                      price: value.map((price) => ({ type: price.type, price: price.price })),
-                    }
-                  : undefined,
-              )
-            }
-          />
-        )}
-      </div>
-      <div className="m-5 mx-6">
-        <GenericSelect
-          label="Category"
-          placeholder="Select a category"
-          options={modalDBData.categories.map((category: { category: any; _id: any }) => ({
-            label: category.category,
-            value: category._id,
-          }))}
-          onSelect={(value: string) => {
-            const selectedCategory = modalDBData.categories.find(
-              (category: { _id: string }) => category._id === value,
-            );
-            setModalActivitiesData(
-              modalActivityData ? { ...modalActivityData, category: selectedCategory } : undefined,
-            );
-          }}
-          initalValue={modalActivityData?.category._id ?? ""}
-        />
-      </div>
-      <div className="m-5 mx-6">
-        <TagsSelector
-          placeholder={"Select tags"}
-          options={modalDBData?.tags.map((tag: string) => ({ label: tag, value: tag }))}
-          onSave={(value) =>
-            setModalActivitiesData(
-              modalActivityData
-                ? {
-                    ...modalActivityData,
-                    tags: value.map((option) => ({
-                      _id: option.value,
-                      preferenceTag: option.label,
-                    })),
-                  }
-                : undefined,
-            )
-          }
-          initialOptions={modalActivityData?.tags?.map((tag) => ({
-            label: tag.preferenceTag,
-            value: tag._id,
-          }))}
-        />
-      </div>
+      <LocationMap
+        isEditingInitially={isNewActivity}
+        initialLocation={
+          modalActivityData
+            ? {
+                lat: modalActivityData.location.latitude,
+                lng: modalActivityData.location.longitude,
+              }
+            : {
+                lat: DEFAULTS.HISTORICAL_PLACE.location.latitude,
+                lng: DEFAULTS.HISTORICAL_PLACE.location.longitude,
+              }
+        }
+        onSave={(location) =>
+          setModalActivitiesData(
+            modalActivityData
+              ? {
+                  ...modalActivityData,
+                  location: { latitude: location.lat, longitude: location.lng },
+                }
+              : undefined,
+          )
+        }
+      />
+      <PriceCategories
+        title="Prices"
+        priceCategories={modalActivityData?.price ?? {}}
+        initialIsDisabled={!isNewActivity}
+        onPriceCategoriesChange={(value) => {
+          setModalActivitiesData(
+            modalActivityData
+              ? {
+                  ...modalActivityData,
+                  price: value,
+                }
+              : undefined,
+          );
+        }}
+      />
+      <GenericSelect
+        label="Category"
+        placeholder="Select a category"
+        options={modalDBData.categories.map((category: { name: any; _id: any }) => ({
+          label: category.name,
+          value: category._id,
+        }))}
+        onSelect={(value: string) => {
+          const selectedCategory = modalDBData.categories.find(
+            (category: { _id: string }) => category._id === value,
+          );
+          setModalActivitiesData(
+            modalActivityData ? { ...modalActivityData, category: selectedCategory } : undefined,
+          );
+        }}
+        initialValue={modalActivityData?.category._id ?? ""}
+      />
       <ShortText
         title="Special Discounts"
-        initialValue={modalActivityData?.specialDiscounts.join(", ") ?? ""}
-        //TODO - do something here
-        onSave={(value) => {}}
+        type={"number"}
+        initialValue={modalActivityData?.specialDiscount.toString() ?? "0"}
+        onSave={(value) => {
+          setModalActivitiesData(
+            modalActivityData
+              ? { ...modalActivityData, specialDiscount: Number(value) }
+              : undefined,
+          );
+        }}
         placeholder={"Enter special discounts"}
         initialDisabled={!isNewActivity}
       />
@@ -183,29 +213,31 @@ export function ActivitiesModal({ activityData, dialogTrigger }: ActivitiesModal
           }
         />
       </div>
-      <div className="m-5 mx-6">
-        <TagsSelector
-          placeholder={"Select preference tags"}
-          options={modalDBData?.preferenceTags.map((tag: string) => ({ label: tag, value: tag }))}
-          onSave={(value) =>
-            setModalActivitiesData(
-              modalActivityData
-                ? {
-                    ...modalActivityData,
-                    preferenceTags: value.map((option) => ({
-                      _id: option.value,
-                      preferenceTag: option.label,
-                    })),
-                  }
-                : undefined,
-            )
-          }
-          initialOptions={modalActivityData?.preferenceTags?.map((tag) => ({
-            label: tag.preferenceTag,
-            value: tag._id,
-          }))}
-        />
-      </div>
+      <TagsSelector
+        placeholder={"Select preference tags"}
+        isEditingInitially={isNewActivity}
+        options={modalDBData?.preferenceTags.map((tag: any) => ({
+          label: tag.name,
+          value: tag._id,
+        }))}
+        onSave={(value) =>
+          setModalActivitiesData(
+            modalActivityData
+              ? {
+                  ...modalActivityData,
+                  preferenceTags: value.map((option) => ({
+                    _id: option.value,
+                    name: option.label,
+                  })),
+                }
+              : undefined,
+          )
+        }
+        initialOptions={modalActivityData?.preferenceTags?.map((preferenceTag) => ({
+          label: preferenceTag.name,
+          value: preferenceTag._id,
+        }))}
+      />
 
       <PictureCard title={"Photo Tour"} description={"Uploaded Photos"} imageSources={IMAGES} />
       <div className="m-5 mx-6">

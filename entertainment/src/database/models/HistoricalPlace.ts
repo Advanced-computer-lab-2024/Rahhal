@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import * as historicalPlaceValidator from "@/database/validators/historical-places-validator";
 import type { IRating } from "@/database/shared";
 import { ratingSchema, validateRatings } from "@/database/shared";
 
@@ -7,8 +6,8 @@ export interface IHistoricalPlace {
   name: string;
   description: string;
   location: { longitude: number; latitude: number; placeId?: string };
-  openingHours: { open: string; close: string };
-  price: { foreigner: number; native: number; student: number };
+  openingHours: { open: Date; close: Date };
+  price: Record<string, number>;
   images: string[];
   tags?: mongoose.Schema.Types.ObjectId[];
   ratings?: IRating[];
@@ -31,30 +30,19 @@ const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
   openingHours: {
     type: {
       open: {
-        type: String,
+        type: Date,
         required: true,
-        validate: {
-          validator: historicalPlaceValidator.validateTime,
-          message: "Invalid timing format, must be in form 00:00",
-        },
       },
       close: {
-        type: String,
+        type: Date,
         required: true,
-        validate: {
-          validator: historicalPlaceValidator.validateTime,
-          message: "Invalid timing format, must be in form 00:00",
-        },
       },
     },
     required: true,
   },
   price: {
-    type: {
-      foreigner: { type: Number, required: true },
-      native: { type: Number, required: true },
-      student: { type: Number, required: true },
-    },
+    type: Map,
+    of: Number,
     required: true,
   },
   images: { type: [String], required: true },

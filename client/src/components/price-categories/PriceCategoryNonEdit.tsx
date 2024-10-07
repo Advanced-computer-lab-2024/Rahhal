@@ -2,12 +2,15 @@ import { Edit2, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 
 interface PriceCategoryNonEditProps {
-  ticket: { id: number; type: string; price: number };
-  startEditing: (ticket: { id: number; type: string; price: number }) => void;
-  removeTicketType: (id: number) => void;
+  ticket: { type: string; price: number };
+  startEditing: (type: string, price: number) => void;
+  removeTicketType: (type: string) => void;
 }
 
 function PriceCategoryNonEdit({
+  ticket,
+  startEditing,
+  removeTicketType,
   ticket,
   startEditing,
   removeTicketType,
@@ -18,10 +21,10 @@ function PriceCategoryNonEdit({
         {ticket.type}: ${ticket.price.toFixed(2)}
       </span>
       <div>
-        <Button variant="ghost" size="icon" onClick={() => startEditing(ticket)}>
+        <Button variant="ghost" size="icon" onClick={() => startEditing(ticket.type, ticket.price)}>
           <Edit2 className="h-4 w-4" />
         </Button>
-        <Button variant="ghost" size="icon" onClick={() => removeTicketType(ticket.id)}>
+        <Button variant="ghost" size="icon" onClick={() => removeTicketType(ticket.type)}>
           <Trash2 className="h-4 w-4" />
         </Button>
       </div>

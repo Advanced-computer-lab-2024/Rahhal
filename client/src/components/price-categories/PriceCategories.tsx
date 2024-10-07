@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import PriceCategoryEdit from "./PriceCategoryEdit";
 import PriceCategoryNonEdit from "./PriceCategoryNonEdit";
 import EditSaveButton from "../EditSaveButton";
 
 interface TicketType {
   title: string;
-  priceCategories: { type: string; price: number }[];
+  priceCategories: Record<string, number>;
   initialIsDisabled?: boolean;
-  onPriceCategoriesChange: (priceCategories: { type: string; price: number }[]) => void;
+  onPriceCategoriesChange: (priceCategories: Record<string, number>) => void;
 }
 
 const PriceCategories = ({
@@ -20,68 +20,59 @@ const PriceCategories = ({
   initialIsDisabled = false,
   onPriceCategoriesChange,
 }: TicketType) => {
-  let priceCategoriesWithId = priceCategories.map((ticket, index) => ({ id: index, ...ticket }));
-
   const [isDisabled, setIsDisabled] = useState(initialIsDisabled);
-
-  const [ticketTypes, setTicketTypes] = useState(priceCategoriesWithId);
+  const [ticketTypes, setTicketTypes] = useState(priceCategories);
   const [newType, setNewType] = useState("");
   const [newPrice, setNewPrice] = useState("");
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingType, setEditingType] = useState<string | null>(null);
   const [editType, setEditType] = useState("");
   const [editPrice, setEditPrice] = useState("");
 
   const addTicketType = () => {
     if (newType && newPrice) {
-      const newId = ticketTypes.length ? ticketTypes[ticketTypes.length - 1].id + 1 : 1;
-      setTicketTypes([...ticketTypes, { id: newId, type: newType, price: parseFloat(newPrice) }]);
+      const updatedTicketTypes = { ...ticketTypes, [newType]: parseFloat(newPrice) };
+      setTicketTypes(updatedTicketTypes);
       setNewType("");
       setNewPrice("");
-      onPriceCategoriesChange([...ticketTypes, { type: newType, price: parseFloat(newPrice) }]);
+      onPriceCategoriesChange(updatedTicketTypes);
     }
   };
 
-  const removeTicketType = (id: number) => {
-    setTicketTypes(ticketTypes.filter((ticket) => ticket.id !== id));
-    onPriceCategoriesChange(ticketTypes.filter((ticket) => ticket.id !== id));
+  const removeTicketType = (type: string) => {
+    const { [type]: removed, ...rest } = ticketTypes;
+    setTicketTypes(rest);
+    onPriceCategoriesChange(rest);
   };
 
-  const startEditing = (ticket: { id: number; type: string; price: number }) => {
-    setEditingId(ticket.id);
-    setEditType(ticket.type);
-    setEditPrice(ticket.price.toString());
+  const startEditing = (type: string, price: number) => {
+    setEditingType(type);
+    setEditType(type);
+    setEditPrice(price.toString());
   };
 
   const cancelEditing = () => {
-    setEditingId(null);
+    setEditingType(null);
     setEditType("");
     setEditPrice("");
   };
 
   const saveEdit = () => {
-    if (editType && editPrice) {
-      setTicketTypes(
-        ticketTypes.map((ticket) =>
-          ticket.id === editingId
-            ? { ...ticket, type: editType, price: parseFloat(editPrice) }
-            : ticket,
-        ),
-      );
-      setEditingId(null);
+    if (editType && editPrice && editingType) {
+      const updatedTicketTypes = { ...ticketTypes };
+      if (editingType !== editType) {
+        delete updatedTicketTypes[editingType];
+      }
+      updatedTicketTypes[editType] = parseFloat(editPrice);
+      setTicketTypes(updatedTicketTypes);
+      setEditingType(null);
       setEditType("");
       setEditPrice("");
-      onPriceCategoriesChange(
-        ticketTypes.map((ticket) =>
-          ticket.id === editingId
-            ? { ...ticket, type: editType, price: parseFloat(editPrice) }
-            : ticket,
-        ),
-      );
+      onPriceCategoriesChange(updatedTicketTypes);
     }
   };
 
   return (
-    <Card className="m-5 mx-6">
+    <Card>
       <div className="p-3 flex justify-between">
         <CardTitle className="text-sm">{title}</CardTitle>
         <EditSaveButton
@@ -92,9 +83,9 @@ const PriceCategories = ({
       </div>
       <CardContent>
         <div className="space-y-4">
-          {ticketTypes.map((ticket) => (
-            <div key={ticket.id} className="flex justify-between items-center">
-              {editingId === ticket.id ? (
+          {Object.entries(ticketTypes).map(([type, price]) => (
+            <div key={type} className="flex justify-between items-center">
+              {editingType === type ? (
                 <PriceCategoryEdit
                   editType={editType}
                   setEditType={setEditType}
@@ -104,13 +95,11 @@ const PriceCategories = ({
                   cancelEditing={cancelEditing}
                 />
               ) : (
-                <>
-                  <PriceCategoryNonEdit
-                    ticket={ticket}
-                    startEditing={startEditing}
-                    removeTicketType={removeTicketType}
-                  />
-                </>
+                <PriceCategoryNonEdit
+                  ticket={{ type, price }}
+                  startEditing={() => startEditing(type, price)}
+                  removeTicketType={() => removeTicketType(type)}
+                />
               )}
             </div>
           ))}
