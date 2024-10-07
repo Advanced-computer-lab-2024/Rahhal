@@ -1,8 +1,8 @@
 import { Role } from "@/table-columns/user-columns";
 
 export const SERVICES_URLS = {
-  ENTERTAINMENT: "http://localhost:3003",
-  USERS: "http://localhost:3000/api/user",
+  ENTERTAINMENT: "http://localhost:3000/api/entertainment",
+  USER: "http://localhost:3000/api/user",
   PRODUCT: "http://localhost:3000/api/product",
 };
 
@@ -43,6 +43,16 @@ export const DEFAULTS = {
     _id: "",
     name: "",
   },
+  PRODUCT: {
+    _id: "",
+    name: "",
+    description: "",
+    price: 0,
+    picture: "src/assets/farmhouse-main.jpeg",
+    seller: "",
+    quantity: 1,
+    ratings: [],
+  },
   USER: {
     firtName: "",
     lastName: "",
@@ -64,8 +74,8 @@ export const DEFAULTS = {
     companyName: "",
     description: "",
     createdAt: new Date(),
-    updatedAt: new Date()
-  }
+    updatedAt: new Date(),
+  },
 };
 export const NATIONALITIES = [
   { value: "Afghanistan", label: "Afghanistan" },

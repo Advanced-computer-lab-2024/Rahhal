@@ -24,22 +24,27 @@ import {
 import { cn } from "@/lib/utils";
 import { DataTableViewOptions } from "./DataTableViewOptions";
 import { DataTablePagination } from "./DataTablePagination";
+import { Input } from "@/components/ui/input";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  newRowModal?: React.ReactNode; // Modal for adding new row that will be displayed when the add new row button is clicked
+  newRowModal?: React.ReactNode;
+  enableFilters?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   newRowModal,
+  enableFilters = false,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  const [priceRange, setPriceRange] = React.useState({ min: "", max: "" });
 
   const table = useReactTable({
     data,
@@ -60,12 +65,50 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  React.useEffect(() => {
+    if (priceRange.min !== "" || priceRange.max !== "") {
+      table.getColumn("price")?.setFilterValue((old) => ({
+        ...old,
+        min: priceRange.min,
+        max: priceRange.max,
+      }));
+    } else {
+      table.getColumn("price")?.setFilterValue(undefined);
+    }
+  }, [priceRange, table]);
+
   return (
     <div className="container m-auto">
       <div className="flex items-center py-4">
         <DataTableViewOptions table={table} />
         {newRowModal}
       </div>
+      {enableFilters && (
+        <div className="flex space-x-2 py-4">
+          <Input
+            placeholder="Filter names..."
+            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+            onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
+            className="max-w-sm"
+          />
+          <div className="flex space-x-2">
+            <Input
+              placeholder="Min price"
+              type="number"
+              value={priceRange.min}
+              onChange={(e) => setPriceRange((prev) => ({ ...prev, min: e.target.value }))}
+              className="max-w-[100px]"
+            />
+            <Input
+              placeholder="Max price"
+              type="number"
+              value={priceRange.max}
+              onChange={(e) => setPriceRange((prev) => ({ ...prev, max: e.target.value }))}
+              className="max-w-[100px]"
+            />
+          </div>
+        </div>
+      )}
       <div className="rounded-md">
         <Table className="border-separate border-spacing-y-2">
           <TableHeader>
@@ -108,7 +151,7 @@ export function DataTable<TData, TValue>({
                 </TableCell>
               </TableRow>
             )}
-          </TableBody>
+          </TableBody>{" "}
         </Table>
       </div>
       <DataTablePagination table={table} />

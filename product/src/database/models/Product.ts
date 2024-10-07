@@ -9,6 +9,7 @@ export interface IProduct {
   description: string;
   seller: string;
   ratings: IRating[];
+  quantity: number;
   reviews: { user: string; rating: number; comment: string }[];
 }
 
@@ -21,6 +22,14 @@ const productSchema = new mongoose.Schema<IProduct>({
     validate: {
       validator: productValidator.validatePrice,
       message: "Invalid price format, must be a number greater than 0",
+    },
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    validate: {
+      validator: productValidator.validateQuantity,
+      message: "Invalid quantity format, must be a number greater than 0",
     },
   },
   description: { type: String, required: true },

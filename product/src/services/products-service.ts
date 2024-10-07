@@ -10,6 +10,10 @@ export async function getAllProducts(): Promise<IProduct[]> {
 export async function getProductById(id: string) {
   return await productsRepository.getProductById(id);
 }
+
+export async function getProductsBySeller(sellerId: string) {
+  return await productsRepository.getActivitiesBySeller(sellerId);
+}
 // Create a new product
 export async function createProduct(product: IProduct) {
   return await productsRepository.createProduct(product);

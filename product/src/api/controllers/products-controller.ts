@@ -1,10 +1,16 @@
 import type express from "express";
-import * as productsService from "../../services/products-service";
-import { STATUS_CODES } from "../../utils/constants";
+import * as productsService from "@/services/products-service";
+import { STATUS_CODES } from "@/utils/constants";
 
 export async function getAllProducts(req: express.Request, res: express.Response) {
   try {
-    const products = await productsService.getAllProducts();
+    const sellerId = req.query.sellerId as string;
+    let products;
+    if (sellerId) {
+      products = await productsService.getProductsBySeller(sellerId);
+    } else {
+      products = await productsService.getAllProducts();
+    }
     res.status(STATUS_CODES.STATUS_OK).json(products);
   } catch (error) {
     res
