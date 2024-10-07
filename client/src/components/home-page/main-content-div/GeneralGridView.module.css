@@ -1,5 +1,12 @@
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
 .general-grid-view {
-  overflow-x: auto; /* Prevent horizontal scrolling */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
   width: 100%; /* Ensure the container width is 100% */
 }
 
@@ -8,7 +15,6 @@
   align-items: center;
   justify-content: space-between;
   background-color: #fff; /* White background */
-  position: fixed;
   width: 100%;
   padding: 10px 0; /* Add some padding */
   z-index: 20; /* Make sure the header is on top of everything */
@@ -16,7 +22,6 @@
 
 .general-grid-view__filter-container__icons {
   display: flex;
- 
   align-items: center;
   width: 22%; /* Adjust width based on your design */
   justify-content: space-between; /* Center the icons horizontally */
@@ -32,12 +37,14 @@
   max-width: 100px; /* Limit maximum size for larger screens */
   max-height: 100px;
   border-radius: 50%; /* Circular wrapper */
-  transition: background-color 0.7s ease, transform 0.6s ease; /* Smooth hover */
+  transition:
+    background-color 0.7s ease,
+    transform 0.6s ease; /* Smooth hover */
 }
 
 .selected {
-    background-color: rgb(186, 185, 185); /* Grey background when selected */
-  }
+  background-color: rgb(186, 185, 185); /* Grey background when selected */
+}
 
 /* Apply the hover effect on the wrapper */
 .icon-wrapper:hover {
@@ -51,18 +58,20 @@
   transition: transform 0.6s ease; /* Smooth hover transform */
 }
 
-
-.selected{
-    background-color: rgb(186, 185, 185); /* Grey background on hover */
+.selected {
+  background-color: rgb(186, 185, 185); /* Grey background on hover */
 }
 
+.scrollable {
+  overflow-y: scroll;
+  height: 700px;
+}
 
 .general-grid-view__card-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3 equal-width columns */
   grid-gap: 50px; /* space between the cards (adjust as needed) */
   padding: 20px;
-
   max-width: 100%; /* Ensure it doesn't exceed the screen width */
   box-sizing: border-box; /* Include padding/border in width calculation */
 }
@@ -70,7 +79,6 @@
 .general-grid-view__header {
   display: flex;
   align-items: center;
-  margin-top: 5%;
   flex-direction: row;
   padding: 20px;
 }
