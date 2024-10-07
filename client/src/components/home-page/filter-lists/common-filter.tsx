@@ -15,7 +15,7 @@ export function CommonFilter(
   const filterList = [
     {
       title: "Price Category",
-      content: <MinMaxRangeSlider values={[0, 100]} onValueChange={setPriceRange} />,
+      content: <MinMaxRangeSlider values={selectedPriceRange} onValueChange={setPriceRange} />,
     },
     {
       title: "Rating",
