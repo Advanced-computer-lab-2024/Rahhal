@@ -15,7 +15,7 @@ import CategoryView from "./components/non-tourist/admin/CategoriesTable.tsx"
 export default function App() {
   const queryClient = new QueryClient();
   return (
-    <>
+    <div style={{ overflowY: "scroll", height: "100vh" }}>
       <QueryClientProvider client={queryClient}>
         <Router>
           <Routes>
@@ -37,6 +37,6 @@ export default function App() {
           </Routes>
         </Router>
       </QueryClientProvider>
-    </>
+    </div>
   );
 }
