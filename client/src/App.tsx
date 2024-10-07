@@ -1,35 +1,54 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import DetailsPage from "./components/home-page/DetailsPage.tsx";
+import TouristHomePage from "./TouristHomePage/TouristHomePage.tsx";
+import SignupSelector from "./components/forms/SignupSelector.tsx";
+import TourismGovernorView from "./components/non-tourist/tourist-governor/TourismGovernorView.tsx";
+import AdvertiserView from "./components/non-tourist/advertiser/AdvertiserView.tsx";
+import SettingsView from "@/components/user-settings/SettingsView";
+import ProfileForm from "./components/user-settings/ProfileForm";
+import AccountForm from "./components/user-settings/AccountForm";
+import AdminHomepage from "./components/non-tourist/admin/AdminHomepage.tsx";
+import UserView from "./components/non-tourist/admin/UserTable.tsx";
+import CategoryView from "./components/non-tourist/admin/CategoriesTable.tsx";
+import GeneralGridView from "./components/home-page/main-content-div/GeneralGridView.tsx";
+import ProductGridView from "./components/home-page/Products-grid/ProductsGridView.tsx";
+import TourGuideView from "./components/non-tourist/tour-guide/ItinerariesTable.tsx";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+import SellerView from "./components/non-tourist/seller/SellerView.tsx";
+export default function App() {
+  const queryClient = new QueryClient();
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div style={{ overflowY: "scroll", height: "100vh" }}>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Routes>
+            <Route element={<TouristHomePage loggedIn={false} />}>
+              <Route path="/entertainment" element={<GeneralGridView />} />
+              <Route path="/shop" element={<ProductGridView />} />
+            </Route>
+            <Route element={<TouristHomePage loggedIn={true} />}>
+              <Route path="/entertainment/:id" element={<GeneralGridView />} />
+              <Route path="/shop/:id" element={<ProductGridView />} />
+            </Route>
+            <Route path="/profile/:id" element={<></>} />
+            <Route path="/signup" element={<SignupSelector />} />
+            <Route path="/signin" element={<></>} />
+            <Route path="/details/:id" element={<DetailsPage />} />
+            <Route path="/user-settings/:id" element={<SettingsView />}>
+              <Route index element={<ProfileForm />} />
+              <Route path="account" element={<AccountForm />} />
+            </Route>
+            <Route path="/advertiser/:id" element={<AdvertiserView />} />
+            <Route path="/tourism-governor/:id" element={<TourismGovernorView />} />
+            <Route path="/admin" element={<AdminHomepage />} />
+            <Route path="/admin/categories" element={<CategoryView />} />
+            <Route path="/admin/users" element={<UserView />} />
+            <Route path="/tour-guide" element={<TourGuideView />} />
+            <Route path="seller/:id" element={<SellerView />} />
+          </Routes>
+        </Router>
+      </QueryClientProvider>
+    </div>
+  );
 }
-
-export default App
