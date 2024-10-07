@@ -32,6 +32,7 @@ const AddressList = ({ initialAddresses, onAddressesChange, isDisabled }: Addres
 
   return (
     <div className="w-full">
+      Address:
       {addresses.map((address, index) => (
         <div key={index} className="w-full flex items-center">
           <ShortText
@@ -52,10 +53,12 @@ const AddressList = ({ initialAddresses, onAddressesChange, isDisabled }: Addres
           </Button>
         </div>
       ))}
-      <Button onClick={addAddress} className="w-full mt-2">
-        <PlusCircle className="mr-2 h-4 w-4" />
-        Add Address
-      </Button>
+      {!isDisabled && (
+        <Button onClick={addAddress} className="w-full mt-2">
+          <PlusCircle className="mr-2 h-4 w-4" />
+          Add Address
+        </Button>
+      )}
     </div>
   );
 };

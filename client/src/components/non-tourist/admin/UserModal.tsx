@@ -15,6 +15,7 @@ import { submitUser } from "@/api-calls/users-api-calls";
 import { DEFAULTS, NATIONALITIES } from "@/lib/constants";
 import { FaCircleCheck } from "react-icons/fa6";
 import AddressList from "./AddressList";
+import { Label } from "@radix-ui/react-label";
 
 interface UserModalProps {
   userData?: TUser;
@@ -32,25 +33,12 @@ export function UserModal({ userData, dialogTrigger }: UserModalProps) {
       dialogTrigger={dialogTrigger}
       onSubmit={() => submitUser(modalUserData, isNewUser)}
     >
-      <ShortText
-        title="First Name"
-        initialValue={modalUserData?.firstName ?? ""}
-        onSave={(value) =>
-          setModalUserData(modalUserData ? { ...modalUserData, firstName: value } : undefined)
-        }
-        initialDisabled={!isNewUser}
-        placeholder="First Name"
-      />
-
-      <ShortText
-        title="Last Name"
-        initialValue={modalUserData?.lastName ?? ""}
-        onSave={(value) =>
-          setModalUserData(modalUserData ? { ...modalUserData, lastName: value } : undefined)
-        }
-        initialDisabled={!isNewUser}
-        placeholder="Last Name"
-      />
+      {!isNewUser && (
+        <>
+          <Label>First Name: {modalUserData?.firstName}</Label>
+          <Label>Last Name: {modalUserData?.lastName}</Label>
+        </>
+      )}
 
       <ShortText
         title="Username"
@@ -62,15 +50,7 @@ export function UserModal({ userData, dialogTrigger }: UserModalProps) {
         placeholder="Username"
       />
 
-      <ShortText
-        title="Email"
-        initialValue={modalUserData?.email ?? ""}
-        onSave={(value) =>
-          setModalUserData(modalUserData ? { ...modalUserData, email: value } : undefined)
-        }
-        initialDisabled={!isNewUser}
-        placeholder="Email"
-      />
+      {!isNewUser && <Label>Email: {modalUserData?.email}</Label>}
 
       <ShortText
         title="Password"
@@ -82,15 +62,26 @@ export function UserModal({ userData, dialogTrigger }: UserModalProps) {
         placeholder="Password"
       />
 
-      <ShortText
-        title="Role"
-        initialValue={modalUserData?.role ?? ""}
-        onSave={(value) =>
-          setModalUserData(modalUserData ? { ...modalUserData, role: value as Role } : undefined)
-        }
-        initialDisabled={!isNewUser}
-        placeholder="Role"
-      />
+      {isNewUser ? (
+        <div className="m-5 mx-6">
+          <GenericSelect
+            label={"Role"}
+            options={[
+              { value: Role.tourismGovernor, label: "Tourism Governor" },
+              { value: Role.admin, label: "Admin" },
+            ]}
+            initalValue={modalUserData?.role ?? Role.tourist}
+            onSelect={(value: string) =>
+              setModalUserData(
+                modalUserData ? { ...modalUserData, role: value as Role } : undefined,
+              )
+            }
+            placeholder={"Select a role"}
+          />
+        </div>
+      ) : (
+        <Label>Role: {modalUserData?.role}</Label>
+      )}
 
       <ToggleableSwitchCard
         title="Approved"
@@ -104,132 +95,42 @@ export function UserModal({ userData, dialogTrigger }: UserModalProps) {
         icon={<FaCircleCheck />}
       />
 
-      <EditableDatePicker
-        date={modalUserData?.dob ?? new Date()}
-        onDateChange={(date) =>
-          setModalUserData(modalUserData ? { ...modalUserData, dob: date } : undefined)
-        }
-        initialIsDisabled={!isNewUser}
-      />
-      <div className="m-5 mx-6">
-        <GenericSelect
-          label={"Nationality"}
-          options={NATIONALITIES}
-          initalValue={modalUserData?.nationality ?? ""}
-          onSelect={(value: string) => {
-            const selectedNationality = NATIONALITIES.find(
-              (nationality: { value: string }) => nationality.value === value,
-            );
+      {!isNewUser && (
+        <>
+          <Label> Date of Birth: {modalUserData?.dob?.toString()}</Label>{" "}
+          <Label> Nationality: {modalUserData?.nationality}</Label>
+        </>
+      )}
+      {!isNewUser && (
+        <div className="m-5 mx-6">
+          <AddressList
+            initialAddresses={modalUserData?.addresses ?? []}
+            onAddressesChange={(addresses) => {}}
+            isDisabled={true}
+          />
+        </div>
+      )}
+      {!isNewUser && (
+        <>
+          <Label> Job: {modalUserData?.job}</Label>
 
-            setModalUserData(
-              modalUserData
-                ? { ...modalUserData, nationality: selectedNationality?.value }
-                : undefined,
-            );
-          }}
-          placeholder={"Select a nationality"}
-        />
-      </div>
-      <div className="m-5 mx-6">
-        <AddressList
-          initialAddresses={modalUserData?.addresses ?? []}
-          onAddressesChange={(addresses) =>
-            setModalUserData(modalUserData ? { ...modalUserData, addresses } : undefined)
-          }
-          isDisabled={!isNewUser}
-        />
-      </div>
-      <ShortText
-        title="Job"
-        initialValue={modalUserData?.job ?? ""}
-        onSave={(value) =>
-          setModalUserData(modalUserData ? { ...modalUserData, job: value } : undefined)
-        }
-        initialDisabled={!isNewUser}
-        placeholder="Job"
-      />
+          <Label> Phone Number: {modalUserData?.phoneNumber}</Label>
 
-      <ShortText
-        title="Phone Number"
-        initialValue={modalUserData?.phoneNumber ?? ""}
-        onSave={(value) =>
-          setModalUserData(modalUserData ? { ...modalUserData, phoneNumber: value } : undefined)
-        }
-        initialDisabled={!isNewUser}
-        placeholder="Phone Number"
-      />
+          <Label> Years of Experience: {modalUserData?.yearsOfExperience}</Label>
 
-      <ShortText
-        title="Years of Experience"
-        initialValue={(modalUserData?.yearsOfExperience ?? 0).toString()}
-        onSave={(value) =>
-          setModalUserData(
-            modalUserData ? { ...modalUserData, yearsOfExperience: parseInt(value) } : undefined,
-          )
-        }
-        initialDisabled={!isNewUser}
-        placeholder="Years of Experience"
-      />
+          <Label> Previous Work: {modalUserData?.previousWork}</Label>
 
-      <ShortText
-        title="Previous Work"
-        initialValue={modalUserData?.previousWork ?? ""}
-        onSave={(value) =>
-          setModalUserData(modalUserData ? { ...modalUserData, previousWork: value } : undefined)
-        }
-        initialDisabled={!isNewUser}
-        placeholder="Previous Work"
-      />
+          <Label> Website: {modalUserData?.website}</Label>
 
-      <ShortText
-        title="Website"
-        initialValue={modalUserData?.website ?? ""}
-        onSave={(value) =>
-          setModalUserData(modalUserData ? { ...modalUserData, website: value } : undefined)
-        }
-        initialDisabled={!isNewUser}
-        placeholder="Website"
-      />
+          <Label> Hotline: {modalUserData?.hotline}</Label>
 
-      <ShortText
-        title="Hotline"
-        initialValue={modalUserData?.hotline ?? ""}
-        onSave={(value) =>
-          setModalUserData(modalUserData ? { ...modalUserData, hotline: value } : undefined)
-        }
-        initialDisabled={!isNewUser}
-        placeholder="Hotline"
-      />
+          <Label> Company Profile: {modalUserData?.companyProfile}</Label>
 
-      <ShortText
-        title="Company Profile"
-        initialValue={modalUserData?.companyProfile ?? ""}
-        onSave={(value) =>
-          setModalUserData(modalUserData ? { ...modalUserData, companyProfile: value } : undefined)
-        }
-        initialDisabled={!isNewUser}
-        placeholder="Company Profile"
-      />
+          <Label> Company Name: {modalUserData?.companyName}</Label>
 
-      <ShortText
-        title="Company Name"
-        initialValue={modalUserData?.companyName ?? ""}
-        onSave={(value) =>
-          setModalUserData(modalUserData ? { ...modalUserData, companyName: value } : undefined)
-        }
-        initialDisabled={!isNewUser}
-        placeholder="Company Name"
-      />
-
-      <ShortText
-        title="Description"
-        initialValue={modalUserData?.description ?? ""}
-        onSave={(value) =>
-          setModalUserData(modalUserData ? { ...modalUserData, description: value } : undefined)
-        }
-        initialDisabled={!isNewUser}
-        placeholder="Description"
-      />
+          <Label> Description: {modalUserData?.description}</Label>
+        </>
+      )}
     </GenericModal>
   );
 }
