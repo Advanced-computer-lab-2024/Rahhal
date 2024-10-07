@@ -13,23 +13,19 @@ function MinMaxRangeSlider({ values, onValueChange }: SliderProps) {
   const onValueChangeMin = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value === "" ? 0 : parseInt(e.target.value);
     if (value >= min.current && value <= max.current) {
-      if (value > values[1]) 
-        onValueChange([values[1], value]);
-      else 
-        onValueChange([value, values[1]]);
+      if (value > values[1]) onValueChange([values[1], value]);
+      else onValueChange([value, values[1]]);
     }
   };
   const onValueChangeMax = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value === "" ? max.current : parseInt(e.target.value);
     if (value >= min.current && value <= max.current) {
-      if (value < values[0]) 
-        onValueChange([value, values[0]]);
-      else
-        onValueChange([values[0], value]);
+      if (value < values[0]) onValueChange([value, values[0]]);
+      else onValueChange([values[0], value]);
     }
   };
   return (
-    <div>
+    <div className="w-[90%]">
       <DualRangeSlider
         min={min.current}
         max={max.current}
