@@ -1,12 +1,11 @@
 import { Separator } from "@/components/ui/separator";
 import SideBar from "@/components/user-settings/SideBar";
 import { Outlet, useParams } from "react-router-dom";
-import { Button } from "../ui/button";
 import { useState, createContext, useEffect } from "react";
 import axios from "axios";
 import { Toaster } from "../ui/toaster";
 import { useToast } from "@/hooks/use-toast";
-import {CONNECTION_STRING} from "../../utils/constants";
+import { CONNECTION_STRING } from "../../utils/constants";
 export enum Role {
   admin = "admin",
   tourist = "tourist",
@@ -38,10 +37,8 @@ interface User {
   wallet?: number;
 }
 export const EditContext = createContext<{
-  editForm: boolean;
   user: User;
 }>({
-  editForm: false,
   user: {
     username: "",
     email: "",
@@ -53,7 +50,7 @@ export const EditContext = createContext<{
 export default function SettingsView() {
   const { toast } = useToast();
   const { id } = useParams();
-  const [editForm, setEditForm] = useState(false);
+
   const USER_SERVICE_URL = CONNECTION_STRING + `${id}`;
   const [user, setUser] = useState<User>({
     username: "",
@@ -84,13 +81,7 @@ export default function SettingsView() {
       <div className="space-y-0.5">
         <div className="flex items-center space-x-4">
           <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
-          <Button
-            onClick={() => {
-              setEditForm(true), console.log(user);
-            }}
-          >
-            <span>Edit Profile</span>
-          </Button>
+
         </div>
         <p className="text-muted-foreground">
           Manage your account settings and set e-mail preferences.
@@ -103,7 +94,7 @@ export default function SettingsView() {
         </div>
         <div className="lg:md:col-span-10" style={{ maxWidth: "70%" }}>
           <Toaster />
-          <EditContext.Provider value={{ editForm, user }}>
+          <EditContext.Provider value={{ user }}>
             <Outlet />
           </EditContext.Provider>
         </div>

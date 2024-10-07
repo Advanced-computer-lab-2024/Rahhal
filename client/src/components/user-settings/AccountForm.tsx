@@ -21,8 +21,8 @@ import { useToast } from "@/hooks/use-toast";
 import { CONNECTION_STRING } from "../../utils/constants";
 export default function AccountForm() {
   const { toast } = useToast();
-  const { editForm, user } = useContext(EditContext);
-
+  const [editForm, setEditForm] = useState(false);
+  const { user } = useContext(EditContext);
   const passwordValidator = z.object({
     oldPassword: z
       .string()
@@ -66,9 +66,7 @@ export default function AccountForm() {
 
     password: z.string().optional(),
 
-    wallet: z
-    .number()
-    .optional()
+    wallet: z.number().optional(),
   });
 
   type AccountFormValues = z.infer<typeof accountFormSchema>;
@@ -82,7 +80,7 @@ export default function AccountForm() {
       username: user.username || "",
       email: user.email || "",
       password: user.password || "",
-      wallet: user.wallet || 0
+      wallet: user.wallet || 0,
     },
   });
   const oldPasswordForm = useForm<passwordValidatorValue>({
@@ -138,12 +136,20 @@ export default function AccountForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="flex-1 lg:max-w-2xl">
           <div className="space-y-6">
-            <div>
+            <div className="flex items-center justify-between">
               <h3 className="text-lg font-medium">Account</h3>
+              <Button
+                onClick={() => {
+                  setEditForm(true);
+                }}
+                type="button"
+              >
+                <span>Edit Account</span>
+              </Button>
+            </div>
               <p className="text-sm text-muted-foreground">
                 Update your account settings. Set your preferred language and timezone.
               </p>
-            </div>
             <div
               data-orientation="horizontal"
               role="none"
@@ -200,9 +206,7 @@ export default function AccountForm() {
                       <FormControl>
                         <Input type="number" disabled {...field} />
                       </FormControl>
-                      <FormDescription>
-                        This is your wallet balance.
-                      </FormDescription>
+                      <FormDescription>This is your wallet balance.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

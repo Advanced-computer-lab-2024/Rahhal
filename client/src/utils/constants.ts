@@ -1,1 +1,1 @@
-export const CONNECTION_STRING = "http://localhost:3000/api/user/users/"
+export const CONNECTION_STRING = "http://localhost:3000/api/user/users/";

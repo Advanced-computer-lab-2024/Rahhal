@@ -11,17 +11,19 @@ import {
 import { Input } from "../ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { EditContext } from "./SettingsView";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import {CONNECTION_STRING} from "../../utils/constants";
-import {Role} from "./SettingsView";
+import { CONNECTION_STRING } from "../../utils/constants";
+import { Role } from "./SettingsView";
+import { Button } from "../ui/button";
 export default function ProfileForm() {
   const { toast } = useToast();
   const { id } = useParams();
-  const { editForm, user } = useContext(EditContext);
+  const [editForm, setEditForm] = useState(false);
+  const { user } = useContext(EditContext);
 
   const profileFormSchema = z.object({
     firstName: z
@@ -121,17 +123,24 @@ export default function ProfileForm() {
   function onSubmit(data: ProfileFormValues) {
     updateUser(data);
   }
-  // const [editForm, setEditForm] = useState(false);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-6">
-          <div>
+          <div className="flex items-center justify-between">
             <h3 className="text-lg font-medium">Profile</h3>
-            <p className="text-sm text-muted-foreground">
-              This is how others will see you on the site.
-            </p>
+            <Button
+              onClick={() => {
+                setEditForm(true);
+              }}
+              type="button"
+            >
+              Edit Profile
+            </Button>
           </div>
+          <p className="text-sm text-muted-foreground">
+            This is how others will see you on the site.
+          </p>
           <div
             data-orientation="horizontal"
             role="none"
