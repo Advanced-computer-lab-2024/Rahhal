@@ -1,4 +1,4 @@
-import * as categoryRepository from '../database/repositories/category-repository';
+import * as categoryRepository from "../database/repositories/category-repository";
 
 export async function getAllCategories() {
   return await categoryRepository.getAllCategories();

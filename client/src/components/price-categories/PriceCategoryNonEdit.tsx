@@ -1,17 +1,16 @@
 import { Edit2, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 
-
 interface PriceCategoryNonEditProps {
-    ticket: { id: number; type: string; price: number };
-    startEditing: (ticket: { id: number; type: string; price: number }) => void;
-    removeTicketType: (id: number) => void;
-    }
+  ticket: { id: number; type: string; price: number };
+  startEditing: (ticket: { id: number; type: string; price: number }) => void;
+  removeTicketType: (id: number) => void;
+}
 
 function PriceCategoryNonEdit({
-    ticket,
-    startEditing,
-    removeTicketType
+  ticket,
+  startEditing,
+  removeTicketType,
 }: PriceCategoryNonEditProps) {
   return (
     <>

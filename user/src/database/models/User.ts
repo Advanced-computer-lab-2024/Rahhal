@@ -1,6 +1,6 @@
 import type { Types } from "mongoose";
 import mongoose, { Schema } from "mongoose";
-import userValidators from '../../validators/user-validators';
+import userValidators from "../../validators/user-validators";
 enum Role {
   admin = "admin",
   tourist = "tourist",
@@ -221,7 +221,6 @@ const userSchema: Schema = new Schema<IUser>(
   },
   { timestamps: true },
 );
-
 
 const User = mongoose.model<IUser>("User", userSchema);
 export default User;

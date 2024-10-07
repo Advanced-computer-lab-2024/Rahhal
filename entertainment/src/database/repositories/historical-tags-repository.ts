@@ -6,7 +6,7 @@ export async function createHistoricalTag(historicalTag: IHistoricalTag) {
   return await newHistoricalTag.save();
 }
 
-export async function getAllHistoricalTags(){
+export async function getAllHistoricalTags() {
   return await HistoricalTagsModel.find();
 }
 

@@ -36,7 +36,10 @@ export async function updatePreferenceTag(req: Request, res: Response) {
   const preferenceTagId = req.params.id;
   const preferenceTagData = req.body;
   try {
-    const preferenceTag = await preferenceTagsService.updatePreferenceTag(preferenceTagId, preferenceTagData);
+    const preferenceTag = await preferenceTagsService.updatePreferenceTag(
+      preferenceTagId,
+      preferenceTagData,
+    );
     res.status(preferenceTag.status).json(preferenceTag.data);
   } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);

@@ -18,44 +18,39 @@ export interface ShortTextRef {
   isDisabled: boolean;
 }
 
-const ShortText = forwardRef<ShortTextRef, ShortTextProps>(({
-  placeholder,
-  initialValue,
-  initialDisabled = true,
-  title,
-  onSave
-}, ref) => {
-  const [isDisabled, setIsDisabled] = useState(initialDisabled);
-  const [fieldValue, setFieldValue] = useState(initialValue);
+const ShortText = forwardRef<ShortTextRef, ShortTextProps>(
+  ({ placeholder, initialValue, initialDisabled = true, title, onSave }, ref) => {
+    const [isDisabled, setIsDisabled] = useState(initialDisabled);
+    const [fieldValue, setFieldValue] = useState(initialValue);
 
 
 
-  useImperativeHandle(ref, () => ({
-    get isDisabled() {
-      return isDisabled;
-    }
-  }));
+    useImperativeHandle(ref, () => ({
+      get isDisabled() {
+        return isDisabled;
+      },
+    }));
 
-  const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFieldValue(event.target.value);
-  };
+    const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFieldValue(event.target.value);
+    };
 
-  const toggleEditMode = () => {
-    setIsDisabled(false);
-  };
-    
-  const saveChanges = () => {
-    setIsDisabled(true);
-    if (onSave) {
-      onSave(fieldValue, true);
-    }
-  };
+    const toggleEditMode = () => {
+      setIsDisabled(false);
+    };
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      saveChanges();
-    }
-  };
+    const saveChanges = () => {
+      setIsDisabled(true);
+      if (onSave) {
+        onSave(fieldValue, true);
+      }
+    };
+
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "Enter") {
+        saveChanges();
+      }
+    };
 
   return (
     <div className="flex flex-col m-5 mx-6">
