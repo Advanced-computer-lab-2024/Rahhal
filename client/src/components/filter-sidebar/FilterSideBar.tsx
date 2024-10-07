@@ -38,7 +38,7 @@ function FilterSideBar({
                 <AccordionTrigger className="ml-2 hover:no-underline">
                   {item.title}
                 </AccordionTrigger>
-                <AccordionContent className="flex justify-center items-center mt-2">
+                <AccordionContent className="flex justify-center items-center mt-7">
                   {item.content}
                 </AccordionContent>
               </AccordionItem>
