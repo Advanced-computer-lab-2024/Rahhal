@@ -11,8 +11,8 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <Router>
         <Routes>
-          {/* Define the routes for the app */}
-          <Route path="/" element={<TouristHomePage />} />
+          <Route path="/" element={<TouristHomePage loggedIn={false} />} />
+          <Route path="/:id" element={<TouristHomePage loggedIn={true} />} />
           <Route path="/details/:id" element={<DetailsPage />} />
         </Routes>
       </Router>
