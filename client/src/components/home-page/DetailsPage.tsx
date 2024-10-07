@@ -71,6 +71,8 @@ const DetailsPage = () => {
 
           <p>Category: {item.category.name}</p>
 
+          {item.isBookingOpen?(item.isBookingOpen===true?<p>Available to Book NOW!</p>:<p>Booking Closed!</p>):null}
+
           <p>
             Rating: {getAverageRating(item.ratings.rating)}{" "}
             <IoMdStar style={{ marginLeft: "0.4rem", fontSize: "1.1rem", color: "#FDCC0D" }} />{" "}
