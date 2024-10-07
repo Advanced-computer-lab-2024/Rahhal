@@ -1,24 +1,40 @@
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/utils';
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 interface ButtonProps{
     navigation: number,
     setNavigation: (index: number) => void,
     index: number
     buttonName: string
 }
-export default function TouristHomePageNavigation(){
+
+interface NavigationProps{
+    loggedIn: boolean
+}
+
+export default function TouristHomePageNavigation(NavigationProps: NavigationProps){
     const [navigation,setNavigation] = useState(1);
     const buttonNames = ["Experiences","Stays","Travel","Shop"];
     return(
-        <>
-        <div className="flex justify-center relative z-10 space-x-12 bg-white  h-16 pt-2 items-center">
+        
+        <div className=" w-full h-16 z-10 relative flex">
+            <div className= " w-full h-full"></div>
+            <div className="flex justify-center relative z-10 space-x-12  h-16 pt-2 items-center">
                 {buttonNames.map((buttonName,index) => (
                         <NavigationButton index={index+1} navigation={navigation} setNavigation={setNavigation} buttonName={buttonName} />  
                 ))}
-          
+            </div>
+            <div className=" w-full h-full flex justify-end">
+                <div className="flex space-x-4 items-center pr-3">
+                    <Button className="text-white bg-red-400 rounded-xl hover:bg-red-500">Sign In</Button>
+                    <Link to="/signup">
+                        <Button className="text-white bg-red-400 rounded-xl hover:bg-red-500">Sign Up</Button>
+                    </Link>
+                </div>
+            </div>
         </div>
-        </>)
+        )
 }
 
 function NavigationButton(ButtonProps : ButtonProps){

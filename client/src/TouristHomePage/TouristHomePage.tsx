@@ -1,11 +1,15 @@
 import GeneralGridView from '@/components/home-page/main-content-div/GeneralGridView';
 import TouristHomePageNavigation from './TouristHomePageNavigation';
 
-export default function TouristHomePage() {
+interface TouristHomePageProps {
+  loggedIn: boolean;
+}
+
+export default function TouristHomePage(TouristHomePageProps : TouristHomePageProps) {
   return (
-    <div>
-      <TouristHomePageNavigation />
+    <>
+      <TouristHomePageNavigation loggedIn={TouristHomePageProps.loggedIn}/>
       <GeneralGridView />
-    </div>
+    </>
   );
 }
