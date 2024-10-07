@@ -20,7 +20,6 @@ export default function ProfileForm() {
   const { id } = useParams();
   const { editForm, user } = useContext(EditContext);
 
-
   const profileFormSchema = z.object({
     firstName: z
       .string()

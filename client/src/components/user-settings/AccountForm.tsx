@@ -130,6 +130,7 @@ export default function AccountForm() {
       }
     } else {
       updateUser(data);
+      window.location.reload();
     }
   }
 
