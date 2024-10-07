@@ -26,16 +26,16 @@ export const submitUser = async (user: TUser | undefined, isNewUser: boolean) =>
       username: user?.username,
       password: user?.password,
       role: user?.role,
-      approved: user?.approved,
+      approved: true,
     }
 
-    await axios.post(SERVICES_URLS.USERS + "/users", newUser).then((response) => {
+    await axios.post(SERVICES_URLS.USER + "/users", newUser).then((response) => {
       console.log(response.data);
     });
   } else {
     if (user) {
       await axios.patch(
-        `${SERVICES_URLS.USERS}/users/${user._id}`,
+        `${SERVICES_URLS.USER}/users/${user._id}`,
         user,
       ).then((response) => {
         console.log(response.data);
