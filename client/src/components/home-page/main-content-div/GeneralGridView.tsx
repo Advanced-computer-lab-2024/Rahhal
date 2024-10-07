@@ -239,9 +239,16 @@ const GeneralGridView = () => {
     .filter((item) => {
       if ("languages" in item) {
         const itemDates = (item as Itinerary).availableDatesTime.map((date) => new Date(date.Date));
-        return itemDates.some((date) => new Date(date) >= new Date());
+        return itemDates.some(
+          (date) =>
+            new Date(date) >= new Date() ||
+            new Date(date).toDateString() === new Date().toDateString(),
+        );
       } else if ("isBookingOpen" in item) {
-        return new Date((item as Activity).date) >= new Date();
+        return (
+          new Date((item as Activity).date) >= new Date() ||
+          new Date((item as Activity).date).toDateString() === new Date().toDateString()
+        );
       } else return true;
     })
     .filter((item) => {
