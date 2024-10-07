@@ -7,6 +7,7 @@ export const SERVICES_URLS = {
 };
 
 export const TEMP_USER_ID = "67032b20ffa86f21339f6cad";
+export const SUPER_ADMIN_ID = "67032b20ffa86f21339f6cad";
 
 export const DEFAULTS = {
   ACTIVITY: {
