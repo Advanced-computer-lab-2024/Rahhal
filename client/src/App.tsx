@@ -18,7 +18,10 @@ import { Login } from "./components/Login.tsx";
 import PreferenceTagsAdminView from "./components/non-tourist/admin/PreferenceTagsTable.tsx";
 
 import SellerView from "./components/non-tourist/seller/SellerView.tsx";
+import TouristGovernerHomepage from "./components/non-tourist/tourist-governor/TouristGovernerHomepage.tsx";
 import AdminProductsView from "./components/non-tourist/admin/AdminProductsView.tsx";
+import HistoricalPlacesView from "./components/non-tourist/tourist-governor/HistoricalPlacesView.tsx";
+import HistoricalTagsView from "./components/non-tourist/tourist-governor/HistoricalTagsTable.tsx";
 
 export default function App() {
   const queryClient = new QueryClient();
@@ -48,7 +51,9 @@ export default function App() {
               <Route path="account" element={<AccountForm />} />
             </Route>
             <Route path="/advertiser/:id" element={<AdvertiserView />} />
-            <Route path="/tourism-governor/:id" element={<TourismGovernorView />} />
+            <Route path="/tourism-governer/:id" element={<TouristGovernerHomepage />} />
+            <Route path="/tourism-governer/historical-places/:id" element={<HistoricalPlacesView />} />
+            <Route path="/tourism-governer/historical-tags/:id" element={<HistoricalTagsView />} />       
             <Route path="/admin" element={<AdminHomepage />} />
             <Route path="/admin/categories" element={<CategoryView />} />
             <Route path="/admin/users" element={<UserView />} />
