@@ -1,30 +1,25 @@
-.filter-button{
-   
-    background-color: transparent;
-    color: black;
-    padding: 10px 20px;
-    margin: 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: all 0.3s;
-    font-weight: 500;
-    font-size: 1.0rem;
-    
-
+.filter-button {
+  background-color: transparent;
+  color: black;
+  padding: 10px 20px;
+  margin: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s;
+  font-weight: 500;
+  font-size: 1rem;
 }
 
-.filter-button__icon-text{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
+.filter-button__icon-text {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
-.filter-button:hover{
-    background-color: #f2f2f2;
+.filter-button:hover {
+  background-color: #f2f2f2;
 }
-.filter-button__icon-text img{
-    margin-right: 10px;
-    width: 20px;
-
+.filter-button__icon-text img {
+  margin-right: 10px;
+  width: 20px;
 }
