@@ -1,6 +1,6 @@
-import path from "path"
-import react from "@vitejs/plugin-react"
-import { defineConfig } from "vite"
+import path from "path";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
@@ -14,13 +14,12 @@ export default defineConfig({
       usePolling: true,
       interval: 1000,
     },
-    host: true, 
-    port: 5173,                 
-    strictPort: true,         
+    host: true,
+    port: 5173,
+    strictPort: true,
     hmr: {
-      host: 'localhost',        
-      port: 5173,               
+      host: "localhost",
+      port: 5173,
     },
   },
-
 });

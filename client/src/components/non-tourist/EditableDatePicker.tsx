@@ -1,6 +1,8 @@
 import { useState } from "react";
 import EditSaveButton from "../EditSaveButton";
 import { DateTimePickerForm } from "../time-picker/date-time-picker-form";
+import { Card } from "../ui/card";
+import { Label } from "../ui/label";
 
 interface EditableDatePickerProps {
   date: Date | undefined;
@@ -16,14 +18,19 @@ function EditableDatePicker({
   const [isDisabled, setIsDisabled] = useState(initialIsDisabled);
 
   return (
-    <div className="flex-row items-end m-5 mx-6">
-      <DateTimePickerForm date={date} onDateChange={onDateChange} />
-      <EditSaveButton
-        isDisabled={isDisabled}
-        toggleEditMode={() => setIsDisabled(false)}
-        saveChanges={() => setIsDisabled(true)}
-      />
-    </div>
+    <Card className="flex flex-col p-4">
+      <div className="flex justify-between items-center">
+        <Label>Date</Label>
+        <EditSaveButton
+          isDisabled={isDisabled}
+          toggleEditMode={() => setIsDisabled(false)}
+          saveChanges={() => setIsDisabled(true)}
+        />
+      </div>
+      <div className="flex items-center">
+        <DateTimePickerForm date={date} onDateChange={onDateChange} />
+      </div>
+    </Card>
   );
 }
 

@@ -2,15 +2,15 @@ import React from "react";
 import { useState, useImperativeHandle, forwardRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Pen, Save } from "lucide-react";
 import EditSaveButton from "./EditSaveButton";
+import { Card } from "./ui/card";
 
 interface ShortTextProps {
   placeholder: string;
   initialValue: string;
   initialDisabled?: boolean;
   title: string;
+  type: string;
   onSave?: (value: string, isDisabled: boolean) => void;
 }
 
@@ -18,62 +18,85 @@ export interface ShortTextRef {
   isDisabled: boolean;
 }
 
-const ShortText = forwardRef<ShortTextRef, ShortTextProps>(({
-  placeholder,
-  initialValue,
-  initialDisabled = true,
-  title,
-  onSave
-}, ref) => {
-  const [isDisabled, setIsDisabled] = useState(initialDisabled);
-  const [fieldValue, setFieldValue] = useState(initialValue);
+const ShortText = forwardRef<ShortTextRef, ShortTextProps>(
+  ({ placeholder, initialValue, initialDisabled = true, title, type, onSave }, ref) => {
+    const [isDisabled, setIsDisabled] = useState(initialDisabled);
+    const [fieldValue, setFieldValue] = useState(initialValue);
 
+    useImperativeHandle(ref, () => ({
+      get isDisabled() {
+        return isDisabled;
+      },
+    }));
+    useImperativeHandle(ref, () => ({
+      get isDisabled() {
+        return isDisabled;
+      },
+    }));
 
+    const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFieldValue(event.target.value);
+    };
+    const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFieldValue(event.target.value);
+    };
 
-  useImperativeHandle(ref, () => ({
-    get isDisabled() {
-      return isDisabled;
-    }
-  }));
+    const toggleEditMode = () => {
+      setIsDisabled(false);
+    };
 
-  const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFieldValue(event.target.value);
-  };
+    const saveChanges = () => {
+      setIsDisabled(true);
+      if (onSave) {
+        onSave(fieldValue, true);
+      }
+    };
+    const toggleEditMode = () => {
+      setIsDisabled(false);
+    };
 
-  const toggleEditMode = () => {
-    setIsDisabled(false);
-  };
-    
-  const saveChanges = () => {
-    setIsDisabled(true);
-    if (onSave) {
-      onSave(fieldValue, true);
-    }
-  };
+    const saveChanges = () => {
+      setIsDisabled(true);
+      if (onSave) {
+        onSave(fieldValue, true);
+      }
+    };
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      saveChanges();
-    }
-  };
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "Enter") {
+        saveChanges();
+      }
+    };
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "Enter") {
+        saveChanges();
+      }
+    };
 
-  return (
-    <div className="flex flex-col m-5 mx-6">
-      <Label className="mb-2">{title}</Label>
-      <div className="flex items-center">
-        <Input
-          type="text"
-          placeholder={placeholder}
-          value={fieldValue}
-          onChange={handleFieldChange}
-          onKeyDown={handleKeyPress}
-          disabled={isDisabled}
-          className="flex-grow"
-        />
-        <EditSaveButton isDisabled={isDisabled} toggleEditMode={toggleEditMode} saveChanges={saveChanges} />
-      </div>
-    </div>
-  );
-});
+    return (
+      <Card className="flex flex-col p-4">
+        <div className="flex justify-between items-center">
+          <Label>{title}</Label>
+          <EditSaveButton
+            isDisabled={isDisabled}
+            toggleEditMode={toggleEditMode}
+            saveChanges={saveChanges}
+          />
+        </div>
+        <div className="flex items-center">
+          <Input
+            type={type}
+            placeholder={placeholder}
+            value={fieldValue}
+            onChange={handleFieldChange}
+            onKeyDown={handleKeyPress}
+            disabled={isDisabled}
+            className="flex-grow"
+          />
+        </div>
+      </Card>
+    );
+  },
+);
 
 export default ShortText;

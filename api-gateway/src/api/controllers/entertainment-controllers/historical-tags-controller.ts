@@ -7,8 +7,7 @@ export async function getAllHistoricalTags(req: Request, res: Response) {
   try {
     const historicalTags = await historicalTagsService.getAllHistoricalTags();
     res.status(historicalTags.status).json(historicalTags.data);
-  }
-  catch (error) {
+  } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
 }
@@ -18,8 +17,7 @@ export async function getHistoricalTagById(req: Request, res: Response) {
   try {
     const historicalTag = await historicalTagsService.getHistoricalTagById(historicalTagId);
     res.status(historicalTag.status).json(historicalTag.data);
-  }
-  catch (error) {
+  } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
 }
@@ -29,8 +27,7 @@ export async function createHistoricalTag(req: Request, res: Response) {
   try {
     const historicalTag = await historicalTagsService.createHistoricalTag(historicalTagData);
     res.status(historicalTag.status).json(historicalTag.data);
-  }
-  catch (error) {
+  } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
 }

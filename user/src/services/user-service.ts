@@ -2,20 +2,18 @@ import * as userRepository from "../database/repositories/user-repository";
 import type { IUser } from "../database/models/User";
 
 export async function createUser(userData: IUser) {
-  if (
-    userData.username &&
-    userData.email &&
-    userData.password &&
-    userData.role
-  ) {
+  if (userData.username && userData.email && userData.password && userData.role) {
     const user = await userRepository.getUserByUsername(userData.username);
 
     const email = await userRepository.getUserByEmail(userData.email);
+    if(user && email){
+      throw new Error("Username already exists and this email is registered to another user");
+    }
     if (user) {
       throw new Error("Username already exists");
     }
     if (email) {
-      throw new Error("This email is registered by another user");
+      throw new Error("This email is registered to another user");
     }
   } else {
     throw new Error("Please provide all the required fields");
@@ -30,9 +28,7 @@ export async function deleteUser(userId: string) {
 }
 
 //get specific user by username
-export async function getUserByUsername(
-  username: string,
-): Promise<IUser | null> {
+export async function getUserByUsername(username: string): Promise<IUser | null> {
   return await userRepository.getUserByUsername(username);
 }
 
@@ -56,6 +52,12 @@ export async function updateUserByUsername(
   username: string,
   updatedUser: IUser,
 ): Promise<IUser | null> {
+  if(updatedUser.email){
+    const email = await userRepository.getUserByEmail(updatedUser.email);
+    if(email){
+      throw new Error("This email is registered to another user");
+    }
+  }
   return await userRepository.updateUserByUsername(username, updatedUser);
 }
 
@@ -64,5 +66,24 @@ export async function updateUserById(
   userId: string,
   updatedUser: IUser,
 ): Promise<IUser | null> {
+  if(updatedUser.email){
+    const email = await userRepository.getUserByEmail(updatedUser.email);
+    if(email){
+      throw new Error("This email is registered to another user");
+    }
+  }
+
   return await userRepository.updateUserById(userId, updatedUser);
+}
+
+
+export async function loginUser(username: string, password: string){
+  const user = await userRepository.getUserByUsername(username);
+  if(!user){
+    throw new Error("Username or Password is incorrect");
+  }
+  if(user.password !== password){
+    throw new Error("Username or Password is incorrect");
+  }
+  return user;
 }

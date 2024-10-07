@@ -20,16 +20,25 @@ export type TCategory = {
 export type TActivity = {
   _id?: string;
   name: string;
+  description: string;
   time: Date;
   date: Date;
   location: { longitude: number; latitude: number };
-  specialDiscounts: string[];
-  preferenceTags: { _id: string; preferenceTag: string }[];
+  specialDiscount: number;
+  preferenceTags: { _id: string; name: string }[];
   isBookingOpen: boolean;
-  price: number | { type: string; price: number }[];
-  category: { _id: string; category: string };
-  tags: { _id: string; preferenceTag: string }[];
+  price: Record<string, number>;
+  category: { _id: string; name: string };
+  tags: { _id: string; name: string }[];
   ratings: TRating[];
+  owner: string;
+};
+// Derive TNewActivity from TActivity
+export type TNewActivity = Omit<TActivity, "preferenceTags" | "category" | "tags" | "_id"> & {
+  // Each representing the id(s) of the omitted fields so that they can directly be inserted in the db
+  preferenceTags: string[];
+  category: string;
+  tags: string[];
 };
 
 function deleteRow(row: any) {
@@ -46,36 +55,21 @@ export const activitiesColumns: ColumnDef<TActivity>[] = [
   {
     accessorKey: "name",
     header: "name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
+    cell: ({ row }) => <div className="capitalize">{row.original.name}</div>,
   },
   {
     accessorKey: "category",
     header: "category",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("category")}</div>,
-  },
-  {
-    accessorKey: "price",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Price
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div className="capitalize">{row.getValue("price")}</div>,
+    cell: ({ row }) => <div className="capitalize">{row.original.category.name}</div>,
   },
   {
     accessorKey: "tags",
     header: "tags",
     cell: ({ row }) => (
       <div>
-        {(row.getValue("tags") as string[]).map((tag) => (
-          <Badge key={tag} variant="default" className="mr-1">
-            {tag}
+        {row.original.preferenceTags.map((preferenceTag) => (
+          <Badge key={preferenceTag._id} variant="default" className="mr-1">
+            {preferenceTag.name}
           </Badge>
         ))}
       </div>
@@ -90,7 +84,7 @@ export const activitiesColumns: ColumnDef<TActivity>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Ratings
+          Average Rating
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

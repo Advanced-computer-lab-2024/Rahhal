@@ -36,7 +36,7 @@ export function GenericModal({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <ScrollArea className="flex-grow">
-          <div className="flex-1 py-4">
+          <div className="flex-1 space-y-4 px-4">
             {children &&
               children.map((child, index) => (
                 <div key={index} className="grid items-center">

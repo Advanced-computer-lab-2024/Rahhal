@@ -13,31 +13,23 @@ interface PictureCardProps {
 
 // Function to handle file upload
 const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-        // ADD FILE UPLOAD LOGIC HERE
-        
-    }
+  const files = e.target.files;
+  if (files) {
+    // ADD FILE UPLOAD LOGIC HERE
+  }
 };
 
 // Function to open the file upload dialog using the file input reference
 const openFileUploadDialog = (pictureUploadFieldRef: React.RefObject<HTMLInputElement>) => {
-    if (pictureUploadFieldRef.current) {
-        pictureUploadFieldRef.current.click();
-    }
-}
+  if (pictureUploadFieldRef.current) {
+    pictureUploadFieldRef.current.click();
+  }
+};
 
-
-const PictureCard = ({
-  title,
-  description,
-  imageSources,
-}: PictureCardProps) => {
-
+const PictureCard = ({ title, description, imageSources }: PictureCardProps) => {
   // CONSTANTS
   const MIN_NUMBER_OF_IMAGES: number = 0; // Minimum number of images
   const MAX_NUMBER_OF_IMAGES: number = 3; // Maximum number of images
-
 
   const pictureUploadFieldRef: React.RefObject<HTMLInputElement> = useRef(null); // Picture upload field reference to open the file dialog when the plus icon is clicked
 
@@ -53,10 +45,8 @@ const PictureCard = ({
     plusIconRotation = "rotate-3";
   }
 
-
-
   return (
-    <Card className="m-5 mx-6">
+    <Card>
       <div className="p-4">
         <h2 className="text-xl font-semibold mb-2">{title}</h2>
         <p className="text-gray-600 mb-4">{description}</p>
@@ -93,8 +83,7 @@ const PictureCard = ({
 
               <Button
                 className={
-                  "w-16 h-16 bg-gray-300 rounded-lg shadow-md -ml-2 transform " +
-                  plusIconRotation
+                  "w-16 h-16 bg-gray-300 rounded-lg shadow-md -ml-2 transform " + plusIconRotation
                 }
                 onClick={() => openFileUploadDialog(pictureUploadFieldRef)}
               >

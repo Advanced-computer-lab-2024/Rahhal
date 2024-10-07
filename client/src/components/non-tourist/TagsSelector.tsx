@@ -1,17 +1,23 @@
 import { useState } from "react";
 import MultipleSelector, { Option } from "@/components/ui/multiple-selector";
-import { Edit2, Save } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import EditSaveButton from "../EditSaveButton";
 
 type TagsSelectorProps = {
   placeholder: string;
   onSave: (selectedOptions: Option[]) => void;
   options?: Option[];
   initialOptions?: Option[];
+  isEditingInitially?: boolean;
 };
 
-function TagsSelector({ placeholder, onSave, options, initialOptions }: TagsSelectorProps) {
-  const [isEditing, setIsEditing] = useState(false);
+function TagsSelector({
+  placeholder,
+  onSave,
+  options,
+  initialOptions,
+  isEditingInitially = false,
+}: TagsSelectorProps) {
+  const [isEditing, setIsEditing] = useState(isEditingInitially);
   const [selectedOptions, setSelectedOptions] = useState<Option[]>(initialOptions ?? []);
 
   const handleSave = () => {
@@ -32,18 +38,15 @@ function TagsSelector({ placeholder, onSave, options, initialOptions }: TagsSele
           }
           disabled={!isEditing}
           onChange={setSelectedOptions}
+          value={selectedOptions}
         />
       </div>
       <div className="ml-4 flex">
-        {isEditing ? (
-          <Button variant="ghost" size="icon" onClick={handleSave} disabled={!isEditing}>
-            <Save className="h-4 w-4" />
-          </Button>
-        ) : (
-          <Button variant="ghost" size="icon" onClick={() => setIsEditing(!isEditing)}>
-            <Edit2 className="h-4 w-4" />
-          </Button>
-        )}
+        <EditSaveButton
+          isDisabled={!isEditing}
+          toggleEditMode={() => setIsEditing(!isEditing)}
+          saveChanges={handleSave}
+        />
       </div>
     </div>
   );

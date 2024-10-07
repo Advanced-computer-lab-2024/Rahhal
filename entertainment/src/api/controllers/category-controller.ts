@@ -8,8 +8,7 @@ export async function getAllCategories(req: Request, res: Response) {
     res.status(STATUS_CODES.STATUS_OK).json(result);
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
-      message:
-        error instanceof Error ? error.message : "An unknown error occurred",
+      message: error instanceof Error ? error.message : "An unknown error occurred",
     });
   }
 }
@@ -21,14 +20,11 @@ export async function getCategoryById(req: Request, res: Response) {
     if (result) {
       res.status(STATUS_CODES.STATUS_OK).json(result);
     } else {
-      res
-        .status(STATUS_CODES.NOT_FOUND)
-        .json({ message: "Category not found" });
+      res.status(STATUS_CODES.NOT_FOUND).json({ message: "Category not found" });
     }
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
-      message:
-        error instanceof Error ? error.message : "An unknown error occurred",
+      message: error instanceof Error ? error.message : "An unknown error occurred",
     });
   }
 }
@@ -40,8 +36,7 @@ export async function createCategory(req: Request, res: Response) {
     res.status(STATUS_CODES.CREATED).json(result);
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
-      message:
-        error instanceof Error ? error.message : "An unknown error occurred",
+      message: error instanceof Error ? error.message : "An unknown error occurred",
     });
   }
 }
@@ -54,14 +49,11 @@ export async function updateCategory(req: Request, res: Response) {
     if (result) {
       res.status(STATUS_CODES.STATUS_OK).json(result);
     } else {
-      res
-        .status(STATUS_CODES.NOT_FOUND)
-        .json({ message: "Category not found" });
+      res.status(STATUS_CODES.NOT_FOUND).json({ message: "Category not found" });
     }
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
-      message:
-        error instanceof Error ? error.message : "An unknown error occurred",
+      message: error instanceof Error ? error.message : "An unknown error occurred",
     });
   }
 }
@@ -73,14 +65,11 @@ export async function deleteCategory(req: Request, res: Response) {
     if (result) {
       res.status(STATUS_CODES.STATUS_OK).json(result);
     } else {
-      res
-        .status(STATUS_CODES.NOT_FOUND)
-        .json({ message: "Category not found" });
+      res.status(STATUS_CODES.NOT_FOUND).json({ message: "Category not found" });
     }
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
-      message:
-        error instanceof Error ? error.message : "An unknown error occurred",
+      message: error instanceof Error ? error.message : "An unknown error occurred",
     });
   }
 }

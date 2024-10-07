@@ -1,7 +1,5 @@
 import DetailsPageStyles from "./DetailsPage.module.css";
 import aswan from "../../assets/Aswan.webp";
-import pyramids from "../../assets/Pyramids.webp";
-import pyramid2 from "../../assets/pyramids2.jpg";
 import { useLocation } from "react-router-dom";
 import { FaTags } from "react-icons/fa6";
 import { IoMdStar } from "react-icons/io";
@@ -44,10 +42,7 @@ const DetailsPage = () => {
             {item.preferenceTags?.map((tag: { name: string }) => tag.name).join(", ")}
           </p>
 
-          
-          {item.specialDiscount?(<p>Special Discounts: {item.specialDiscount}</p>):null}
-          
-        
+          {item.specialDiscount ? <p>Special Discounts: {item.specialDiscount}</p> : null}
 
           {item.date ? (
             <p>
@@ -152,7 +147,9 @@ const DetailsPage = () => {
 
           {item.ratings && item.ratings.length > 0 ? (
             <div>
-              <p><strong>User Reviews:</strong></p>
+              <p>
+                <strong>User Reviews:</strong>
+              </p>
               <ul>
                 {item.ratings.map(
                   (rating: { user: string; rating: number; review?: string }, index: number) => (
@@ -185,10 +182,10 @@ const DetailsPage = () => {
             <img src={aswan} />
           </div>
           <div className={DetailsPageStyles["item-2"]}>
-            <img src={pyramids} />
+            <img src={aswan} />
           </div>
           <div className={DetailsPageStyles["item-3"]}>
-            <img src={pyramid2} />
+            <img src={aswan} />
           </div>
           <div className={DetailsPageStyles["price-section"]}>
             <div>

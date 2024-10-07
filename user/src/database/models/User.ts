@@ -1,6 +1,6 @@
 import type { Types } from "mongoose";
 import mongoose, { Schema } from "mongoose";
-import userValidators from '../../validators/user-validators';
+import userValidators from "../../validators/user-validators";
 enum Role {
   admin = "admin",
   tourist = "tourist",
@@ -31,9 +31,22 @@ export interface IUser {
   companyProfile?: string;
   companyName?: string;
   description?: string;
+  wallet?:number;
   createdAt: Date;
   updatedAt: Date;
 }
+
+// interface ICreditCard{
+//   cardNumber:string;
+//   expirationDate:Date;
+//   cvv:number;
+// }
+
+// interface IWallet{
+//   balance:number;
+//   creditCard:ICreditCard;
+  
+// }
 
 const userSchema: Schema = new Schema<IUser>(
   {
@@ -69,6 +82,7 @@ const userSchema: Schema = new Schema<IUser>(
         validator: userValidators.validateUsername,
         message: "Invalid username entry",
       },
+      immutable: true,
     },
     email: {
       type: String,
@@ -218,10 +232,17 @@ const userSchema: Schema = new Schema<IUser>(
         message: "Invalid description entry",
       },
     },
+    wallet:{
+      type:Number,
+      default:0,
+      validate: {
+        validator: userValidators.validateWallet,
+        message: "Invalid wallet entry",
+      },
+    }
   },
   { timestamps: true },
 );
-
 
 const User = mongoose.model<IUser>("User", userSchema);
 export default User;

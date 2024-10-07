@@ -3,22 +3,21 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
 interface PriceCategoryEditProps {
-    editType: string;
-    setEditType: (value: string) => void;
-    editPrice: string;
-    setEditPrice: (value: string) => void;
-    saveEdit: () => void;
-    cancelEditing: () => void;
-    }
-
+  editType: string;
+  setEditType: (value: string) => void;
+  editPrice: string;
+  setEditPrice: (value: string) => void;
+  saveEdit: () => void;
+  cancelEditing: () => void;
+}
 
 function PriceCategoryEdit({
-    editType,
-    setEditType,
-    editPrice,
-    setEditPrice,
-    saveEdit,
-    cancelEditing
+  editType,
+  setEditType,
+  editPrice,
+  setEditPrice,
+  saveEdit,
+  cancelEditing,
 }: PriceCategoryEditProps) {
   return (
     <>

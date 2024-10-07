@@ -1,5 +1,5 @@
 import type { IHistoricalPlace } from "../database/models/HistoricalPlace";
-import * as historicalPlacesRepository from"../database/repositories/historical-places-repository";
+import * as historicalPlacesRepository from "../database/repositories/historical-places-repository";
 
 // Get all historical places
 export async function getAllHistoricalPlaces() {
@@ -24,4 +24,8 @@ export async function updateHistoricalPlace(id: string, historicalPlaceData: IHi
 // Delete a historical place
 export async function deleteHistoricalPlace(id: string) {
   return historicalPlacesRepository.deleteHistoricalPlace(id);
+}
+
+export async function getHistoricalPlacesByOwner(ownerId: string) {
+  return historicalPlacesRepository.getHistoricalPlacesByOwner(ownerId);
 }
