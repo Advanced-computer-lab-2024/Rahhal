@@ -31,7 +31,7 @@ export interface IUser {
   companyProfile?: string;
   companyName?: string;
   description?: string;
-  wallet?:number;
+  wallet?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -45,7 +45,7 @@ export interface IUser {
 // interface IWallet{
 //   balance:number;
 //   creditCard:ICreditCard;
-  
+
 // }
 
 const userSchema: Schema = new Schema<IUser>(
@@ -86,16 +86,16 @@ const userSchema: Schema = new Schema<IUser>(
     },
     email: {
       type: String,
-      unique: function () {
-        return this.role !== Role.admin && this.role !== Role.tourismGovernor;
-      },
+      // unique: function () {
+      //   return this.role !== Role.admin && this.role !== Role.tourismGovernor;
+      // },
       required: function () {
         return this.role !== Role.tourismGovernor && this.role !== Role.admin;
       },
-      validate: {
-        validator: userValidators.validateEmail,
-        message: "Invalid email entry",
-      },
+      // validate: {
+      //   validator: userValidators.validateEmail,
+      //   message: "Invalid email entry",
+      // },
     },
     password: {
       type: String,
@@ -236,9 +236,9 @@ const userSchema: Schema = new Schema<IUser>(
         message: "Invalid description entry",
       },
     },
-    wallet:{
-      type:Number,
-      default:0,
+    wallet: {
+      type: Number,
+      default: 0,
       validate: {
         validator: userValidators.validateWallet,
         message: "Invalid wallet entry",
