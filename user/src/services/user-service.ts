@@ -2,7 +2,11 @@ import * as userRepository from "../database/repositories/user-repository";
 import type { IUser } from "../database/models/User";
 
 export async function createUser(userData: IUser) {
-  if (userData.username && userData.email && userData.password && userData.role) {
+  if (
+    userData.username &&
+    userData.password &&
+    userData.role
+  ) {
     const user = await userRepository.getUserByUsername(userData.username);
 
     const email = await userRepository.getUserByEmail(userData.email);

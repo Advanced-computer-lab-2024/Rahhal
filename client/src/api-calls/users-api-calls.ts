@@ -19,7 +19,17 @@ export const deleteUser = async (user: TUser) => {
 export const submitUser = async (user: TUser | undefined, isNewUser: boolean) => {
     console.log(user);
   if (isNewUser) {
-    await axios.post(SERVICES_URLS.USERS + "/users", user).then((response) => {
+
+    // Create a new user with only username, password, role and appoved fields
+
+    const newUser = {
+      username: user?.username,
+      password: user?.password,
+      role: user?.role,
+      approved: user?.approved,
+    }
+
+    await axios.post(SERVICES_URLS.USERS + "/users", newUser).then((response) => {
       console.log(response.data);
     });
   } else {
