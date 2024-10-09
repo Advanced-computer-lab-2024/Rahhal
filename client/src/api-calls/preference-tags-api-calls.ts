@@ -11,6 +11,8 @@ export const fetchPreferenceTags = async () => {
 //delete preference tag by id
 export const deletePreferenceTag = async (id: string) => {
   const response = await axios.delete(SERVICES_URLS.ENTERTAINMENT + "/preference-tags/"+id);
+    alert("Preference tag deleted successfully");
+    window.location.reload();
   return response.data;
 };
 
@@ -20,14 +22,18 @@ export const submitPreferenceTag = async (preferenceTagData : TPreferenceTag | u
         await axios.post(SERVICES_URLS.ENTERTAINMENT + "/preference-tags", preferenceTagData).then((response) => {
             console.log(response.data);
         });
+        alert("Preference tag created successfully");
+        window.location.reload();
     }
     else {
         if(preferenceTagData) {
             await axios.patch(
-                `${SERVICES_URLS.ENTERTAINMENT}/preferencetags/${preferenceTagData._id}`,
+                `${SERVICES_URLS.ENTERTAINMENT}/preference-tags/${preferenceTagData._id}`,
                 preferenceTagData
 
             );
+            alert("Preference tag updated successfully");
+            window.location.reload();
             }
             
     }

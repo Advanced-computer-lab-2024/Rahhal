@@ -11,13 +11,19 @@ export const fetchUsers = async () => {
 
 // delete user from users endpoint
 export const deleteUser = async (user: TUser) => {
-    
-    await axios.delete(`${SERVICES_URLS.USER}/users/${user._id}`);
+    try{    
+      await axios.delete(`${SERVICES_URLS.USER}/users/${user._id}`);
+    alert("User deleted successfully")
+    window.location.reload();
+  }
+  catch(error){
+    console.log(user._id)
+  }
 };
 
 // submit user to the users endpoint
 export const submitUser = async (user: TUser | undefined, isNewUser: boolean) => {
-    console.log(user);
+  console.log(user);
   if (isNewUser) {
 
     // Create a new user with only username, password, role and appoved fields
@@ -29,17 +35,36 @@ export const submitUser = async (user: TUser | undefined, isNewUser: boolean) =>
       approved: true,
     }
 
-    await axios.post(SERVICES_URLS.USER + "/users", newUser).then((response) => {
+    await axios.post(SERVICES_URLS.USER + "/users", newUser, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
       console.log(response.data);
     });
+    alert("User created successfully")
+    window.location.reload();
   } else {
     if (user) {
-      await axios.patch(
-        `${SERVICES_URLS.USER}/users/${user._id}`,
-        user,
-      ).then((response) => {
-        console.log(response.data);
-      });
+
+      try{
+        await axios.patch(
+          `${SERVICES_URLS.USER}/users/${user._id}`,
+          JSON.stringify(user),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        alert("User updated successfully")
+        window.location.reload();
+      }
+      catch(error){
+      console.log(user)
+      console.log(user.approved)
+      console.log(error)
+    }
     }
   }
 }

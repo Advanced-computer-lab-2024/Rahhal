@@ -2,7 +2,7 @@ import type { Option } from "@/components/ui/multiple-selector";
 import MultSelector from "@/components/filter-sidebar/MultSelector";
 
 export function ItinerariesFilter(
-  options: Option[],
+  options: Set<string>[],
   setSelectedOption: (selectedOptions: Option[]) => void,
 ) {
   return [

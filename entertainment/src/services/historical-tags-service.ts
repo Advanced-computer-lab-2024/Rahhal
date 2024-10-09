@@ -1,8 +1,9 @@
 import type { IHistoricalTag } from "../database/models/HistoricalTag";
 import * as historicalTagsRepository from "../database/repositories/historical-tags-repository";
 
-export async function createHistoricalTag(historicalTag: IHistoricalTag) {
-  return await historicalTagsRepository.createHistoricalTag(historicalTag);
+export async function createHistoricalTag(historicalTag: string) {
+  const newHistoricalTag = { name: historicalTag };
+  return await historicalTagsRepository.createHistoricalTag(newHistoricalTag);
 }
 
 export async function getAllHistoricalTags() {

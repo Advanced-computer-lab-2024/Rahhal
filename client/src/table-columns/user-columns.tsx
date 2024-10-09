@@ -44,7 +44,6 @@ export type TUser = {
 
 function deleteRow(row: any) {
   deleteUser(row.original);
-  window.location.reload();
 }
 
 

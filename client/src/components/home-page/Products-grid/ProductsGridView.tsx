@@ -15,6 +15,7 @@ import {
   IRating,
   SortOption,
 } from "../home-page-types";
+import  Hoodie  from "@/assets/farmhouse-main.jpeg"
 import MinMaxRangeSlider from "@/components/filter-sidebar/MinMaxRangeSlider";
 import FilterStarRating from "@/components/filter-sidebar/FilterStarRating";
 
@@ -197,8 +198,7 @@ const ProductGridView = () => {
               filteredProducts.map((product: Product) => (
                 <ProductCard
                   key={product._id}
-                  picture={"src/assets/ski egypt.jpg"}
-                  //fix later
+                  picture={Hoodie}
                   rating={getAverageRating(product.ratings)}
                   title={product.name}
                   price={product.price}

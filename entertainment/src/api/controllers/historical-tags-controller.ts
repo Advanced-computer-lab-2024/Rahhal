@@ -11,7 +11,8 @@ export async function createHistoricalTag(req: Request, res: Response) {
     if (oldHistoricalTag) {
       res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Historical Tag already exists" });
     } else {
-      const HistoricalTag = await historicalTagsService.createHistoricalTag(HistoricalTagData);
+      console.log(HistoricalTagData.name);
+      const HistoricalTag = await historicalTagsService.createHistoricalTag(HistoricalTagData.name);
       res.status(STATUS_CODES.CREATED).json(HistoricalTag);
     }
   } catch (error: unknown) {

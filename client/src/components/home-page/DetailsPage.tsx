@@ -97,7 +97,6 @@ const DetailsPage = () => {
             </p>
           ) : null}
 
-          {item.owner ? <p>Owner: {item.owner}</p> : null}
 
           {item.activities
             ? item.activities.map((activity: string, index: number) => {
