@@ -53,7 +53,7 @@ export default function LocationMap({
   return (
     <Card className="w-full m-auto">
       <CardHeader className="flex-row justify-between items-center">
-        <CardTitle>{title? title : "Location"}</CardTitle>
+        <CardTitle>{title ? title : "Location"}</CardTitle>
         <EditSaveButton
           saveChanges={handleSave}
           isDisabled={!isEditable}

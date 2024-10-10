@@ -17,11 +17,11 @@ type GoogleMapProps = {
   className?: string;
 };
 
-function GoogleMap({ isEditable, location, setLocation,className }: GoogleMapProps) {
+function GoogleMap({ isEditable, location, setLocation, className }: GoogleMapProps) {
   return (
     <APIProvider apiKey="AIzaSyDH66WmNegr3ISHqJMqAFGfmg9eP3jI59g" language="en">
       <Map
-         className={`h-96 ${className || ""}`}  
+        className={`h-96 ${className || ""}`}
         defaultZoom={13}
         center={location}
         onCameraChanged={(event: MapCameraChangedEvent) => {

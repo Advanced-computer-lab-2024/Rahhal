@@ -26,16 +26,15 @@ export function GenericModal({
   children,
   onSubmit,
 }: GenericModalProps) {
-
-  const handleSubmit = (event : any) => {
+  const handleSubmit = (event: any) => {
     event.preventDefault();
     onSubmit();
-  }
+  };
 
   return (
     <Dialog>
       <DialogTrigger asChild>{dialogTrigger}</DialogTrigger>
-      
+
       <DialogContent className="max-w-[90vw] max-h-[90vh] w-1/2 h-full flex flex-col">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>

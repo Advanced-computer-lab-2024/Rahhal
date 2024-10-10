@@ -13,16 +13,9 @@ export default function AutoFormDate({
 }: AutoFormInputComponentProps) {
   return (
     <FormItem>
-      <AutoFormLabel
-        label={fieldConfigItem?.label || label}
-        isRequired={isRequired}
-      />
+      <AutoFormLabel label={fieldConfigItem?.label || label} isRequired={isRequired} />
       <FormControl>
-        <DatePicker
-          date={field.value}
-          setDate={field.onChange}
-          {...fieldProps}
-        />
+        <DatePicker date={field.value} setDate={field.onChange} {...fieldProps} />
       </FormControl>
       <AutoFormTooltip fieldConfigItem={fieldConfigItem} />
 

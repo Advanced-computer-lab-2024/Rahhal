@@ -27,10 +27,7 @@ export async function updateItinerary(itineraryData: TItinerary) {
   window.location.reload();
 }
 
-export async function createItinerary(
-  newItineraryData: TNewItinerary,
-  userId: string,
-) {
+export async function createItinerary(newItineraryData: TNewItinerary, userId: string) {
   newItineraryData.owner = userId;
   await axios.post(SERVICES_URLS.ENTERTAINMENT + "/itineraries", newItineraryData);
   alert("Itinerary created successfully");

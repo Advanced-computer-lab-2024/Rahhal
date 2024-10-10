@@ -1,4 +1,4 @@
-import ProductGridStyle from "./ProductsGridView.module.css"
+import ProductGridStyle from "./ProductsGridView.module.css";
 import ProductCard from "@/components/product-card/ProductCard";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -10,12 +10,8 @@ import type { Option } from "@/components/ui/multiple-selector";
 import { FilterX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { fetchProducts } from "@/api-calls/products-api-calls";
-import {
-  Product,
-  IRating,
-  SortOption,
-} from "../home-page-types";
-import  Hoodie  from "@/assets/farmhouse-main.jpeg"
+import { Product, IRating, SortOption } from "../home-page-types";
+import Hoodie from "@/assets/farmhouse-main.jpeg";
 import MinMaxRangeSlider from "@/components/filter-sidebar/MinMaxRangeSlider";
 import FilterStarRating from "@/components/filter-sidebar/FilterStarRating";
 
@@ -45,7 +41,7 @@ const ProductGridView = () => {
   const [search, setSearch] = useState<string>("");
   const [skeleton, setSkeleton] = useState<boolean>(true);
   const [finishedLoading, setFinishedLoading] = useState<boolean>(false);
-  const [combined, setCombined] = useState<(Product)[]>([]);
+  const [combined, setCombined] = useState<Product[]>([]);
   const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>([0, 1000]);
   const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
   const [sortOption, setSortOption] = useState<SortOption | null>(null);
@@ -66,11 +62,8 @@ const ProductGridView = () => {
 
   //fetching data
   useEffect(() => {
-    setFinishedLoading(
-      !isLoadingProducts
-    );
-  }, 
-  [isLoadingProducts]);
+    setFinishedLoading(!isLoadingProducts);
+  }, [isLoadingProducts]);
 
   useEffect(() => {
     if (finishedLoading) {
@@ -92,7 +85,6 @@ const ProductGridView = () => {
     if (finishedLoading) setCombined([...products]);
   }, [finishedLoading, products]);
 
-
   let combinedSideBarFilters = [
     {
       title: "Reset Filters",
@@ -106,18 +98,13 @@ const ProductGridView = () => {
     {
       title: "Price Range",
       content: (
-        <MinMaxRangeSlider
-          values={selectedPriceRange}
-          onValueChange={setSelectedPriceRange}
-        />
+        <MinMaxRangeSlider values={selectedPriceRange} onValueChange={setSelectedPriceRange} />
       ),
     },
     {
       title: "Rating",
-      content: (
-        <FilterStarRating values={selectedRatings} onValueChange={setSelectedRatings} />
-      ),
-    }
+      content: <FilterStarRating values={selectedRatings} onValueChange={setSelectedRatings} />,
+    },
   ];
 
   const getAverageRating = (ratings?: IRating[]) => {
@@ -127,27 +114,27 @@ const ProductGridView = () => {
 
   //Searching first, then result is filter  then result is sorted
   const filteredProducts = combined
-  .filter((item) => {
-    // Filter based on search
-    if (search) {
-      return item.name.toLowerCase().includes(search.toLowerCase());
-    }
-    return true;
-  })
-  .filter((item) => {
-    const itemPrice = getPriceValue(item.price);
-    const itemRating = getAverageRating(item.ratings);
-    const matchPrice =
-      (selectedPriceRange[0] != -1 &&
-        itemPrice >= selectedPriceRange[0] &&
-        itemPrice <= selectedPriceRange[1]) ||
-      (selectedPriceRange[0] === -1 && selectedPriceRange[1] === -1);
-    const matchRating =
-      selectedRatings.length === 0 ||
-      selectedRatings.some((rating) => itemRating >= rating && itemRating < rating + 1);
-    
-    return matchPrice && matchRating ;
-  });
+    .filter((item) => {
+      // Filter based on search
+      if (search) {
+        return item.name.toLowerCase().includes(search.toLowerCase());
+      }
+      return true;
+    })
+    .filter((item) => {
+      const itemPrice = getPriceValue(item.price);
+      const itemRating = getAverageRating(item.ratings);
+      const matchPrice =
+        (selectedPriceRange[0] != -1 &&
+          itemPrice >= selectedPriceRange[0] &&
+          itemPrice <= selectedPriceRange[1]) ||
+        (selectedPriceRange[0] === -1 && selectedPriceRange[1] === -1);
+      const matchRating =
+        selectedRatings.length === 0 ||
+        selectedRatings.some((rating) => itemRating >= rating && itemRating < rating + 1);
+
+      return matchPrice && matchRating;
+    });
 
   const sortedProducts = filteredProducts.sort((a, b) => {
     const aRatings = getAverageRating(a.ratings ?? []);
@@ -175,9 +162,7 @@ const ProductGridView = () => {
         searchPartsValues={[]}
         searchPartsHandlers={[]}
         handleSort={handleSort}
-      >
-
-      </FilterSortSearchHeader>
+      ></FilterSortSearchHeader>
       <hr className="border-t border-gray-600 " />
       <div className="flex ">
         <FilterSideBar sideBarItems={combinedSideBarFilters} />

@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import ItineraryLocationsEdit from './ItineraryLocationsEdit';
-import ItineraryLocationsNonEdit from './ItineraryLocationsNonEdit';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import ItineraryLocationsEdit from "./ItineraryLocationsEdit";
+import ItineraryLocationsNonEdit from "./ItineraryLocationsNonEdit";
 
 interface LocationEntry {
-  lat: number;   
-  lng: number;   
+  lat: number;
+  lng: number;
 }
 
 interface ItineraryLocationsProps {
@@ -14,10 +14,7 @@ interface ItineraryLocationsProps {
   onSave: (newLocations: LocationEntry[]) => void;
 }
 
-const ItineraryLocations: React.FC<ItineraryLocationsProps> = ({
-  locations,
-  onSave,
-}) => {
+const ItineraryLocations: React.FC<ItineraryLocationsProps> = ({ locations, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const handleSave = (newLocations: LocationEntry[]) => {
@@ -29,9 +26,7 @@ const ItineraryLocations: React.FC<ItineraryLocationsProps> = ({
     <Card>
       <CardHeader className="flex justify-between items-center">
         <span>Available Locations</span>
-        <Button onClick={() => setIsEditing(!isEditing)}>
-          {isEditing ? 'Cancel' : 'Edit'}
-        </Button>
+        <Button onClick={() => setIsEditing(!isEditing)}>{isEditing ? "Cancel" : "Edit"}</Button>
       </CardHeader>
       <CardContent>
         {isEditing ? (

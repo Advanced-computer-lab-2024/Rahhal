@@ -1,9 +1,4 @@
-import {
-  FormControl,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import * as z from "zod";
 import AutoFormLabel from "../common/label";
@@ -19,8 +14,7 @@ export default function AutoFormRadioGroup({
   fieldProps,
   fieldConfigItem,
 }: AutoFormInputComponentProps) {
-  const baseValues = (getBaseSchema(zodItem) as unknown as z.ZodEnum<any>)._def
-    .values;
+  const baseValues = (getBaseSchema(zodItem) as unknown as z.ZodEnum<any>)._def.values;
 
   let values: string[] = [];
   if (!Array.isArray(baseValues)) {
@@ -32,21 +26,11 @@ export default function AutoFormRadioGroup({
   return (
     <div>
       <FormItem>
-        <AutoFormLabel
-          label={fieldConfigItem?.label || label}
-          isRequired={isRequired}
-        />
+        <AutoFormLabel label={fieldConfigItem?.label || label} isRequired={isRequired} />
         <FormControl>
-          <RadioGroup
-            onValueChange={field.onChange}
-            defaultValue={field.value}
-            {...fieldProps}
-          >
+          <RadioGroup onValueChange={field.onChange} defaultValue={field.value} {...fieldProps}>
             {values?.map((value: any) => (
-              <FormItem
-                key={value}
-                className="mb-2 flex items-center gap-3 space-y-0"
-              >
+              <FormItem key={value} className="mb-2 flex items-center gap-3 space-y-0">
                 <FormControl>
                   <RadioGroupItem value={value} />
                 </FormControl>

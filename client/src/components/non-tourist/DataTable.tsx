@@ -66,7 +66,7 @@ export function DataTable<TData, TValue>({
   });
 
   React.useEffect(() => {
-    try{
+    try {
       if (priceRange.min !== "" || priceRange.max !== "") {
         table.getColumn("price")?.setFilterValue((old) => ({
           ...old,
@@ -74,11 +74,9 @@ export function DataTable<TData, TValue>({
           max: priceRange.max,
         }));
       } else {
-        
         table.getColumn("price")?.setFilterValue(undefined);
       }
-    }
-    catch(e){
+    } catch (e) {
       console.log(e);
     }
   }, [priceRange, table]);

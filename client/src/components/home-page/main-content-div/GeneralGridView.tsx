@@ -51,7 +51,7 @@ export const getPriceValue = (
   if (Array.isArray(price)) {
     return price.length > 0 ? Math.min(...price.map((p) => p.price)) : 0;
   }
-  
+
   return Object.values(price).length > 0 ? Math.min(...Object.values(price)) : 0;
 };
 
@@ -223,12 +223,9 @@ const GeneralGridView = () => {
   }
   if (activefilter.includes("itinerary")) {
     const languages: Option[] = Array.from(
-      new Set(
-        itineraries
-          .flatMap((itinerary: Itinerary) => (itinerary as Itinerary).languages)
-      )
+      new Set(itineraries.flatMap((itinerary: Itinerary) => (itinerary as Itinerary).languages)),
     ).map((language: string) => ({ label: language, value: language }));
-    
+
     combinedSideBarFilters = combinedSideBarFilters.concat(
       ItinerariesFilter(languages, setSelectedLanguages),
     );

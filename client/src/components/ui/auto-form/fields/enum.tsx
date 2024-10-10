@@ -20,8 +20,7 @@ export default function AutoFormEnum({
   zodItem,
   fieldProps,
 }: AutoFormInputComponentProps) {
-  const baseValues = (getBaseSchema(zodItem) as unknown as z.ZodEnum<any>)._def
-    .values;
+  const baseValues = (getBaseSchema(zodItem) as unknown as z.ZodEnum<any>)._def.values;
 
   let values: [string, string][] = [];
   if (!Array.isArray(baseValues)) {
@@ -36,16 +35,9 @@ export default function AutoFormEnum({
 
   return (
     <FormItem>
-      <AutoFormLabel
-        label={fieldConfigItem?.label || label}
-        isRequired={isRequired}
-      />
+      <AutoFormLabel label={fieldConfigItem?.label || label} isRequired={isRequired} />
       <FormControl>
-        <Select
-          onValueChange={field.onChange}
-          defaultValue={field.value}
-          {...fieldProps}
-        >
+        <Select onValueChange={field.onChange} defaultValue={field.value} {...fieldProps}>
           <SelectTrigger className={fieldProps.className}>
             <SelectValue placeholder={fieldConfigItem.inputProps?.placeholder}>
               {field.value ? findItem(field.value)?.[1] : "Select an option"}

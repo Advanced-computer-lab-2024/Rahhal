@@ -77,7 +77,7 @@ export interface Product {
   _id: string;
   name: string;
   description: string;
-  pictures: string[];  // changed from picture: string in the schema to pictures: string[]
+  pictures: string[]; // changed from picture: string in the schema to pictures: string[]
   price: number;
   seller: string;
   ratings: IRating[];

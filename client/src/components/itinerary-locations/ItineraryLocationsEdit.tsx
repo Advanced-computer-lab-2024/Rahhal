@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import LocationMap from '@/components/google-maps/LocationMap';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import LocationMap from "@/components/google-maps/LocationMap";
 
 interface LocationEntry {
-  lat: number; 
-  lng: number; 
+  lat: number;
+  lng: number;
 }
 
 interface ItineraryLocationsEditProps {
@@ -12,10 +12,7 @@ interface ItineraryLocationsEditProps {
   onSave: (newLocations: LocationEntry[]) => void; // Ensure onSave is defined
 }
 
-const ItineraryLocationsEdit: React.FC<ItineraryLocationsEditProps> = ({
-  locations,
-  onSave,
-}) => {
+const ItineraryLocationsEdit: React.FC<ItineraryLocationsEditProps> = ({ locations, onSave }) => {
   const [editedLocations, setEditedLocations] = useState<LocationEntry[]>(locations);
 
   const handleAddEntry = () => {

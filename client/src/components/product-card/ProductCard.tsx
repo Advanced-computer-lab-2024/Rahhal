@@ -9,7 +9,7 @@ interface ProductCardProps {
   picture: string;
   price: number;
   seller: string;
-  rating: number; 
+  rating: number;
   onClick?: () => void;
 }
 

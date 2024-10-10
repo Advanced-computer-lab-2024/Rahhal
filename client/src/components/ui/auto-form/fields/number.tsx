@@ -16,10 +16,7 @@ export default function AutoFormNumber({
   return (
     <FormItem>
       {showLabel && (
-        <AutoFormLabel
-          label={fieldConfigItem?.label || label}
-          isRequired={isRequired}
-        />
+        <AutoFormLabel label={fieldConfigItem?.label || label} isRequired={isRequired} />
       )}
       <FormControl>
         <Input type="number" {...fieldPropsWithoutShowLabel} />

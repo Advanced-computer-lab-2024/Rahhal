@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface LocationEntry {
   lat: number;
@@ -9,9 +9,7 @@ interface ItineraryLocationsNonEditProps {
   locations: LocationEntry[];
 }
 
-const ItineraryLocationsNonEdit: React.FC<ItineraryLocationsNonEditProps> = ({
-  locations,
-}) => {
+const ItineraryLocationsNonEdit: React.FC<ItineraryLocationsNonEditProps> = ({ locations }) => {
   return (
     <div>
       {locations.length === 0 ? (

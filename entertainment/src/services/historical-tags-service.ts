@@ -1,4 +1,3 @@
-import type { IHistoricalTag } from "../database/models/HistoricalTag";
 import * as historicalTagsRepository from "../database/repositories/historical-tags-repository";
 
 export async function createHistoricalTag(historicalTag: string) {
