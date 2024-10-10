@@ -16,6 +16,8 @@ export const fetchUserHistoricalPlaces = async (userId: string) => {
 export async function deleteHistoricalPlace(historicalPlace: THistoricalPlace) {
   console.log(historicalPlace);
   await axios.delete(`${SERVICES_URLS.ENTERTAINMENT}/historical-places/${historicalPlace._id}`);
+  alert("Historical Place deleted successfully");
+  window.location.reload();
 }
 
 export async function updateHistoricalPlace(historicalPlaceData: THistoricalPlace) {
@@ -23,6 +25,8 @@ export async function updateHistoricalPlace(historicalPlaceData: THistoricalPlac
     `${SERVICES_URLS.ENTERTAINMENT}/historical-places/${historicalPlaceData!._id}`,
     historicalPlaceData,
   );
+  alert("Historical Place updated successfully");
+  window.location.reload();
 }
 
 export async function createHistoricalPlace(
@@ -31,4 +35,6 @@ export async function createHistoricalPlace(
 ) {
   newHistoricalPlaceData.owner = userId;
   await axios.post(SERVICES_URLS.ENTERTAINMENT + "/historical-places", newHistoricalPlaceData);
+  alert("Historical Place created successfully");
+  window.location.reload();
 }

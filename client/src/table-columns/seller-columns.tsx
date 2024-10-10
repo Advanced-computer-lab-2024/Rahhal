@@ -27,7 +27,6 @@ export type TNewProduct = Omit<TProduct, "_id">;
 
 function deleteRow(row: any) {
   deleteProduct(row.original);
-  window.location.reload();
 }
 
 function calculateAverageRating(ratings: TRating[]) {

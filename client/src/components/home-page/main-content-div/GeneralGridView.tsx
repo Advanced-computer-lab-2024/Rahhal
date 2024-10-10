@@ -20,6 +20,7 @@ import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { fetchHistoricalPlaces } from "@/api-calls/historical-places-api-calls";
 import { fetchHistoricalTags } from "@/api-calls/historical-tags-api-calls";
 import { fetchItineraries } from "@/api-calls/itineraries-api-calls";
+import ski from "@/assets/ski egypt.jpg";
 import {
   Activity,
   Category,
@@ -221,9 +222,13 @@ const GeneralGridView = () => {
     );
   }
   if (activefilter.includes("itinerary")) {
-    const languages = itineraries
-      .flatMap((itinerary: Itinerary) => (itinerary as Itinerary).languages)
-      .map((language: string) => ({ label: language, value: language }));
+    const languages: Option[] = Array.from(
+      new Set(
+        itineraries
+          .flatMap((itinerary: Itinerary) => (itinerary as Itinerary).languages)
+      )
+    ).map((language: string) => ({ label: language, value: language }));
+    
     combinedSideBarFilters = combinedSideBarFilters.concat(
       ItinerariesFilter(languages, setSelectedLanguages),
     );
@@ -397,7 +402,7 @@ const GeneralGridView = () => {
               filteredCombinedItems.map((item) => (
                 <EntertainmentCard
                   key={item._id}
-                  image={"src/assets/ski egypt.jpg"}
+                  image={ski}
                   //fix later
                   rating={getAverageRating(item.ratings)}
                   title={item.name}

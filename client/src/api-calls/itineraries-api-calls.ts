@@ -13,6 +13,8 @@ export const fetchItineraries = async () => {
 export const deleteItinerary = async (itinerary: TItinerary) => {
   console.log(itinerary);
   await axios.delete(`${SERVICES_URLS.ENTERTAINMENT}/itineraries/${itinerary._id}`);
+  alert("Itinerary deleted successfully");
+  window.location.reload();
 };
 
 // submit itinerary to the itineraries endpoint
@@ -21,6 +23,8 @@ export async function updateItinerary(itineraryData: TItinerary) {
     `${SERVICES_URLS.ENTERTAINMENT}/itineraries/${itineraryData!._id}`,
     itineraryData,
   );
+  alert("Itinerary updated successfully");
+  window.location.reload();
 }
 
 export async function createItinerary(
@@ -29,4 +33,6 @@ export async function createItinerary(
 ) {
   newItineraryData.owner = userId;
   await axios.post(SERVICES_URLS.ENTERTAINMENT + "/itineraries", newItineraryData);
+  alert("Itinerary created successfully");
+  window.location.reload();
 }

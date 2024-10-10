@@ -52,7 +52,7 @@ export async function updateUser(id: string, body: string) {
 }
 
 export async function deleteUser(id: string) {
-  return await userAxiosInstance.delete(`/users/:${id}`);
+  return await userAxiosInstance.delete(`/users/${id}`);
 }
 
 export async function loginUser(body: string) {

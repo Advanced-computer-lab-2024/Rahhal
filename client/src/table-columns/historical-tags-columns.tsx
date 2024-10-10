@@ -12,7 +12,6 @@ export type THistoricalTag = {
 
 function deleteRow(row: any) {
     deleteCategory(row.original._id);
-    window.location.reload();
 }
 
 export const historicalTagsColumns: ColumnDef<THistoricalTag>[] = [

@@ -48,6 +48,7 @@ export function UserModal({ userData, dialogTrigger }: UserModalProps) {
         }
         initialDisabled={!isNewUser}
         placeholder="Username"
+        type="text"
       />
 
       {!isNewUser && <Label>Email: {modalUserData?.email}</Label>}
@@ -60,6 +61,7 @@ export function UserModal({ userData, dialogTrigger }: UserModalProps) {
         }
         initialDisabled={!isNewUser}
         placeholder="Password"
+        type="text"
       />
 
       {isNewUser ? (
@@ -70,7 +72,7 @@ export function UserModal({ userData, dialogTrigger }: UserModalProps) {
               { value: Role.tourismGovernor, label: "Tourism Governor" },
               { value: Role.admin, label: "Admin" },
             ]}
-            initalValue={modalUserData?.role ?? Role.tourist}
+            initialValue={modalUserData?.role ?? Role.tourist}
             onSelect={(value: string) =>
               setModalUserData(
                 modalUserData ? { ...modalUserData, role: value as Role } : undefined,

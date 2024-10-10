@@ -70,7 +70,6 @@ export function HistoricalPlacesModal({
       // and already stored in the database and it's not needed in updates
       await createHistoricalPlace(newHistoricalPlace, userId!);
     } else await updateHistoricalPlace(modalHistoricalPlaceData!);
-    window.location.reload();
   };
 
   useEffect(() => {

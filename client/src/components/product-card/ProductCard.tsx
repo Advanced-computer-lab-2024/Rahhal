@@ -70,10 +70,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <div className={CardStyles["product-card-container__language-time"]}>
             {/* language and opening time and availability goes here */}
 
-            {seller !== undefined && (
+            {price !== undefined && (
               <p>
-                <strong>Seller:</strong>
-                {seller}
+                {price}
+                <strong>{"  EGP"}</strong>
               </p>
             )}
           </div>

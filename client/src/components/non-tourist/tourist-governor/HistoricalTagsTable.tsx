@@ -12,7 +12,7 @@ function HistoricalTagsView() {
     const { id } = useParams();
 
     useEffect(() => {
-        fetchUserHistoricalTags(id).then((data) => setHistoricalTags(data));
+        fetchUserHistoricalTags(id!).then((data) => setHistoricalTags(data));
     }, []);
 
     return (

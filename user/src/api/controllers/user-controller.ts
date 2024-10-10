@@ -130,12 +130,12 @@ const deleteUser = async (req: Request, res: Response) => {
 };
 
 const loginUser = async (req: Request, res: Response) => {
-  try{
-    const {username, password} = req.body;
+  try {
+    const { username, password } = req.body;
     const user = await userService.loginUser(username, password);
     res.status(STATUS_CODES.STATUS_OK).json(user);
   }
-  catch(error){
+  catch (error) {
     if (error instanceof Error) {
       res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
     }
