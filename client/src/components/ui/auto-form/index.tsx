@@ -10,11 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import AutoFormObject from "./fields/object";
 import { Dependency, FieldConfig, SubmitOptions } from "./types";
-import {
-  ZodObjectOrWrapped,
-  getDefaultValues,
-  getObjectFormSchema,
-} from "./utils";
+import { ZodObjectOrWrapped, getDefaultValues, getObjectFormSchema } from "./utils";
 
 export function AutoFormSubmit({
   children,
@@ -47,20 +43,17 @@ function AutoForm<SchemaType extends ZodObjectOrWrapped>({
   values?: Partial<z.infer<SchemaType>>;
   onValuesChange?: (values: Partial<z.infer<SchemaType>>) => void;
   onParsedValuesChange?: (values: Partial<z.infer<SchemaType>>) => void;
-  onSubmit?: (
-    values: z.infer<SchemaType>,
-    options: SubmitOptions<z.infer<SchemaType>>
-  ) => void;
+  onSubmit?: (values: z.infer<SchemaType>, options: SubmitOptions<z.infer<SchemaType>>) => void;
   fieldConfig?: FieldConfig<z.infer<SchemaType>>;
-  children?:
-    | React.ReactNode
-    | ((formState: FormState<z.infer<SchemaType>>) => React.ReactNode);
+  children?: React.ReactNode | ((formState: FormState<z.infer<SchemaType>>) => React.ReactNode);
   className?: string;
   dependencies?: Dependency<z.infer<SchemaType>>[];
 }) {
   const objectFormSchema = getObjectFormSchema(formSchema);
-  const defaultValues: DefaultValues<z.infer<typeof objectFormSchema>> | null =
-    getDefaultValues(objectFormSchema, fieldConfig);
+  const defaultValues: DefaultValues<z.infer<typeof objectFormSchema>> | null = getDefaultValues(
+    objectFormSchema,
+    fieldConfig,
+  );
 
   const form = useForm<z.infer<typeof objectFormSchema>>({
     resolver: zodResolver(formSchema),

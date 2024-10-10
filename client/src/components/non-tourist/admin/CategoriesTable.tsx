@@ -6,23 +6,23 @@ import DataTableAddButton from "../DataTableAddButton";
 import { CategoryModal } from "./CategoryModal";
 
 function CategoryView() {
-    const [categories, setCategories] = useState<TCategory[]>([]);
+  const [categories, setCategories] = useState<TCategory[]>([]);
 
-    useEffect(() => {
-        fetchCategories().then((data) => setCategories(data));
-    }, []);
+  useEffect(() => {
+    fetchCategories().then((data) => setCategories(data));
+  }, []);
 
-    return (
-        <>
-            <DataTable
-                data={categories}
-                columns={categoriesColumns}
-                newRowModal={
-                    <CategoryModal categoryData={undefined} dialogTrigger={<DataTableAddButton />} />
-                }
-            />
-        </>
-    );
+  return (
+    <>
+      <DataTable
+        data={categories}
+        columns={categoriesColumns}
+        newRowModal={
+          <CategoryModal categoryData={undefined} dialogTrigger={<DataTableAddButton />} />
+        }
+      />
+    </>
+  );
 }
 
 export default CategoryView;

@@ -19,5 +19,4 @@ function TouristGovernerHomepage() {
     </div>
   );
 }
-  export default TouristGovernerHomepage;
-  
+export default TouristGovernerHomepage;

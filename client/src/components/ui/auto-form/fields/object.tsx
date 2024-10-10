@@ -23,9 +23,7 @@ function DefaultParent({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-export default function AutoFormObject<
-  SchemaType extends z.ZodObject<any, any>,
->({
+export default function AutoFormObject<SchemaType extends z.ZodObject<any, any>>({
   schema,
   form,
   fieldConfig,
@@ -51,8 +49,7 @@ export default function AutoFormObject<
 
   const handleIfZodNumber = (item: z.ZodAny) => {
     const isZodNumber = (item as any)._def.typeName === "ZodNumber";
-    const isInnerZodNumber =
-      (item._def as any).innerType?._def?.typeName === "ZodNumber";
+    const isInnerZodNumber = (item._def as any).innerType?._def?.typeName === "ZodNumber";
 
     if (isZodNumber) {
       (item as any)._def.coerce = true;
@@ -92,11 +89,7 @@ export default function AutoFormObject<
                 <AutoFormObject
                   schema={item as unknown as z.ZodObject<any, any>}
                   form={form}
-                  fieldConfig={
-                    (fieldConfig?.[name] ?? {}) as FieldConfig<
-                      z.infer<typeof item>
-                    >
-                  }
+                  fieldConfig={(fieldConfig?.[name] ?? {}) as FieldConfig<z.infer<typeof item>>}
                   path={[...path, name]}
                 />
               </AccordionContent>
@@ -135,17 +128,12 @@ export default function AutoFormObject<
             key={key}
             render={({ field }) => {
               const inputType =
-                fieldConfigItem.fieldType ??
-                DEFAULT_ZOD_HANDLERS[zodBaseType] ??
-                "fallback";
+                fieldConfigItem.fieldType ?? DEFAULT_ZOD_HANDLERS[zodBaseType] ?? "fallback";
 
               const InputComponent =
-                typeof inputType === "function"
-                  ? inputType
-                  : INPUT_COMPONENTS[inputType];
+                typeof inputType === "function" ? inputType : INPUT_COMPONENTS[inputType];
 
-              const ParentElement =
-                fieldConfigItem.renderParent ?? DefaultParent;
+              const ParentElement = fieldConfigItem.renderParent ?? DefaultParent;
 
               const defaultValue = fieldConfigItem.inputProps?.defaultValue;
               const value = field.value ?? defaultValue ?? "";

@@ -16,16 +16,9 @@ export default function AutoFormSwitch({
       <FormItem>
         <div className="flex items-center gap-3">
           <FormControl>
-            <Switch
-              checked={field.value}
-              onCheckedChange={field.onChange}
-              {...fieldProps}
-            />
+            <Switch checked={field.value} onCheckedChange={field.onChange} {...fieldProps} />
           </FormControl>
-          <AutoFormLabel
-            label={fieldConfigItem?.label || label}
-            isRequired={isRequired}
-          />
+          <AutoFormLabel label={fieldConfigItem?.label || label} isRequired={isRequired} />
         </div>
       </FormItem>
       <AutoFormTooltip fieldConfigItem={fieldConfigItem} />

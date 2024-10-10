@@ -79,7 +79,7 @@ export const DEFAULTS = {
     companyName: "",
     description: "",
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
   PREFERENCE_TAG: {
     _id: "",
@@ -103,8 +103,8 @@ export const DEFAULTS = {
     ratings: [],
     preferenceTags: [],
     category: { _id: "", name: "" },
-    owner: ""
-  }
+    owner: "",
+  },
 };
 export const NATIONALITIES = [
   { value: "Afghanistan", label: "Afghanistan" },

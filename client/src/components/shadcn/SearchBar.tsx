@@ -264,24 +264,25 @@ function ComboboxPopover(SearchPartProps: SearchPartProps) {
               <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
-                  {SearchPartProps.values.length != 0 && SearchPartProps.values.map((status) => (
-                    <CommandItem
-                      key={status}
-                      value={status}
-                      onSelect={(value: string) => {
-                        SearchPartProps.handler.setState(value);
-                      }}
-                    >
-                      <span
-                        className={
-                          SearchPartProps.handler.state.includes(status) ? "font-bold" : ""
-                        }
+                  {SearchPartProps.values.length != 0 &&
+                    SearchPartProps.values.map((status) => (
+                      <CommandItem
+                        key={status}
+                        value={status}
+                        onSelect={(value: string) => {
+                          SearchPartProps.handler.setState(value);
+                        }}
                       >
-                        {SearchPartProps.handler.state.includes(status) ? "✓ " : ""}
-                        {status}
-                      </span>
-                    </CommandItem>
-                  ))}
+                        <span
+                          className={
+                            SearchPartProps.handler.state.includes(status) ? "font-bold" : ""
+                          }
+                        >
+                          {SearchPartProps.handler.state.includes(status) ? "✓ " : ""}
+                          {status}
+                        </span>
+                      </CommandItem>
+                    ))}
                 </CommandGroup>
               </CommandList>
             </Command>

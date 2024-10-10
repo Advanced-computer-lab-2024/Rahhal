@@ -69,7 +69,7 @@ const DetailsPage = () => {
             </div>
           ) : null}
 
-          {item.category ? (<p>Category: {item.category.name}</p>) : null}
+          {item.category ? <p>Category: {item.category.name}</p> : null}
 
           {"isBookingOpen" in item ? (
             item.isBookingOpen === true ? (
@@ -96,7 +96,6 @@ const DetailsPage = () => {
               Timeline: {item.timeline}-{item.timeline}{" "}
             </p>
           ) : null}
-
 
           {item.activities
             ? item.activities.map((activity: string, index: number) => {

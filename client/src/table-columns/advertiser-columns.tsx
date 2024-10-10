@@ -50,7 +50,7 @@ function displayMinMaxPrice(price: Record<string, number>) {
   if (prices.length === 0) {
     return 0;
   }
-  
+
   let minPrice = Math.min(...prices);
   let maxPrice = Math.max(...prices);
   if (minPrice === maxPrice) {
@@ -61,7 +61,6 @@ function displayMinMaxPrice(price: Record<string, number>) {
 }
 
 function calculateAverageRating(ratings: TRating[]) {
-
   if (ratings.length === 0) {
     return 0;
   }
@@ -94,7 +93,13 @@ export const activitiesColumns: ColumnDef<TActivity>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="capitalize">{typeof row.original.price == "object" ? displayMinMaxPrice(row.original.price) : row.original.price}</div>,
+    cell: ({ row }) => (
+      <div className="capitalize">
+        {typeof row.original.price == "object"
+          ? displayMinMaxPrice(row.original.price)
+          : row.original.price}
+      </div>
+    ),
   },
   {
     accessorKey: "tags",

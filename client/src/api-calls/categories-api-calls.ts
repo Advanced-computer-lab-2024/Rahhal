@@ -17,14 +17,16 @@ export const deleteCategory = async (id: string) => {
 };
 
 // submit category to categories endpoint
-export const submitCategory = async (categoryData: TCategory | undefined, isNewCategory: boolean) => {
+export const submitCategory = async (
+  categoryData: TCategory | undefined,
+  isNewCategory: boolean,
+) => {
   if (isNewCategory) {
-    try{
-      await axios.post(SERVICES_URLS.ENTERTAINMENT + "/categories", categoryData)
-      console.log(categoryData)
-    }
-    catch(error){
-      console.log(categoryData)
+    try {
+      await axios.post(SERVICES_URLS.ENTERTAINMENT + "/categories", categoryData);
+      console.log(categoryData);
+    } catch (error) {
+      console.log(categoryData);
     }
     alert("Category created successfully");
     window.location.reload();
@@ -38,4 +40,4 @@ export const submitCategory = async (categoryData: TCategory | undefined, isNewC
       window.location.reload();
     }
   }
-}
+};

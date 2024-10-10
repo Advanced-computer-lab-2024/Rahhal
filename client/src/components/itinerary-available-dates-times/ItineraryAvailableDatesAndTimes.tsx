@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import ItineraryAvailableDatesAndTimesEdit from './ItineraryAvailableDatesAndTimesEdit';
-import ItineraryAvailableDatesAndTimesNonEdit from './ItineraryAvailableDatesAndTimesNonEdit';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import ItineraryAvailableDatesAndTimesEdit from "./ItineraryAvailableDatesAndTimesEdit";
+import ItineraryAvailableDatesAndTimesNonEdit from "./ItineraryAvailableDatesAndTimesNonEdit";
 
 interface DateTimeEntry {
   Date: Date;
@@ -23,16 +23,14 @@ const ItineraryAvailableDatesAndTimes: React.FC<ItineraryAvailableDatesAndTimesP
   const handleSave = (newDatesTime: DateTimeEntry[]) => {
     console.log("Saving Dates and Times: ", newDatesTime);
     onSave(newDatesTime); // Call the onSave prop to update the parent state
-    setIsEditing(false);  // Exit edit mode after saving
+    setIsEditing(false); // Exit edit mode after saving
   };
 
   return (
     <Card>
       <CardHeader className="flex justify-between items-center">
         <span>Available Dates and Times</span>
-        <Button onClick={() => setIsEditing(!isEditing)}>
-          {isEditing ? 'Cancel' : 'Edit'}
-        </Button>
+        <Button onClick={() => setIsEditing(!isEditing)}>{isEditing ? "Cancel" : "Edit"}</Button>
       </CardHeader>
       <CardContent>
         {isEditing ? (
