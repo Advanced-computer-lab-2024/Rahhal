@@ -7,27 +7,28 @@ import { HistoricalTagsModal } from "./HistoricalTagsModal";
 import { useParams } from "react-router-dom";
 
 function HistoricalTagsView() {
-    const [historicalTags, setHistoricalTags] = useState<THistoricalTag[]>([]);
+  const [historicalTags, setHistoricalTags] = useState<THistoricalTag[]>([]);
 
-    const { id } = useParams();
+  const { id } = useParams();
 
-    useEffect(() => {
-        fetchUserHistoricalTags(id!).then((data) => setHistoricalTags(data));
-    }, []);
+  useEffect(() => {
+    fetchUserHistoricalTags(id!).then((data) => setHistoricalTags(data));
+  }, []);
 
-    return (
-        <>
-            <DataTable
-                data={historicalTags}
-                columns={historicalTagsColumns}
-                newRowModal={
-                    <HistoricalTagsModal historicalTagsData={undefined} dialogTrigger={<DataTableAddButton />} />
-                }
-            />
-        </>
-    );
+  return (
+    <>
+      <DataTable
+        data={historicalTags}
+        columns={historicalTagsColumns}
+        newRowModal={
+          <HistoricalTagsModal
+            historicalTagsData={undefined}
+            dialogTrigger={<DataTableAddButton />}
+          />
+        }
+      />
+    </>
+  );
 }
 
 export default HistoricalTagsView;
-
-

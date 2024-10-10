@@ -142,7 +142,7 @@ body {
   }
 }
 
-.filter-sort-buttons__container{
+.filter-sort-buttons__container {
   display: flex;
   flex-direction: row;
 

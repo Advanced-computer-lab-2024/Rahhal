@@ -6,18 +6,16 @@ import { FaTrash } from "react-icons/fa6";
 import { UserModal } from "@/components/non-tourist/admin/UserModal";
 import { deleteUser } from "@/api-calls/users-api-calls";
 
-
 export enum Role {
-    admin = "admin",
-    tourist = "tourist",
-    tourGuide = "tourGuide",
-    advertiser = "advertiser",
-    seller = "seller",
-    tourismGovernor = "tourismGovernor",
-  }
+  admin = "admin",
+  tourist = "tourist",
+  tourGuide = "tourGuide",
+  advertiser = "advertiser",
+  seller = "seller",
+  tourismGovernor = "tourismGovernor",
+}
 
 export type TUser = {
-
   _id?: string;
   firstName?: string;
   lastName?: string;
@@ -45,8 +43,6 @@ export type TUser = {
 function deleteRow(row: any) {
   deleteUser(row.original);
 }
-
-
 
 export const userColumns: ColumnDef<TUser>[] = [
   {

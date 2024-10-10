@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface DateTimeEntry {
   Date: Date;
@@ -26,7 +26,7 @@ const ItineraryAvailableDatesAndTimesEdit: React.FC<ItineraryAvailableDatesAndTi
 
   const handleTimeChange = (index: number, newTime: string) => {
     const updatedDatesTime = [...editedDatesTime];
-    const [hours, minutes] = newTime.split(':');
+    const [hours, minutes] = newTime.split(":");
     const newDateTime = new Date(updatedDatesTime[index].Date);
     newDateTime.setHours(parseInt(hours), parseInt(minutes));
     updatedDatesTime[index] = { ...updatedDatesTime[index], Time: newDateTime };
@@ -43,7 +43,7 @@ const ItineraryAvailableDatesAndTimesEdit: React.FC<ItineraryAvailableDatesAndTi
   };
 
   const handleSave = () => {
-    console.log('Edited Dates:', editedDatesTime); // Log to check edited dates
+    console.log("Edited Dates:", editedDatesTime); // Log to check edited dates
     onSave(editedDatesTime); // Call onSave with the updated dates and times
   };
 
@@ -53,12 +53,12 @@ const ItineraryAvailableDatesAndTimesEdit: React.FC<ItineraryAvailableDatesAndTi
         <div key={index} className="flex space-x-2">
           <Input
             type="date"
-            value={entry.Date.toISOString().split('T')[0]}
+            value={entry.Date.toISOString().split("T")[0]}
             onChange={(e) => handleDateChange(index, e.target.value)}
           />
           <Input
             type="time"
-            value={`${entry.Time.getHours().toString().padStart(2, '0')}:${entry.Time.getMinutes().toString().padStart(2, '0')}`}
+            value={`${entry.Time.getHours().toString().padStart(2, "0")}:${entry.Time.getMinutes().toString().padStart(2, "0")}`}
             onChange={(e) => handleTimeChange(index, e.target.value)}
           />
           <Button onClick={() => handleRemoveEntry(index)}>Remove</Button>

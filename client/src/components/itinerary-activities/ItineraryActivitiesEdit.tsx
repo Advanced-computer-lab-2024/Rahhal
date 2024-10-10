@@ -11,15 +11,13 @@ interface ItineraryActivitiesEditProps {
   cancelEditing: () => void;
 }
 
-
-
 function ItineraryActivitiesEdit({
   editType,
   setEditType,
   editDuration,
   setEditDuration,
   saveEdit,
-  cancelEditing
+  cancelEditing,
 }: ItineraryActivitiesEditProps) {
   return (
     <>

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ItineraryActivitiesEdit from "./ItineraryActivitiesEdit";
-import  ItineraryActivitiesNonEdit from "./ItineraryActivitiesNonEdit";
+import ItineraryActivitiesNonEdit from "./ItineraryActivitiesNonEdit";
 import EditSaveButton from "../EditSaveButton";
 
 interface ItineraryActivities {
@@ -20,7 +20,10 @@ const ItineraryActivities = ({
   initialIsDisabled = false,
   onItineraryActivityChange,
 }: ItineraryActivities) => {
-  let itineraryActivitiesWithId = itineraryActivities.map((activity, index) => ({ id: index, ...activity }));
+  let itineraryActivitiesWithId = itineraryActivities.map((activity, index) => ({
+    id: index,
+    ...activity,
+  }));
 
   const [isDisabled, setIsDisabled] = useState(initialIsDisabled);
   const [activities, setActivities] = useState(itineraryActivitiesWithId);
@@ -63,8 +66,8 @@ const ItineraryActivities = ({
         activities.map((activity) =>
           activity.id === editingId
             ? { ...activity, type: editType, duration: editDuration }
-            : activity
-        )
+            : activity,
+        ),
       );
       setEditingId(null);
       setEditType("");
@@ -73,8 +76,8 @@ const ItineraryActivities = ({
         activities.map((activity) =>
           activity.id === editingId
             ? { ...activity, type: editType, duration: editDuration }
-            : activity
-        )
+            : activity,
+        ),
       );
     }
   };

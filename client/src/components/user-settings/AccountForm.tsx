@@ -147,9 +147,9 @@ export default function AccountForm() {
                 <span>Edit Account</span>
               </Button>
             </div>
-              <p className="text-sm text-muted-foreground">
-                Update your account settings. Set your preferred language and timezone.
-              </p>
+            <p className="text-sm text-muted-foreground">
+              Update your account settings. Set your preferred language and timezone.
+            </p>
             <div
               data-orientation="horizontal"
               role="none"

@@ -69,7 +69,7 @@ function validateDescription(description: string) {
 }
 
 function validateWallet(wallet: number) {
-  return typeof wallet === "number" && wallet >= 0;
+  return typeof wallet === "number" && wallet >= MIN_LENGTH;
 }
 
 export default {
@@ -91,5 +91,5 @@ export default {
   validateCompanyProfile,
   validateCompanyName,
   validateDescription,
-  validateWallet
+  validateWallet,
 };

@@ -10,7 +10,7 @@ interface ItineraryActivitiesNonEditProps {
 function ItineraryActivitiesNonEdit({
   activity,
   startEditing,
-  removeActivity
+  removeActivity,
 }: ItineraryActivitiesNonEditProps) {
   return (
     <>

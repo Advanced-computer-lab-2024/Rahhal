@@ -6,11 +6,15 @@ import { getPriceValue } from "../home-page/main-content-div/GeneralGridView";
 interface EntertainmentCardProps {
   image: string;
   title: string;
-  price: number | { min: number; max: number } | { foreigner: number, native: number, student: number} | { type: string; price: number }[];
+  price:
+    | number
+    | { min: number; max: number }
+    | { foreigner: number; native: number; student: number }
+    | { type: string; price: number }[];
   rating: number;
   location?: string;
   languages?: string[];
-  openingTime?: {open: string; close: string};
+  openingTime?: { open: string; close: string };
   availability?: boolean;
   seller?: string;
   onClick?: () => void;
@@ -59,10 +63,9 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
             {languages !== undefined && (
               <p>
                 <br />
-                <div style={{display:"flex" ,flexDirection:"row",alignItems:"center"}}>
-                <GrLanguage style={{marginRight:"0.4rem"}}/> {languages?.join("/")}
+                <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                  <GrLanguage style={{ marginRight: "0.4rem" }} /> {languages?.join("/")}
                 </div>
-                
               </p>
             )}
 

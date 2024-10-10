@@ -6,8 +6,6 @@ interface ReviewProps {
   reviews: TRating[];
 }
 
-
-
 const ReviewStar = ({ filled }: { filled: boolean }) => (
   <Star
     size={20}

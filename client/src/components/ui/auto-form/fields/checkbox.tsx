@@ -16,16 +16,9 @@ export default function AutoFormCheckbox({
       <FormItem>
         <div className="mb-3 flex items-center gap-3">
           <FormControl>
-            <Checkbox
-              checked={field.value}
-              onCheckedChange={field.onChange}
-              {...fieldProps}
-            />
+            <Checkbox checked={field.value} onCheckedChange={field.onChange} {...fieldProps} />
           </FormControl>
-          <AutoFormLabel
-            label={fieldConfigItem?.label || label}
-            isRequired={isRequired}
-          />
+          <AutoFormLabel label={fieldConfigItem?.label || label} isRequired={isRequired} />
         </div>
       </FormItem>
       <AutoFormTooltip fieldConfigItem={fieldConfigItem} />

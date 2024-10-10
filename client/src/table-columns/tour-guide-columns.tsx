@@ -47,7 +47,6 @@ export type TNewItinerary = Omit<TItinerary, "preferenceTags" | "category" | "_i
 
 function deleteRow(row: any) {
   deleteItinerary(row.original);
-  
 }
 
 function calculateAverageRating(ratings: TRating[]) {
@@ -86,7 +85,7 @@ export const itinerariesColumns: ColumnDef<TItinerary>[] = [
     header: "preferenceTags",
     cell: ({ row }) => (
       <div>
-        {(row.original.preferenceTags).map((preferenceTag) => (
+        {row.original.preferenceTags.map((preferenceTag) => (
           <Badge key={preferenceTag._id} variant="default" className="mr-1">
             {preferenceTag.name}
           </Badge>
@@ -136,9 +135,3 @@ export const itinerariesColumns: ColumnDef<TItinerary>[] = [
     },
   },
 ];
-
-
-
-
-
-

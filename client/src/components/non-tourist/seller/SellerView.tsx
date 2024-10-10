@@ -23,15 +23,15 @@ function SellerView() {
 
   return (
     <>
-    <div className=" w-full h-4 flex justify-end">
+      <div className=" w-full h-4 flex justify-end">
         <div className="flex justify-end relative z-10 pr-3  h-16 pt-2 items-center">
-                    <Link to={`/user-settings/${id}`}>
-                        <Avatar className="h-10 w-10">
-                            <AvatarFallback>SE</AvatarFallback>
-                        </Avatar>
-                    </Link>
-            </div>
+          <Link to={`/user-settings/${id}`}>
+            <Avatar className="h-10 w-10">
+              <AvatarFallback>SE</AvatarFallback>
+            </Avatar>
+          </Link>
         </div>
+      </div>
       {id ? (
         <DataTable
           data={products}

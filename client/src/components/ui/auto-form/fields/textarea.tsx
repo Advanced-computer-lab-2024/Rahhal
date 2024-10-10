@@ -15,10 +15,7 @@ export default function AutoFormTextarea({
   return (
     <FormItem>
       {showLabel && (
-        <AutoFormLabel
-          label={fieldConfigItem?.label || label}
-          isRequired={isRequired}
-        />
+        <AutoFormLabel label={fieldConfigItem?.label || label} isRequired={isRequired} />
       )}
       <FormControl>
         <Textarea {...fieldPropsWithoutShowLabel} />

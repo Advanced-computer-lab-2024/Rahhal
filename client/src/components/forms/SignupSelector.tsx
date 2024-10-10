@@ -1,20 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import SignupTourist from './SignupTourist';
-import SignupTourGuide from './SignupTourGuide';
-import SignupAdvertiser from './SignupAdvertiser';
-import SignupSeller from './SignupSeller';
+import SignupTourist from "./SignupTourist";
+import SignupTourGuide from "./SignupTourGuide";
+import SignupAdvertiser from "./SignupAdvertiser";
+import SignupSeller from "./SignupSeller";
 
 const roles = [
-  { name: 'Tourist', component: SignupTourist },
-  { name: 'Tour Guide', component: SignupTourGuide },
-  { name: 'Advertiser', component: SignupAdvertiser },
-  { name: 'Seller', component: SignupSeller },
+  { name: "Tourist", component: SignupTourist },
+  { name: "Tour Guide", component: SignupTourGuide },
+  { name: "Advertiser", component: SignupAdvertiser },
+  { name: "Seller", component: SignupSeller },
 ];
 
 const SignupSelector = () => {
-  const [selectedRole, setSelectedRole] = useState<{ name: string; component: React.ComponentType } | null>(null);
+  const [selectedRole, setSelectedRole] = useState<{
+    name: string;
+    component: React.ComponentType;
+  } | null>(null);
 
   const handleRoleSelect = (role: { name: string; component: React.ComponentType }) => {
     setSelectedRole(role);
@@ -26,9 +29,7 @@ const SignupSelector = () => {
 
   if (selectedRole) {
     const SelectedComponent = selectedRole.component;
-    return (
-      <SelectedComponent onBack={handleBack} />
-    );
+    return <SelectedComponent onBack={handleBack} />;
   }
 
   return (
@@ -39,11 +40,7 @@ const SignupSelector = () => {
         </CardHeader>
         <CardContent className="flex flex-col space-y-4">
           {roles.map((role) => (
-            <Button
-              key={role.name}
-              onClick={() => handleRoleSelect(role)}
-              className="w-full"
-            >
+            <Button key={role.name} onClick={() => handleRoleSelect(role)} className="w-full">
               {role.name}
             </Button>
           ))}

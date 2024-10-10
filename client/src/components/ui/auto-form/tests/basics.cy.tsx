@@ -75,11 +75,7 @@ describe("<AutoForm />", () => {
       />,
     );
 
-    cy.get("input[name=username]").should(
-      "have.attr",
-      "placeholder",
-      "Enter your username",
-    );
+    cy.get("input[name=username]").should("have.attr", "placeholder", "Enter your username");
   });
 
   it("allows setting custom field type", () => {

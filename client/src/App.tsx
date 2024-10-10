@@ -52,8 +52,11 @@ export default function App() {
             </Route>
             <Route path="/advertiser/:id" element={<AdvertiserView />} />
             <Route path="/tourism-governor/:id" element={<TouristGovernerHomepage />} />
-            <Route path="/tourism-governor/historical-places/:id" element={<HistoricalPlacesView />} />
-            <Route path="/tourism-governor/historical-tags/:id" element={<HistoricalTagsView />} />       
+            <Route
+              path="/tourism-governor/historical-places/:id"
+              element={<HistoricalPlacesView />}
+            />
+            <Route path="/tourism-governor/historical-tags/:id" element={<HistoricalTagsView />} />
             <Route path="/admin" element={<AdminHomepage />} />
             <Route path="/admin/categories" element={<CategoryView />} />
             <Route path="/admin/users" element={<UserView />} />

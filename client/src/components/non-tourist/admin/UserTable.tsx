@@ -6,8 +6,6 @@ import { User } from "lucide-react";
 import { UserModal } from "./UserModal";
 import DataTableAddButton from "../DataTableAddButton";
 
-
-
 function UserView() {
   const [users, setUsers] = useState<TUser[]>([]);
 
@@ -20,9 +18,7 @@ function UserView() {
       <DataTable
         data={users}
         columns={userColumns}
-        newRowModal={
-          <UserModal  dialogTrigger={<DataTableAddButton />} />
-        }
+        newRowModal={<UserModal dialogTrigger={<DataTableAddButton />} />}
       />
     </>
   );
