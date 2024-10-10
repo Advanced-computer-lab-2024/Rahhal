@@ -7,7 +7,7 @@ export const fetchHistoricalTags = async () => {
   return response.data;
 };
 
-export const fetchUserHistoricalTags = async (userId: string) => {
+export const fetchUserHistoricalTags = async () => {
   const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/historical-tags`);
   return response.data;
 };
@@ -18,11 +18,8 @@ export const submitHistoricalTags = async (
 ) => {
   if (isNewHistoricalTag) {
     try {
-      await axios
-        .post(SERVICES_URLS.ENTERTAINMENT + "/historical-tags", tagData)
-        .then((response) => {
-          console.log(response.data);
-        });
+      const response = await axios.post(SERVICES_URLS.ENTERTAINMENT + "/historical-tags", tagData);
+      console.log(response.data);
       alert("Historical Tag created successfully");
       window.location.reload();
     } catch (error) {
