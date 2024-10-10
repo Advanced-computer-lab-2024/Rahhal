@@ -47,7 +47,7 @@ export type TNewItinerary = Omit<TItinerary, "preferenceTags" | "category" | "_i
 
 function deleteRow(row: any) {
   deleteItinerary(row.original);
-  window.location.reload();
+  
 }
 
 function calculateAverageRating(ratings: TRating[]) {

@@ -41,6 +41,7 @@ const AddressList = ({ initialAddresses, onAddressesChange, isDisabled }: Addres
             onSave={(value) => updateAddress(index, value)}
             placeholder="Enter address"
             initialDisabled={isDisabled}
+            type="text"
           />
           <Button
             variant="outline"

@@ -62,7 +62,6 @@ export function ActivitiesModal({ activityData, dialogTrigger, userId }: Activit
       // and already stored in the database and it's not needed in updates
       await createActivity(newActivity, userId!);
     } else await updateActivity(modalActivityData!);
-    window.location.reload();
   };
 
   useEffect(() => {

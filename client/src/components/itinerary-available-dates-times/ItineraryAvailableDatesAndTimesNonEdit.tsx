@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface DateTimeEntry {
   Date: Date;
@@ -9,9 +9,9 @@ interface ItineraryAvailableDatesAndTimesNonEditProps {
   availableDatesTime: DateTimeEntry[];
 }
 
-const ItineraryAvailableDatesAndTimesNonEdit: React.FC<ItineraryAvailableDatesAndTimesNonEditProps> = ({
-  availableDatesTime,
-}) => {
+const ItineraryAvailableDatesAndTimesNonEdit: React.FC<
+  ItineraryAvailableDatesAndTimesNonEditProps
+> = ({ availableDatesTime }) => {
   return (
     <div className="space-y-2">
       {availableDatesTime.length === 0 ? (
@@ -19,8 +19,8 @@ const ItineraryAvailableDatesAndTimesNonEdit: React.FC<ItineraryAvailableDatesAn
       ) : (
         availableDatesTime.map((entry, index) => (
           <div key={index} className="flex justify-between items-center">
-            <span>{entry.Date.toLocaleDateString()}</span>
-            <span>{entry.Time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            <span>{entry.Date.toString()}</span>
+            <span>{entry.Time.toString([], { hour: '2-digit', minute: '2-digit' })}</span>
           </div>
         ))
       )}

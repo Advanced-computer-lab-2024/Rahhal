@@ -1,6 +1,6 @@
 import { GenericModal } from "../../GenericModal";
 import { useEffect, useState } from "react";
-import { submitCategory } from "@/api-calls/categories-api-calls";
+import { submitHistoricalTags } from "@/api-calls/historical-tags-api-calls";
 import ShortText from "@/components/ShortText";
 import { DEFAULTS } from "@/lib/constants";
 import { THistoricalTag } from "@/table-columns/historical-tags-columns";
@@ -13,7 +13,7 @@ interface HistoricalTagsModalProps {
 
 export function HistoricalTagsModal({ historicalTagsData, dialogTrigger }: HistoricalTagsModalProps) {
     const isNewHistoricalTag = historicalTagsData === undefined; // check if the category is new
-    const [modalHistoricalTagData, setModalHistoricalTagData] = useState<THistoricalTag | undefined>(historicalTagsData ?? DEFAULTS.HISTORICAL_TAG); // current category data present in the modal
+    const [modalHistoricalTagData, setModalHistoricalTagData] = useState<THistoricalTag | undefined>(historicalTagsData); // current category data present in the modal
 
     useEffect(() => {
         // if the historical tag is new, set the default values
@@ -26,11 +26,10 @@ export function HistoricalTagsModal({ historicalTagsData, dialogTrigger }: Histo
     return (
         <GenericModal
             title={historicalTagsData?.name ?? "New Historical Tag"}
-            description="Category Details"
+            description="Historical Tag Details"
             dialogTrigger={dialogTrigger}
             onSubmit={() => {
-                submitCategory(modalHistoricalTagData, isNewHistoricalTag);
-                window.location.reload();
+                submitHistoricalTags(modalHistoricalTagData, isNewHistoricalTag);
             }}
         >
             <ShortText
@@ -39,7 +38,7 @@ export function HistoricalTagsModal({ historicalTagsData, dialogTrigger }: Histo
                 onSave={(value) => setModalHistoricalTagData(
                     modalHistoricalTagData ? { ...modalHistoricalTagData, name: value } : undefined
                 )}
-                placeholder={"Enter Category Name"}
+                placeholder={"Enter Tag Name"}
                 initialDisabled={!isNewHistoricalTag} type={"text"} />
             <></>
         </GenericModal>

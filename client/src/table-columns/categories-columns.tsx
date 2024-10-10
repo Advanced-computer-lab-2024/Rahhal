@@ -12,7 +12,6 @@ export type TCategory = {
 
 function deleteRow(row: any) {
     deleteCategory(row.original._id);
-    window.location.reload();
 }
 
 export const categoriesColumns: ColumnDef<TCategory>[] = [

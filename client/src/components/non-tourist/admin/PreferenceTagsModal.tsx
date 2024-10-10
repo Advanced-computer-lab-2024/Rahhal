@@ -26,7 +26,7 @@ const [modalPrefernceTagData, setModalPrefernceTagData] = useState<TPreferenceTa
         dialogTrigger={dialogTrigger}
         onSubmit={() => {
              submitPreferenceTag(modalPrefernceTagData, isNewPreferenceTag);
-             window.location.reload();
+            
         }
          } 
 >

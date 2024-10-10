@@ -84,6 +84,26 @@ export const DEFAULTS = {
   PREFERENCE_TAG: {
     _id: "",
     name: "",
+  },
+  ITINERARY: {
+    _id: "",
+    name: "",
+    images: [],
+    description: "",
+    activities: [],
+    locations: [],
+    timeline: "",
+    durationOfActivities: [],
+    languages: [],
+    price: 0,
+    availableDatesTime: [],
+    accessibility: "",
+    pickUpLocation: { longitude: 31.1342, latitude: 29.9792, placeId: "" },
+    dropOffLocation: { longitude: 31.1342, latitude: 29.9792, placeId: "" },
+    ratings: [],
+    preferenceTags: [],
+    category: { _id: "", name: "" },
+    owner: ""
   }
 };
 export const NATIONALITIES = [

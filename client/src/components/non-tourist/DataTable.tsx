@@ -66,14 +66,20 @@ export function DataTable<TData, TValue>({
   });
 
   React.useEffect(() => {
-    if (priceRange.min !== "" || priceRange.max !== "") {
-      table.getColumn("price")?.setFilterValue((old) => ({
-        ...old,
-        min: priceRange.min,
-        max: priceRange.max,
-      }));
-    } else {
-      table.getColumn("price")?.setFilterValue(undefined);
+    try{
+      if (priceRange.min !== "" || priceRange.max !== "") {
+        table.getColumn("price")?.setFilterValue((old) => ({
+          ...old,
+          min: priceRange.min,
+          max: priceRange.max,
+        }));
+      } else {
+        
+        table.getColumn("price")?.setFilterValue(undefined);
+      }
+    }
+    catch(e){
+      console.log(e);
     }
   }, [priceRange, table]);
 

@@ -45,7 +45,6 @@ export type TNewHistoricalPlace = Omit<
 
 function deleteRow(row: any) {
   deleteHistoricalPlace(row.original);
-  window.location.reload();
 }
 
 function calculateAverageRating(ratings: TRating[]) {

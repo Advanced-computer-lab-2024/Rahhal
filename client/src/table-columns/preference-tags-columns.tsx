@@ -11,7 +11,6 @@ export type TPreferenceTag = {
 
 function deleteRow(row: any){
     deletePreferenceTag(row.original._id);
-    window.location.reload();
 }
 
 export const preferenceTagsColumns: ColumnDef<TPreferenceTag>[] = [

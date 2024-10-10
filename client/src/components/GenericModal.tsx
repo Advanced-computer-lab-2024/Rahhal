@@ -27,9 +27,9 @@ export function GenericModal({
   onSubmit,
 }: GenericModalProps) {
 
-  const handleSubmit = () => {
+  const handleSubmit = (event : any) => {
+    event.preventDefault();
     onSubmit();
-    window.location.reload();
   }
 
   return (

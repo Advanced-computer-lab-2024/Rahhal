@@ -31,7 +31,6 @@ export function ProductModal({ productData, dialogTrigger, userId }: ProductModa
       // and already stored in the database and it's not needed in updates
       await createProduct(newProduct, userId!);
     } else await updateProduct(modalProductData!);
-    window.location.reload();
   };
 
   useEffect(() => {
