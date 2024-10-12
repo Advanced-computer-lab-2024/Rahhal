@@ -1,6 +1,9 @@
 import axios from "axios";
 import { SERVICES_URLS } from "@/lib/constants";
-import { THistoricalPlace, TNewHistoricalPlace } from "@/table-columns/tourism-governor-columns";
+import {
+  THistoricalPlace,
+  TNewHistoricalPlace,
+} from "@/features/tourism-governor/utils/tourism-governor-columns";
 
 export async function fetchHistoricalPlaces() {
   const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + "/historical-places");

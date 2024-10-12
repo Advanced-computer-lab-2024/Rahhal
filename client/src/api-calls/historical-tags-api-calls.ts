@@ -1,5 +1,5 @@
 import { SERVICES_URLS } from "@/lib/constants";
-import { THistoricalTag } from "@/table-columns/historical-tags-columns";
+import { THistoricalTag } from "@/features/tourism-governor/utils/historical-tags-columns";
 import axios from "axios";
 
 export const fetchHistoricalTags = async () => {

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import axios from "axios";
+import axios, { AxiosError, isAxiosError } from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -44,11 +44,11 @@ export function Login() {
         navigate(`/seller/${response._id}`);
       }
     } catch (error) {
-      console.log(error);
-      if (axios.isAxiosError(error) && error.response) {
-        alert(error.response.data.error);
+      if (isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        if (axiosError.response) alert(axiosError.response.data.error);
       } else {
-        alert(error);
+        console.error("Unexpected error:", error);
       }
     }
   };
