@@ -1,6 +1,6 @@
 import { SERVICES_URLS } from "@/lib/constants";
 import axios from "axios";
-import { TPreferenceTag } from "@/table-columns/preference-tags-columns";
+import { TPreferenceTag } from "@/features/admin/utils/preference-tags-columns";
 
 //fetch all preference tags from preference tags endpoint
 export const fetchPreferenceTags = async () => {

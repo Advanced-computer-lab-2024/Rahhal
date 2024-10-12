@@ -1,6 +1,6 @@
 import { SERVICES_URLS } from "@/lib/constants";
 import axios from "axios";
-import { TCategory } from "@/table-columns/categories-columns";
+import { TCategory } from "@/features/admin/utils/categories-columns";
 
 // fetch available categories from categories endpoint
 export const fetchCategories = async () => {

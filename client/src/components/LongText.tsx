@@ -2,8 +2,6 @@ import React from "react";
 import { useState, useImperativeHandle, forwardRef } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Pen, Save } from "lucide-react";
 import EditSaveButton from "./EditSaveButton";
 import { Card } from "./ui/card";
 interface LongTextProps {

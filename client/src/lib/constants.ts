@@ -1,4 +1,4 @@
-import { Role } from "@/table-columns/user-columns";
+import { Role } from "@/features/admin/utils/user-columns";
 
 export const SERVICES_URLS = {
   ENTERTAINMENT: "http://localhost:3000/api/entertainment",

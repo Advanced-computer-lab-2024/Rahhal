@@ -1,6 +1,6 @@
 import axios from "axios";
 import { SERVICES_URLS } from "@/lib/constants";
-import { TActivity, TNewActivity } from "@/table-columns/advertiser-columns";
+import { TActivity, TNewActivity } from "@/features/advertiser/utils/advertiser-columns";
 
 export const fetchActivities = async () => {
   const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/activities`);

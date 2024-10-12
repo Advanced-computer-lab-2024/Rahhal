@@ -1,5 +1,4 @@
 import { PropsWithChildren, createContext, useState, useContext } from "react";
-import { TimePickerType, setDateByType } from "./time-picker-utils";
 
 export type TimePickerContextType = {
   date: Date;
