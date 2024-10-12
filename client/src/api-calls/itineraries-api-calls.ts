@@ -1,7 +1,7 @@
 import axios from "axios";
 import { SERVICES_URLS } from "@/lib/constants";
-import { TItinerary } from "@/table-columns/tour-guide-columns";
-import { TNewItinerary } from "@/table-columns/tour-guide-columns";
+import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
+import { TNewItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
 
 // fetch data from the server
 export const fetchItineraries = async () => {

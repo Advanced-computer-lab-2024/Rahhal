@@ -3,7 +3,7 @@ import GoogleMap from "./GoogleMap";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useDebounce } from "use-debounce";
-import EditSaveButton from "../EditSaveButton";
+import EditSaveButton from "@/components/EditSaveButton";
 
 type LocationMapProps = {
   initialLocation: { lat: number; lng: number };

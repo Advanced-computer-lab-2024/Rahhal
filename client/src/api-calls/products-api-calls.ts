@@ -1,5 +1,5 @@
 import { SERVICES_URLS } from "@/lib/constants";
-import { TNewProduct, TProduct } from "@/table-columns/seller-columns";
+import { TNewProduct, TProduct } from "@/features/seller/utils/seller-columns";
 import axios from "axios";
 
 //TODO - later it should be by owner and some other type of handling

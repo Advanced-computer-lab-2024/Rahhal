@@ -1,6 +1,6 @@
 import axios from "axios";
 import { SERVICES_URLS } from "@/lib/constants";
-import { TUser } from "@/table-columns/user-columns";
+import { TUser } from "@/features/admin/utils/user-columns";
 
 // fetch data from the server
 export const fetchUsers = async () => {
