@@ -1,6 +1,6 @@
 import axios from "axios";
 import { SERVICES_URLS } from "@/lib/constants";
-import { TUser } from "@/types/user";
+import type { TUser } from "@/types/user";
 
 // fetch data from the server
 export async function fetchUsers() {
@@ -35,7 +35,6 @@ export async function deleteUserNoReload(user: TUser) {
 
 // submit user to the users endpoint
 export async function submitUser(user: TUser | undefined, isNewUser: boolean) {
-  console.log(user);
   if (isNewUser) {
     // Create a new user with only username, password, role and appoved fields
 
@@ -53,10 +52,7 @@ export async function submitUser(user: TUser | undefined, isNewUser: boolean) {
   } else {
     if (user) {
       try {
-        const response = await axios.patch(
-          `${SERVICES_URLS.USER}/users/${user._id}`,
-          JSON.stringify(user),
-        );
+        const response = await axios.patch(`${SERVICES_URLS.USER}/users/${user._id}`, user);
         console.log(response.data);
         alert("User updated successfully");
         window.location.reload();
