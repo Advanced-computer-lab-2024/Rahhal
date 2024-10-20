@@ -1,4 +1,4 @@
-import { Role } from "@/features/admin/utils/user-columns";
+import { UserRoleEnum } from "@/utils/enums";
 
 export const SERVICES_URLS = {
   ENTERTAINMENT: "http://localhost:3000/api/entertainment",
@@ -64,7 +64,7 @@ export const DEFAULTS = {
     username: "",
     email: "",
     password: "",
-    role: "tourist" as Role,
+    UserRoleEnum: "tourist" as UserRoleEnum,
     approved: false,
     dob: new Date(),
     nationality: "",

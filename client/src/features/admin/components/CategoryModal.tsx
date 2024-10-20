@@ -1,5 +1,5 @@
 import { GenericModal } from "@/components/GenericModal";
-import { TCategory } from "@/features/admin/utils/categories-columns";
+import { TCategory } from "@/features/admin/utils/columns-definitions/categories-columns";
 import { useEffect, useState } from "react";
 import { submitCategory } from "@/api-calls/categories-api-calls";
 import ShortText from "@/components/ShortText";

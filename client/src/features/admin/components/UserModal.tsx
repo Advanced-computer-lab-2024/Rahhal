@@ -1,5 +1,6 @@
 import { GenericModal } from "@/components/GenericModal";
-import { TUser, Role } from "@/features/admin/utils/user-columns";
+import type { TUser } from "@/types/user";
+import { UserRoleEnum } from "@/utils/enums";
 import { ToggleableSwitchCard } from "@/components/ToggleableSwitchCard";
 import { useState } from "react";
 import ShortText from "@/components/ShortText";
@@ -62,13 +63,13 @@ export function UserModal({ userData, dialogTrigger }: UserModalProps) {
           <GenericSelect
             label={"Role"}
             options={[
-              { value: Role.tourismGovernor, label: "Tourism Governor" },
-              { value: Role.admin, label: "Admin" },
+              { value: UserRoleEnum.tourismGovernor, label: "Tourism Governor" },
+              { value: UserRoleEnum.admin, label: "Admin" },
             ]}
-            initialValue={modalUserData?.role ?? Role.tourist}
+            initialValue={modalUserData?.role ?? UserRoleEnum.tourist}
             onSelect={(value: string) =>
               setModalUserData(
-                modalUserData ? { ...modalUserData, role: value as Role } : undefined,
+                modalUserData ? { ...modalUserData, role: value as UserRoleEnum } : undefined,
               )
             }
             placeholder={"Select a role"}
