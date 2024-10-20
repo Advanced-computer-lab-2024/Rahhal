@@ -45,8 +45,8 @@ export async function getUserByEmail(email: string): Promise<IUser | null> {
 }
 
 //get all users
-export async function getAllUsers(): Promise<IUser[] | null> {
-  return await userRepository.getAllUsers();
+export async function getAllUsers(approved?: boolean): Promise<IUser[] | null> {
+  return await userRepository.getAllUsers(approved);
 }
 
 //update user and searching for the user using it username
