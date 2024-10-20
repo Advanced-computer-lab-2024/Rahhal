@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import * as userService from "../../services/user-service";
 import { STATUS_CODES } from "../../utils/constants";
+import { z } from "zod";
 
 const getUserByUsername = async (req: Request, res: Response) => {
   try {
@@ -18,8 +19,25 @@ const getUserByUsername = async (req: Request, res: Response) => {
 
 //get all users
 const getAllUsers = async (req: Request, res: Response) => {
+  const queryParametersSchema = z.object({
+    approved: z
+      .enum(["true", "false"])
+      // Convert the string to a boolean
+      .transform((val) => val.toLocaleLowerCase() === "true")
+      .optional(),
+  });
+  const validationResult = queryParametersSchema.safeParse(req.query);
+
+  if (!validationResult.success) {
+    res.status(STATUS_CODES.UNPROCESSABLE_ENTITY).json({ error: validationResult.error });
+    return;
+  }
+
+  const { approved } = validationResult.data;
+
   try {
-    const users = await userService.getAllUsers();
+    // If approved is not provided (== undefined), it will get all users
+    const users = await userService.getAllUsers(approved);
     if (!users) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "No users found" });
     } else {
