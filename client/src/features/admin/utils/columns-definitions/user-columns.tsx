@@ -4,7 +4,7 @@ import { ChevronRight } from "lucide-react";
 import { FaTrash } from "react-icons/fa6";
 import { UserModal } from "@/features/admin/components/UserModal";
 import { deleteUser } from "@/api-calls/users-api-calls";
-import { TUser } from "@/types/user";
+import type { TUser } from "@/types/user";
 
 function deleteRow(row: any) {
   deleteUser(row.original);

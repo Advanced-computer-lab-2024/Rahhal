@@ -1,24 +1,72 @@
 import { GenericModal } from "@/components/GenericModal";
-import type { TUser } from "@/types/user";
-import { UserRoleEnum } from "@/utils/enums";
 import { ToggleableSwitchCard } from "@/components/ToggleableSwitchCard";
 import { useState } from "react";
-import ShortText from "@/components/ShortText";
-import { GenericSelect } from "@/components/GenericSelect";
 import { submitUser } from "@/api-calls/users-api-calls";
 import { DEFAULTS } from "@/lib/constants";
 import { FaCircleCheck } from "react-icons/fa6";
-import AddressList from "./AddressList";
-import { Label } from "@radix-ui/react-label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { format } from "@/features/admin/utils/user-details-formatter";
+import type { TUser } from "@/types/user";
 
 interface UserModalProps {
   userData?: TUser;
   dialogTrigger?: React.ReactNode;
 }
 
+type KeyValuePairViewProps = {
+  user: Partial<TUser>;
+};
+
+const KeyValuePairView = ({ user }: KeyValuePairViewProps) => {
+  // Exclude specific fields and optional fields that are undefined
+  const filteredEntries = Object.entries(user).filter(([key, value]) => {
+    const excludedFields = [
+      "previousWork",
+      "companyProfile",
+      "description",
+      "createdAt",
+      "updatedAt",
+      "approved",
+      "password",
+      "_id",
+    ];
+    if (!value) return false;
+    if (Array.isArray(value) && value.length === 0) return false;
+    if (excludedFields.includes(key)) return false;
+    return true;
+  });
+
+  return (
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>General Information</CardTitle>
+      </CardHeader>
+      <CardContent className="p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {filteredEntries.map(([key, value]) => {
+            const [formattedKey, formattedValue] = format(key, value);
+            return (
+              <div
+                key={key}
+                className="flex flex-col p-4 bg-muted rounded-lg overflow-hidden break-words"
+              >
+                <span className="text-sm font-medium text-muted-foreground mb-1">
+                  {formattedKey}
+                </span>
+                <span className="text-base">{formattedValue}</span>
+              </div>
+            );
+          })}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
 export function UserModal({ userData, dialogTrigger }: UserModalProps) {
   const isNewUser: boolean = userData === undefined; // check if the user is new or existing
-  const [modalUserData, setModalUserData] = useState<TUser | undefined>(userData ?? DEFAULTS.USER); // current user data present in the modal
+  const [modalUserData, setModalUserData] = useState<TUser>(userData ?? DEFAULTS.USER); // current user data present in the modal
   // create generic modal with components based on data type of columns
   return (
     <GenericModal
@@ -27,106 +75,33 @@ export function UserModal({ userData, dialogTrigger }: UserModalProps) {
       dialogTrigger={dialogTrigger}
       onSubmit={() => submitUser(modalUserData, isNewUser)}
     >
-      {!isNewUser && (
-        <>
-          <Label>First Name: {modalUserData?.firstName}</Label>
-          <Label>Last Name: {modalUserData?.lastName}</Label>
-        </>
-      )}
+      <KeyValuePairView user={modalUserData} />
 
-      <ShortText
-        title="Username"
-        initialValue={modalUserData?.username ?? ""}
-        onSave={(value) =>
-          setModalUserData(modalUserData ? { ...modalUserData, username: value } : undefined)
-        }
-        initialDisabled={!isNewUser}
-        placeholder="Username"
-        type="text"
-      />
-
-      {!isNewUser && <Label>Email: {modalUserData?.email}</Label>}
-
-      <ShortText
-        title="Password"
-        initialValue={modalUserData?.password ?? ""}
-        onSave={(value) =>
-          setModalUserData(modalUserData ? { ...modalUserData, password: value } : undefined)
-        }
-        initialDisabled={!isNewUser}
-        placeholder="Password"
-        type="text"
-      />
-
-      {isNewUser ? (
-        <div className="m-5 mx-6">
-          <GenericSelect
-            label={"Role"}
-            options={[
-              { value: UserRoleEnum.tourismGovernor, label: "Tourism Governor" },
-              { value: UserRoleEnum.admin, label: "Admin" },
-            ]}
-            initialValue={modalUserData?.role ?? UserRoleEnum.tourist}
-            onSelect={(value: string) =>
-              setModalUserData(
-                modalUserData ? { ...modalUserData, role: value as UserRoleEnum } : undefined,
-              )
-            }
-            placeholder={"Select a role"}
-          />
-        </div>
-      ) : (
-        <Label>Role: {modalUserData?.role}</Label>
-      )}
+      {[
+        { title: "Description", value: modalUserData.description },
+        { title: "Company Profile", value: modalUserData.companyProfile },
+        { title: "Previous Work", value: modalUserData.previousWork },
+      ].map(({ title, value }) => {
+        if (value)
+          return (
+            <Card className="w-full mb-5" key={title}>
+              <CardHeader>
+                <CardTitle>{title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Textarea value={value} className="flex-grow min-h-40" readOnly={true} />
+              </CardContent>
+            </Card>
+          );
+      })}
 
       <ToggleableSwitchCard
         title="Approved"
         switchState={modalUserData?.approved ?? false}
-        onToggle={() =>
-          setModalUserData(
-            modalUserData ? { ...modalUserData, approved: !modalUserData.approved } : undefined,
-          )
-        }
+        onToggle={() => setModalUserData({ ...modalUserData, approved: !modalUserData.approved })}
         description={"Check if user is approved"}
         icon={<FaCircleCheck />}
       />
-
-      {!isNewUser && (
-        <>
-          <Label> Date of Birth: {modalUserData?.dob?.toString()}</Label>{" "}
-          <Label> Nationality: {modalUserData?.nationality}</Label>
-        </>
-      )}
-      {!isNewUser && (
-        <div className="m-5 mx-6">
-          <AddressList
-            initialAddresses={modalUserData?.addresses ?? []}
-            onAddressesChange={() => {}}
-            isDisabled={true}
-          />
-        </div>
-      )}
-      {!isNewUser && (
-        <>
-          <Label> Job: {modalUserData?.job}</Label>
-
-          <Label> Phone Number: {modalUserData?.phoneNumber}</Label>
-
-          <Label> Years of Experience: {modalUserData?.yearsOfExperience}</Label>
-
-          <Label> Previous Work: {modalUserData?.previousWork}</Label>
-
-          <Label> Website: {modalUserData?.website}</Label>
-
-          <Label> Hotline: {modalUserData?.hotline}</Label>
-
-          <Label> Company Profile: {modalUserData?.companyProfile}</Label>
-
-          <Label> Company Name: {modalUserData?.companyName}</Label>
-
-          <Label> Description: {modalUserData?.description}</Label>
-        </>
-      )}
     </GenericModal>
   );
 }

@@ -6,14 +6,12 @@
 */
 import { useQuery } from "@tanstack/react-query";
 import { DataTable } from "@/components/data-table/DataTable";
-import { TUser } from "../types/user";
+import type { TUser } from "@/types/user";
 import {
   deleteUserNoReload,
   fetchUsersPendingRequests,
   updateUser,
 } from "@/api-calls/users-api-calls";
-import { UserModal } from "./UserModal";
-import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { userRequestColumns } from "@/features/admin/utils/columns-definitions/users-pending-requests-columns";
 import { Row } from "@tanstack/react-table";
 import { toast } from "@/hooks/use-toast";
@@ -62,13 +60,10 @@ function UserRequestsView() {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
   return (
-    <>
-      <DataTable
-        data={usersRequests}
-        columns={userRequestColumns({ onApprove: handleUserApprove, onDelete: handleUserDelete })}
-        newRowModal={<UserModal dialogTrigger={<DataTableAddButton />} />}
-      />
-    </>
+    <DataTable
+      data={usersRequests}
+      columns={userRequestColumns({ onApprove: handleUserApprove, onDelete: handleUserDelete })}
+    />
   );
 }
 
