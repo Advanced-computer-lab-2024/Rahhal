@@ -14,9 +14,9 @@ export async function getUserById(userId: string): Promise<IUser | null> {
   return await User.findById(userId);
 }
 
-//get all users
-export async function getAllUsers(): Promise<IUser[] | null> {
-  return await User.find();
+//get all users or filter them based on given parameters
+export async function getAllUsers(approved?: boolean): Promise<IUser[] | null> {
+  return await User.find(approved !== undefined ? { approved: approved } : {});
 }
 
 //update user
