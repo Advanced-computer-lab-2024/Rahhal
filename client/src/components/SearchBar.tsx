@@ -56,12 +56,8 @@ export default function SearchBar(props: SearchBar) {
           "bg-transparent flex items-center px-0 group relative overflow-hidden h-max",
           focusIndex === 1 && hoverIndex === 2
             ? "bg-gray-200/65"
-            : focusIndex === 3 && hoverIndex === 2
-              ? "bg-gray-200/65"
-              : focusIndex === 2 && hoverIndex === 1
+            : focusIndex === 2 && hoverIndex === 1
                 ? "bg-gray-200/65"
-                : focusIndex === 2 && hoverIndex === 3
-                  ? "bg-gray-200/65"
                   : "",
         )}
       >
