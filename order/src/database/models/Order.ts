@@ -1,13 +1,13 @@
 import { Schema, model } from "mongoose";
 import type { Types } from "mongoose";
 
-enum PaymentMethod {
+export enum PaymentMethod {
   wallet = "wallet",
   creditCard = "creditCard",
   cash = "cash",
 }
 
-enum OrderStatus {
+export enum OrderStatus {
   received = "received",
   processing = "processing",
   shipped = "shipped",
@@ -15,7 +15,7 @@ enum OrderStatus {
   cancelled = "cancelled",
 }
 
-interface IItem {
+export interface IItem {
   name: string;
   price: number;
   quantity: number;
@@ -24,7 +24,7 @@ interface IItem {
   productId: string;
 }
 
-interface IOrder {
+export interface IOrder {
   _id: Types.ObjectId;
   userId: string;
   orderDate: Date;
