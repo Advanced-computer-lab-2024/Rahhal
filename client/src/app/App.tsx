@@ -30,6 +30,7 @@ import AdminActivitiesView from "@/features/admin/components/AdminActivitiesView
 import { getCurrencyExchangeRates } from "@/api-calls/currency-exchange-api-calls";
 import { useEffect } from "react";
 import { useRatesStore } from '@/stores/currency-exchange-store'
+import ProductReport from "@/features/seller/components/ProductReport";
 
 export default function App() {
   const { setRates } = useRatesStore();
@@ -89,7 +90,8 @@ export default function App() {
             <Route path="/admin/users" element={<UserView />} />
             <Route path="/admin/users/requests" element={<UsersPendingRequests />} />
             <Route path="/admin/products" element={<AdminProductsView />} />
-            <Route path="seller/:id" element={<SellerView />} />
+            <Route path="/seller/:id" element={<SellerView />} />
+            <Route path="/seller/product/:id" element={<ProductReport />} />
             <Route path="/admin" element={<AdminHomepage />} />
             <Route path="/admin/categories" element={<CategoryView />} />
             <Route path="/admin/users" element={<UserView />} />
