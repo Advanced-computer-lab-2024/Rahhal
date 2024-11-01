@@ -10,6 +10,7 @@ export interface IProduct {
   seller: string;
   ratings: IRating[];
   quantity: number;
+  archived: boolean;
   reviews: { user: string; rating: number; comment: string }[];
 }
 
@@ -34,6 +35,7 @@ const productSchema = new mongoose.Schema<IProduct>({
   },
   description: { type: String, required: true },
   seller: { type: String, required: true },
+  archived: { type: Boolean, required: true, default: false },
   ratings: {
     type: [ratingSchema],
     validate: {
