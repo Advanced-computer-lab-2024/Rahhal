@@ -1,26 +1,7 @@
 import * as userRepository from "../database/repositories/user-repository";
-import { Role, type IUser } from "../database/models/User";
+import { type IUser } from "../database/models/User";
 
 export async function createUser(userData: IUser) {
-  if (userData.username && userData.password && userData.role) {
-    const shouldCheckEmail = userData.role !== Role.admin && userData.role !== Role.tourismGovernor;
-
-    const user = await userRepository.getUserByUsername(userData.username);
-
-    const email = await userRepository.getUserByEmail(userData.email);
-    if (user && email && shouldCheckEmail) {
-      throw new Error("Username already exists and this email is registered to another user");
-    }
-    if (user) {
-      throw new Error("Username already exists");
-    }
-    if (email && shouldCheckEmail) {
-      throw new Error("This email is registered to another user");
-    }
-  } else {
-    throw new Error("Please provide all the required fields");
-  }
-
   return await userRepository.createUser(userData);
 }
 
@@ -54,37 +35,12 @@ export async function updateUserByUsername(
   username: string,
   updatedUser: IUser,
 ): Promise<IUser | null> {
-  if (updatedUser.email) {
-    const email = await userRepository.getUserByEmail(updatedUser.email);
-    if (email && email.email != updatedUser.email) {
-      throw new Error("This email is registered to another user");
-    }
-  }
   return await userRepository.updateUserByUsername(username, updatedUser);
 }
 
 //update user and searching for the user using it id
 export async function updateUserById(userId: string, updatedUser: IUser): Promise<IUser | null> {
-  if (updatedUser.email) {
-    const email = await userRepository.getUserByEmail(updatedUser.email);
-    if (email && email.email != updatedUser.email) {
-      throw new Error("This email is registered to another user");
-    }
-  }
-
   return await userRepository.updateUserById(userId, updatedUser);
 }
 
-export async function loginUser(username: string, password: string) {
-  const user = await userRepository.getUserByUsername(username);
-  if (!user) {
-    throw new Error("Username or Password is incorrect");
-  }
-  if (user.password !== password) {
-    throw new Error("Username or Password is incorrect");
-  }
-  if (user.approved == false) {
-    throw new Error("Your account is not verified by website yet");
-  }
-  return user;
-}
+
