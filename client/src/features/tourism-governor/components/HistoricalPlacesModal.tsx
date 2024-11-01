@@ -234,7 +234,7 @@ export function HistoricalPlacesModal({
       <PictureCard
         title={"Photo Tour"}
         description={"Uploaded Photos"}
-        imageSources={isNewHistoricalPlace ? [] : (modalHistoricalPlaceData?.images ?? IMAGES)}
+        initialImageSources={isNewHistoricalPlace ? [] : (modalHistoricalPlaceData?.images ?? IMAGES)}
       />
       <ReviewDisplay reviews={sampleReviews} />
 

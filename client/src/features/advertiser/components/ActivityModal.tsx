@@ -241,7 +241,7 @@ export function ActivitiesModal({ activityData, dialogTrigger, userId }: Activit
         }))}
       />
 
-      <PictureCard title={"Photo Tour"} description={"Uploaded Photos"} imageSources={IMAGES} />
+      <PictureCard title={"Photo Tour"} description={"Uploaded Photos"} initialImageSources={IMAGES} />
       <div className="m-5 mx-6">
         <ReviewDisplay reviews={sampleReviews} />
       </div>

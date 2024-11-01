@@ -118,7 +118,7 @@ export function ItinerariesModal({ itineraryData, dialogTrigger, userId }: Itine
         initialDisabled={!isNewItinerary}
         type="text"
       />
-      <PictureCard title={"Photo Tour"} description={"Uploaded Photos"} imageSources={IMAGES} />
+      <PictureCard title={"Photo Tour"} description={"Uploaded Photos"} initialImageSources={IMAGES} />
       <LongText
         title="Description"
         initialValue={modalItineraryData?.description ?? ""}

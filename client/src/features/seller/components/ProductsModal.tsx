@@ -103,7 +103,7 @@ export function ProductModal({ productData, dialogTrigger, userId }: ProductModa
         title={"Product Picture"}
         description={"Uploaded Picture"}
         // modalProductData?.picture??
-        imageSources={IMAGES}
+        initialImageSources={IMAGES}
       />
       {!isNewProduct && <ReviewDisplay reviews={sampleReviews} />}
     </GenericModal>
