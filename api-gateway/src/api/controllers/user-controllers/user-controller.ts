@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { STATUS_CODES } from "@/utils/constants";
-import * as userService from "@/services/user-service";
+import * as userService from "@/services/user-services/user-service";
 
 export async function getAllUsers(req: Request, res: Response) {
   try {
