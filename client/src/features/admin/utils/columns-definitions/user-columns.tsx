@@ -50,28 +50,4 @@ export const userColumns: ColumnDef<TUser>[] = [
       );
     },
   },
-  // {
-  //   accessorKey: "firstName",
-  //   header: "First Name",
-  //   cell: ({ row }) => <div className="capitalize">{row.getValue("firstName")}</div>,
-  // },
-  // {
-  //   accessorKey: "lastName",
-  //   header: "Last Name",
-  //   cell: ({ row }) => <div className="capitalize">{row.getValue("lastName")}</div>,
-  // },
-  // {
-  //   accessorKey: "dob",
-  //   header: "Date of Birth",
-  //   cell: ({ row }) => <div>{row.getValue("dob")}</div>,
-  // },
-  // {
-  //   accessorKey: "approved",
-  //   header: "Approved",
-  //   cell: ({ row }) => (
-  //     <Badge variant={row.getValue("approved") ? "default" : "destructive"}>
-  //       {row.getValue("approved") ? "Approved" : "Not Approved"}
-  //     </Badge>
-  //   ),
-  // },
 ];
