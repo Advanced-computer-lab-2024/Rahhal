@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { useSideBarToggleStore } from "@/stores/side-bar-toggle-store";
+import { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -14,12 +15,27 @@ function FilterSideBar({
 }) {
   const { isOpen } = useSideBarToggleStore();
   const [firstItem, ...restItems] = sideBarItems;
+  const [heightClass, setHeightClass] = useState("h-[80vh]");
+
+  useEffect(() => {
+    const updateHeightClass = () => {
+      if (window.innerHeight >= 900) {
+        setHeightClass("h-[90vh]");
+      } else {
+        setHeightClass("h-[80vh]");
+      }
+    };
+
+    updateHeightClass();
+    window.addEventListener("resize", updateHeightClass);
+    return () => window.removeEventListener("resize", updateHeightClass);
+  }, []);
 
   return (
     <aside
       className={cn(
-        "z-10 h-screen ease-in-out duration-300 border border-r-gray-400",
-        isOpen ? "w-[50vh] overflow-y-scroll h-[80vh]" : "w-0 overflow-hidden",
+        "z-10 ease-in-out duration-300 border border-r-gray-400",
+        isOpen ? `w-[50vh] overflow-y-scroll ${heightClass}` : "w-0 overflow-hidden",
       )}
     >
       {isOpen && (
