@@ -8,6 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from "@/features/admin/utils/user-details-formatter";
 import type { TUser } from "@/types/user";
+import ShortText from "@/components/ShortText";
+import { GenericSelect } from "@/components/GenericSelect";
+import { UserRoleEnum } from "@/utils/enums";
 
 interface UserModalProps {
   userData?: TUser;
@@ -75,33 +78,73 @@ export function UserModal({ userData, dialogTrigger }: UserModalProps) {
       dialogTrigger={dialogTrigger}
       onSubmit={() => submitUser(modalUserData, isNewUser)}
     >
-      <KeyValuePairView user={modalUserData} />
+      {isNewUser && (
+        <>
+          <ShortText
+            title="Username"
+            initialValue={modalUserData.username}
+            onSave={(value) => setModalUserData({ ...modalUserData, username: value })}
+            placeholder="Username"
+            initialDisabled={!isNewUser}
+            type="text"
+          />
 
-      {[
-        { title: "Description", value: modalUserData.description },
-        { title: "Company Profile", value: modalUserData.companyProfile },
-        { title: "Previous Work", value: modalUserData.previousWork },
-      ].map(({ title, value }) => {
-        if (value)
-          return (
-            <Card className="w-full mb-5" key={title}>
-              <CardHeader>
-                <CardTitle>{title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Textarea value={value} className="flex-grow min-h-40" readOnly={true} />
-              </CardContent>
-            </Card>
-          );
-      })}
+          <ShortText
+            title="Password"
+            initialValue={modalUserData.password}
+            onSave={(value) => setModalUserData({ ...modalUserData, password: value })}
+            initialDisabled={!isNewUser}
+            placeholder="Password"
+            type="text"
+          />
 
-      <ToggleableSwitchCard
-        title="Approved"
-        switchState={modalUserData?.approved ?? false}
-        onToggle={() => setModalUserData({ ...modalUserData, approved: !modalUserData.approved })}
-        description={"Check if user is approved"}
-        icon={<FaCircleCheck />}
-      />
+          <GenericSelect
+            label={"Role"}
+            options={[
+              { value: UserRoleEnum.tourismGovernor, label: "Tourism Governor" },
+              { value: UserRoleEnum.admin, label: "Admin" },
+            ]}
+            onSelect={(value: string) =>
+              setModalUserData({ ...modalUserData, role: value as UserRoleEnum })
+            }
+            placeholder={"Select a role"}
+          />
+        </>
+      )}
+
+      {!isNewUser && (
+        <>
+          <KeyValuePairView user={modalUserData} />
+
+          {[
+            { title: "Description", value: modalUserData.description },
+            { title: "Company Profile", value: modalUserData.companyProfile },
+            { title: "Previous Work", value: modalUserData.previousWork },
+          ].map(({ title, value }) => {
+            if (value)
+              return (
+                <Card key={title}>
+                  <CardHeader>
+                    <CardTitle>{title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Textarea value={value} className="flex-grow min-h-40" readOnly={true} />
+                  </CardContent>
+                </Card>
+              );
+          })}
+
+          <ToggleableSwitchCard
+            title="Approved"
+            switchState={modalUserData.approved}
+            onToggle={() =>
+              setModalUserData({ ...modalUserData, approved: !modalUserData.approved })
+            }
+            description={"Check if user is approved"}
+            icon={<FaCircleCheck />}
+          />
+        </>
+      )}
     </GenericModal>
   );
 }

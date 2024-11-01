@@ -64,7 +64,7 @@ export const DEFAULTS = {
     username: "",
     email: "",
     password: "",
-    role: "tourist" as UserRoleEnum,
+    role: UserRoleEnum.tourist,
     approved: false,
     dob: new Date(),
     nationality: "",
