@@ -21,7 +21,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
   const paths = ["/entertainment", "/entertainment", "/entertainment", "/shop"];
   const { id } = useParams();
   return (
-    <div className=" w-full h-16 z-10 relative flex">
+    <div className=" w-full z-10 relative flex">
       <div className=" w-full h-full"></div>
       <div className="flex justify-center relative z-10 space-x-12  h-16 pt-2 items-center">
         {buttonNames.map((buttonName, index) => (
