@@ -6,6 +6,11 @@ export async function getAllActivities() {
   return activitiesRepository.getAllActivities();
 }
 
+// Get all appropriate activities
+export async function getAppropriateActivities() {
+  return activitiesRepository.getAppropriateActivities();
+}
+
 // Get activity by id
 export async function getActivityById(id: string) {
   return activitiesRepository.getActivityById(id);

@@ -20,6 +20,8 @@ export interface IItinerary {
   ratings?: IRating[];
   preferenceTags?: mongoose.Schema.Types.ObjectId[];
   category?: mongoose.Schema.Types.ObjectId;
+  active: boolean;
+  appropriate: boolean;
   owner: string;
 }
 
@@ -87,6 +89,8 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
   },
   preferenceTags: { type: [mongoose.Schema.Types.ObjectId], ref: "PreferenceTag" },
   category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
+  active: { type: Boolean, required: true, default: true },
+  appropriate: { type: Boolean, required: true, default: true },
   owner: { type: String, required: true },
 });
 

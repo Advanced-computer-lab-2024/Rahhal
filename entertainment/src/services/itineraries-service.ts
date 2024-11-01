@@ -6,6 +6,11 @@ export async function getAllItineraries() {
   return itinerariesRepository.getAllItineraries();
 }
 
+//Get all active & appropriate itineraries
+export async function getActiveAppropriateItineraries() {
+  return itinerariesRepository.getActiveAppropriateItineraries();
+}
+
 // Get an itinerary by id
 export async function getItineraryById(id: string) {
   return itinerariesRepository.getItineraryById(id);
