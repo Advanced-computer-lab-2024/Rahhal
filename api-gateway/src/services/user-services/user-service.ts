@@ -5,8 +5,12 @@ import {
 } from "@/utils/axios-instances";
 
 // users service calls
-export async function getAllUsers() {
-  return await userAxiosInstance.get("/users");
+export async function getApprovedUsers() {
+  return await userAxiosInstance.get("/users?approved=true");
+}
+
+export async function getUsersPendingRequests() {
+  return await userAxiosInstance.get("/users?approved=false");
 }
 
 export async function getUserById(id: string) {

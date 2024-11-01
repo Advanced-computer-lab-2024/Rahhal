@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/data-table/DataTable";
-import { categoriesColumns, TCategory } from "@/features/admin/utils/categories-columns";
+import {
+  categoriesColumns,
+  TCategory,
+} from "@/features/admin/utils/columns-definitions/categories-columns";
 import { fetchCategories } from "@/api-calls/categories-api-calls";
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { CategoryModal } from "./CategoryModal";
