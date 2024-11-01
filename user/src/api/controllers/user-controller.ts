@@ -3,7 +3,7 @@ import * as userService from "../../services/user-service";
 import { STATUS_CODES } from "../../utils/constants";
 import { z } from "zod";
 
-async function getUserByUsername (req: Request, res: Response)  {
+export async function getUserByUsername (req: Request, res: Response)  {
   try {
     const username = req.body.username;
     const user = await userService.getUserByUsername(username);
@@ -18,7 +18,7 @@ async function getUserByUsername (req: Request, res: Response)  {
 };
 
 //get all users
-async function getAllUsers (req: Request, res: Response) {
+export async function getAllUsers (req: Request, res: Response) {
   const queryParametersSchema = z.object({
     approved: z
       .enum(["true", "false"])
@@ -49,7 +49,7 @@ async function getAllUsers (req: Request, res: Response) {
 };
 
 //getUserById
-async function getUserById (req: Request, res: Response)  {
+export async function getUserById (req: Request, res: Response)  {
   try {
     const userId = req.params.id;
     const user = await userService.getUserById(userId);
@@ -66,7 +66,7 @@ async function getUserById (req: Request, res: Response)  {
 };
 
 //get User by email
-async function getUserByEmail (req: Request, res: Response)  {
+export async function getUserByEmail (req: Request, res: Response)  {
   try {
     const email = req.body.email;
     const user = await userService.getUserByEmail(email);
@@ -83,7 +83,7 @@ async function getUserByEmail (req: Request, res: Response)  {
 };
 
 //update user by username
-async function updateUserByUsername (req: Request, res: Response) {
+export async function updateUserByUsername (req: Request, res: Response) {
   try {
     const username = req.body.username;
     const updatedUser = req.body;
@@ -108,7 +108,7 @@ async function updateUserByUsername (req: Request, res: Response) {
 };
 
 //update user by userId
-async function updateUserById (req: Request, res: Response)  {
+export async function updateUserById (req: Request, res: Response)  {
   try {
     const userId = req.params.id;
     const updatedUser = req.body;
@@ -132,7 +132,7 @@ async function updateUserById (req: Request, res: Response)  {
   }
 };
 
-async function createUser  (req: Request, res: Response)  {
+export async function createUser  (req: Request, res: Response)  {
   try {
     const userData = req.body;
     if(userData.email && userData.username && userData.password) {
@@ -166,7 +166,7 @@ async function createUser  (req: Request, res: Response)  {
   }
 };
 
-async function deleteUser  (req: Request, res: Response)  {
+export async function deleteUser  (req: Request, res: Response)  {
   try {
     const userId = req.params.id;
     const user = await userService.getUserById(userId);
@@ -183,7 +183,7 @@ async function deleteUser  (req: Request, res: Response)  {
   }
 };
 
-async function loginUser (req: Request, res: Response)  {
+export async function loginUser (req: Request, res: Response)  {
   try {
     const { username, password } = req.body;
     const user = await userService.getUserByUsername(username);
@@ -207,14 +207,4 @@ async function loginUser (req: Request, res: Response)  {
   }
 };
 
-export default {
-  getUserByUsername,
-  getAllUsers,
-  updateUserByUsername,
-  createUser,
-  deleteUser,
-  getUserById,
-  updateUserById,
-  getUserByEmail,
-  loginUser,
-};
+
