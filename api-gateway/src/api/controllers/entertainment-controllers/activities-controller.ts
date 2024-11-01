@@ -12,6 +12,14 @@ export async function getAllActivities(req: Request, res: Response) {
   }
 }
 
+export async function getAppropriateActivities(req: Request, res: Response) {
+  try {
+    const activities = await activityService.getAppropriateActivities();
+    res.status(activities.status).json(activities.data);
+  } catch (error) {
+    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
+  }
+}
 export async function getActivityById(req: Request, res: Response) {
   const activityId = req.params.id;
   try {

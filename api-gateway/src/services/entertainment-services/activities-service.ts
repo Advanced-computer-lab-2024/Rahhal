@@ -13,6 +13,9 @@ export async function getAllActivities() {
   return await axiosInstance.get("/activities");
 }
 
+export async function getAppropriateActivities() {
+  return axiosInstance.get("/activities/appropriate");
+}
 export async function getActivityById(id: string) {
   return await axiosInstance.get(`/activities/${id}`);
 }
