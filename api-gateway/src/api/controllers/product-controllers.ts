@@ -11,6 +11,15 @@ export async function getAllProducts(req: Request, res: Response) {
   }
 }
 
+export async function getAvailableProducts(req: Request, res: Response) {
+  try {
+    const products = await productService.getAvailableProducts();
+    res.status(products.status).json(products.data);
+  } catch (error) {
+    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
+  }
+}
+
 export async function getProductById(req: Request, res: Response) {
   const productId = req.params.id;
   try {
