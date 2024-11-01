@@ -2,11 +2,11 @@ import type { IComplaint } from "../models/Complaint";
 import Complaint from "../models/Complaint";
 
 export async function getComplaints(): Promise<IComplaint[]> {
-  return await Complaint.find();
+  return await Complaint.find().populate("owner").exec();
 }
 
 export async function getComplaintsByOwner(ownerId: string): Promise<IComplaint[]> {
-  return await Complaint.find({ owner: ownerId });
+  return await Complaint.find({ owner: ownerId }).populate("owner").exec();
 }
 
 export async function createComplaint(complaint: IComplaint): Promise<IComplaint> {

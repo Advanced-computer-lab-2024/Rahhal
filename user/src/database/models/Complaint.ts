@@ -12,7 +12,7 @@ export interface IComplaint {
   body: string;
   date: Date;
   status: Status;
-  owner: string;
+  owner: mongoose.Schema.Types.ObjectId;
   replies?: string[];
 }
 
@@ -37,7 +37,8 @@ const complaintSchema: Schema = new Schema<IComplaint>(
       default: Status.pending,
     },
     owner: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     replies: {
