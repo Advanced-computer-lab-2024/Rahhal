@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 100%;
+  width: 330px;
   cursor: pointer;
   transition: filter 0.3s ease;
 }
@@ -99,4 +99,10 @@
   margin-top: 3%;
   font-size: small;
   text-align: left;
+}
+
+@media (max-width: 1000px) {
+  .entertainment-card-container {
+    width: 350px;
+  }
 }

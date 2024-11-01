@@ -75,7 +75,7 @@ const ProductGridView = () => {
   };
 
   const resetFilters = () => {
-    setSelectedPriceRange([0, 1000]);
+    setSelectedPriceRange([0, 10000]);
     setSelectedRatings([]);
   };
 
@@ -156,21 +156,19 @@ const ProductGridView = () => {
     <div className={ProductGridStyle["product-grid-view"]}>
       <FilterSortSearchHeader
         finishedLoading={finishedLoading}
+        searchPlaceHolder={"Search for products.. "}
         setSearch={setSearch}
-        searchParts={[]}
-        searchPartsValues={[]}
-        searchPartsHandlers={[]}
         handleSort={handleSort}
       ></FilterSortSearchHeader>
       <hr className="border-t border-gray-600 " />
-      <div className="flex ">
+      <div className="flex w-[100vw]">
         <FilterSideBar sideBarItems={combinedSideBarFilters} />
         <div className={ProductGridStyle["scrollable"]}>
           <div className={ProductGridStyle["product-grid-view__header"]}>
-            <h1>Product</h1>
+            <h1>Products</h1>
           </div>
 
-          <div className={ProductGridStyle["product-grid-view__card-row"]}>
+          <div className={ProductGridStyle["product-grid-view__cards"]}>
             {skeleton && (
               <div className="space-y-2">
                 <Skeleton className="h-4 w-[250px]" />

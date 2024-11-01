@@ -32,6 +32,7 @@ interface SearchPartProps {
 }
 interface SearchBar {
   onSearch: (query: string) => void;
+  searchPlaceHolder?: string;
   searchParts?: string[];
   searchPartsValues?: string[][];
   searchPartsHandlers?: SearchPartHandler[];
@@ -57,8 +58,8 @@ export default function SearchBar(props: SearchBar) {
           focusIndex === 1 && hoverIndex === 2
             ? "bg-gray-200/65"
             : focusIndex === 2 && hoverIndex === 1
-                ? "bg-gray-200/65"
-                  : "",
+              ? "bg-gray-200/65"
+              : "",
         )}
       >
         <div
@@ -71,11 +72,12 @@ export default function SearchBar(props: SearchBar) {
             type="search"
             className={cn(
               "border-0 h-max focus-visible:outline-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent bg-transparent",
+              props.searchParts ? "" : "w-[330px]",
             )}
             onFocus={() => {
               setFocusIndex(1);
             }}
-            placeholder={"Name"}
+            placeholder={props.searchPlaceHolder}
             onBlur={() => setFocusIndex(0)}
             onMouseEnter={() => setHoverIndex(1)}
             onMouseLeave={() => setHoverIndex(0)}
@@ -94,7 +96,7 @@ export default function SearchBar(props: SearchBar) {
               placeholder={value}
               hoverIndex={hoverIndex}
               setHoverIndex={setHoverIndex}
-              values={props.searchPartsValues[index]}
+              values={props.searchPartsValues.length > 0 ? props.searchPartsValues[index] : []}
               handler={props.searchPartsHandlers[index]}
             />
           )}

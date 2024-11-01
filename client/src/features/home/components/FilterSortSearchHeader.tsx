@@ -9,9 +9,10 @@ import React from "react";
 interface FilterSortSearchHeaderProps {
   finishedLoading: boolean;
   setSearch: (value: string) => void;
-  searchParts: string[];
-  searchPartsValues: string[][];
-  searchPartsHandlers: SearchPartHandler[];
+  searchPlaceHolder?: string;
+  searchParts?: string[];
+  searchPartsValues?: string[][];
+  searchPartsHandlers?: SearchPartHandler[];
   handleSort: (value: SortOption) => void;
   children?: React.ReactNode;
 }
@@ -19,6 +20,7 @@ interface FilterSortSearchHeaderProps {
 function FilterSortSearchHeader({
   finishedLoading,
   setSearch,
+  searchPlaceHolder,
   searchParts,
   searchPartsValues,
   searchPartsHandlers,
@@ -32,6 +34,7 @@ function FilterSortSearchHeader({
           {finishedLoading && (
             <SearchBar
               onSearch={setSearch}
+              searchPlaceHolder={searchPlaceHolder}
               searchParts={searchParts}
               searchPartsValues={searchPartsValues}
               searchPartsHandlers={searchPartsHandlers}
