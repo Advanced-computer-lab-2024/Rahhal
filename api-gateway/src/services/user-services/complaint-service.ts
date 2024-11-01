@@ -1,29 +1,21 @@
-import axios from "axios";
-import { STATUS_CODES } from "@/utils/constants";
-
-const complaintAxiosInstance = axios.create({
-  baseURL: "http://user:3000",
-  validateStatus: (status) => {
-    return status < STATUS_CODES.GATEWAY_TIMEOUT;
-  },
-});
+import { userAxiosInstance } from "@/utils/axios-instances";
 
 export async function getAllComplaints() {
-  return await complaintAxiosInstance.get("/complaints");
+  return await userAxiosInstance.get("/complaints");
 }
 
 export async function getComplaintByOwner(ownerId: string) {
-  return await complaintAxiosInstance.get(`/complaints/${ownerId}`);
+  return await userAxiosInstance.get(`/complaints/${ownerId}`);
 }
 
 export async function createComplaint(body: string) {
-  return await complaintAxiosInstance.post("/complaints", body);
+  return await userAxiosInstance.post("/complaints", body);
 }
 
 export async function updateComplaint(id: string, body: string) {
-  return await complaintAxiosInstance.patch(`/complaints/${id}`, body);
+  return await userAxiosInstance.patch(`/complaints/${id}`, body);
 }
 
 export async function addReply(id: string, body: string) {
-  return await complaintAxiosInstance.post(`/complaints/${id}`, body);
+  return await userAxiosInstance.post(`/complaints/${id}`, body);
 }
