@@ -192,7 +192,7 @@ const DetailsPage = () => {
               ) : (
                 Object.entries(item.price).map(([key, value], index) => (
                   <h1 key={index}>
-                    {key}: {value} EGP
+                    {key}: {value as string | number} EGP
                   </h1>
                 ))
               )}
