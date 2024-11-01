@@ -3,7 +3,7 @@ import * as userService from "../../services/user-service";
 import { STATUS_CODES } from "../../utils/constants";
 import { z } from "zod";
 
-const getUserByUsername = async (req: Request, res: Response) => {
+export async function getUserByUsername (req: Request, res: Response)  {
   try {
     const username = req.body.username;
     const user = await userService.getUserByUsername(username);
@@ -18,7 +18,7 @@ const getUserByUsername = async (req: Request, res: Response) => {
 };
 
 //get all users
-const getAllUsers = async (req: Request, res: Response) => {
+export async function getAllUsers (req: Request, res: Response) {
   const queryParametersSchema = z.object({
     approved: z
       .enum(["true", "false"])
@@ -49,7 +49,7 @@ const getAllUsers = async (req: Request, res: Response) => {
 };
 
 //getUserById
-const getUserById = async (req: Request, res: Response) => {
+export async function getUserById (req: Request, res: Response)  {
   try {
     const userId = req.params.id;
     const user = await userService.getUserById(userId);
@@ -66,7 +66,7 @@ const getUserById = async (req: Request, res: Response) => {
 };
 
 //get User by email
-const getUserByEmail = async (req: Request, res: Response) => {
+export async function getUserByEmail (req: Request, res: Response)  {
   try {
     const email = req.body.email;
     const user = await userService.getUserByEmail(email);
@@ -83,10 +83,17 @@ const getUserByEmail = async (req: Request, res: Response) => {
 };
 
 //update user by username
-const updateUserByUsername = async (req: Request, res: Response) => {
+export async function updateUserByUsername (req: Request, res: Response) {
   try {
     const username = req.body.username;
     const updatedUser = req.body;
+    if(updatedUser.email){
+      const email = await userService.getUserByEmail(updatedUser.email);
+      if (email && email.username != username) {
+        res.status(STATUS_CODES.CONFLICT).json({ error: "This email is registered to another user" });
+        return;
+      }
+    }
     const user = await userService.updateUserByUsername(username, updatedUser);
     if (!user) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
@@ -101,10 +108,17 @@ const updateUserByUsername = async (req: Request, res: Response) => {
 };
 
 //update user by userId
-const updateUserById = async (req: Request, res: Response) => {
+export async function updateUserById (req: Request, res: Response)  {
   try {
     const userId = req.params.id;
     const updatedUser = req.body;
+    if(updatedUser.email){
+      const email = await userService.getUserByEmail(updatedUser.email);
+      if (email && !email._id.equals(userId)) {
+        res.status(STATUS_CODES.CONFLICT).json({ error: "This email is registered to another user" });
+        return;
+      }
+    }
     const user = await userService.updateUserById(userId, updatedUser);
     if (!user) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
@@ -118,11 +132,33 @@ const updateUserById = async (req: Request, res: Response) => {
   }
 };
 
-const createUser = async (req: Request, res: Response) => {
+export async function createUser  (req: Request, res: Response)  {
   try {
     const userData = req.body;
-    const user = await userService.createUser(userData);
-    res.status(STATUS_CODES.CREATED).json(user);
+    if(userData.email && userData.username && userData.password) {
+      const shouldCheckEmail = userData.role !== "admin" && userData.role !== "tourismGovernor";
+      const userUsername = await userService.getUserByUsername(userData.username);
+      const userEmail = await userService.getUserByEmail(userData.email);
+
+      if(userUsername && userEmail && shouldCheckEmail) {
+        res.status(STATUS_CODES.CONFLICT).json({ error: "Username already exists and this email is registered to another user" });
+        return;
+      }
+      else if (userUsername) {
+        res.status(STATUS_CODES.CONFLICT).json({ error: "Username already exists" });
+        return;
+      }
+      else if (userEmail && shouldCheckEmail) {
+        res.status(STATUS_CODES.CONFLICT).json({ error: "This email is registered to another user" });
+        return;
+      }
+      
+      const user = await userService.createUser(userData);
+      res.status(STATUS_CODES.CREATED).json(user);
+      return;
+    } 
+    res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Please provide all the required fields!" });
+
   } catch (error) {
     if (error instanceof Error) {
       res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
@@ -130,7 +166,7 @@ const createUser = async (req: Request, res: Response) => {
   }
 };
 
-const deleteUser = async (req: Request, res: Response) => {
+export async function deleteUser  (req: Request, res: Response)  {
   try {
     const userId = req.params.id;
     const user = await userService.getUserById(userId);
@@ -147,10 +183,22 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-const loginUser = async (req: Request, res: Response) => {
+export async function loginUser (req: Request, res: Response)  {
   try {
     const { username, password } = req.body;
-    const user = await userService.loginUser(username, password);
+    const user = await userService.getUserByUsername(username);
+    if (!user) {
+      res.status(STATUS_CODES.NOT_FOUND).json({ error: "Username or Password is incorrect" });
+      return;
+    }
+    else if(user.password !== password) {
+      res.status(STATUS_CODES.NOT_FOUND).json({ error: "Username or Password is incorrect" });
+      return;
+    }
+    else if(user.approved === false) {
+      res.status(STATUS_CODES.NOT_FOUND).json({ error: "User is not approved yet" });
+      return;
+    }
     res.status(STATUS_CODES.STATUS_OK).json(user);
   } catch (error) {
     if (error instanceof Error) {
@@ -159,14 +207,4 @@ const loginUser = async (req: Request, res: Response) => {
   }
 };
 
-export default {
-  getUserByUsername,
-  getAllUsers,
-  updateUserByUsername,
-  createUser,
-  deleteUser,
-  getUserById,
-  updateUserById,
-  getUserByEmail,
-  loginUser,
-};
+
