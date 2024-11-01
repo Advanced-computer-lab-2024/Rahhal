@@ -32,7 +32,7 @@ import {
   SortOption,
   Filter,
 } from "../types/home-page-types";
-import { isWithinInterval, set } from "date-fns";
+import { isWithinInterval } from "date-fns";
 
 export const getPriceValue = (
   price:
@@ -65,7 +65,7 @@ const GeneralGridView = () => {
   const [selectedTag, setSelectedTag] = useState<string[]>([]);
   const [skeleton, setSkeleton] = useState<boolean>(true);
   const [finishedLoading, setFinishedLoading] = useState<boolean>(false);
-  const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>([0, 1000]);
+  const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>([0, 10000]);
   const [selectedDates, setSelectedDates] = useState<DateRange>({ from: undefined, to: undefined });
   const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<Option[]>([]);
@@ -223,7 +223,9 @@ const GeneralGridView = () => {
   }
   if (activeFilter.includes("itinerary")) {
     const languages: Option[] = Array.from(
-      new Set(itineraries.flatMap((itinerary: Itinerary) => (itinerary as Itinerary).languages)),
+      new Set<string>(
+        itineraries.flatMap((itinerary: Itinerary) => (itinerary as Itinerary).languages),
+      ),
     ).map((language: string) => ({ label: language, value: language }));
 
     combinedSideBarFilters = combinedSideBarFilters.concat(
@@ -285,30 +287,46 @@ const GeneralGridView = () => {
       return selectedTag.length === 0 || preferenceTags || historicalTags;
     })
     .filter((item) => {
-      const itemPrice = getPriceValue(item.price);
-      const itemRating = getAverageRating(item.ratings);
-      const adjustedToDate = selectedDates?.to
-        ? new Date(selectedDates.to.getTime() + 86400000)
-        : null;
-      const matchPrice =
-        (selectedPriceRange[0] != -1 &&
-          itemPrice >= selectedPriceRange[0] &&
-          itemPrice <= selectedPriceRange[1]) ||
-        (selectedPriceRange[0] === -1 && selectedPriceRange[1] === -1);
-      const matchRating =
-        selectedRatings.length === 0 ||
-        selectedRatings.some((rating) => itemRating >= rating && itemRating < rating + 1);
-      const matchLanguage =
+      // Filter based on selected languages
+      return (
         selectedLanguages.length === 0 ||
         selectedLanguages.some((language) =>
           (item as Itinerary)?.languages?.includes(language.value),
-        );
-      const matchHistoricalTag =
+        )
+      );
+    })
+    .filter((item) => {
+      // Filter based on selected historical tags
+      return (
         selectedHistoricalTags.length === 0 ||
         selectedHistoricalTags.some((tag) =>
           (item as HistoricalPlace)?.tags?.some((t) => t.name === tag.value),
-        );
-
+        )
+      );
+    })
+    .filter((item) => {
+      // Filter based on selected price range
+      const itemPrice = getPriceValue(item.price);
+      return (
+        (selectedPriceRange[0] != -1 &&
+          itemPrice >= selectedPriceRange[0] &&
+          itemPrice <= selectedPriceRange[1]) ||
+        (selectedPriceRange[0] === -1 && selectedPriceRange[1] === -1)
+      );
+    })
+    .filter((item) => {
+      // Filter based on selected ratings
+      const itemRating = getAverageRating(item.ratings);
+      return (
+        selectedRatings.length === 0 ||
+        selectedRatings.some((rating) => itemRating >= rating && itemRating < rating + 1)
+      );
+    })
+    .filter((item) => {
+      // Filter based on selected dates
+      const adjustedToDate = selectedDates?.to
+        ? new Date(selectedDates.to.getTime() + 86400000)
+        : null;
       let matchDate = null;
       if (
         "openingHours" in item ||
@@ -316,7 +334,6 @@ const GeneralGridView = () => {
       )
         matchDate = true;
       else if ("isBookingOpen" in item) {
-        console.log("BISM Activities", item);
         const itemDate = (item as Activity).date;
         matchDate =
           (selectedDates.from &&
@@ -327,7 +344,6 @@ const GeneralGridView = () => {
             new Date(itemDate).toDateString() === selectedDates.from.toDateString());
       } else if ("languages" in item) {
         const itemDates = (item as Itinerary).availableDatesTime.map((date) => new Date(date.Date));
-        console.log(itemDates);
         matchDate =
           !selectedDates?.from ||
           itemDates.some(
@@ -340,7 +356,7 @@ const GeneralGridView = () => {
                 new Date(date).toDateString() === selectedDates.from.toDateString()),
           );
       }
-      return matchPrice && matchRating && matchLanguage && matchHistoricalTag && matchDate;
+      return matchDate;
     });
 
   // Sort combined items
@@ -360,11 +376,11 @@ const GeneralGridView = () => {
             : bRatings - aRatings;
     return sort;
   });
-
   return (
     <div className={GeneralGridStyle["general-grid-view"]}>
       <FilterSortSearchHeader
         finishedLoading={finishedLoading}
+        searchPlaceHolder={"Name"}
         setSearch={setSearch}
         searchParts={searchParts}
         searchPartsValues={searchPartsValues}
@@ -380,14 +396,14 @@ const GeneralGridView = () => {
         />
       </FilterSortSearchHeader>
       <hr className="border-t border-gray-600 " />
-      <div className="flex ">
+      <div className="flex w-[100vw]">
         <FilterSideBar sideBarItems={combinedSideBarFilters} />
         <div className={GeneralGridStyle["scrollable"]}>
           <div className={GeneralGridStyle["general-grid-view__header"]}>
             <h1>Entertainment</h1>
           </div>
 
-          <div className={GeneralGridStyle["general-grid-view__card-row"]}>
+          <div className={GeneralGridStyle["general-grid-view__cards"]}>
             {skeleton && (
               <div className="space-y-2">
                 <Skeleton className="h-4 w-[250px]" />
@@ -396,11 +412,10 @@ const GeneralGridView = () => {
             )}
 
             {!skeleton &&
-              filteredCombinedItems.map((item) => (
+              sortedCombinedItems.map((item) => (
                 <EntertainmentCard
                   key={item._id}
                   image={ski}
-                  //fix later
                   rating={getAverageRating(item.ratings)}
                   title={item.name}
                   price={item.price}
