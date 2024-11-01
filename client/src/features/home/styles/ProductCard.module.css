@@ -9,7 +9,7 @@
 }
 
 .product-card-container__image {
-  width: 100%;
+  width: 330px;
   height: 240px; /* Set a fixed height for the image container */
   display: flex;
   justify-content: center;
