@@ -15,7 +15,7 @@ import ProductGridView from "@/features/home/components/ProductsGridView";
 import TourGuideView from "@/features/tour-guide/components/ItinerariesTable";
 import { Login } from "@/components/Login";
 import PreferenceTagsAdminView from "@/features/admin/components/PreferenceTagsTable";
-
+import AdminComplaintsView from "@/features/admin/components/ComplaintsTable";
 import SellerView from "@/features/seller/components/SellerView";
 import TouristGovernerHomepage from "@/features/tourism-governor/components/TourismGovernerHomepage";
 import AdminProductsView from "@/features/admin/components/AdminProductsView";
@@ -68,6 +68,8 @@ export default function App() {
             <Route path="/admin/users" element={<UserView />} />
             <Route path="/tour-guide/:id" element={<TourGuideView />} />
             <Route path="/admin/preference-tags" element={<PreferenceTagsAdminView />} />
+            <Route path="/admin/complaints" element={<AdminComplaintsView />} />
+
           </Routes>
         </Router>
       </QueryClientProvider>
