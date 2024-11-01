@@ -21,6 +21,7 @@ import TouristGovernerHomepage from "@/features/tourism-governor/components/Tour
 import AdminProductsView from "@/features/admin/components/AdminProductsView";
 import HistoricalPlacesView from "@/features/tourism-governor/components/HistoricalPlacesView";
 import HistoricalTagsView from "@/features/tourism-governor/components/HistoricalTagsTable";
+import UsersPendingRequests from "@/features/admin/components/UsersPendingRequests";
 
 export default function App() {
   const queryClient = new QueryClient();
@@ -59,6 +60,7 @@ export default function App() {
             <Route path="/admin" element={<AdminHomepage />} />
             <Route path="/admin/categories" element={<CategoryView />} />
             <Route path="/admin/users" element={<UserView />} />
+            <Route path="/admin/users/requests" element={<UsersPendingRequests />} />
             <Route path="/admin/products" element={<AdminProductsView />} />
             <Route path="seller/:id" element={<SellerView />} />
             <Route path="/admin" element={<AdminHomepage />} />

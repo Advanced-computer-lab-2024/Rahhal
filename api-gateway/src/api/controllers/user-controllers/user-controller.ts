@@ -2,10 +2,19 @@ import type { Request, Response } from "express";
 import { STATUS_CODES } from "@/utils/constants";
 import * as userService from "@/services/user-services/user-service";
 
-export async function getAllUsers(req: Request, res: Response) {
+export async function getApprovedUsers(req: Request, res: Response) {
   try {
-    const users = await userService.getAllUsers();
+    const users = await userService.getApprovedUsers();
     res.status(users.status).json(users.data);
+  } catch (error) {
+    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
+  }
+}
+
+export async function getUsersPendingRequests(req: Request, res: Response) {
+  try {
+    const newUsersRequests = await userService.getUsersPendingRequests();
+    res.status(newUsersRequests.status).json(newUsersRequests.data);
   } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }

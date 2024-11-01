@@ -4,7 +4,8 @@ import * as complaintController from "@/api/controllers/user-controllers/complai
 
 const router = express.Router();
 
-router.get("/users", userContoller.getAllUsers);
+router.get("/users", userContoller.getApprovedUsers);
+router.get("/users/requests", userContoller.getUsersPendingRequests);
 router.get("/users/:id", userContoller.getUserById);
 router.get("/users/:id/activities", userContoller.getUserActivities);
 router.get("/users/:id/historical-places", userContoller.getUserHistoricalPlaces);

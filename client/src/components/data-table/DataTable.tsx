@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import { DataTableViewOptions } from "./DataTableViewOptions";
 import { DataTablePagination } from "./DataTablePagination";
 import { Input } from "@/components/ui/input";
+import { useEffect } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -65,19 +66,21 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  React.useEffect(() => {
-    try {
-      if (priceRange.min !== "" || priceRange.max !== "") {
-        table.getColumn("price")?.setFilterValue((old: any) => ({
-          ...old,
-          min: priceRange.min,
-          max: priceRange.max,
-        }));
-      } else {
-        table.getColumn("price")?.setFilterValue(undefined);
+  useEffect(() => {
+    if (enableFilters) {
+      try {
+        if (priceRange.min !== "" || priceRange.max !== "") {
+          table.getColumn("price")?.setFilterValue((old: any) => ({
+            ...old,
+            min: priceRange.min,
+            max: priceRange.max,
+          }));
+        } else {
+          table.getColumn("price")?.setFilterValue(undefined);
+        }
+      } catch (e) {
+        console.log(e);
       }
-    } catch (e) {
-      console.log(e);
     }
   }, [priceRange, table]);
 
@@ -155,7 +158,7 @@ export function DataTable<TData, TValue>({
                 </TableCell>
               </TableRow>
             )}
-          </TableBody>{" "}
+          </TableBody>
         </Table>
       </div>
       <DataTablePagination table={table} />

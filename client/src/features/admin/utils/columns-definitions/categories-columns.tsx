@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ChevronRight } from "lucide-react";
 import { FaTrash } from "react-icons/fa6";
 import { deleteCategory } from "@/api-calls/categories-api-calls";
-import { CategoryModal } from "../components/CategoryModal";
+import { CategoryModal } from "../../components/CategoryModal";
 
 export type TCategory = {
   _id: string;

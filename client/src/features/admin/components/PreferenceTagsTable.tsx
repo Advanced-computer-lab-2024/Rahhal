@@ -3,7 +3,7 @@ import { DataTable } from "@/components/data-table/DataTable";
 import {
   preferenceTagsColumns,
   TPreferenceTag,
-} from "@/features/admin/utils/preference-tags-columns";
+} from "@/features/admin/utils/columns-definitions/preference-tags-columns";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { PreferenceTagsModal } from "./PreferenceTagsModal";

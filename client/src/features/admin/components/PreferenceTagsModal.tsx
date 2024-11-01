@@ -2,7 +2,7 @@ import { GenericModal } from "@/components/GenericModal";
 import { useEffect, useState } from "react";
 import ShortText from "@/components/ShortText";
 import { DEFAULTS } from "@/lib/constants";
-import { TPreferenceTag } from "@/features/admin/utils/preference-tags-columns";
+import { TPreferenceTag } from "@/features/admin/utils/columns-definitions/preference-tags-columns";
 import { submitPreferenceTag } from "@/api-calls/preference-tags-api-calls";
 
 interface PreferenceTagsModalProps {
