@@ -19,6 +19,17 @@ export async function getAllProducts(req: express.Request, res: express.Response
   }
 }
 
+export async function getAvailableProducts(req: express.Request, res: express.Response) {
+  try {
+    const products = await productsService.getAvailableProducts();
+    res.status(STATUS_CODES.STATUS_OK).json(products);
+  } catch (error) {
+    res
+      .status(STATUS_CODES.SERVER_ERROR)
+      .json({ message: error instanceof Error ? error.message : "An unknown error occurred" });
+  }
+}
+
 export async function getProductById(req: express.Request, res: express.Response) {
   try {
     const product = await productsService.getProductById(req.params.id);

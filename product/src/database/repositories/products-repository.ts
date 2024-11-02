@@ -6,6 +6,11 @@ export async function getAllProducts() {
   return Product.find();
 }
 
+// Get all available products 
+export async function getAvailableProducts() {
+  return Product.find({ archived: false });
+}
+
 // Get product by id
 export async function getProductById(id: string) {
   return Product.findById(id);
