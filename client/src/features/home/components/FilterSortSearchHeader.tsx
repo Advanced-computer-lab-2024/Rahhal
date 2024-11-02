@@ -1,6 +1,6 @@
 import GeneralGridStyle from "../styles/GeneralGridView.module.css";
-import SearchBar from "@/components/SearchBar";
-import type { SearchPartHandler } from "@/components/SearchBar";
+import SearchBar from "@/features/home/components/search-bar/SearchBar";
+import type { genericHandler } from "@/features/home/components/search-bar/SearchBar";
 import SortButton from "./SortButton";
 import type { SortOption } from "@/features/home/types/home-page-types";
 import FilterButton from "./FilterButton";
@@ -10,9 +10,11 @@ interface FilterSortSearchHeaderProps {
   finishedLoading: boolean;
   setSearch: (value: string) => void;
   searchPlaceHolder?: string;
+  searchPartsPlaceholders?: string[];
   searchParts?: string[];
+  searchPartsTypes?: string[];
   searchPartsValues?: string[][];
-  searchPartsHandlers?: SearchPartHandler[];
+  searchPartsHandlers?: genericHandler[];
   handleSort: (value: SortOption) => void;
   children?: React.ReactNode;
 }
@@ -21,8 +23,10 @@ function FilterSortSearchHeader({
   finishedLoading,
   setSearch,
   searchPlaceHolder,
+  searchPartsPlaceholders,
   searchParts,
   searchPartsValues,
+  searchPartsTypes,
   searchPartsHandlers,
   children,
   handleSort,
@@ -38,6 +42,8 @@ function FilterSortSearchHeader({
               searchParts={searchParts}
               searchPartsValues={searchPartsValues}
               searchPartsHandlers={searchPartsHandlers}
+              searchPartsTypes={searchPartsTypes}
+              searchPartsPlaceholders={searchPartsPlaceholders}
             />
           )}
         </div>
