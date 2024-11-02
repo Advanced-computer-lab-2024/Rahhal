@@ -8,9 +8,10 @@ dotenv.config();
 async function getAccessToken() {
   const clientId = process.env.AMADEUS_API_KEY;
   const clientSecret = process.env.AMADEUS_API_SECRET;
+  const amadeusAuthURL = process.env.AMADEUS_AUTH_URL;
 
-  if (!clientId || !clientSecret) {
-    throw new Error("AMADEUS_API_KEY and AMADEUS_API_SECRET must be defined");
+  if (!clientId || !clientSecret || !amadeusAuthURL) {
+    throw new Error("Missing Amadeus APIs in .env file");
   }
 
   const data = new URLSearchParams({
@@ -20,7 +21,7 @@ async function getAccessToken() {
   });
 
   const response = await axios.post(
-    "https://test.api.amadeus.com/v1/security/oauth2/token",
+    amadeusAuthURL,
     data.toString(), // Pass data as a URL-encoded string
     {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -31,13 +32,13 @@ async function getAccessToken() {
 }
 
 export async function getTransportationOffers(request: TransferRequest) {
+  const amadeusTransferURL = process.env.AMADEUS_TRANSFER_URL;
+  if (!amadeusTransferURL) {
+    throw new Error("Missing Amadeus Transfer URL in .env file");
+  }
   const accessToken = await getAccessToken();
-  const response = await axios.post(
-    "https://test.api.amadeus.com/v1/shopping/transfer-offers",
-    request,
-    {
-      headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" },
-    },
-  );
+  const response = await axios.post(amadeusTransferURL, request, {
+    headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" },
+  });
   return response.data;
 }
