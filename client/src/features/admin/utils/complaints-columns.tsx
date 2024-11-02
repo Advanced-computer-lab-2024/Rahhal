@@ -13,20 +13,7 @@ export type TComplaint = {
     owner: {
         "_id": string,
         "firstName": string,
-        "lastName": string,
-        "username": string,
-        "email": string,
-        "password": string,
-        "role": string,
-        "dob": Date,
-        "nationality": string,
-        "job": string,
-        "addresses": string[],
-        "wallet": number,
-        "approved": boolean,
-        "createdAt": Date,
-        "updatedAt": Date,
-        "__v": number
+        "lastName": string
     };
     replies: string[];
 };
