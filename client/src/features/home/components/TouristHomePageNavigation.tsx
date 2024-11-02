@@ -19,7 +19,7 @@ interface NavigationProps {
 export default function TouristHomePageNavigation(NavigationProps: NavigationProps) {
   const [navigation, setNavigation] = useState(1);
   const buttonNames = ["Experiences", "Stays", "Travel", "Shop"];
-  const paths = ["/entertainment", "/entertainment", "/entertainment", "/shop"];
+  const paths = ["/entertainment", "/entertainment", "/travel", "/shop"];
   const { id } = useParams();
   return (
     <div className=" w-full z-10 relative flex">
