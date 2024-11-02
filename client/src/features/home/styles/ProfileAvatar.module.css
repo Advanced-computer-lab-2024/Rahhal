@@ -55,7 +55,7 @@
   padding: 12px 16px;
   font-size: 14px;
   color: white;
-  background-color: #e1bc6d;
+  background-color: var(--primary-color);
   cursor: pointer;
   transition: background-color 0.2s;
 }
