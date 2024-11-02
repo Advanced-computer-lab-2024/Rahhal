@@ -6,6 +6,8 @@ import { DependencyType } from "@/components/ui/auto-form/types";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { TermsAndConditionsModal } from "./TermsAndConditionsModal";
+import { termsAndConditions } from "../terms-and-conditions/TouistTermsAndConditions";
 
 interface SignupTouristProps {
   onBack: () => void;
@@ -326,9 +328,6 @@ function SignupTourist({ onBack }: SignupTouristProps) {
     <>
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <Card className="w-full max-w-3xl flex flex-col" style={{ padding: 20 }}>
-          {/* <CardHeader className="text-xl font-bold" >
-            <CardTitle>Tourist Sign Up</CardTitle>
-        </CardHeader> */}
           <CardHeader className="flex flex-row items-center space-x-4">
             <Button onClick={onBack} variant="outline" size="sm">
               Back
@@ -422,16 +421,7 @@ function SignupTourist({ onBack }: SignupTouristProps) {
                   description: (
                     <>
                       {"    "} By checking this box you agree to the{" "}
-                      <a
-                        href="#"
-                        className="text-primary underline"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          alert("Terms and conditions clicked.");
-                        }}
-                      >
-                        terms and conditions
-                      </a>
+                      <TermsAndConditionsModal sections ={termsAndConditions} />
                       .
                     </>
                   ),

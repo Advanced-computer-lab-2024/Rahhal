@@ -5,6 +5,8 @@ import { useState } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { TermsAndConditionsModal } from "./TermsAndConditionsModal";
+import { termsAndConditions } from "../terms-and-conditions/AdvertiserTermsAndConditions";
 
 interface SignupAdvertiserProps {
   onBack: () => void;
@@ -187,16 +189,7 @@ function SignupAdvertiser({ onBack }: SignupAdvertiserProps) {
                   description: (
                     <>
                       {"    "} By checking this box you agree to the{" "}
-                      <a
-                        href="#"
-                        className="text-primary underline"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          alert("Terms and conditions clicked.");
-                        }}
-                      >
-                        terms and conditions
-                      </a>
+                      <TermsAndConditionsModal sections ={termsAndConditions} />
                       .
                     </>
                   ),
