@@ -13,6 +13,10 @@ export async function getAllProducts() {
   return await axiosInstance.get("/products");
 }
 
+export async function getAvailableProducts(){
+  return await axiosInstance.get("/products/available");
+}
+
 export async function getProductById(id: string) {
   return await axiosInstance.get(`/products/${id}`);
 }

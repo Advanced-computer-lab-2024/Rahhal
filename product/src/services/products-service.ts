@@ -6,6 +6,11 @@ export async function getAllProducts(): Promise<IProduct[]> {
   return await productsRepository.getAllProducts();
 }
 
+// Get all available products
+export async function getAvailableProducts(): Promise<IProduct[]> {
+  return await productsRepository.getAvailableProducts();
+}
+
 // Get product by id
 export async function getProductById(id: string) {
   return await productsRepository.getProductById(id);
