@@ -18,6 +18,12 @@ export async function updateUser(user: TUser, updates: Partial<TUser>) {
   return response.data;
 }
 
+//get user by user by id
+export const getUserById = async (id: string): Promise<TUser> => {
+  const response = await axios.get<TUser>(`${SERVICES_URLS.USER}/users/${id}`);
+  return response.data;
+};
+
 // delete user from users endpoint
 export async function deleteUser(user: TUser) {
   try {

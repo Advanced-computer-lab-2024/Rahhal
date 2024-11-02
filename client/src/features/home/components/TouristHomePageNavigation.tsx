@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ProfileAvatar } from "./ProfileAvatar";
 interface ButtonProps {
   navigation: number;
   setNavigation: (index: number) => void;
@@ -47,11 +48,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
         )}
         {NavigationProps.loggedIn && (
           <div className="flex items-center pr-3">
-            <Link to={`/user-settings/${id}`}>
-              <Avatar className="h-10 w-10">
-                <AvatarFallback>US</AvatarFallback>
-              </Avatar>
-            </Link>
+            <ProfileAvatar/>
           </div>
         )}
       </div>
