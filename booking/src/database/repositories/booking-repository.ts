@@ -15,12 +15,7 @@ export async function createBooking(user: string, entity: string, type: bookingT
 }
 
 export async function updateBooking(id: string, bookingData: Partial<IBooking>) {
-  const { user, entity, type, status } = bookingData;
-  return await Booking.findByIdAndUpdate(
-    id,
-    { user, entity, type, status },
-    { new: true, runValidators: true },
-  );
+  return await Booking.findByIdAndUpdate(id, bookingData, { new: true, runValidators: true });
 }
 
 export async function deleteBooking(id: string) {
