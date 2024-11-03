@@ -27,6 +27,19 @@ const exchangeratesAxiosInstance = axios.create({
   validateStatus: (status) => {
     return status < STATUS_CODES.GATEWAY_TIMEOUT;
   },
+});  
+
+const bookingAxiosInstance = axios.create({
+  baseURL: "http://booking:3000",
+  validateStatus: (status) => {
+    return status < STATUS_CODES.GATEWAY_TIMEOUT;
+  },
 });
 
-export { userAxiosInstance, entertainmentAxiosInstance, productAxiosInstance, exchangeratesAxiosInstance };
+export {
+  userAxiosInstance,
+  entertainmentAxiosInstance,
+  productAxiosInstance,
+  bookingAxiosInstance,
+  exchangeratesAxiosInstance
+};
