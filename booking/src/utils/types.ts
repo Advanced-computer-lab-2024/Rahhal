@@ -16,5 +16,5 @@ export interface IBooking {
   user: string;
   entity: string;
   type: bookingType;
-  status?: string;
+  status?: bookingStatus;
 }

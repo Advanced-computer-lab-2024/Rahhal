@@ -11,3 +11,11 @@ export const STATUS_CODES = {
 export const CONSTANTS = {
   ZERO: 0,
 };
+
+export const ERROR_MESSAGES = {
+  NOT_FOUND: "Not Found",
+  BAD_REQUEST: "Bad Request",
+  SERVER_ERROR: "Internal Server Error",
+  GATEWAY_TIMEOUT: "Gateway Timeout",
+  BAD_GATEWAY: "Bad Gateway",
+};
