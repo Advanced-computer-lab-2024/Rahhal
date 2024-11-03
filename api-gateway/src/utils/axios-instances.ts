@@ -22,4 +22,11 @@ const productAxiosInstance = axios.create({
   },
 });
 
-export { userAxiosInstance, entertainmentAxiosInstance, productAxiosInstance };
+const exchangeratesAxiosInstance = axios.create({
+  baseURL: "https://api.exchangeratesapi.io/v1",
+  validateStatus: (status) => {
+    return status < STATUS_CODES.GATEWAY_TIMEOUT;
+  },
+});
+
+export { userAxiosInstance, entertainmentAxiosInstance, productAxiosInstance, exchangeratesAxiosInstance };
