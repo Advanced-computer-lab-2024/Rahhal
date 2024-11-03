@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import type { bookingType, IBooking, bookingStatus } from "@/utils/types";
-import { STATUS_CODES } from "@/utils/constants";
+import { STATUS_CODES, ERROR_MESSAGES } from "@/utils/constants";
 import * as bookingService from "@/services/booking-service";
 
 export async function getBookings(req: Request, res: Response) {
@@ -9,7 +9,6 @@ export async function getBookings(req: Request, res: Response) {
       user: req.query.userId as string,
       entity: req.query.entity as string,
       type: req.query.type as bookingType,
-      date: req.query.date ? new Date(req.query.date as string) : undefined,
       status: req.query.status as bookingStatus,
     };
     const definedFilters = Object.fromEntries(
@@ -21,7 +20,7 @@ export async function getBookings(req: Request, res: Response) {
     res.status(STATUS_CODES.STATUS_OK).json(bookings);
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
-      message: error instanceof Error ? error.message : "An unknown error occurred",
+      message: error instanceof Error ? error.message : ERROR_MESSAGES.SERVER_ERROR,
     });
   }
 }
@@ -37,7 +36,7 @@ export async function getBookingById(req: Request, res: Response) {
     }
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
-      message: error instanceof Error ? error.message : "An unknown error occurred",
+      message: error instanceof Error ? error.message : ERROR_MESSAGES.SERVER_ERROR,
     });
   }
 }
@@ -53,7 +52,7 @@ export async function createBooking(req: Request, res: Response) {
     res.status(STATUS_CODES.CREATED).json(booking);
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
-      message: error instanceof Error ? error.message : "An unknown error occurred",
+      message: error instanceof Error ? error.message : ERROR_MESSAGES.SERVER_ERROR,
     });
   }
 }
@@ -70,7 +69,7 @@ export async function updateBooking(req: Request, res: Response) {
     }
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
-      message: error instanceof Error ? error.message : "An unknown error occurred",
+      message: error instanceof Error ? error.message : ERROR_MESSAGES.SERVER_ERROR,
     });
   }
 }
@@ -86,7 +85,7 @@ export async function deleteBooking(req: Request, res: Response) {
     }
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
-      message: error instanceof Error ? error.message : "An unknown error occurred",
+      message: error instanceof Error ? error.message : ERROR_MESSAGES.SERVER_ERROR,
     });
   }
 }
