@@ -32,12 +32,8 @@ async function getAccessToken() {
 }
 
 export async function getTransportationOffers(request: TransferRequest) {
-  const amadeusTransferURL = process.env.AMADEUS_TRANSFER_URL;
-  if (!amadeusTransferURL) {
-    throw new Error("Missing Amadeus Transfer URL in .env file");
-  }
   const accessToken = await getAccessToken();
-  const response = await axios.post(amadeusTransferURL, request, {
+  const response = await axios.post("https://test.api.amadeus.com/v1/shopping/transfer-offers", request, {
     headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" },
   });
   return response.data;
