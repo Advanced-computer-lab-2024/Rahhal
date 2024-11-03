@@ -16,6 +16,7 @@ interface GenericSelectProps {
   options: { label: string; value: string }[];
   onSelect: (value: string) => void;
   initialValue?: string;
+  width?: string;
 }
 
 export function GenericSelect({
@@ -24,6 +25,7 @@ export function GenericSelect({
   options,
   onSelect,
   initialValue,
+  width = "w-full",
 }: GenericSelectProps) {
   const [selectedValue, setSelectedValue] = React.useState<string | undefined>(initialValue);
 
@@ -35,7 +37,7 @@ export function GenericSelect({
 
   return (
     <Select value={selectedValue} onValueChange={handleValueChange}>
-      <SelectTrigger className="w-full">
+      <SelectTrigger className={width}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
