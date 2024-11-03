@@ -14,7 +14,7 @@ export async function getAllItineraries() {
 }
 
 export async function getActiveAppropriateItineraries() {
-  return axiosInstance.get("/itineraries/valid");
+  return axiosInstance.get("/itineraries/active-appropriate");
 }
 
 export async function getItineraryById(id: string) {
