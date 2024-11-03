@@ -32,7 +32,7 @@ export async function getBookingById(req: Request, res: Response) {
     if (booking) {
       res.status(STATUS_CODES.STATUS_OK).json(booking);
     } else {
-      res.status(STATUS_CODES.NOT_FOUND).json({ message: "Booking not found" });
+      res.status(STATUS_CODES.NOT_FOUND).json({ message: ERROR_MESSAGES.NOT_FOUND });
     }
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
@@ -65,7 +65,7 @@ export async function updateBooking(req: Request, res: Response) {
     if (booking) {
       res.status(STATUS_CODES.STATUS_OK).json(booking);
     } else {
-      res.status(STATUS_CODES.NOT_FOUND).json({ message: "Booking not found" });
+      res.status(STATUS_CODES.NOT_FOUND).json({ message: ERROR_MESSAGES.NOT_FOUND });
     }
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
@@ -81,7 +81,7 @@ export async function deleteBooking(req: Request, res: Response) {
     if (booking) {
       res.status(STATUS_CODES.STATUS_OK).json(booking);
     } else {
-      res.status(STATUS_CODES.NOT_FOUND).json({ message: "Booking not found" });
+      res.status(STATUS_CODES.NOT_FOUND).json({ message: ERROR_MESSAGES.NOT_FOUND });
     }
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
