@@ -4,12 +4,6 @@ export const STATUS_CODES = {
   STATUS_OK: 200,
   BAD_REQUEST: 400,
   SERVER_ERROR: 500,
-  GATEWAY_TIMEOUT: 504,
-  BAD_GATEWAY: 502,
-};
-
-export const CONSTANTS = {
-  ZERO: 0,
 };
 
 export const ERROR_MESSAGES = {
