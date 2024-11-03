@@ -22,6 +22,11 @@ interface SearchPartHandler<T> {
   setState: (value: T) => void;
 }
 
+interface SearchPartValueChangeHandler {
+  state: string;
+  setState: (value: string) => void;
+}
+
 export type genericHandler =
   | SearchPartHandler<string>
   | SearchPartHandler<Date>
@@ -37,6 +42,7 @@ interface SearchPartProps {
   placeholder_2: string;
   values: string[];
   handler: SearchPartHandler<string>;
+  onValueChange?: (value: string) => void;
 }
 interface SearchBar {
   onSearch?: (query: string) => void;
@@ -46,6 +52,7 @@ interface SearchBar {
   searchPartsValues?: string[][];
   searchPartsTypes?: string[];
   searchPartsHandlers?: genericHandler[];
+  searchPartsOnValueChange?: ((value: string) => void)[];
   inputBox?: boolean;
 }
 
@@ -58,6 +65,7 @@ export default function SearchBar({
   searchPartsTypes,
   searchPartsValues,
   searchPartsHandlers,
+  searchPartsOnValueChange,
   inputBox = true,
 }: SearchBar) {
   const [focusIndex, setFocusIndex] = useState(0);
@@ -124,6 +132,11 @@ export default function SearchBar({
                 setHoverIndex={setHoverIndex}
                 values={searchPartsValues.length > 0 ? searchPartsValues[index] : []}
                 handler={searchPartsHandlers[index] as SearchPartHandler<string>}
+                onValueChange={
+                  searchPartsOnValueChange && searchPartsOnValueChange.length >= index
+                    ? searchPartsOnValueChange[index]
+                    : undefined
+                }
               />
             ) : searchPartsTypes[index] === "date" ? (
               <DateTimePickerSearchBar
@@ -287,7 +300,10 @@ function ComboboxPopover(SearchPartProps: SearchPartProps) {
           </PopoverTrigger>
           <PopoverContent className="p-0" side="bottom" align="start">
             <Command>
-              <CommandInput placeholder="Change status..." />
+              <CommandInput
+                placeholder="Change status..."
+                onValueChange={SearchPartProps.onValueChange}
+              />
               <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
