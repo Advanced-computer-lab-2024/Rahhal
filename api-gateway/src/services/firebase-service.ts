@@ -1,4 +1,4 @@
-import { storage } from "../utils/firebase";
+import { storage } from "@/utils/firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import type { UploadTaskSnapshot } from "firebase/storage";
 
@@ -32,14 +32,21 @@ export async function uploadFile(file: any) : Promise<string> {
 
 
 
-export async function uploadMultipleFiles(files: File[] | FileList) : Promise<string[]> {
- 
+export async function uploadMultipleFiles(files: { [key: string]: any }) : Promise<string[]> {
+    
+    
+
     const urls: string[] = [];
-    for (const file of files) {
+    
+    // loop over all keys in files object
+    for (const key in files) {
+        const file = files[key];
         const url = await uploadFile(file);
         urls.push(url);
     }
     return urls;
+    
+   
 }
 
 

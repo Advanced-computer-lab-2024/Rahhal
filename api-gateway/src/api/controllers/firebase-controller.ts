@@ -17,7 +17,9 @@ export async function uploadFile(Request: Request, Response: Response) {
 
 export async function uploadMultipleFiles(Request: Request, Response: Response) {
   const files = Request.files;
+  
   try {
+    
     const urls = await firebaseService.uploadMultipleFiles(files);
     Response.status(STATUS_CODES.STATUS_OK).json(urls);
   } catch (error) {

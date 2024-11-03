@@ -8,7 +8,7 @@ import exchangeRatesRoutes from "@/api/routes/exchange-rates-routes";
 import transportationRoutes from "@/api/routes/trasportation-routes";
 import bookingRoutes from "@/api/routes/booking-routes";
 import cors from "cors";
-import firebaseRoutes from "./api/routes/firebase-routes";
+import firebaseRoutes from "@/api/routes/firebase-routes";
 import fileUpload from "express-fileupload";
 const app = express();
 
