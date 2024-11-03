@@ -65,8 +65,6 @@ export default function AccountForm() {
       .optional(),
 
     password: z.string().optional(),
-
-    wallet: z.number().optional(),
   });
 
   type AccountFormValues = z.infer<typeof accountFormSchema>;
@@ -79,8 +77,7 @@ export default function AccountForm() {
     defaultValues: {
       username: user.username || "",
       email: user.email || "",
-      password: user.password || "",
-      wallet: user.wallet || 0,
+      password: user.password || ""
     },
   });
   const oldPasswordForm = useForm<passwordValidatorValue>({
@@ -195,24 +192,6 @@ export default function AccountForm() {
                 )}
               />
             </div>
-            {/* Wallet */}
-            {user.role == "tourist" && (
-              <div className="space-y-2">
-                <FormField
-                  name="wallet"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Wallet</FormLabel>
-                      <FormControl>
-                        <Input type="number" disabled {...field} />
-                      </FormControl>
-                      <FormDescription>This is your wallet balance.</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            )}
             {changePassword && (
               <Form {...oldPasswordForm}>
                 {/* Old Password */}
