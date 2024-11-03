@@ -105,6 +105,19 @@ export const DEFAULTS = {
     category: { _id: "", name: "" },
     owner: "",
   },
+  COMPLAINT: {
+    _id: "",
+    title: "",
+    body: "",
+    status: "",
+    date: new Date(),
+    owner: {
+      _id: "",
+      firstName: "",
+      lastName: ""
+    },
+    replies: [],
+  },
 };
 export const NATIONALITIES = [
   { value: "Afghanistan", label: "Afghanistan" },

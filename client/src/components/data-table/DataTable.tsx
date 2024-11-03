@@ -26,12 +26,14 @@ import { DataTableViewOptions } from "./DataTableViewOptions";
 import { DataTablePagination } from "./DataTablePagination";
 import { Input } from "@/components/ui/input";
 import { useEffect } from "react";
+import { GenericSelect } from "@/components/GenericSelect";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   newRowModal?: React.ReactNode;
   enableFilters?: boolean;
+  complaintFilter?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -39,6 +41,7 @@ export function DataTable<TData, TValue>({
   data,
   newRowModal,
   enableFilters = false,
+  complaintFilter = false,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -114,6 +117,29 @@ export function DataTable<TData, TValue>({
               className="max-w-[100px]"
             />
           </div>
+        </div>
+      )}
+      {complaintFilter && (
+        <div className="w-50">
+          <GenericSelect
+            width="w-1/4"
+            label="Status"
+            options={[
+              { value: "all", label: "Select a status" },
+              { value: "resolved", label: "Resolved" },
+              { value: "pending", label: "Pending" },
+            ]}
+            initialValue={undefined}
+            placeholder={"Select a status"}
+            onSelect={(value) => {
+              if (value === "all") {
+                table.getColumn("status")?.setFilterValue(undefined);
+              } else {
+                table.getColumn("status")?.setFilterValue(value);
+              }
+            }
+            }
+          />
         </div>
       )}
       <div className="rounded-md">
