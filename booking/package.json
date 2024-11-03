@@ -26,7 +26,6 @@
     "vitest": "^2.1.1"
   },
   "dependencies": {
-    "@esbuild/linux-arm64": "^0.24.0",
     "axios": "^1.7.7",
     "body-parser": "^1.20.2",
     "booking": "file:",
