@@ -3,7 +3,7 @@ export enum bookingType {
   Itinerary = "itinerary",
   Flight = "flight",
   Hotel = "hotel",
-  Transfer = "transfer",
+  Transportation = "transportation",
 }
 
 export enum bookingStatus {
@@ -16,6 +16,5 @@ export interface IBooking {
   user: string;
   entity: string;
   type: bookingType;
-  date?: Date;
   status?: string;
 }
