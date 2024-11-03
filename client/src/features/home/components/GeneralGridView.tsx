@@ -384,10 +384,12 @@ const GeneralGridView = () => {
         setSearch={setSearch}
         searchParts={searchParts}
         searchPartsValues={searchPartsValues}
+        searchPartsTypes={["dropdown", "dropdown"]}
         searchPartsHandlers={[
           { state: selectedCategory, setState: handleCategoryClick },
           { state: selectedTag, setState: handleTagClick },
         ]}
+        searchPartsPlaceholders={["Add Category", "Add Tag"]}
         handleSort={handleSort}
       >
         <HeaderIcons
