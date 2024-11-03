@@ -13,6 +13,10 @@ export async function getAllItineraries() {
   return await axiosInstance.get("/itineraries");
 }
 
+export async function getActiveAppropriateItineraries() {
+  return axiosInstance.get("/itineraries/active-appropriate");
+}
+
 export async function getItineraryById(id: string) {
   return await axiosInstance.get(`/itineraries/${id}`);
 }

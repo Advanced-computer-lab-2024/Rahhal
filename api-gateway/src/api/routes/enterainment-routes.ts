@@ -9,6 +9,7 @@ import * as categoriesController from "@/api/controllers/entertainment-controlle
 const router = express.Router();
 //activites routes
 router.get("/activities", activitiesController.getAllActivities);
+router.get("/activities/appropriate", activitiesController.getAppropriateActivities);
 router.get("/activities/:id", activitiesController.getActivityById);
 router.post("/activities", activitiesController.createActivity);
 router.patch("/activities/:id", activitiesController.updateActivity);
@@ -16,6 +17,7 @@ router.delete("/activities/:id", activitiesController.deleteActivity);
 
 //itineraries routes
 router.get("/itineraries", itinerariesController.getAllItineraries);
+router.get("/itineraries/active-appropriate", itinerariesController.getActiveAppropriateItineraries);
 router.get("/itineraries/:id", itinerariesController.getAItineraryById);
 router.post("/itineraries", itinerariesController.createItinerary);
 router.patch("/itineraries/:id", itinerariesController.updateItinerary);

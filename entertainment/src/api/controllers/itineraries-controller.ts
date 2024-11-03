@@ -13,6 +13,17 @@ export async function getAllItineraries(req: express.Request, res: express.Respo
   }
 }
 
+export async function getActiveAppropriateItineraries(req: express.Request, res: express.Response) {
+  try {
+    const itineraries = await itinerariesService.getActiveAppropriateItineraries();
+    res.status(STATUS_CODES.STATUS_OK).json(itineraries);
+  } catch (error: unknown) {
+    res.status(STATUS_CODES.SERVER_ERROR).json({
+      message: error instanceof Error ? error.message : "An unknown error occurred",
+    });
+  }
+}
+
 export async function getItineraryById(req: express.Request, res: express.Response) {
   try {
     const itinerary = await itinerariesService.getItineraryById(req.params.id);
