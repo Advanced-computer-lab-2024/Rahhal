@@ -15,10 +15,6 @@ const bookingSchema = new mongoose.Schema({
     enum: Object.values(bookingType),
     required: true,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
   status: {
     type: String,
     enum: Object.values(bookingStatus),
