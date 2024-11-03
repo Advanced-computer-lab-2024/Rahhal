@@ -12,10 +12,14 @@ interface IAutocompletePrediction {
   reference: string;
 }
 
-export async function getPlaceAutocomplete(place: string) {
-  const { data } = await axios.get(
-    `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${place}&key=${GOOGLE_MAPS_API_KEY}`,
-  );
+export async function getPlaceAutocomplete(place: string, filter: string) {
+  const { data } = await axios.get("https://maps.googleapis.com/maps/api/place/autocomplete/json", {
+    params: {
+      input: place,
+      key: GOOGLE_MAPS_API_KEY,
+      types: filter,
+    },
+  });
   const predictions = data.predictions;
   return predictions.map((prediction: IAutocompletePrediction) => {
     return {
