@@ -13,11 +13,11 @@ export type TProduct = {
   price: number;
   quantity: number;
   description: string;
+  archived: boolean;
   seller: string;
   ratings: TRating[];
 };
 
-// Derive TNewActivity from TActivity
 export type TNewProduct = Omit<TProduct, "_id">;
 
 function deleteRow(row: any) {
@@ -35,6 +35,25 @@ export const productsColumns: ColumnDef<TProduct>[] = [
     header: "Name",
     cell: ({ row }) => <div className="capitalize">{row.original.name}</div>,
     enableColumnFilter: true,
+  },
+
+  {accessorKey: "archived",
+    header: "Status",
+    cell: ({ row }) => (
+      <div>
+        {row.original.archived ? (
+          <span className="text-muted-foreground">Archived</span>
+        ) : (
+          <span className="text-muted-foreground">Available</span>
+        )}
+      </div>
+    ),
+    enableColumnFilter: true,
+    filterFn: (row, id, value) => {
+      if (value === "archived") return row.original.archived;
+      if (value === "available") return !row.original.archived;
+      return true;
+    }
   },
   {
     accessorKey: "price",

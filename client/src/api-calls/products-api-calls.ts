@@ -15,6 +15,11 @@ export async function fetchProducts() {
   return response.data;
 }
 
+export async function fetchAvailableProducts() {
+  const response = await axios.get(SERVICES_URLS.PRODUCT + "/products/available");
+  return response.data;
+}
+
 export async function createProduct(
   newProductData: TNewProduct,
   userId: string,

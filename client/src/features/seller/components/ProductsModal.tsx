@@ -6,6 +6,7 @@ import ReviewDisplay from "@/components/Ratings";
 import { sampleReviews } from "@/lib/utils";
 import { DEFAULTS } from "@/lib/constants";
 import LongText from "@/components/LongText";
+import { Checkbox } from "@/components/ui/checkbox";
 import { TNewProduct, TProduct } from "@/features/seller/utils/seller-columns";
 import { createProduct, updateProduct } from "@/api-calls/products-api-calls";
 
@@ -103,6 +104,25 @@ export function ProductModal({ productData, dialogTrigger, userId }: ProductModa
         placeholder={"Enter a detailed description"}
         initialDisabled={!isNewProduct}
       />
+
+<div className="flex items-center space-x-2">
+        <Checkbox
+          id="archive"
+          checked={modalProductData?.archived || false}
+          onCheckedChange={(checked) =>
+            setModalProductData(
+              modalProductData ? { ...modalProductData, archived: checked as boolean } : undefined
+            )
+          }
+         // disabled={isNewProduct} // new products can't be archived "ask about it"
+        />
+        <label
+          htmlFor="archive"
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+          Archive Product
+        </label>
+      </div>
 
       <PictureCard
         title={"Product Picture"}
