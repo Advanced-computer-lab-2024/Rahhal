@@ -5,6 +5,7 @@ import productRoutes from "@/api/routes/product-routes";
 import googleMapsRoutes from "@/api/routes/google-maps-routes";
 import entertainmentRoutes from "@/api/routes/enterainment-routes";
 import exchangeRatesRoutes from "@/api/routes/exchange-rates-routes";
+import transportationRoutes from "@/api/routes/trasportation-routes";
 import cors from "cors";
 const app = express();
 
@@ -19,5 +20,6 @@ app.use("/api/product", productRoutes);
 app.use("/api/google-maps", googleMapsRoutes);
 app.use("/api/entertainment", entertainmentRoutes);
 app.use("/api/exchange-rates", exchangeRatesRoutes);
+app.use("/api/transportation", transportationRoutes);
 
 export default app;
