@@ -6,6 +6,16 @@ export async function getAllItineraries() {
   return await Itinerary.find().populate("category").populate("preferenceTags").exec();
 }
 
+// Get all active & appropriate itineraries
+export async function getActiveAppropriateItineraries() {
+  return await Itinerary.find(
+    { active: true, appropriate: true }
+  )
+    .populate("category")
+    .populate("preferenceTags")
+    .exec();
+}
+
 // Get itinerary by id
 export async function getItineraryById(id: string) {
   return await Itinerary.findById(id).populate("category").populate("preferenceTags").exec();

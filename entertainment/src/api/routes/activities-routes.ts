@@ -6,6 +6,7 @@ const router = express.Router();
 // Activities routes
 
 router.get("/", activitiesController.getAllActivities); // Get all activities
+router.get("/appropriate", activitiesController.getAppropriateActivities); // Get all appropriate activities
 router.get("/:id", activitiesController.getActivityById); // Get activity by id
 router.post("/", activitiesController.createActivity); // Create a new activity
 router.patch("/:id", activitiesController.updateActivity); // Update an existing activity

@@ -19,6 +19,17 @@ export async function getAllActivities(req: Request, res: Response) {
   }
 }
 
+export async function getAppropriateActivities(req: Request, res: Response) {
+  try {
+    const activities = await activitiesService.getAppropriateActivities();
+    res.status(STATUS_CODES.STATUS_OK).json(activities);
+  } catch (error: unknown) {
+    res.status(STATUS_CODES.SERVER_ERROR).json({
+      message: error instanceof Error ? error.message : "An unknown error occurred",
+    });
+  }
+}
+
 export async function getActivityById(req: Request, res: Response) {
   try {
     const activity = await activitiesService.getActivityById(req.params.id);

@@ -11,6 +11,14 @@ export async function getAllItineraries(req: Request, res: Response) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
 }
+export async function getActiveAppropriateItineraries(req: Request, res: Response) {
+  try {
+    const itinerary = await itinerariesService.getActiveAppropriateItineraries();
+    res.status(itinerary.status).json(itinerary.data);
+  } catch (error) {
+    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
+  }
+}
 
 export async function getAItineraryById(req: Request, res: Response) {
   const itineraryId = req.params.id;

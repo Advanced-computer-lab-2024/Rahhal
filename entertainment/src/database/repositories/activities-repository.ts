@@ -6,6 +6,16 @@ export async function getAllActivities() {
   return await Activity.find().populate("category").populate("preferenceTags").exec();
 }
 
+// Get all appropriate activities
+export async function getAppropriateActivities() {
+  return await Activity.find(
+    { appropriate: true }
+  )
+    .populate("category")
+    .populate("preferenceTags")
+    .exec();
+}
+
 // Get activity by id
 export async function getActivityById(id: string) {
   return await Activity.findById(id).populate("category").populate("preferenceTags").exec();
