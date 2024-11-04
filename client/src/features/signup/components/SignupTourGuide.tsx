@@ -1,49 +1,58 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Label } from '@/components/ui/label'
-import { useToast } from '@/components/ui/use-toast'
-import { TermsAndConditionsModal } from './TermsAndConditionsModal'
-import { termsAndConditions } from '../terms-and-conditions/TourGuideTermsAndConditions'
+import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
+import { TermsAndConditionsModal } from "./TermsAndConditionsModal";
+import { termsAndConditions } from "../terms-and-conditions/TourGuideTermsAndConditions";
 
-const tourGuideSchema = z.object({
-  firstName: z.string().min(1, "Required"),
-  lastName: z.string().min(1, "Required"),
-  email: z.string().email({ message: "Invalid email address" }),
-  username: z.string().regex(/^[A-Za-z0-9_]+$/, {
-    message: "Username can only contain letters, numbers, and underscores",
-  }),
-  password: z.string().min(8, "Password must be at least 8 characters long"),
-  confirmPassword: z.string(),
-  mobileNumber: z.string().min(1, "Required"),
-  yearsOfExperience: z.number().min(0, "Must be a positive number"),
-  previousWork: z.string().min(1,"Please provide your previous work."),
-  nationalID: z.instanceof(File),
-  certificates: z.array(z.instanceof(File)).min(1, "At least one certificate is required"),
-  acceptTerms: z.boolean().refine((val) => val === true, "You must accept the terms and conditions"),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-})
+const tourGuideSchema = z
+  .object({
+    firstName: z.string().min(1, "Required"),
+    lastName: z.string().min(1, "Required"),
+    email: z.string().email({ message: "Invalid email address" }),
+    username: z.string().regex(/^[A-Za-z0-9_]+$/, {
+      message: "Username can only contain letters, numbers, and underscores",
+    }),
+    password: z.string().min(8, "Password must be at least 8 characters long"),
+    confirmPassword: z.string(),
+    mobileNumber: z.string().min(1, "Required"),
+    yearsOfExperience: z.number().min(0, "Must be a positive number"),
+    previousWork: z.string().min(1, "Please provide your previous work."),
+    nationalID: z.instanceof(File),
+    certificates: z.array(z.instanceof(File)).min(1, "At least one certificate is required"),
+    acceptTerms: z
+      .boolean()
+      .refine((val) => val === true, "You must accept the terms and conditions"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
-type TourGuideFormData = z.infer<typeof tourGuideSchema>
+type TourGuideFormData = z.infer<typeof tourGuideSchema>;
 
 export default function SignupTourGuide() {
-  const navigate = useNavigate()
-  const { toast } = useToast()
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { control, handleSubmit, formState: { errors }, setError } = useForm<TourGuideFormData>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<TourGuideFormData>({
     resolver: zodResolver(tourGuideSchema),
     defaultValues: {
       firstName: "",
@@ -58,19 +67,19 @@ export default function SignupTourGuide() {
       certificates: [],
       acceptTerms: false,
     },
-  })
+  });
 
   const createUser = async (newUser: any) => {
     const response = await axios.post("http://localhost:3000/api/user/users", newUser, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
-    })
-    return response.data
-  }
+    });
+    return response.data;
+  };
 
   const onSubmit = async (data: TourGuideFormData) => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     // const formData = new FormData()
 
     // Object.entries(data).forEach(([key, value]) => {
@@ -105,14 +114,14 @@ export default function SignupTourGuide() {
       toast({
         title: "Creating User",
         description: "Please wait while we create your account",
-        duration: 1500
-      })
-      const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-      
+        duration: 1500,
+      });
+      const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
       await delay(4500);
 
       const response: any = await createUser(reqBody);
-      console.log('Server response:', response);
+      console.log("Server response:", response);
 
       toast({
         title: "User Created",
@@ -122,39 +131,40 @@ export default function SignupTourGuide() {
           color: "#000000",
         },
         duration: 3000,
-      })
+      });
       setTimeout(() => {
-        navigate("/login")
-      }, 3000)
+        navigate("/login");
+      }, 3000);
     } catch (error: any) {
-      console.error('Error during form submission:', error);
+      console.error("Error during form submission:", error);
 
       if (axios.isAxiosError(error) && error.response) {
-        console.error('Server error response:', error.response.data);
+        console.error("Server error response:", error.response.data);
 
         if (error.response.data.error === "Username already exists") {
           setError("username", {
             type: "manual",
-            message: "Username already exists"
-          })
-        }
-        else if(error.response.data.error === "This email is registered to another user") {
+            message: "Username already exists",
+          });
+        } else if (error.response.data.error === "This email is registered to another user") {
           setError("email", {
             type: "manual",
-            message: "This email is registered to another user"
-          })
-        }
-        else if(error.response.data.error === "Username already exists and this email is registered to another user"){
+            message: "This email is registered to another user",
+          });
+        } else if (
+          error.response.data.error ===
+          "Username already exists and this email is registered to another user"
+        ) {
           setError("username", {
             type: "manual",
-            message: "Username already exists"
-          })
+            message: "Username already exists",
+          });
           setError("email", {
             type: "manual",
-            message: "Email already exists"
-          })
+            message: "Email already exists",
+          });
         }
-    
+
         toast({
           title: "Error",
           description: error.response.data.error,
@@ -167,12 +177,12 @@ export default function SignupTourGuide() {
           description: "An unexpected error occurred",
           variant: "destructive",
           duration: 3000,
-        })
+        });
       }
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <div className="flex">
@@ -187,15 +197,19 @@ export default function SignupTourGuide() {
               control={control}
               render={({ field }) => (
                 <div>
-                  <Label htmlFor="firstName" className={errors.firstName ? 'text-red-500' : ''}>First Name</Label>
-                  <Input 
-                    id="firstName" 
-                    placeholder="First Name" 
-                    {...field} 
-                    className={errors.firstName ? 'border-red-500' : ''}
+                  <Label htmlFor="firstName" className={errors.firstName ? "text-red-500" : ""}>
+                    First Name
+                  </Label>
+                  <Input
+                    id="firstName"
+                    placeholder="First Name"
+                    {...field}
+                    className={errors.firstName ? "border-red-500" : ""}
                     disabled={isSubmitting}
                   />
-                  {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName.message}</p>}
+                  {errors.firstName && (
+                    <p className="text-red-500 text-sm">{errors.firstName.message}</p>
+                  )}
                 </div>
               )}
             />
@@ -205,15 +219,19 @@ export default function SignupTourGuide() {
               control={control}
               render={({ field }) => (
                 <div>
-                  <Label htmlFor="lastName" className={errors.lastName ? 'text-red-500' : ''}>Last Name</Label>
-                  <Input 
-                    id="lastName" 
-                    placeholder="Last Name" 
-                    {...field} 
-                    className={errors.lastName ? 'border-red-500' : ''}
+                  <Label htmlFor="lastName" className={errors.lastName ? "text-red-500" : ""}>
+                    Last Name
+                  </Label>
+                  <Input
+                    id="lastName"
+                    placeholder="Last Name"
+                    {...field}
+                    className={errors.lastName ? "border-red-500" : ""}
                     disabled={isSubmitting}
                   />
-                  {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName.message}</p>}
+                  {errors.lastName && (
+                    <p className="text-red-500 text-sm">{errors.lastName.message}</p>
+                  )}
                 </div>
               )}
             />
@@ -223,13 +241,15 @@ export default function SignupTourGuide() {
               control={control}
               render={({ field }) => (
                 <div>
-                  <Label htmlFor="email" className={errors.email ? 'text-red-500' : ''}>Email</Label>
-                  <Input 
-                    id="email" 
-                    type="email" 
-                    placeholder="Email" 
-                    {...field} 
-                    className={errors.email ? 'border-red-500' : ''}
+                  <Label htmlFor="email" className={errors.email ? "text-red-500" : ""}>
+                    Email
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Email"
+                    {...field}
+                    className={errors.email ? "border-red-500" : ""}
                     disabled={isSubmitting}
                   />
                   {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
@@ -242,15 +262,19 @@ export default function SignupTourGuide() {
               control={control}
               render={({ field }) => (
                 <div>
-                  <Label htmlFor="username" className={errors.username ? 'text-red-500' : ''}>Username</Label>
-                  <Input 
-                    id="username" 
-                    placeholder="Username" 
-                    {...field} 
-                    className={errors.username ? 'border-red-500' : ''}
+                  <Label htmlFor="username" className={errors.username ? "text-red-500" : ""}>
+                    Username
+                  </Label>
+                  <Input
+                    id="username"
+                    placeholder="Username"
+                    {...field}
+                    className={errors.username ? "border-red-500" : ""}
                     disabled={isSubmitting}
                   />
-                  {errors.username && <p className="text-red-500 text-sm">{errors.username.message}</p>}
+                  {errors.username && (
+                    <p className="text-red-500 text-sm">{errors.username.message}</p>
+                  )}
                 </div>
               )}
             />
@@ -260,16 +284,20 @@ export default function SignupTourGuide() {
               control={control}
               render={({ field }) => (
                 <div>
-                  <Label htmlFor="password" className={errors.password ? 'text-red-500' : ''}>Password</Label>
-                  <Input 
-                    id="password" 
-                    type="password" 
-                    placeholder="Password" 
-                    {...field} 
-                    className={errors.password ? 'border-red-500' : ''}
+                  <Label htmlFor="password" className={errors.password ? "text-red-500" : ""}>
+                    Password
+                  </Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Password"
+                    {...field}
+                    className={errors.password ? "border-red-500" : ""}
                     disabled={isSubmitting}
                   />
-                  {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+                  {errors.password && (
+                    <p className="text-red-500 text-sm">{errors.password.message}</p>
+                  )}
                 </div>
               )}
             />
@@ -279,16 +307,23 @@ export default function SignupTourGuide() {
               control={control}
               render={({ field }) => (
                 <div>
-                  <Label htmlFor="confirmPassword" className={errors.confirmPassword ? 'text-red-500' : ''}>Confirm Password</Label>
-                  <Input 
-                    id="confirmPassword" 
-                    type="password" 
-                    placeholder="Confirm Password" 
-                    {...field} 
-                    className={errors.confirmPassword ? 'border-red-500' : ''}
+                  <Label
+                    htmlFor="confirmPassword"
+                    className={errors.confirmPassword ? "text-red-500" : ""}
+                  >
+                    Confirm Password
+                  </Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    placeholder="Confirm Password"
+                    {...field}
+                    className={errors.confirmPassword ? "border-red-500" : ""}
                     disabled={isSubmitting}
                   />
-                  {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>}
+                  {errors.confirmPassword && (
+                    <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>
+                  )}
                 </div>
               )}
             />
@@ -298,15 +333,22 @@ export default function SignupTourGuide() {
               control={control}
               render={({ field }) => (
                 <div>
-                  <Label htmlFor="mobileNumber" className={errors.mobileNumber ? 'text-red-500' : ''}>Phone Number</Label>
-                  <Input 
-                    id="mobileNumber" 
-                    placeholder="Enter your Phone Number" 
-                    {...field} 
-                    className={errors.mobileNumber ? 'border-red-500' : ''}
+                  <Label
+                    htmlFor="mobileNumber"
+                    className={errors.mobileNumber ? "text-red-500" : ""}
+                  >
+                    Phone Number
+                  </Label>
+                  <Input
+                    id="mobileNumber"
+                    placeholder="Enter your Phone Number"
+                    {...field}
+                    className={errors.mobileNumber ? "border-red-500" : ""}
                     disabled={isSubmitting}
                   />
-                  {errors.mobileNumber && <p className="text-red-500 text-sm">{errors.mobileNumber.message}</p>}
+                  {errors.mobileNumber && (
+                    <p className="text-red-500 text-sm">{errors.mobileNumber.message}</p>
+                  )}
                 </div>
               )}
             />
@@ -316,17 +358,24 @@ export default function SignupTourGuide() {
               control={control}
               render={({ field }) => (
                 <div>
-                  <Label htmlFor="yearsOfExperience" className={errors.yearsOfExperience ? 'text-red-500' : ''}>Years of Experience</Label>
-                  <Input 
-                    id="yearsOfExperience" 
-                    type="number" 
-                    placeholder="Years of Experience" 
-                    {...field} 
+                  <Label
+                    htmlFor="yearsOfExperience"
+                    className={errors.yearsOfExperience ? "text-red-500" : ""}
+                  >
+                    Years of Experience
+                  </Label>
+                  <Input
+                    id="yearsOfExperience"
+                    type="number"
+                    placeholder="Years of Experience"
+                    {...field}
                     onChange={(e) => field.onChange(parseInt(e.target.value))}
-                    className={errors.yearsOfExperience ? 'border-red-500' : ''}
+                    className={errors.yearsOfExperience ? "border-red-500" : ""}
                     disabled={isSubmitting}
                   />
-                  {errors.yearsOfExperience && <p className="text-red-500 text-sm">{errors.yearsOfExperience.message}</p>}
+                  {errors.yearsOfExperience && (
+                    <p className="text-red-500 text-sm">{errors.yearsOfExperience.message}</p>
+                  )}
                 </div>
               )}
             />
@@ -336,15 +385,22 @@ export default function SignupTourGuide() {
               control={control}
               render={({ field }) => (
                 <div>
-                  <Label htmlFor="previousWork" className={errors.previousWork ? 'text-red-500' : ''}>Previous Work</Label>
-                  <Textarea 
-                    id="previousWork" 
-                    placeholder="Previous Work" 
-                    {...field} 
-                    className={errors.previousWork ? 'border-red-500' : ''}
+                  <Label
+                    htmlFor="previousWork"
+                    className={errors.previousWork ? "text-red-500" : ""}
+                  >
+                    Previous Work
+                  </Label>
+                  <Textarea
+                    id="previousWork"
+                    placeholder="Previous Work"
+                    {...field}
+                    className={errors.previousWork ? "border-red-500" : ""}
                     disabled={isSubmitting}
                   />
-                  {errors.previousWork && <p className="text-red-500 text-sm">{errors.previousWork.message}</p>}
+                  {errors.previousWork && (
+                    <p className="text-red-500 text-sm">{errors.previousWork.message}</p>
+                  )}
                 </div>
               )}
             />
@@ -354,10 +410,12 @@ export default function SignupTourGuide() {
               control={control}
               render={({ field: { onChange, value, ...field } }) => (
                 <div>
-                  <Label htmlFor="nationalID" className={errors.nationalID ? 'text-red-500' : ''}>National ID</Label>
-                  <Input 
-                    id="nationalID" 
-                    type="file" 
+                  <Label htmlFor="nationalID" className={errors.nationalID ? "text-red-500" : ""}>
+                    National ID
+                  </Label>
+                  <Input
+                    id="nationalID"
+                    type="file"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {
@@ -365,10 +423,12 @@ export default function SignupTourGuide() {
                       }
                     }}
                     {...field}
-                    className={errors.nationalID ? 'border-red-500' : ''}
+                    className={errors.nationalID ? "border-red-500" : ""}
                     disabled={isSubmitting}
                   />
-                  {errors.nationalID && <p className="text-red-500 text-sm">{errors.nationalID.message}</p>}
+                  {errors.nationalID && (
+                    <p className="text-red-500 text-sm">{errors.nationalID.message}</p>
+                  )}
                 </div>
               )}
             />
@@ -378,10 +438,15 @@ export default function SignupTourGuide() {
               control={control}
               render={({ field: { onChange, value, ...field } }) => (
                 <div>
-                  <Label htmlFor="certificates" className={errors.certificates ? 'text-red-500' : ''}>Certificates</Label>
-                  <Input 
-                    id="certificates" 
-                    type="file" 
+                  <Label
+                    htmlFor="certificates"
+                    className={errors.certificates ? "text-red-500" : ""}
+                  >
+                    Certificates
+                  </Label>
+                  <Input
+                    id="certificates"
+                    type="file"
                     onChange={(e) => {
                       const files = e.target.files;
                       if (files) {
@@ -391,11 +456,12 @@ export default function SignupTourGuide() {
                     {...field}
                     multiple
                     accept=".pdf,.png,.jpg,.jpeg"
-                    
-                    className={errors.certificates ? 'border-red-500' : ''}
+                    className={errors.certificates ? "border-red-500" : ""}
                     disabled={isSubmitting}
                   />
-                  {errors.certificates && <p className="text-red-500 text-sm">{errors.certificates.message}</p>}
+                  {errors.certificates && (
+                    <p className="text-red-500 text-sm">{errors.certificates.message}</p>
+                  )}
                 </div>
               )}
             />
@@ -406,30 +472,41 @@ export default function SignupTourGuide() {
               render={({ field }) => (
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="acceptTerms" 
-                      checked={field.value} 
-                      onCheckedChange={field.onChange} 
-                      className={errors.acceptTerms ? 'border-red-500' : ''}
+                    <Checkbox
+                      id="acceptTerms"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      className={errors.acceptTerms ? "border-red-500" : ""}
                       disabled={isSubmitting}
                     />
-                    <Label htmlFor="acceptTerms" className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${errors.acceptTerms ? 'text-red-500' : ''}`}>
+                    <Label
+                      htmlFor="acceptTerms"
+                      className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${errors.acceptTerms ? "text-red-500" : ""}`}
+                    >
                       Accept terms and conditions
                     </Label>
                     <TermsAndConditionsModal sections={termsAndConditions} />
                   </div>
-                  {errors.acceptTerms && <p className="text-red-500 text-sm">{errors.acceptTerms.message}</p>}
+                  {errors.acceptTerms && (
+                    <p className="text-red-500 text-sm">{errors.acceptTerms.message}</p>
+                  )}
                 </div>
               )}
             />
           </form>
         </CardContent>
         <CardFooter className="mt-4">
-          <Button type="submit" className="w-full" disabled={isSubmitting} style={{backgroundColor: '#E1BC6D'}} onClick={handleSubmit(onSubmit)}>
-            {isSubmitting ? 'Signing Up...' : 'Sign Up'}
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isSubmitting}
+            style={{ backgroundColor: "#E1BC6D" }}
+            onClick={handleSubmit(onSubmit)}
+          >
+            {isSubmitting ? "Signing Up..." : "Sign Up"}
           </Button>
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
