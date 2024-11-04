@@ -38,6 +38,7 @@ export async function populateBookings(
           entity = await entertainmentAxiosInstance.get<IActivity | IItinerary>(entityUrl);
         }
         return {
+          _id: booking._id,
           user: {
             _id: user!.data._id,
             username: user!.data.username,
@@ -51,6 +52,8 @@ export async function populateBookings(
           entity: entity!.data,
           type: booking.type,
           status: booking.status,
+          selectedPrice: booking.selectedPrice,
+          selectedDate: booking.selectedDate,
         };
       }
       return null;

@@ -1,9 +1,24 @@
+import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
+import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
+
 export interface IBooking {
   user: string;
   entity: string;
   type: bookingType;
   status?: bookingStatus;
+  selectedPrice?: number;
+  selectedDate?: Date;
 }
+
+export type TPopulatedBooking = {
+  _id?: string;
+  user: IUser;
+  entity: TActivity | TItinerary;
+  type: bookingType;
+  status: bookingStatus;
+  selectedPrice: number;
+  selectedDate: Date;
+};
 
 export type TBookingType = {
   user: string;

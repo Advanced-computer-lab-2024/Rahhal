@@ -43,11 +43,9 @@ export async function getBookingById(req: Request, res: Response) {
 
 export async function createBooking(req: Request, res: Response) {
   try {
-    const bookingData = req.body;
+    const bookingData: Partial<IBooking> = req.body;
     const booking = await bookingService.createBooking(
-      bookingData.user,
-      bookingData.entity,
-      bookingData.type,
+      bookingData
     );
     res.status(STATUS_CODES.CREATED).json(booking);
   } catch (error: unknown) {
