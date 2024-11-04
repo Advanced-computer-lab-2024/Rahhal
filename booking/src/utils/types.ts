@@ -17,4 +17,6 @@ export interface IBooking {
   entity: string;
   type: bookingType;
   status?: bookingStatus;
+  selectedPrice?: number;
+  selectedDate?: Date;
 }

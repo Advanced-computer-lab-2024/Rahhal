@@ -29,17 +29,23 @@ export interface PreferenceTag {
 }
 
 export interface IBooking {
+  _id: string;
   user: string;
   entity: string;
   type: bookingType;
   status?: bookingStatus;
+  selectedPrice?: number;
+  selectedDate?: Date;
 }
 
 export interface PopulatedBooking {
+  _id: string;
   user: IUser;
   entity: IActivity | IItinerary;
   type: bookingType;
   status: bookingStatus;
+  selectedPrice: number;
+  selectedDate?: Date;
 }
 
 export interface IItinerary {

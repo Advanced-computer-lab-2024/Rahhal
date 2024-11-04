@@ -1,5 +1,5 @@
 import Booking from "@/database/models/Booking";
-import type { bookingType, IBooking } from "@/utils/types";
+import type { IBooking } from "@/utils/types";
 
 export async function getBookings(filter: Partial<IBooking>) {
   return await Booking.find(filter);
@@ -9,8 +9,8 @@ export async function getBookingById(id: string) {
   return await Booking.findById(id);
 }
 
-export async function createBooking(user: string, entity: string, type: bookingType) {
-  const newBooking = new Booking({ user, entity, type });
+export async function createBooking(bookingData: Partial<IBooking>) {
+  const newBooking = new Booking(bookingData);
   return await newBooking.save();
 }
 

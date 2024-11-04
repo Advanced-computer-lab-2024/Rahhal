@@ -1,4 +1,4 @@
-import type { bookingType, IBooking } from "@/utils/types";
+import type { IBooking } from "@/utils/types";
 import * as bookingRepository from "@/database/repositories/booking-repository";
 
 export async function getBookings(filter: Partial<IBooking>) {
@@ -9,8 +9,8 @@ export async function getBookingById(id: string) {
   return await bookingRepository.getBookingById(id);
 }
 
-export async function createBooking(user: string, entity: string, type: bookingType) {
-  return await bookingRepository.createBooking(user, entity, type);
+export async function createBooking(bookingData: Partial<IBooking>) {
+  return await bookingRepository.createBooking(bookingData);
 }
 
 export async function updateBooking(id: string, bookingData: Partial<IBooking>) {
