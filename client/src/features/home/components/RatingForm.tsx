@@ -1,8 +1,37 @@
 import AutoForm, { AutoFormSubmit } from "@/components/ui/auto-form";
 import AutoFormLabel from "@/components/ui/auto-form/common/label";
+import AutoFormTextarea from "@/components/ui/auto-form/fields/textarea";
 import { AutoFormInputComponentProps } from "@/components/ui/auto-form/types";
 import { FormControl, FormDescription, FormItem } from "@/components/ui/form";
 import { z } from "zod";
+
+export type TRatingEntity = {
+  label: string;
+  description: string;
+  type: "rating" | "comment";
+};
+
+function getFieldsConfig(ratingEntities: Record<string, TRatingEntity>) {
+  return Object.entries(ratingEntities).reduce((acc: Record<string, any>, [key, value]) => {
+    acc[key] = {
+      label: value.label,
+      fieldType: value.type === "rating" ? AutoFormRating : AutoFormTextarea,
+      description: value.description,
+    };
+    return acc;
+  }, {});
+}
+function getZodSchema(ratingEntities: Record<string, TRatingEntity>) {
+  const schemaConfig = Object.entries(ratingEntities).reduce(
+    (acc: Record<string, any>, [key, value]) => {
+      acc[key] =
+        value.type === "rating" ? z.number().min(1).max(5) : z.string().max(1000).optional();
+      return acc;
+    },
+    {},
+  );
+  return z.object(schemaConfig);
+}
 
 function StarIcon() {
   return (
@@ -34,6 +63,7 @@ function RatingStars({
     <div className="flex items-center gap-1">
       {[1, 2, 3, 4, 5].map((star) => (
         <button
+          type="button"
           key={star}
           className={`p-2 rounded-full transition-colors ${
             star <= rating
@@ -70,46 +100,22 @@ function AutoFormRating({
   );
 }
 
-type RatingEntity = {
-  rating: {
-    label: string;
-    description: string;
-  };
-  comment: {
-    label: string;
-    description: string;
-  };
-};
+export default function RatingForm({
+  ratingEntities,
+  onSubmit,
+}: {
+  ratingEntities: Record<string, TRatingEntity>;
 
-function getFieldsConfig(ratingEntities: RatingEntity[]) {
-  return ratingEntities.reduce((acc: Record<string, any>, entity, index) => {
-    acc[`rating-${index}`] = {
-      label: entity.rating.label,
-      fieldType: AutoFormRating,
-      description: entity.rating.description,
-    };
-    acc[`comment-${index}`] = {
-      label: entity.comment.label,
-      fieldType: "textarea",
-      description: entity.comment.description,
-    };
-    return acc;
-  }, {});
-}
-function getZodSchema(ratingEntities: RatingEntity[]) {
-  const x = ratingEntities.reduce((acc: Record<string, any>, entity, index) => {
-    acc[`rating-${index}`] = z.coerce.number().min(1).max(5).describe(entity.rating.label);
-    acc[`comment-${index}`] = z.string().max(1000).optional();
-    return acc;
-  }, {});
-  return z.object(x);
-}
-
-export default function RatingForm({ ratingEntities }: { ratingEntities: RatingEntity[] }) {
+  /* TODO
+  Tried to achieve type safety here with the values parameter
+  to only allow keys existing the the ratingEntities object but failed :(
+  */
+  onSubmit: (values: Record<string, any>) => void;
+}) {
   return (
     <AutoForm
       formSchema={getZodSchema(ratingEntities)}
-      onSubmit={(values) => console.log(values)}
+      onSubmit={(values) => onSubmit(values)}
       fieldConfig={getFieldsConfig(ratingEntities)}
     >
       <AutoFormSubmit className="bg-primary text-white w-full mt-4">Sign Up</AutoFormSubmit>
