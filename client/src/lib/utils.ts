@@ -14,7 +14,7 @@ export const IMAGES = [
 
 // sample reviews for the review display
 export const sampleReviews = [
-  { user: "John Doe", rating: 4, review: "Great product, highly recommend!" },
-  { user: "Jane Smith", rating: 5, review: "Exceeded my expectations." },
-  { user: "Bob Johnson", rating: 3 },
+  { userId: "44", userName: "John Doe", rating: 4, review: "Great product, highly recommend!" },
+  { userId: "44", userName: "Jane Smith", rating: 5, review: "Exceeded my expectations." },
+  { userId: "44", userName: "Bob Johnson", rating: 3 },
 ];

@@ -1,6 +1,6 @@
 import React from "react";
 import { Star } from "lucide-react";
-import { TRating } from "@/features/advertiser/utils/advertiser-columns";
+import type { TRating } from "@/types/shared";
 
 interface ReviewProps {
   reviews: TRating[];
@@ -17,7 +17,7 @@ const ReviewStar = ({ filled }: { filled: boolean }) => (
 const ReviewCard = ({ review }: { review: TRating }) => (
   <div className="bg-white shadow-md rounded-lg p-4 mb-4">
     <div className="flex items-center mb-2">
-      <span className="font-bold mr-2">{review.user}</span>
+      <span className="font-bold mr-2">{review.userName}</span>
       <div className="flex">
         {[1, 2, 3, 4, 5].map((star) => (
           <ReviewStar key={star} filled={star <= review.rating} />

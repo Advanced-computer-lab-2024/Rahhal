@@ -5,12 +5,7 @@ import { ActivitiesModal } from "@/features/advertiser/components/ActivityModal"
 import { Badge } from "@/components/ui/badge";
 import { FaTrash } from "react-icons/fa6";
 import { deleteActivity } from "@/api-calls/activities-api-calls";
-
-export type TRating = {
-  user: string;
-  rating: number;
-  review?: string;
-};
+import type { TRating } from "@/types/shared";
 
 export type TCategory = {
   _id: string;

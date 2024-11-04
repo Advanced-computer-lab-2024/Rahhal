@@ -21,8 +21,8 @@
 
 .iconButton:hover,
 .iconButton.active {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); 
-  transform: translateY(-1px); 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
 }
 
 .menu {
@@ -63,5 +63,3 @@
 .logout:hover {
   background-color: #b88e2a;
 }
-
-

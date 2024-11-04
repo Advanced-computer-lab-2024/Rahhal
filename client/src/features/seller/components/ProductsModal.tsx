@@ -111,7 +111,7 @@ export function ProductModal({ productData, dialogTrigger, userId }: ProductModa
         initialImageSources={productData?.picture ? [productData.picture] : []}
         handleFileUploadCallback={(files) => setProductImages(files)}
       />
-      {!isNewProduct && <ReviewDisplay reviews={sampleReviews} />}
+      {!isNewProduct && <ReviewDisplay reviews={modalProductData?.ratings ?? sampleReviews} />}
     </GenericModal>
   );
 }
