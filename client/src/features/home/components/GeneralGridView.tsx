@@ -14,7 +14,7 @@ import { HistoricalPlacesFilter } from "@/features/home/utils/filter-lists/histo
 import { DateRange } from "react-day-picker";
 import { FilterX } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { fetchActivities } from "@/api-calls/activities-api-calls";
+import { fetchAppropriateActivities } from "@/api-calls/activities-api-calls";
 import { fetchCategories } from "@/api-calls/categories-api-calls";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { fetchHistoricalPlaces } from "@/api-calls/historical-places-api-calls";
@@ -77,7 +77,7 @@ const GeneralGridView = () => {
     data: activities,
     isLoading: isLoadingActivities,
     error: errorActivities,
-  } = useQuery({ queryKey: ["entertainment", "activities"], queryFn: fetchActivities });
+  } = useQuery({ queryKey: ["entertainment", "activities"], queryFn: fetchAppropriateActivities });
   const {
     data: itineraries,
     isLoading: isLoadingItineraries,

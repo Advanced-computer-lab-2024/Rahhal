@@ -24,6 +24,7 @@ import HistoricalTagsView from "@/features/tourism-governor/components/Historica
 import UsersPendingRequests from "@/features/admin/components/UsersPendingRequests";
 import TravelPage from "@/features/home/components/TravelPage";
 import AdminItinerariesView from "@/features/admin/components/AdminItinerariesView";
+import AdminActivitiesView from "@/features/admin/components/AdminActivitiesView";
 
 export default function App() {
   const queryClient = new QueryClient();
@@ -72,7 +73,8 @@ export default function App() {
             <Route path="/tour-guide/:id" element={<TourGuideView />} />
             <Route path="/admin/preference-tags" element={<PreferenceTagsAdminView />} />
             <Route path="/admin/complaints" element={<AdminComplaintsView />} />
-            <Route path="/admin/itineraries" element={<AdminItinerariesView />} />
+            <Route path="/admin/itineraries" element={<AdminItinerariesView />} />            <Route path="/admin/activities" element={<AdminActivitiesView />} />
+
           </Routes>
         </Router>
       </QueryClientProvider>

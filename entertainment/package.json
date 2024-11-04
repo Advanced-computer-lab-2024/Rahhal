@@ -27,7 +27,6 @@
     "vitest": "^2.1.1"
   },
   "dependencies": {
-    "@esbuild/linux-arm64": "^0.24.0",
     "@types/swagger-ui-express": "^4.1.6",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",

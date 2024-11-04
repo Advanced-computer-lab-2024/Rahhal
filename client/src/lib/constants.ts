@@ -25,6 +25,7 @@ export const DEFAULTS = {
     price: {},
     category: { _id: "", name: "" },
     tags: [],
+    isAppropriate: true,
     ratings: [],
   },
   HISTORICAL_PLACE: {
