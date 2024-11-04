@@ -1,5 +1,3 @@
-"use client";
-
 import { Icons } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,17 +20,131 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { EditContext } from "./SettingsView";
+import { useParams } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import { CONNECTION_STRING } from "@/utils/constants";
+import axios from "axios";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 export function CardsPaymentMethod() {
+  const { toast } = useToast();
+  const { user } = useContext(EditContext);
+  const { id } = useParams();
   const [cardType, setCardType] = useState<string | null>(null);
+
+  const formSchema = z.object({
+    paymentMethod: z.enum(["card", "paypal", "apple"]),
+    wallet: z.object({
+      creditCard: z.array(
+        z.object({
+          cardHolderName: z.string().min(1, "Cardholder name is required"),
+          cardNumber: z.string().length(16, "Card number must be 16 digits"),
+          expirationMonth: z.string().min(1, "Month is required"),
+          expirationYear: z.string().min(1, "Year is required"),
+          cvv: z.string().length(3, "CVV must be 3 digits"),
+        }),
+      ),
+      defaultCreditCardIndex: z.number().min(0),
+    }),
+  });
+
+  type FormValues = z.infer<typeof formSchema>;
+
+  interface APIPayload {
+    wallet: {
+      creditCard: Array<{
+        cardHolderName: string;
+        cardNumber: string;
+        expirationDate: Date;
+        cvv: string;
+      }>;
+      defaultCreditCardIndex: number;
+    };
+  }
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      paymentMethod: "card",
+      wallet: {
+        creditCard: [
+          {
+            cardHolderName: "",
+            cardNumber: "",
+            expirationMonth: "",
+            expirationYear: "",
+            cvv: "",
+          },
+        ],
+        defaultCreditCardIndex: 0,
+      },
+    },
+  });
+
+  const transformFormDataToAPI = (data: FormValues): APIPayload => {
+    return {
+      wallet: {
+        creditCard: data.wallet.creditCard.map((card) => ({
+          cardHolderName: card.cardHolderName,
+          cardNumber: card.cardNumber,
+          expirationDate: new Date(
+            parseInt(card.expirationYear),
+            parseInt(card.expirationMonth) - 1, // Months are 0-based in JavaScript
+            1, // Set to first day of month
+          ),
+          cvv: card.cvv,
+        })),
+        defaultCreditCardIndex: data.wallet.defaultCreditCardIndex,
+      },
+    };
+  };
+
+  async function updateUser(data: APIPayload) {
+    const USER_SERVICE_URL = CONNECTION_STRING + `${id}`;
+    try {
+      const response = await axios.patch(USER_SERVICE_URL, data);
+      toast({
+        title: "Update " + response.statusText,
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } catch (error) {
+      toast({
+        title: "Error: " + error,
+        variant: "destructive",
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+    }
+  }
+
+  function onSubmit(data: FormValues) {
+    const apiData = transformFormDataToAPI(data);
+    // updateUser(apiData);
+    console.log("Form Data:", data);
+    console.log("API Data:", apiData);
+  }
+
   function GetCardType(number: string) {
     // visa
     var re = new RegExp("^4");
     if (number.match(re) != null) return "Visa";
 
     // Mastercard
-    // Updated for Mastercard 2017 BINs expansion
     if (
       /^(5[1-5][0-9]{14}|2(22[1-9][0-9]{12}|2[3-9][0-9]{13}|[3-6][0-9]{14}|7[0-1][0-9]{13}|720[0-9]{12}))$/.test(
         number,
@@ -70,146 +182,219 @@ export function CardsPaymentMethod() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Payment Method</CardTitle>
-        <CardDescription>Add a new payment method to your account.</CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-6">
-        <RadioGroup defaultValue="card" className="grid grid-cols-3 gap-4">
-          <div>
-            <RadioGroupItem value="card" id="card" className="peer sr-only" aria-label="Card" />
-            <Label
-              htmlFor="card"
-              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                className="mb-3 h-6 w-6"
-              >
-                <rect width="20" height="14" x="2" y="5" rx="2" />
-                <path d="M2 10h20" />
-              </svg>
-              Card
-            </Label>
-          </div>
-
-          <div>
-            <RadioGroupItem
-              value="paypal"
-              id="paypal"
-              className="peer sr-only"
-              aria-label="Paypal"
-            />
-            <Label
-              htmlFor="paypal"
-              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-            >
-              <Icons.paypal className="mb-3 h-6 w-6" />
-              Paypal
-            </Label>
-          </div>
-
-          <div>
-            <RadioGroupItem value="apple" id="apple" className="peer sr-only" aria-label="Apple" />
-            <Label
-              htmlFor="apple"
-              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-            >
-              <Icons.apple className="mb-3 h-6 w-6" />
-              Apple
-            </Label>
-          </div>
-        </RadioGroup>
-        <div className="grid gap-2">
-          <Label htmlFor="name">Cardholder Name</Label>
-          <Input id="name" placeholder="" />
-        </div>
-        {/* What does this billing address differ than the address provided in profile settings? */}
-
-        {/* <div className="grid gap-2">
-          <Label htmlFor="city">City</Label>
-          <Input id="city" placeholder="" />
-        </div> */}
-        <div className="grid gap-2">
-          <Label htmlFor="number">Card number</Label>
-          <div className="flex w-full items-center space-x-2">
-            <Input
-              id="number"
-              placeholder="XXXX-XXXX-XXXX-XXXX"
-              onChange={(e) => {
-                const cardType = GetCardType(e.target.value);
-                setCardType(cardType);
-                console.log(cardType);
-              }}
-            />
-            <div className="absolute right-12 flex items-center h-full pointer-events-none">
-              {cardType === "Visa" && (
-                <img src={visaLogo} alt="Visa Logo" className="h-11 mr-4 w-auto object-contain" />
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Payment Method</CardTitle>
+            <CardDescription>Add a new payment method to your account.</CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-6">
+            {/* Type of Card */}
+            <FormField
+              control={form.control}
+              name="paymentMethod"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="grid grid-cols-3 gap-4"
+                    >
+                      <div>
+                        <RadioGroupItem value="card" id="card" className="peer sr-only" />
+                        <Label
+                          htmlFor="card"
+                          className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            className="mb-3 h-6 w-6"
+                          >
+                            <rect width="20" height="14" x="2" y="5" rx="2" />
+                            <path d="M2 10h20" />
+                          </svg>
+                          Card
+                        </Label>
+                      </div>
+                      <div>
+                        <RadioGroupItem value="paypal" id="paypal" className="peer sr-only" />
+                        <Label
+                          htmlFor="paypal"
+                          className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                        >
+                          <Icons.paypal className="mb-3 h-6 w-6" />
+                          Paypal
+                        </Label>
+                      </div>
+                      <div>
+                        <RadioGroupItem value="apple" id="apple" className="peer sr-only" />
+                        <Label
+                          htmlFor="apple"
+                          className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                        >
+                          <Icons.apple className="mb-3 h-6 w-6" />
+                          Apple
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-              {cardType === "Mastercard" && (
-                <img
-                  src={mastercardLogo}
-                  alt="Mastercard Logo"
-                  className="h-8 mr-4 w-auto object-contain"
-                />
+            />
+            {/* CardHolder Name */}
+            <FormField
+              control={form.control}
+              name="wallet.creditCard.0.cardHolderName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Cardholder Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Your name as it appears on the card" value={field.value as string} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
+            />
+            {/* CardNumber */}
+            <FormField
+              control={form.control}
+              name="wallet.creditCard.0.cardNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Card Number</FormLabel>
+                  <FormControl>
+                    <div className="flex w-full items-center space-x-2 relative">
+                      <Input
+                        placeholder="XXXX-XXXX-XXXX-XXXX"
+                        maxLength={16}
+                        {...field}
+                        inputMode="numeric"
+                        onInput={(e) => {
+                          e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, "");
+                          field.onChange(e);
+                        }}
+                        onChange={(e) => {
+                          const cardType = GetCardType(e.target.value);
+                          setCardType(cardType);
+                          field.onChange(e);
+                        }}
+                      />
+                      <div className="absolute right-5 flex items-center h-full pointer-events-none">
+                        {cardType === "Visa" && (
+                          <img
+                            src={visaLogo}
+                            alt="Visa Logo"
+                            className="h-11 w-auto object-contain"
+                          />
+                        )}
+                        {cardType === "Mastercard" && (
+                          <img
+                            src={mastercardLogo}
+                            alt="Mastercard Logo"
+                            className="h-8 w-auto object-contain"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Expiration Month */}
+            <div className="grid grid-cols-3 gap-4">
+              <FormField
+                control={form.control}
+                name="wallet.creditCard.0.expirationMonth"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Expires</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Month" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                          <SelectItem key={month} value={month.toString()}>
+                            {new Date(0, month - 1).toLocaleString("default", { month: "long" })}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* Expiration Year */}
+              <FormField
+                control={form.control}
+                name="wallet.creditCard.0.expirationYear"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Year</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Year" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Array.from({ length: 10 }, (_, i) => (
+                          <SelectItem key={i} value={`${new Date().getFullYear() + i}`}>
+                            {new Date().getFullYear() + i}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* CVV */}
+              <FormField
+                control={form.control}
+                name="wallet.creditCard.0.cvv"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>CVV</FormLabel>
+                    <FormControl>
+                      <Input
+                        maxLength={3}
+                        inputMode="numeric"
+                        onInput={(e) => {
+                          e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, "");
+                          field.onChange(e);
+                        }}
+                        placeholder="CVV"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
-          </div>
-        </div>
-        <div className="grid grid-cols-3 gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="month">Expires</Label>
-            <Select>
-              <SelectTrigger id="month" aria-label="Month">
-                <SelectValue placeholder="Month" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">January</SelectItem>
-                <SelectItem value="2">February</SelectItem>
-                <SelectItem value="3">March</SelectItem>
-                <SelectItem value="4">April</SelectItem>
-                <SelectItem value="5">May</SelectItem>
-                <SelectItem value="6">June</SelectItem>
-                <SelectItem value="7">July</SelectItem>
-                <SelectItem value="8">August</SelectItem>
-                <SelectItem value="9">September</SelectItem>
-                <SelectItem value="10">October</SelectItem>
-                <SelectItem value="11">November</SelectItem>
-                <SelectItem value="12">December</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="year">Year</Label>
-            <Select>
-              <SelectTrigger id="year" aria-label="Year">
-                <SelectValue placeholder="Year" />
-              </SelectTrigger>
-              <SelectContent>
-                {Array.from({ length: 10 }, (_, i) => (
-                  <SelectItem key={i} value={`${new Date().getFullYear() + i}`}>
-                    {new Date().getFullYear() + i}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="CVV">CVV</Label>
-            <Input id="CVV" placeholder="CVV" />
-          </div>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button className="w-full">Continue</Button>
-      </CardFooter>
-    </Card>
+          </CardContent>
+          <CardFooter>
+            <Button className="w-full" type="submit">
+              Continue
+            </Button>
+          </CardFooter>
+        </Card>
+      </form>
+    </Form>
   );
 }
+
+export default CardsPaymentMethod;

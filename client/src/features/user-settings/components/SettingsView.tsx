@@ -15,13 +15,13 @@ export enum Role {
   tourismGovernor = "tourismGovernor",
 }
 interface ICreditCard {
+  cardHolderName: string;
   cardNumber: string;
   expirationDate: Date;
-  cvv: number;
+  cvv: string;
 }
 
 interface IWallet {
-  balance: number;
   creditCard: ICreditCard[];
   defaultCreditCardIndex: number;
 }
@@ -45,6 +45,8 @@ interface User {
   companyProfile?: string;
   companyName?: string;
   description?: string;
+  points?: number;
+  balance?: number;
   wallet?: IWallet;
 }
 export const EditContext = createContext<{

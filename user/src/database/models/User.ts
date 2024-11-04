@@ -12,9 +12,10 @@ export enum Role {
   tourismGovernor = "tourismGovernor",
 }
 interface ICreditCard {
+  cardHolderName: string;
   cardNumber: string;
   expirationDate: Date;
-  cvv: number;
+  cvv: string;
 }
 
 interface IWallet {
@@ -276,35 +277,46 @@ const userSchema: Schema = new Schema<IUser>(
     },
     wallet: {
       type: {
-        creditCard: {
-          cardNumber: {
-            type: String,
-            default: "",
-            required: true,
-            validate: {
-              validator: userValidators.validateCardNumber,
-              message: "Invalid card number entry",
+        creditCard: [
+          {
+            cardHolderName: {
+              type: String,
+              default: "",
+              required: true,
+              validate: {
+                validator: userValidators.validateCardHolderName,
+                message: "Invalid card holder name entry",
+              },
+            },
+            cardNumber: {
+              type: String,
+              default: "",
+              required: true,
+              validate: {
+                validator: userValidators.validateCardNumber,
+                message: "Invalid card number entry",
+              },
+            },
+            expirationDate: {
+              type: Date,
+              default: undefined,
+              required: true,
+              validate: {
+                validator: userValidators.validateExpirationDate,
+                message: "Invalid expiration date entry",
+              },
+            },
+            cvv: {
+              type: String,
+              default: "",
+              required: true,
+              validate: {
+                validator: userValidators.validateCVV,
+                message: "Invalid CVV entry",
+              },
             },
           },
-          expirationDate: {
-            type: Date,
-            default: null,
-            required: true,
-            validate: {
-              validator: userValidators.validateExpirationDate,
-              message: "Invalid expiration date entry",
-            },
-          },
-          cvv: {
-            type: String,
-            default: "",
-            required: true,
-            validate: {
-              validator: userValidators.validateCVV,
-              message: "Invalid CVV entry",
-            },
-          },
-        },
+        ],
         defaultCreditCardIndex: {
           type: Number,
           default: 0,

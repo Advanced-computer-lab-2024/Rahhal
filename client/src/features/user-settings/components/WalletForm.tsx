@@ -37,13 +37,13 @@ export default function AccountForm() {
     resolver: zodResolver(balanceValidator),
     mode: "onChange",
     defaultValues: {
-      balance: user.wallet?.balance || 0,
+      balance: user.balance || 0,
     },
   });
 
   useEffect(() => {
     form.reset({
-      balance: user.wallet?.balance || 0,
+      balance: user.balance || 0,
     });
   }, [user, form]);
 
