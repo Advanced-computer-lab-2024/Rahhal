@@ -20,20 +20,12 @@ type KeyValuePairViewProps = {
 
 const KeyValuePairView = ({ complaint }: KeyValuePairViewProps) => {
   const entries = Object.entries(complaint).filter(([key, value]) => {
-    const excludedFields = [
-      "_id",
-      "status",
-      "replies",
-      "createdAt",
-      "updatedAt",
-      "__v",
-    ];
+    const excludedFields = ["_id", "status", "replies", "createdAt", "updatedAt", "__v"];
     if (!value) return false;
     if (Array.isArray(value) && value.length === 0) return false;
     if (excludedFields.includes(key)) return false;
     return true;
-  }
-  );
+  });
 
   return (
     <Card className="w-full">
@@ -60,15 +52,11 @@ const KeyValuePairView = ({ complaint }: KeyValuePairViewProps) => {
       </CardContent>
     </Card>
   );
-}
+};
 
-
-export function ComplaintsModal({
-  complaintData,
-  dialogTrigger,
-}: ComplaintsModalProps) {
+export function ComplaintsModal({ complaintData, dialogTrigger }: ComplaintsModalProps) {
   const [modalComplaintData, setModalComplaintData] = useState<TComplaint>(
-    complaintData ?? DEFAULTS.COMPLAINT
+    complaintData ?? DEFAULTS.COMPLAINT,
   );
   const [newReply, setNewReply] = useState<string>("");
   useEffect(() => {
@@ -84,7 +72,7 @@ export function ComplaintsModal({
         await addReply(modalComplaintData._id, newReply);
       }
     }
-  }
+  };
 
   return (
     <GenericModal
@@ -105,7 +93,7 @@ export function ComplaintsModal({
           initialValue={modalComplaintData?.status ?? "pending"}
           onSelect={(value: string) =>
             setModalComplaintData(
-              modalComplaintData ? { ...modalComplaintData, status: value } : DEFAULTS.COMPLAINT
+              modalComplaintData ? { ...modalComplaintData, status: value } : DEFAULTS.COMPLAINT,
             )
           }
           placeholder={"Select Status"}
@@ -114,16 +102,17 @@ export function ComplaintsModal({
       <div className="pt-4 space-y-4">
         <Label>Previous Replies</Label>
         {modalComplaintData?.replies.map((reply, index) => (
-          <li className="text-sm font-medium" key={index}> {reply} </li>
+          <li className="text-sm font-medium" key={index}>
+            {" "}
+            {reply}{" "}
+          </li>
         ))}
       </div>
       <ShortText
         title="Add a Reply"
         initialValue={" "}
         type="text"
-        onSave={(value) =>
-          setNewReply(value)
-        }
+        onSave={(value) => setNewReply(value)}
         placeholder={"Enter A New Reply"}
       />
     </GenericModal>

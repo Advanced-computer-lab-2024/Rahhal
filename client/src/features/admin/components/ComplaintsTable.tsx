@@ -20,11 +20,7 @@ function AdminComplaintsView() {
         data={complaints}
         columns={complaintsColumns}
         complaintFilter={true}
-        newRowModal={
-          <ComplaintsModal
-            complaintData={undefined}
-          />
-        }
+        newRowModal={<ComplaintsModal complaintData={undefined} />}
       />
     </div>
   );

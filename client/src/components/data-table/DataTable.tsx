@@ -137,8 +137,7 @@ export function DataTable<TData, TValue>({
               } else {
                 table.getColumn("status")?.setFilterValue(value);
               }
-            }
-            }
+            }}
           />
         </div>
       )}
