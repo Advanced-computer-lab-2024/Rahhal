@@ -14,6 +14,17 @@ export enum Role {
   seller = "seller",
   tourismGovernor = "tourismGovernor",
 }
+interface ICreditCard {
+  cardNumber: string;
+  expirationDate: Date;
+  cvv: number;
+}
+
+interface IWallet {
+  balance: number;
+  creditCard: ICreditCard[];
+  defaultCreditCardIndex: number;
+}
 interface User {
   firstName?: string;
   lastName?: string;
@@ -34,7 +45,7 @@ interface User {
   companyProfile?: string;
   companyName?: string;
   description?: string;
-  wallet?: number;
+  wallet?: IWallet;
 }
 export const EditContext = createContext<{
   user: User;

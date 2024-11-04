@@ -91,6 +91,10 @@ function validateCVV(cvv: string) {
   return typeof cvv === "string" && cvv.length == MIN_CVV_LENGTH;
 }
 
+function validateDefaultCreditCardIndex(defaultCreditCardIndex: number) {
+  return typeof defaultCreditCardIndex === "number" && defaultCreditCardIndex >= MIN_LENGTH;
+}
+
 export default {
   validateFirstName,
   validateLastName,
@@ -114,4 +118,5 @@ export default {
   validateCardNumber,
   validateExpirationDate,
   validateCVV,
+  validateDefaultCreditCardIndex,
 };

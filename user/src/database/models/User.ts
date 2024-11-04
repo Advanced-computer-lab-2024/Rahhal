@@ -19,7 +19,8 @@ interface ICreditCard {
 
 interface IWallet {
   balance: number;
-  creditCard: ICreditCard;
+  creditCard: ICreditCard[];
+  defaultCreditCardIndex: number;
 }
 
 export interface IUser {
@@ -44,9 +45,10 @@ export interface IUser {
   companyName?: string;
   description?: string;
   balance: number;
-  points: IWallet[];
+  points: number;
   ratings?: TRating[];
   preferences?: string[];
+  wallet?: IWallet;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -291,6 +293,14 @@ const userSchema: Schema = new Schema<IUser>(
               validator: userValidators.validateCVV,
               message: "Invalid CVV entry",
             },
+          },
+        },
+        defaultCreditCardIndex: {
+          type: Number,
+          default: 0,
+          validate: {
+            validator: userValidators.validateDefaultCreditCardIndex,
+            message: "Invalid default credit card index entry",
           },
         },
       },

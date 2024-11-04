@@ -128,19 +128,21 @@ export function CardsPaymentMethod() {
           </div>
         </RadioGroup>
         <div className="grid gap-2">
-          <Label htmlFor="name">Name</Label>
-          <Input id="name" placeholder="First Last" />
+          <Label htmlFor="name">Cardholder Name</Label>
+          <Input id="name" placeholder="" />
         </div>
-        <div className="grid gap-2">
+        {/* What does this billing address differ than the address provided in profile settings? */}
+
+        {/* <div className="grid gap-2">
           <Label htmlFor="city">City</Label>
           <Input id="city" placeholder="" />
-        </div>
+        </div> */}
         <div className="grid gap-2">
           <Label htmlFor="number">Card number</Label>
           <div className="flex w-full items-center space-x-2">
             <Input
               id="number"
-              placeholder=""
+              placeholder="XXXX-XXXX-XXXX-XXXX"
               onChange={(e) => {
                 const cardType = GetCardType(e.target.value);
                 setCardType(cardType);
@@ -200,8 +202,8 @@ export function CardsPaymentMethod() {
             </Select>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="cvc">CVC</Label>
-            <Input id="cvc" placeholder="CVC" />
+            <Label htmlFor="CVV">CVV</Label>
+            <Input id="CVV" placeholder="CVV" />
           </div>
         </div>
       </CardContent>
