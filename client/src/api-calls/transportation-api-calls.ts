@@ -3,17 +3,37 @@ import type {
   TransferRequest,
   AirportResponse,
   IPlaceDetails,
+  TransportationData,
 } from "@/features/home/types/home-page-types";
 import { SERVICES_URLS } from "@/lib/constants";
 import axios from "axios";
 
-export const getTransportation = async (transferReq: TransferRequest) => {
-  try {
-    const { data } = await axios.post(`${SERVICES_URLS.TRANSPORTATION}`, transferReq);
-    return data;
-  } catch (error) {
-    console.error("Error fetching transportation:", error);
+const handleAxiosError = (error: unknown) => {
+  // if (axios.isAxiosError(error) && error.response) {
+  //   alert(error.response.data.error);
+  //   console.error("Server error response:", error.response.data);
+  // }
+};
+interface ErrorResponse {
+  errors: {
+    code: number;
+    detail: string;
+  }[];
+}
+const isErrorResponse = (data: any): data is ErrorResponse => {
+  return data && typeof data === "object" && "errors" in data;
+};
+
+export const getTransportation = async (
+  transferReq: TransferRequest,
+): Promise<TransportationData> => {
+  const { data } = await axios.post(`${SERVICES_URLS.TRANSPORTATION}`, transferReq);
+  if (isErrorResponse(data)) {
+    console.error("Error details:", data.errors);
+    alert(`Error: ${data.errors[0].detail}`);
+    return { data: [] };
   }
+  return data as TransportationData;
 };
 
 export const getAirportCode = async (longitude: number, latitude: number) => {
@@ -21,8 +41,10 @@ export const getAirportCode = async (longitude: number, latitude: number) => {
     const { data } = await axios.get(`${SERVICES_URLS.TRANSPORTATION}/airport-code`, {
       params: { longitude: longitude, latitude: latitude },
     });
-    return (data as AirportResponse).data[0].iataCode;
+    const response = data as AirportResponse;
+    return response.data.length != 0 ? response.data[0].iataCode : "";
   } catch (error) {
+    handleAxiosError(error);
     console.error("Error fetching airport code:", error);
   }
 };
@@ -40,6 +62,7 @@ export const fetchSuggestions = async (query: string) => {
 
     return suggestions;
   } catch (error) {
+    handleAxiosError(error);
     console.error("Error fetching suggestions:", error);
   }
 };
@@ -54,6 +77,7 @@ export const fetchPlaceDetails = async (placeId: string) => {
       countryCode: (data as IPlaceDetails).countryCode,
     };
   } catch (error) {
+    handleAxiosError(error);
     console.error("Error fetching place details:", error);
   }
 };

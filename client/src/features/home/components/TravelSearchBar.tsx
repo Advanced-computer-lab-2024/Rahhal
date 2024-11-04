@@ -48,7 +48,7 @@ function TravelSearchBar() {
     const geocode = await fetchPlaceDetails(placeId);
     if (geocode) {
       try {
-        return await getAirportCode(geocode.lng, geocode.lat);
+        return await getAirportCode(geocode.location.lng, geocode.location.lat);
       } catch (error) {
         console.error("Error getting airport code:", error);
       }
