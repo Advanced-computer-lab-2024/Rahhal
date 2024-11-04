@@ -6,6 +6,7 @@ export const SERVICES_URLS = {
   PRODUCT: "http://localhost:3000/api/product",
   FIREBASE: "http://localhost:3000/api/firebase",
   BOOKING: "http://localhost:3000/api/booking",
+  GOOGLEMAP: "http://localhost:3000/api/google-maps",
 };
 
 export const TEMP_USER_ID = "67032b20ffa86f21339f6cad";

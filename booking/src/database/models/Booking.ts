@@ -21,6 +21,12 @@ const bookingSchema = new mongoose.Schema({
     required: true,
     default: bookingStatus.Upcoming,
   },
+  selectedPrice: {
+    type: Number,
+  },
+  selectedDate: {
+    type: Date,
+  }
 });
 
 export default mongoose.model("Booking", bookingSchema);

@@ -1,0 +1,85 @@
+.card-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 100%;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  border-radius: 5px;
+  
+}
+.card-container:hover {
+  box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.3);
+}
+
+.trip-details {
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+  height: 100%;
+  padding: 1%;
+  margin-left: 1%;
+}
+
+.trip-details_image-container {
+  width: 8rem;
+}
+
+.trip-details_image-container_image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.trip-details_data {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 5%;
+}
+
+.trip-details_data p:first-child {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #000;
+  margin: 0;
+}
+
+.trip-details_data p:nth-child(2) {
+  font-size: 0.875rem;
+  color: #333;
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.trip-details_data p:nth-child(3) {
+  font-size: 0.75rem;
+  margin: 0;
+  margin-top: 0.6rem;
+}
+.statusUpcoming {
+  color: green;
+}
+
+.statusCanceled {
+  color: red;
+}
+
+.statusCompleted {
+  color: grey;
+}
+
+.trip-price-container {
+  padding: 1%;
+}
+
+.trip-price-container_text-icon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}

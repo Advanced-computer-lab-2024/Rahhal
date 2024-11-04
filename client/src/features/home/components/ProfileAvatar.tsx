@@ -5,7 +5,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { TUser } from "@/types/user";
 
 export const ProfileAvatar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,10 +13,12 @@ export const ProfileAvatar = () => {
     setIsOpen(!isOpen);
   };
 
+
+
   const { id } = useParams<{ id: string }>();
   console.log(id);
 
-  const { data: user } = useQuery<TUser>({
+  const { data: user, isLoading, isError } = useQuery({
     queryKey: ["user", id],
     queryFn: () => getUserById(id as string),
     enabled: !!id,
@@ -43,17 +44,12 @@ export const ProfileAvatar = () => {
       </button>
       {isOpen && (
         <div className={AvatarStyles["menu"]}>
-          <Link to={`/user-settings/${id}`}>
-            {" "}
-            <div className={AvatarStyles["menuItem"]}>Account</div>
-          </Link>
-          <div className={AvatarStyles["menuItem"]}>Trips</div>
-          <div className={AvatarStyles["menuItem"]}>Wallet</div>
-          <div className={AvatarStyles["menuItem"]}>Loyalty</div>
+          <Link to={`/user-settings/${id}`} onClick={toggleDropdown}> <div className={AvatarStyles["menuItem"]}>Account</div></Link>
+          <Link to={`/my-trips/${id}`} onClick={toggleDropdown}> <div className={AvatarStyles["menuItem"]}>Trips</div></Link>
+          <div className={AvatarStyles["menuItem"]} onClick={toggleDropdown}>Wallet</div>
+          <div className={AvatarStyles["menuItem"]} onClick={toggleDropdown}>Loyalty</div>
           <div className={AvatarStyles["menuItem"]}>Help Center</div>
-          <Link to="/entertainment">
-            <div className={AvatarStyles["logout"]}>Log Out</div>
-          </Link>
+          <Link to="/entertainment" onClick={toggleDropdown}><div className={AvatarStyles["logout"]}>Log Out</div></Link>
         </div>
       )}
     </div>
