@@ -9,6 +9,12 @@ export const fetchItineraries = async () => {
   return response.data;
 };
 
+// fetch only active-appropriate itineraries
+export const fetchActiveAppropriateItineraries = async () => {
+  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + "/itineraries/active-appropriate");
+  return response.data;
+};
+
 // delete itinerary from itineraries endpoint
 export const deleteItinerary = async (itinerary: TItinerary) => {
   console.log(itinerary);

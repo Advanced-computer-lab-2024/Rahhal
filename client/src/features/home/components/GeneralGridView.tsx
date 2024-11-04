@@ -19,7 +19,7 @@ import { fetchCategories } from "@/api-calls/categories-api-calls";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { fetchHistoricalPlaces } from "@/api-calls/historical-places-api-calls";
 import { fetchHistoricalTags } from "@/api-calls/historical-tags-api-calls";
-import { fetchItineraries } from "@/api-calls/itineraries-api-calls";
+import { fetchActiveAppropriateItineraries } from "@/api-calls/itineraries-api-calls";
 import ski from "@/assets/ski egypt.jpg";
 import {
   Activity,
@@ -82,7 +82,7 @@ const GeneralGridView = () => {
     data: itineraries,
     isLoading: isLoadingItineraries,
     error: errorItenaries,
-  } = useQuery({ queryKey: ["entertainment", "itineraries"], queryFn: fetchItineraries });
+  } = useQuery({ queryKey: ["entertainment", "itineraries"], queryFn: fetchActiveAppropriateItineraries });
   const {
     data: historicalPlaces,
     isLoading: isHistoricalPlaces,

@@ -5,7 +5,6 @@ export const SERVICES_URLS = {
   USER: "http://localhost:3000/api/user",
   PRODUCT: "http://localhost:3000/api/product",
   BOOKING: "http://localhost:3000/api/booking",
-
 };
 
 export const TEMP_USER_ID = "67032b20ffa86f21339f6cad";
@@ -105,6 +104,8 @@ export const DEFAULTS = {
     ratings: [],
     preferenceTags: [],
     category: { _id: "", name: "" },
+    active: true,
+    appropriate: true,
     owner: "",
   },
   COMPLAINT: {
@@ -116,7 +117,7 @@ export const DEFAULTS = {
     owner: {
       _id: "",
       firstName: "",
-      lastName: ""
+      lastName: "",
     },
     replies: [],
   },
