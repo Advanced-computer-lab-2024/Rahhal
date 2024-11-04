@@ -27,23 +27,23 @@ import { CardsPaymentMethod } from "./PaymentMethodForm";
 export default function AccountForm() {
   const { user } = useContext(EditContext);
 
-  const walletValidator = z.object({
-    wallet: z.number().optional(),
+  const balanceValidator = z.object({
+    balance: z.number().optional(),
   });
 
-  type WalletValues = z.infer<typeof walletValidator>;
+  type balanceValues = z.infer<typeof balanceValidator>;
 
-  const form = useForm<WalletValues>({
-    resolver: zodResolver(walletValidator),
+  const form = useForm<balanceValues>({
+    resolver: zodResolver(balanceValidator),
     mode: "onChange",
     defaultValues: {
-      wallet: user.wallet || 0,
+      balance: user.wallet?.balance || 0,
     },
   });
 
   useEffect(() => {
     form.reset({
-      wallet: user.wallet || 0,
+      balance: user.wallet?.balance || 0,
     });
   }, [user, form]);
 
@@ -55,7 +55,7 @@ export default function AccountForm() {
         {user.role === "tourist" && (
           <FormField
             control={form.control}
-            name="wallet"
+            name="balance"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Wallet</FormLabel>
