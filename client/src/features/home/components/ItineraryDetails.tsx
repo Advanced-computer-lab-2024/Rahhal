@@ -15,6 +15,7 @@ import GoogleMap from "@/components/google-maps/GoogleMap";
 import { IoMdPricetag } from "react-icons/io";
 import SharePopover from "@/components/SharePopover";
 import TouristHomePageNavigation from "./TouristHomePageNavigation";
+import Timeline from "./ActivityTimeline";
 
 interface ActivityImage {
   src: string;
@@ -36,7 +37,7 @@ interface ActivityDetailsProps {
   availableDates: AvailableDate[];
 }
 
-const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
+const ItineraryDetailsPage: React.FC<ActivityDetailsProps> = ({
   images = [
     {
       src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2qeXRnkbkroTiHZXDhvYgJIoa-0QiLlswJA&s",
@@ -130,6 +131,9 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
           {/* Reviews */}
           <Reviews />
 
+          {/* Timeline */}
+          <Timeline />
+
       </div>
 
       {/* Right Column - Booking Card */}
@@ -168,4 +172,4 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
   );
 };
 
-export default ActivityDetailsPage;
+export default ItineraryDetailsPage;

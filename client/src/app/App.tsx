@@ -25,6 +25,7 @@ import HistoricalTagsView from "@/features/tourism-governor/components/Historica
 import UsersPendingRequests from "@/features/admin/components/UsersPendingRequests";
 import ActivityTimeline from "@/features/home/components/ActivityTimeline";
 import ActivityDetailsPage from "@/features/home/components/ActivityDetails";
+import ItineraryDetailsPage from "@/features/home/components/ItineraryDetails";
 import ComplaintsTable from "@/features/user-settings/components/TouristComplaintsTable";
 import { MyTripsPage } from "@/features/home/components/MyTripsPage";
 import TravelPage from "@/features/home/components/TravelPage";
