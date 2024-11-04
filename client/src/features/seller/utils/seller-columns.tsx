@@ -4,12 +4,7 @@ import { ArrowUpDown, ChevronRight } from "lucide-react";
 import { FaTrash } from "react-icons/fa6";
 import { ProductModal } from "@/features/seller/components/ProductsModal";
 import { deleteProduct } from "@/api-calls/products-api-calls";
-
-export type TRating = {
-  userId: string;
-  rating: number;
-  review?: string;
-};
+import type { TRating } from "@/types/shared";
 
 export type TProduct = {
   _id?: string;
