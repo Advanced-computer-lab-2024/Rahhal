@@ -2,12 +2,12 @@ import axios from "axios";
 import { SERVICES_URLS } from "@/lib/constants";
 import type { TBookingType, IBooking } from "@/features/home/types/home-page-types";
 
-export const fetchAllBookings = async () => {
+export async function fetchAllBookings(){
     const response = await axios.get(SERVICES_URLS.BOOKING + `/bookings`);
     return response.data;
 }
 
-export const fetchUserBookings = async (userId: string) => {
+export async function fetchUserBookings(userId: string) {
     const response = await axios.get(SERVICES_URLS.BOOKING + `/bookings`, {
         params: {
             userId: userId,
@@ -16,7 +16,7 @@ export const fetchUserBookings = async (userId: string) => {
     return response.data;
 };
 
-export const createBooking = async (bookingData: TBookingType) => {
+export async function createBooking (bookingData: TBookingType){
     const newBooking = {
         user: bookingData.user,
         entity: bookingData.entity,
@@ -26,7 +26,7 @@ export const createBooking = async (bookingData: TBookingType) => {
     return response.data;
 }
 
-export const updateBookingRequest = async (id: string, bookingData: Partial<IBooking>) => {
+export async function updateBookingRequest(id: string, bookingData: Partial<IBooking>){
     const response = await axios.patch(
         `${SERVICES_URLS.BOOKING}/bookings/${id}`,
         bookingData
