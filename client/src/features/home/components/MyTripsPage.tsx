@@ -25,13 +25,13 @@ export const MyTripsPage = () => {
     return `${formattedDate} at ${formattedTime}`;
   }
 
-  function isDateInPast(date: string | Date): boolean {
+  function isDateInPast(date: string | Date,status:string): boolean {
     if (!date) return false;
 
     const dateTimestamp = new Date(date).getTime();
     const currentTimestamp = Date.now();
 
-    return dateTimestamp < currentTimestamp;
+    return (dateTimestamp < currentTimestamp && status === "upcoming");
   }
 
   const { id } = useParams<{ id: string }>();
@@ -50,7 +50,7 @@ export const MyTripsPage = () => {
   const { id: userId } = useParams<{ id: string }>(); // Get the userId from URL params
 
   const handleClick = (booking: TPopulatedBooking) => {
-    if (!isDateInPast(booking.entity.date ? booking.entity.date : booking.selectedDate)) {
+    if (!isDateInPast(booking.entity.date ? booking.entity.date : booking.selectedDate,booking.status)) {
       return navigate(
         `/destination-page?userId=${userId}&bookingId=${booking.entity._id}&status=${booking.status}`,
       );
@@ -76,7 +76,7 @@ export const MyTripsPage = () => {
                 title={booking.entity.name}
                 price={booking.selectedPrice}
                 status={
-                  isDateInPast(booking.entity.date ? booking.entity.date : booking.selectedDate)
+                  isDateInPast(booking.entity.date ? booking.entity.date : booking.selectedDate,booking.status)
                     ? "completed"
                     : booking.status
                 }
