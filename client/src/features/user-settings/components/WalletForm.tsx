@@ -13,6 +13,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CardsPaymentMethod } from "./PaymentMethod";
@@ -70,10 +78,20 @@ export default function AccountForm() {
           </div>
         </h4>
         <div className="grid justify-items-center">
-          <Button id={styles["addBtn"]}>+ Add Payment Method</Button>
+          <Dialog>
+            <DialogHeader>
+              <DialogTitle></DialogTitle>
+            </DialogHeader>
+            <DialogTrigger>
+              {" "}
+              <Button id={styles["addBtn"]}>+ Add Payment Method</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <CardsPaymentMethod></CardsPaymentMethod>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
-      <CardsPaymentMethod></CardsPaymentMethod>
     </>
   );
 }
