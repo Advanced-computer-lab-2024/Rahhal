@@ -28,6 +28,7 @@
     "vitest": "^2.1.1"
   },
   "dependencies": {
+    "@types/express-fileupload": "^1.5.1",
     "axios": "^1.7.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
