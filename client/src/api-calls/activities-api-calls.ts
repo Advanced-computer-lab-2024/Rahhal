@@ -13,6 +13,11 @@ export const fetchUserActivities = async (userId: string) => {
   return response.data;
 };
 
+export const fetchAppropriateActivities = async (userId: string) => {
+  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/activities/appropriate`);
+  return response.data;
+};
+
 export const deleteActivity = async (activity: TActivity) => {
   await axios.delete(`${SERVICES_URLS.ENTERTAINMENT}/activities/${activity._id}`);
   alert("Activity deleted successfully");

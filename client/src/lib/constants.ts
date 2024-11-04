@@ -1,4 +1,5 @@
 import { UserRoleEnum } from "@/utils/enums";
+import { Turtle } from "lucide-react";
 
 export const SERVICES_URLS = {
   ENTERTAINMENT: "http://localhost:3000/api/entertainment",
@@ -25,6 +26,7 @@ export const DEFAULTS = {
     price: {},
     category: { _id: "", name: "" },
     tags: [],
+    isAppropriate : true,
     ratings: [],
   },
   HISTORICAL_PLACE: {

@@ -9,7 +9,7 @@ export async function getAllActivities() {
 // Get all appropriate activities
 export async function getAppropriateActivities() {
   return await Activity.find(
-    { appropriate: true }
+    { isAppropriate: true }
   )
     .populate("category")
     .populate("preferenceTags")
