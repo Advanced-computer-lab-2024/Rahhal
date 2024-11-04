@@ -1,3 +1,4 @@
+import type { IRating } from "@/database/rating";
 import type { IProduct } from "../database/models/Product";
 import * as productsRepository from "../database/repositories/products-repository";
 
@@ -22,6 +23,10 @@ export async function getProductsBySeller(sellerId: string) {
 // Create a new product
 export async function createProduct(product: IProduct) {
   return await productsRepository.createProduct(product);
+}
+
+export async function addRating(userRating: IRating, productId: string) {
+  return await productsRepository.addRating(userRating, productId);
 }
 
 // Update an existing product

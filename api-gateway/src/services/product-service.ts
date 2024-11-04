@@ -13,7 +13,7 @@ export async function getAllProducts() {
   return await axiosInstance.get("/products");
 }
 
-export async function getAvailableProducts(){
+export async function getAvailableProducts() {
   return await axiosInstance.get("/products/available");
 }
 

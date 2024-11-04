@@ -1,3 +1,4 @@
+import type { IRating } from "@/database/rating";
 import Product from "../models/Product";
 import type { IProduct } from "../models/Product";
 
@@ -6,7 +7,7 @@ export async function getAllProducts() {
   return Product.find();
 }
 
-// Get all available products 
+// Get all available products
 export async function getAvailableProducts() {
   return Product.find({ archived: false });
 }
@@ -24,6 +25,14 @@ export async function getActivitiesBySeller(sellerId: string) {
 export async function createProduct(product: IProduct) {
   const newProduct = new Product(product);
   return await newProduct.save();
+}
+
+export async function addRating(userRating: IRating, productId: string) {
+  return await Product.findByIdAndUpdate(
+    productId,
+    { $push: { ratings: userRating } },
+    { new: true },
+  );
 }
 
 // Update an existing product
