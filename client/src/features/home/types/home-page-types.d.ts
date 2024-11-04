@@ -1,3 +1,18 @@
+export interface IBooking {
+  user: string;
+  entity: string;
+  type: bookingType;
+  status?: bookingStatus;
+}
+
+export type TBookingType{
+  user: string;
+  entity: string;
+  type: bookingType;
+  status?: bookingStatus;
+}
+
+
 export interface IRating {
   userId: string;
   rating: number;
