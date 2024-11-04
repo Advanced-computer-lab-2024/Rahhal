@@ -2,6 +2,8 @@ import axios from "axios";
 import { SERVICES_URLS } from "@/lib/constants";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
 import { TNewItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
+import { renameItineraryImage } from "@/features/tour-guide/utils/tour-guide-firebase";
+import { uploadToFirebase } from "@/utils/firebase";
 
 // fetch data from the server
 export const fetchItineraries = async () => {
@@ -24,7 +26,12 @@ export const deleteItinerary = async (itinerary: TItinerary) => {
 };
 
 // submit itinerary to the itineraries endpoint
-export async function updateItinerary(itineraryData: TItinerary) {
+export async function updateItinerary(itineraryData: TItinerary, itineraryImages: FileList | null) {
+  const urls: string[] = await uploadToFirebase(itineraryImages, itineraryData.owner, itineraryData._id, renameItineraryImage);
+
+  
+  itineraryData.images = [...itineraryData.images, ...urls];
+
   await axios.patch(
     `${SERVICES_URLS.ENTERTAINMENT}/itineraries/${itineraryData!._id}`,
     itineraryData,
@@ -33,9 +40,17 @@ export async function updateItinerary(itineraryData: TItinerary) {
   window.location.reload();
 }
 
-export async function createItinerary(newItineraryData: TNewItinerary, userId: string) {
+export async function createItinerary(newItineraryData: TNewItinerary, userId: string, itineraryImages: FileList | null) {
   newItineraryData.owner = userId;
-  await axios.post(SERVICES_URLS.ENTERTAINMENT + "/itineraries", newItineraryData);
+  const response = await axios.post(SERVICES_URLS.ENTERTAINMENT + "/itineraries", newItineraryData);
+  const itineraryId = (response.data as TItinerary)._id;
+  const urls: string[] = await uploadToFirebase(itineraryImages, userId, itineraryId, renameItineraryImage);
+
+  
+  newItineraryData.images = urls;
+
+  await axios.patch(`${SERVICES_URLS.ENTERTAINMENT}/itineraries/${itineraryId}`, newItineraryData);
+
   alert("Itinerary created successfully");
   window.location.reload();
 }
