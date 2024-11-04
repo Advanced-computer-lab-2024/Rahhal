@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { CardsPaymentMethod } from "./PaymentMethod";
 
 export default function AccountForm() {
   const { user } = useContext(EditContext);
@@ -72,6 +73,7 @@ export default function AccountForm() {
           <Button id={styles["addBtn"]}>+ Add Payment Method</Button>
         </div>
       </div>
+      <CardsPaymentMethod></CardsPaymentMethod>
     </>
   );
 }
