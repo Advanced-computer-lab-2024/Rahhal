@@ -16,7 +16,6 @@ import { termsAndConditions } from "../terms-and-conditions/TourGuideTermsAndCon
 import { tourGuideSchema } from "../utils/ZodSchemas/tourGuideSchema";
 import { createUser } from "@/api-calls/users-api-calls";
 
-
 type TourGuideFormData = z.infer<typeof tourGuideSchema>;
 
 export default function SignupTourGuide() {

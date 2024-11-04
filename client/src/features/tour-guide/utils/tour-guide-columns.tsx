@@ -5,12 +5,7 @@ import { ItinerariesModal } from "@/features/tour-guide/components/ItineraryModa
 import { Badge } from "@/components/ui/badge";
 import { FaTrash } from "react-icons/fa6";
 import { deleteItinerary } from "@/api-calls/itineraries-api-calls";
-
-export type TRating = {
-  user: string;
-  rating: number;
-  review?: string;
-};
+import type { TRating } from "@/types/shared";
 
 export type TCategory = {
   _id: string;

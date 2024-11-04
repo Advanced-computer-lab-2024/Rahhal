@@ -16,7 +16,6 @@ import { termsAndConditions } from "../terms-and-conditions/SellerTermsAndCondit
 import { sellerSchema } from "../utils/ZodSchemas/sellerSchema";
 import { createUser } from "@/api-calls/users-api-calls";
 
-
 type SellerFormData = z.infer<typeof sellerSchema>;
 
 export default function SignupSeller() {

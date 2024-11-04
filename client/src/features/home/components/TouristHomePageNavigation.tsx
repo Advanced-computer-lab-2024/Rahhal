@@ -48,7 +48,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
         )}
         {NavigationProps.loggedIn && (
           <div className="flex items-center pr-3">
-            <ProfileAvatar/>
+            <ProfileAvatar />
           </div>
         )}
       </div>

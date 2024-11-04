@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUserById } from "@/api-calls/users-api-calls";
 import AvatarStyles from "../styles/ProfileAvatar.module.css";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { TUser } from "@/features/admin/utils/user-columns";
+import { TUser } from "@/types/user";
 
 export const ProfileAvatar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,10 +17,10 @@ export const ProfileAvatar = () => {
   const { id } = useParams<{ id: string }>();
   console.log(id);
 
-  const { data: user, isLoading, isError } = useQuery<TUser>({
+  const { data: user } = useQuery<TUser>({
     queryKey: ["user", id],
     queryFn: () => getUserById(id as string),
-    enabled: !!id, 
+    enabled: !!id,
   });
 
   // Access firstName directly from the user object
@@ -28,7 +28,6 @@ export const ProfileAvatar = () => {
   const lastName = user?.lastName;
   const avatarLetters = firstName && lastName ? `${firstName[0]}${lastName[0]}` : "US";
   console.log(firstName); // This will log the firstName once the data is fetched
-
 
   return (
     <div className={AvatarStyles["dropdown"]}>
@@ -44,12 +43,17 @@ export const ProfileAvatar = () => {
       </button>
       {isOpen && (
         <div className={AvatarStyles["menu"]}>
-         <Link to={`/user-settings/${id}`}> <div className={AvatarStyles["menuItem"]}>Account</div></Link> 
+          <Link to={`/user-settings/${id}`}>
+            {" "}
+            <div className={AvatarStyles["menuItem"]}>Account</div>
+          </Link>
           <div className={AvatarStyles["menuItem"]}>Trips</div>
           <div className={AvatarStyles["menuItem"]}>Wallet</div>
           <div className={AvatarStyles["menuItem"]}>Loyalty</div>
           <div className={AvatarStyles["menuItem"]}>Help Center</div>
-          <Link to="/entertainment" ><div className={AvatarStyles["logout"]}>Log Out</div></Link>
+          <Link to="/entertainment">
+            <div className={AvatarStyles["logout"]}>Log Out</div>
+          </Link>
         </div>
       )}
     </div>

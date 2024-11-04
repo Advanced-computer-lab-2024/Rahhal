@@ -5,13 +5,12 @@ export interface IBooking {
   status?: bookingStatus;
 }
 
-export type TBookingType ={
+export type TBookingType = {
   user: string;
   entity: string;
   type: bookingType;
   status?: bookingStatus;
-}
-
+};
 
 export interface IRating {
   userId: string;
