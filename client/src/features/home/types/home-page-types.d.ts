@@ -27,6 +27,26 @@ export type TBookingType = {
   status?: bookingStatus;
 };
 
+export interface TransferRequest {
+  startLocationCode?: string;
+  startGeoCode?: string;
+  startAddressLine?: string;
+  startCountryCode?: string;
+  endLocationCode?: string;
+  endGeoCode?: string;
+  endAddressLine?: string;
+  endCountryCode?: string;
+  transferType: string;
+  startDateTime: string;
+  passengers: number;
+}
+
+interface IAutocompletePrediction {
+  description: string;
+  place_id: string;
+  reference: string;
+}
+
 export interface IRating {
   userId: string;
   rating: number;
@@ -119,3 +139,56 @@ export type SortOption =
   | "rating-low-high";
 
 export type Filter = "itinerary" | "place" | "activity";
+
+// Define interfaces for response structure
+interface AirportData {
+  type: string;
+  subType: string;
+  name: string;
+  detailedName: string;
+  timeZoneOffset: string;
+  iataCode: string;
+  geoCode: {
+    latitude: number;
+    longitude: number;
+  };
+  address: {
+    cityName: string;
+    cityCode: string;
+    countryName: string;
+    countryCode: string;
+    regionCode: string;
+  };
+  distance: {
+    value: number;
+    unit: string;
+  };
+  analytics: {
+    flights: {
+      score: number;
+    };
+    travelers: {
+      score: number;
+    };
+  };
+  relevance: number;
+}
+
+export interface AirportResponse {
+  meta: {
+    count: number;
+    links: {
+      self: string;
+    };
+  };
+  data: AirportData[];
+}
+
+export interface IPlaceDetails {
+  location: {
+    lat: number;
+    lng: number;
+  };
+  description: string[];
+  countryCode: string;
+}
