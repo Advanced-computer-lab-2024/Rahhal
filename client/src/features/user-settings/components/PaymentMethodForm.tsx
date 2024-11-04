@@ -54,7 +54,20 @@ export function CardsPaymentMethod() {
           expirationMonth: z.string().min(1, "Month is required"),
           expirationYear: z.string().min(1, "Year is required"),
           cvv: z.string().length(3, "CVV must be 3 digits"),
-        }),
+        }).refine(
+          (data) => {
+            const today = new Date();
+            const expirationDate = new Date(
+              parseInt(data.expirationYear),
+              parseInt(data.expirationMonth) - 1
+            );
+            return expirationDate > today;
+          },
+          {
+            message: "Card has expired. Please use a valid expiration date.",
+            path: ["expirationMonth"], // This will show the error on the year field
+          }
+        )
       ),
       defaultCreditCardIndex: z.number().min(0),
     }),
@@ -88,25 +101,31 @@ export function CardsPaymentMethod() {
             cvv: "",
           },
         ],
-        defaultCreditCardIndex: 0,
+        defaultCreditCardIndex: user?.wallet?.creditCard?.length || 0,
       },
     },
   });
 
   const transformFormDataToAPI = (data: FormValues): APIPayload => {
+    // Get existing credit cards from user context
+    const existingCards = user?.wallet?.creditCard || [];
+    
+    // Create the new card
+    const newCard = {
+      cardHolderName: data.wallet.creditCard[0].cardHolderName,
+      cardNumber: data.wallet.creditCard[0].cardNumber,
+      expirationDate: new Date(
+        parseInt(data.wallet.creditCard[0].expirationYear),
+        parseInt(data.wallet.creditCard[0].expirationMonth) - 1,
+        1
+      ),
+      cvv: data.wallet.creditCard[0].cvv,
+    };
+
     return {
       wallet: {
-        creditCard: data.wallet.creditCard.map((card) => ({
-          cardHolderName: card.cardHolderName,
-          cardNumber: card.cardNumber,
-          expirationDate: new Date(
-            parseInt(card.expirationYear),
-            parseInt(card.expirationMonth) - 1, // Months are 0-based in JavaScript
-            1, // Set to first day of month
-          ),
-          cvv: card.cvv,
-        })),
-        defaultCreditCardIndex: data.wallet.defaultCreditCardIndex,
+        creditCard: [...existingCards, newCard], // Append new card to existing cards
+        defaultCreditCardIndex: user?.wallet?.defaultCreditCardIndex || 0, // Set the new card as default
       },
     };
   };
@@ -134,7 +153,7 @@ export function CardsPaymentMethod() {
 
   function onSubmit(data: FormValues) {
     const apiData = transformFormDataToAPI(data);
-    // updateUser(apiData);
+    updateUser(apiData);
     console.log("Form Data:", data);
     console.log("API Data:", apiData);
   }
@@ -258,7 +277,11 @@ export function CardsPaymentMethod() {
                 <FormItem>
                   <FormLabel>Cardholder Name</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Your name as it appears on the card" value={field.value as string} />
+                    <Input
+                      {...field}
+                      placeholder="Your name as it appears on the card"
+                      value={field.value as string}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

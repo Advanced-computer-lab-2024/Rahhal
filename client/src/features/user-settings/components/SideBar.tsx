@@ -13,11 +13,11 @@ export default function SideBar() {
 
   const sideBarElements = [
     { title: "Profile", to: `/user-settings/${id}` },
-    { title: "Account", to: `/user-settings/account/${id}` }
+    { title: "Account", to: `/user-settings/account/${id}` },
   ];
 
-  if(user.role === "tourist") {
-    sideBarElements.push({ title: "Payment Information", to: `/user-settings/wallet/${id}` })
+  if (user.role === "tourist") {
+    sideBarElements.push({ title: "Payment Information", to: `/user-settings/wallet/${id}` });
   }
 
   return (

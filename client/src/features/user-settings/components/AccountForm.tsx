@@ -77,7 +77,7 @@ export default function AccountForm() {
     defaultValues: {
       username: user.username || "",
       email: user.email || "",
-      password: user.password || ""
+      password: user.password || "",
     },
   });
   const oldPasswordForm = useForm<passwordValidatorValue>({
