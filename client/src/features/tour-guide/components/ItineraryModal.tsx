@@ -8,7 +8,7 @@ import LocationMap from "@/components/google-maps/LocationMap";
 import TagsSelector from "@/components/TagsSelector";
 import { GenericSelect } from "@/components/GenericSelect";
 import ReviewDisplay from "@/components/Ratings";
-import { IMAGES, sampleReviews } from "@/lib/utils";
+import { sampleReviews } from "@/lib/utils";
 import { createItinerary } from "@/api-calls/itineraries-api-calls";
 import { updateItinerary } from "@/api-calls/itineraries-api-calls";
 import { fetchCategories } from "@/api-calls/categories-api-calls";
@@ -39,6 +39,9 @@ export function ItinerariesModal({ itineraryData, dialogTrigger, userId }: Itine
   const [activitiesWithDurations, setActivitiesWithDurations] = useState<
     { name: string; duration: string }[]
   >([]);
+
+  const [itineraryImages, setItineraryImages] = useState<FileList | null>(null);
+
   const extractIds = (data: ({ _id: string } & Record<string, any>)[]) => {
     const ids = data.map(({ _id }) => _id);
     const FIRST_ELEMENT = 0;
@@ -62,8 +65,8 @@ export function ItinerariesModal({ itineraryData, dialogTrigger, userId }: Itine
       // I am sure that userId is not null when the modal open from table add button
       // otherwise it opens from an edit action and in that situation userId is not null
       // and already stored in the database and it's not needed in updates
-      await createItinerary(newItinerary, id!);
-    } else await updateItinerary(modalItineraryData!);
+      await createItinerary(newItinerary, id!, itineraryImages);
+    } else await updateItinerary(modalItineraryData!, itineraryImages);
   };
 
   useEffect(() => {
@@ -118,7 +121,7 @@ export function ItinerariesModal({ itineraryData, dialogTrigger, userId }: Itine
         initialDisabled={!isNewItinerary}
         type="text"
       />
-      <PictureCard title={"Photo Tour"} description={"Uploaded Photos"} initialImageSources={IMAGES} />
+      <PictureCard title={"Photo Tour"} description={"Uploaded Photos"} initialImageSources={itineraryData?.images ?? []} handleFileUploadCallback={(files) => { setItineraryImages(files); }} />
       <LongText
         title="Description"
         initialValue={modalItineraryData?.description ?? ""}

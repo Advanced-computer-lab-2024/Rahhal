@@ -22,6 +22,7 @@ export type TActivity = {
   name: string;
   description: string;
   time: Date;
+  images: string[];
   date: Date;
   location: { longitude: number; latitude: number };
   specialDiscount: number;

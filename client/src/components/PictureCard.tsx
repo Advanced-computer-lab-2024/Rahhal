@@ -9,17 +9,24 @@ interface PictureCardProps {
   title: string;
   description: string;
   initialImageSources: string[];
+  handleFileUploadCallback: (files: FileList) => void;
 }
 
 // Function to handle file upload
-const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, imageSources: string[], imageSourcesCallback: (imageSources: string[]) => void) => {
+const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, imageSources: string[], imageSourcesCallback: (imageSources: string[]) => void, handleFileUploadCallback: (files: FileList) => void) => {
   const files = e.target.files;
   if (files) {
     // ADD FILE UPLOAD LOGIC HERE
 
-    
+    // Loop through the files and add the image sources to the image sources array
+    for (let i = 0; i < files.length; i++) {
+      imageSourcesCallback([...imageSources, URL.createObjectURL(files[i])]);
+    }
 
-    imageSourcesCallback([...imageSources, URL.createObjectURL(files[0])]);
+    // Call the handle file upload callback
+    handleFileUploadCallback(files);
+
+
     
   
   }
@@ -32,7 +39,7 @@ const openFileUploadDialog = (pictureUploadFieldRef: React.RefObject<HTMLInputEl
   }
 };
 
-const PictureCard = ({ title, description, initialImageSources }: PictureCardProps) => {
+const PictureCard = ({ title, description, initialImageSources, handleFileUploadCallback }: PictureCardProps) => {
   // CONSTANTS
   const MIN_NUMBER_OF_IMAGES: number = 0; // Minimum number of images
   const MAX_NUMBER_OF_IMAGES: number = 3; // Maximum number of images
@@ -102,7 +109,7 @@ const PictureCard = ({ title, description, initialImageSources }: PictureCardPro
                 ref={pictureUploadFieldRef}
                 multiple={true}
                 accept="image/*"
-                onChange={(e) => handleFileUpload(e, imageSources, setImageSources)}
+                onChange={(e) => handleFileUpload(e, imageSources, setImageSources, handleFileUploadCallback)}
                 hidden
               />
             </div>

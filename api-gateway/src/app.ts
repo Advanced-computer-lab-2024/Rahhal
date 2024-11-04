@@ -13,7 +13,7 @@ import fileUpload from "express-fileupload";
 const app = express();
 
 // Middleware
-app.use(fileUpload());
+app.use(fileUpload({preservePath : true}));
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());

@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import PictureCard from "@/components/PictureCard";
 import ShortText from "@/components/ShortText";
 import ReviewDisplay from "@/components/Ratings";
-import { IMAGES, sampleReviews } from "@/lib/utils";
+import { sampleReviews } from "@/lib/utils";
 import { DEFAULTS } from "@/lib/constants";
 import LongText from "@/components/LongText";
 import { TNewProduct, TProduct } from "@/features/seller/utils/seller-columns";
 import { createProduct, updateProduct } from "@/api-calls/products-api-calls";
+
 
 interface ProductModalProps {
   productData?: TProduct;
@@ -19,18 +20,22 @@ export function ProductModal({ productData, dialogTrigger, userId }: ProductModa
   const isNewProduct: boolean = productData === undefined;
   const [modalProductData, setModalProductData] = useState<TProduct | undefined>(productData); // current product data present in the modal
 
+  const [productImages, setProductImages] = useState<FileList | null>(null);
+
   const handleSubmit = async () => {
-    console.log(modalProductData);
-    console.log(isNewProduct);
+    const { _id, ...rest } = modalProductData!;
+
+    
+
     if (isNewProduct) {
-      const { _id, ...rest } = modalProductData!;
+      
       const newProduct: TNewProduct = rest;
 
       // I am sure that userId is not null when the modal open from table add button
       // otherwise it opens from an edit action and in that situation userId is not null
       // and already stored in the database and it's not needed in updates
-      await createProduct(newProduct, userId!);
-    } else await updateProduct(modalProductData!);
+      await createProduct(newProduct, userId!, productImages);
+    } else await updateProduct(modalProductData!, productImages);
   };
 
   useEffect(() => {
@@ -102,8 +107,9 @@ export function ProductModal({ productData, dialogTrigger, userId }: ProductModa
       <PictureCard
         title={"Product Picture"}
         description={"Uploaded Picture"}
-        // modalProductData?.picture??
-        initialImageSources={IMAGES}
+        
+        initialImageSources={productData?.picture ? [productData.picture] : []}
+        handleFileUploadCallback={(files) => setProductImages(files)}
       />
       {!isNewProduct && <ReviewDisplay reviews={sampleReviews} />}
     </GenericModal>
