@@ -1,0 +1,43 @@
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.4s ease;
+  }
+
+  .button:hover{
+    transform: scale(1.02);
+  }
+  
+  .button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  .gold {
+    background-color:var(--primary-color);
+    color: white;
+  }
+  
+
+  .gold:hover:not(:disabled) {
+    background-color: #cd9f33;
+  }
+  
+  .red {
+    background-color: #ff4d4f;
+    color: white;
+  }
+  
+  .red:hover:not(:disabled) {
+    background-color: #d9383e;
+  }
+    
+  .disabled {
+    background-color: #e0e0e0;
+    color: #888;
+    cursor: not-allowed;
+    transform: none; /* No scaling on hover */
+  }
