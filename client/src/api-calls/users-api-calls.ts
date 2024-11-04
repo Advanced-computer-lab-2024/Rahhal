@@ -70,3 +70,12 @@ export async function submitUser(user: TUser | undefined, isNewUser: boolean) {
     }
   }
 }
+
+ export async function createUser (newUser: any) {
+  const response = await axios.post(SERVICES_URLS.USER + "/users", newUser, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response.data;
+};

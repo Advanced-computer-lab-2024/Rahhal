@@ -1,15 +1,13 @@
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-    DialogClose,
-    DialogFooter,
-  } from "@/components/ui/dialog";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-
-
 
 interface Section {
   title: string;
@@ -21,24 +19,24 @@ interface TermsAndConditionsModalProps {
 }
 
 export function TermsAndConditionsModal({ sections = [] }: TermsAndConditionsModalProps) {
-    return(
-        <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="link" 
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button
+          variant="link"
           className="p-0 h-auto font-bold hover:underline cursor-pointer text-blue-600 hover:text-blue-800 transition-colors"
-          >
+        >
+          Terms and Conditions
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl flex flex-col max-h-[80vh]">
+        <DialogHeader>
+          <DialogTitle className="text-4xl font-bold pb-4">
             Terms and Conditions
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="max-w-2xl flex flex-col max-h-[80vh]">
-          <DialogHeader>
-            {/* <DialogTitle className="text-2xl font-bold">Terms and Conditions <hr/></DialogTitle> */}
-            <DialogTitle className="text-4xl font-bold pb-4">
-            Terms and Conditions 
-            <hr className="mt-4"/>
+            <hr className="mt-4" />
           </DialogTitle>
-          </DialogHeader>
-          <div className="flex-1 overflow-y-auto pr-6">
+        </DialogHeader>
+        <div className="flex-1 overflow-y-auto pr-6">
           {sections.map((section, sectionIndex) => (
             <div key={sectionIndex} className="mb-6">
               <h2 className="text-xl font-semibold mb-3">
@@ -54,9 +52,9 @@ export function TermsAndConditionsModal({ sections = [] }: TermsAndConditionsMod
             </div>
           ))}
         </div>
-          <DialogFooter className="flex-shrink-0 mt-6 border-t pt-4">
+        <DialogFooter className="flex-shrink-0 mt-6 border-t pt-4">
           <DialogClose asChild>
-            <Button 
+            <Button
               className="bg-black hover:bg-gray-700 text-white transition-colors"
               variant="default"
             >
@@ -64,8 +62,7 @@ export function TermsAndConditionsModal({ sections = [] }: TermsAndConditionsMod
             </Button>
           </DialogClose>
         </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    );
-
+      </DialogContent>
+    </Dialog>
+  );
 }

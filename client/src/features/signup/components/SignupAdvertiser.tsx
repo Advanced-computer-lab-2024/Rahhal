@@ -1,207 +1,414 @@
-import { z } from "zod";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import AutoForm, { AutoFormSubmit } from "@/components/ui/auto-form";
 import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import axios from "axios";
-import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
 import { TermsAndConditionsModal } from "./TermsAndConditionsModal";
 import { termsAndConditions } from "../terms-and-conditions/AdvertiserTermsAndConditions";
+import { advertiserSchema } from "../utils/ZodSchemas/advertiserSchema";
+import { createUser } from "@/api-calls/users-api-calls";
 
-interface SignupAdvertiserProps {
-  onBack: () => void;
-}
+type AdvertiserFormData = z.infer<typeof advertiserSchema>;
 
-function SignupAdvertiser({ onBack }: SignupAdvertiserProps) {
+export default function SignupAdvertiser() {
   const navigate = useNavigate();
-  const advertiserSchema = z
-    .object({
-      companyName: z.string().optional(),
-      email: z.string().email({ message: "Invalid email address" }).optional(),
-      username: z
-        .string()
-        .refine((val) => /^[A-Za-z0-9_]+$/.test(val), {
-          message: "Username can only contain letters, numbers, and underscores",
-        })
-        .optional(),
-      password: z.string().optional(),
-      confirmPassword: z.string().optional(),
-      companyWebsite: z.string().optional(),
-      hotline: z.string().optional(),
-      companyProfile: z.string().optional(),
-      acceptTerms: z.boolean().describe("Accept terms and conditions.").optional(),
-    })
-    .refine((data) => data.companyName, {
-      message: "Required",
-      path: ["companyName"],
-    })
-    .refine((data) => data.email, {
-      message: "Required",
-      path: ["email"],
-    })
-    .refine((data) => data.username, {
-      message: "Required",
-      path: ["username"],
-    })
-    .refine((data) => data.password, {
-      message: "Required",
-      path: ["password"],
-    })
-    .refine((data) => data.password && data.password.length >= 8, {
-      message: "Password must be at least 8 characters long",
-      path: ["password"],
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: "Passwords do not match",
-      path: ["confirmPassword"],
-    })
-    .refine((data) => data.companyWebsite, {
-      message: "Required",
-      path: ["companyWebsite"],
-    })
-    .refine((data) => data.hotline, {
-      message: "Required",
-      path: ["hotline"],
-    })
-    .refine((data) => data.companyProfile, {
-      message: "Required",
-      path: ["companyProfile"],
-    })
-    .refine((value) => value.acceptTerms, {
-      message: "You must accept the terms and conditions.",
-      path: ["acceptTerms"],
-    });
-  const createUser: any = async (newUser: any) => {
-    const response = await axios.post("http://localhost:3000/api/user/users ", newUser, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  };
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [values, setValues] = useState<Partial<z.infer<typeof advertiserSchema>>>({});
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<AdvertiserFormData>({
+    resolver: zodResolver(advertiserSchema),
+    defaultValues: {
+      companyName: "",
+      email: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+      companyWebsite: "",
+      hotline: "",
+      companyProfile: "",
+      acceptTerms: false,
+    },
+  });
 
-  const onSubmit = async () => {
+  const onSubmit = async (data: AdvertiserFormData) => {
+    setIsSubmitting(true);
     const reqBody = {
-      companyName: values.companyName,
-      email: values.email,
-      username: values.username,
-      password: values.password,
-      website: values.companyWebsite,
-      hotline: values.hotline,
-      companyProfile: values.companyProfile,
+      companyName: data.companyName,
+      email: data.email,
+      username: data.username,
+      password: data.password,
+      website: data.companyWebsite,
+      hotline: data.hotline,
+      companyProfile: data.companyProfile,
       role: "advertiser",
     };
 
     try {
-      const response = await createUser(reqBody);
-      console.log(response);
-      alert("User created successfully, awaiting approval");
+      toast({
+        title: "Creating User",
+        description: "Please wait while we create your account",
+        duration: 1500,
+      });
+      const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+      await delay(4500);
+
+      const response: any = await createUser(reqBody);
+      console.log("Server response:", response);
+
+      toast({
+        title: "User Created",
+        description: "User created successfully. Wait for email confirmation of approval!",
+        style: {
+          backgroundColor: "#34D399",
+          color: "#000000",
+        },
+        duration: 3000,
+      });
       setTimeout(() => {
-        navigate("/");
+        navigate("/signin");
       }, 3000);
-    } catch (error) {
+    } catch (error: any) {
       if (axios.isAxiosError(error) && error.response) {
-        alert(error.response.data.error);
+        if (error.response.data.error === "Username already exists") {
+          setError("username", {
+            type: "manual",
+            message: "Username already exists",
+          });
+        } else if (error.response.data.error === "This email is registered to another user") {
+          setError("email", {
+            type: "manual",
+            message: "This email is registered to another user",
+          });
+        } else if (
+          error.response.data.error ===
+          "Username already exists and this email is registered to another user"
+        ) {
+          setError("username", {
+            type: "manual",
+            message: "Username already exists",
+          });
+          setError("email", {
+            type: "manual",
+            message: "Email already exists",
+          });
+        }
+
+        toast({
+          title: "Error",
+          description: error.response.data.error,
+          variant: "destructive",
+          duration: 3000,
+        });
       } else {
-        alert(error);
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred",
+          variant: "destructive",
+          duration: 3000,
+        });
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <>
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <Card className="w-full max-w-3xl flex flex-col" style={{ padding: 20 }}>
-          <CardHeader className="flex flex-row items-center space-x-4">
-            <Button onClick={onBack} variant="outline" size="sm">
-              Back
-            </Button>
-            <CardTitle className="text-xl font-bold">Advertiser Sign Up</CardTitle>
-          </CardHeader>
-          <CardContent className="flex overflow-y-auto h-[80vh]">
-            <AutoForm
-              formSchema={advertiserSchema as any}
-              values={values}
-              onValuesChange={setValues}
-              onSubmit={onSubmit}
-              className="w-full"
-              fieldConfig={{
-                companyName: {
-                  label: "Company Name",
-                  inputProps: {
-                    type: "text",
-                    placeholder: "Company Name",
-                  },
-                },
-                email: {
-                  label: "Email",
-                  inputProps: {
-                    type: "email",
-                    placeholder: "Email",
-                  },
-                },
-                username: {
-                  label: "Username",
-                  inputProps: {
-                    type: "text",
-                    placeholder: "Username",
-                  },
-                },
-                password: {
-                  label: "Password",
-                  inputProps: {
-                    type: "password",
-                    placeholder: "Password",
-                  },
-                },
-                confirmPassword: {
-                  label: "Confirm Password",
-                  inputProps: {
-                    type: "password",
-                    placeholder: "Please re-enter your password",
-                  },
-                },
-                companyWebsite: {
-                  label: "Company Website",
-                  inputProps: {
-                    type: "text",
-                    placeholder: "Please Provide Your Company Website",
-                  },
-                },
-                hotline: {
-                  label: "Hotline",
-                  inputProps: {
-                    type: "text",
-                    placeholder: "Please Provide Your Company Hotline",
-                  },
-                },
-                companyProfile: {
-                  label: "Company Profile",
-                  inputProps: {
-                    type: "text",
-                    placeholder: "Please Provide Your Company LinkedIn Profile",
-                  },
-                },
-                acceptTerms: {
-                  inputProps: {},
-                  description: (
-                    <>
-                      {"    "} By checking this box you agree to the{" "}
-                      <TermsAndConditionsModal sections ={termsAndConditions} />
-                      .
-                    </>
-                  ),
-                },
-              }}
-            >
-              <AutoFormSubmit className="bg-primary text-white w-full mt-4">Sign Up</AutoFormSubmit>
-            </AutoForm>
-          </CardContent>
-        </Card>
-      </div>
-    </>
+    <div className="flex">
+      <Card className="w-full max-w-3xl flex flex-col">
+        <CardHeader className="flex flex-row items-center space-x-4">
+          <CardTitle className="text-3xl font-bold">Advertiser Sign Up</CardTitle>
+        </CardHeader>
+        <CardContent className="flex overflow-y-auto h-[calc(100vh-200px)]">
+          <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
+            <Controller
+              name="companyName"
+              control={control}
+              render={({ field }) => (
+                <div>
+                  <Label htmlFor="companyName" className={errors.companyName ? "text-red-500" : ""}>
+                    Company Name
+                  </Label>
+                  <Input
+                    id="companyName"
+                    placeholder="Company Name"
+                    {...field}
+                    className={errors.companyName ? "border-red-500" : ""}
+                    disabled={isSubmitting}
+                  />
+                  {errors.companyName && (
+                    <p className="text-red-500 text-sm">{errors.companyName.message}</p>
+                  )}
+                </div>
+              )}
+            />
+
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <div>
+                  <Label htmlFor="email" className={errors.email ? "text-red-500" : ""}>
+                    Email
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Email"
+                    {...field}
+                    className={errors.email ? "border-red-500" : ""}
+                    disabled={isSubmitting}
+                  />
+                  {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+                </div>
+              )}
+            />
+
+            <Controller
+              name="username"
+              control={control}
+              render={({ field }) => (
+                <div>
+                  <Label htmlFor="username" className={errors.username ? "text-red-500" : ""}>
+                    Username
+                  </Label>
+                  <Input
+                    id="username"
+                    placeholder="Username"
+                    {...field}
+                    className={errors.username ? "border-red-500" : ""}
+                    disabled={isSubmitting}
+                  />
+                  {errors.username && (
+                    <p className="text-red-500 text-sm">{errors.username.message}</p>
+                  )}
+                </div>
+              )}
+            />
+
+            <Controller
+              name="password"
+              control={control}
+              render={({ field }) => (
+                <div>
+                  <Label htmlFor="password" className={errors.password ? "text-red-500" : ""}>
+                    Password
+                  </Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Password"
+                    {...field}
+                    className={errors.password ? "border-red-500" : ""}
+                    disabled={isSubmitting}
+                  />
+                  {errors.password && (
+                    <p className="text-red-500 text-sm">{errors.password.message}</p>
+                  )}
+                </div>
+              )}
+            />
+
+            <Controller
+              name="confirmPassword"
+              control={control}
+              render={({ field }) => (
+                <div>
+                  <Label
+                    htmlFor="confirmPassword"
+                    className={errors.confirmPassword ? "text-red-500" : ""}
+                  >
+                    Confirm Password
+                  </Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    placeholder="Confirm Password"
+                    {...field}
+                    className={errors.confirmPassword ? "border-red-500" : ""}
+                    disabled={isSubmitting}
+                  />
+                  {errors.confirmPassword && (
+                    <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>
+                  )}
+                </div>
+              )}
+            />
+
+            <Controller
+              name="companyWebsite"
+              control={control}
+              render={({ field }) => (
+                <div>
+                  <Label
+                    htmlFor="companyWebsite"
+                    className={errors.companyWebsite ? "text-red-500" : ""}
+                  >
+                    Company Website
+                  </Label>
+                  <Input
+                    id="companyWebsite"
+                    placeholder="Company Website"
+                    {...field}
+                    className={errors.companyWebsite ? "border-red-500" : ""}
+                    disabled={isSubmitting}
+                  />
+                  {errors.companyWebsite && (
+                    <p className="text-red-500 text-sm">{errors.companyWebsite.message}</p>
+                  )}
+                </div>
+              )}
+            />
+
+            <Controller
+              name="hotline"
+              control={control}
+              render={({ field }) => (
+                <div>
+                  <Label htmlFor="hotline" className={errors.hotline ? "text-red-500" : ""}>
+                    Hotline
+                  </Label>
+                  <Input
+                    id="hotline"
+                    placeholder="Hotline"
+                    {...field}
+                    className={errors.hotline ? "border-red-500" : ""}
+                    disabled={isSubmitting}
+                  />
+                  {errors.hotline && (
+                    <p className="text-red-500 text-sm">{errors.hotline.message}</p>
+                  )}
+                </div>
+              )}
+            />
+
+            <Controller
+              name="companyProfile"
+              control={control}
+              render={({ field }) => (
+                <div>
+                  <Label
+                    htmlFor="companyProfile"
+                    className={errors.companyProfile ? "text-red-500" : ""}
+                  >
+                    Company Profile
+                  </Label>
+                  <Input
+                    id="companyProfile"
+                    placeholder="Company LinkedIn Profile"
+                    {...field}
+                    className={errors.companyProfile ? "border-red-500" : ""}
+                    disabled={isSubmitting}
+                  />
+                  {errors.companyProfile && (
+                    <p className="text-red-500 text-sm">{errors.companyProfile.message}</p>
+                  )}
+                </div>
+              )}
+            />
+
+            <Controller
+              name="nationalID"
+              control={control}
+              render={({ field: { onChange } }) => (
+                <div>
+                  <Label htmlFor="nationalID" className={errors.nationalID ? "text-red-500" : ""}>
+                    National ID
+                  </Label>
+                  <Input
+                    id="nationalID"
+                    type="file"
+                    onChange={(e) => onChange(e.target.files?.[0])}
+                    // {...field}
+                    className={errors.nationalID ? "border-red-500" : ""}
+                    disabled={isSubmitting}
+                  />
+                  {errors.nationalID && (
+                    <p className="text-red-500 text-sm">{errors.nationalID.message}</p>
+                  )}
+                </div>
+              )}
+            />
+
+            <Controller
+              name="taxRegistration"
+              control={control}
+              render={({ field: { onChange } }) => (
+                <div>
+                  <Label
+                    htmlFor="taxRegistration"
+                    className={errors.taxRegistration ? "text-red-500" : ""}
+                  >
+                    Tax Registration Card
+                  </Label>
+                  <Input
+                    id="taxRegistration"
+                    type="file"
+                    onChange={(e) => onChange(e.target.files?.[0])}
+                    // {...field}
+                    className={errors.taxRegistration ? "border-red-500" : ""}
+                    disabled={isSubmitting}
+                  />
+                  {errors.taxRegistration && (
+                    <p className="text-red-500 text-sm">{errors.taxRegistration.message}</p>
+                  )}
+                </div>
+              )}
+            />
+
+            <Controller
+              name="acceptTerms"
+              control={control}
+              render={({ field }) => (
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="acceptTerms"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      className={errors.acceptTerms ? "border-red-500" : ""}
+                      disabled={isSubmitting}
+                    />
+                    <Label
+                      htmlFor="acceptTerms"
+                      className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${errors.acceptTerms ? "text-red-500" : ""}`}
+                    >
+                      Accept terms and conditions
+                    </Label>
+                    <TermsAndConditionsModal sections={termsAndConditions} />
+                  </div>
+                  {errors.acceptTerms && (
+                    <p className="text-red-500 text-sm">{errors.acceptTerms.message}</p>
+                  )}
+                </div>
+              )}
+            />
+          </form>
+        </CardContent>
+        <CardFooter className="mt-6">
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isSubmitting}
+            style={{ backgroundColor: "#E1BC6D" }}
+            onClick={handleSubmit(onSubmit)}
+          >
+            {isSubmitting ? "Signing Up..." : "Sign Up"}
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
   );
 }
-export default SignupAdvertiser;
