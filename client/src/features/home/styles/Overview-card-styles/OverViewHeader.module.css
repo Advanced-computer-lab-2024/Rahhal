@@ -1,0 +1,38 @@
+.priceInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.originalPrice {
+  text-decoration: line-through;
+  color: #888;
+  font-weight: bold;
+}
+
+.discountedPrice {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.discountIcon {
+  color: #d4af37;
+  font-size: 1.2rem;
+}
+
+.noDiscountPrice {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.separator {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 8px 0;
+}
