@@ -11,6 +11,16 @@ export enum Role {
   seller = "seller",
   tourismGovernor = "tourismGovernor",
 }
+interface ICreditCard {
+  cardNumber: string;
+  expirationDate: Date;
+  cvv: number;
+}
+
+interface IWallet {
+  balance: number;
+  creditCard: ICreditCard;
+}
 
 export interface IUser {
   _id: Types.ObjectId;
@@ -34,24 +44,12 @@ export interface IUser {
   companyName?: string;
   description?: string;
   balance: number;
-  points: number;
+  points: IWallet[];
   ratings?: TRating[];
   preferences?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
-
-// interface ICreditCard{
-//   cardNumber:string;
-//   expirationDate:Date;
-//   cvv:number;
-// }
-
-// interface IWallet{
-//   balance:number;
-//   creditCard:ICreditCard;
-
-// }
 
 const ratingSchema = new Schema<TRating>({
   userName: { type: String, required: true },
@@ -265,12 +263,41 @@ const userSchema: Schema = new Schema<IUser>(
       },
     },
     points: {
-      type: Number,
-      default: 0,
-      validate: {
-        validator: userValidators.validatePoints,
-        message: "Invalid points entry",
+      type: {
+        creditCard: {
+          cardNumber: {
+            type: String,
+            default: "",
+            required: true,
+            validate: {
+              validator: userValidators.validateCardNumber,
+              message: "Invalid card number entry",
+            },
+          },
+          expirationDate: {
+            type: Date,
+            default: null,
+            required: true,
+            validate: {
+              validator: userValidators.validateExpirationDate,
+              message: "Invalid expiration date entry",
+            },
+          },
+          cvv: {
+            type: String,
+            default: "",
+            required: true,
+            validate: {
+              validator: userValidators.validateCVV,
+              message: "Invalid CVV entry",
+            },
+          },
+        },
       },
+      // validate: {
+      //   validator: userValidators.validateWallet,
+      //   message: "Invalid wallet entry",
+      // },
     },
     ratings: {
       type: [ratingSchema],
