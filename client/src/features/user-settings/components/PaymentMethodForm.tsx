@@ -48,26 +48,29 @@ export function CardsPaymentMethod() {
     paymentMethod: z.enum(["card", "paypal", "apple"]),
     wallet: z.object({
       creditCard: z.array(
-        z.object({
-          cardHolderName: z.string().min(1, "Cardholder name is required"),
-          cardNumber: z.string().length(16, "Card number must be 16 digits"),
-          expirationMonth: z.string().min(1, "Month is required"),
-          expirationYear: z.string().min(1, "Year is required"),
-          cvv: z.string().length(3, "CVV must be 3 digits"),
-        }).refine(
-          (data) => {
-            const today = new Date();
-            const expirationDate = new Date(
-              parseInt(data.expirationYear),
-              parseInt(data.expirationMonth) - 1
-            );
-            return expirationDate > today;
-          },
-          {
-            message: "Card has expired. Please use a valid expiration date.",
-            path: ["expirationMonth"], // This will show the error on the year field
-          }
-        )
+        z
+          .object({
+            cardHolderName: z.string().min(1, "Cardholder name is required"),
+            cardNumber: z.string().length(16, "Card number must be 16 digits"),
+            expirationMonth: z.string().min(1, "Month is required"),
+            expirationYear: z.string().min(1, "Year is required"),
+            cvv: z.string().length(3, "CVV must be 3 digits"),
+          })
+          .refine(
+            (data) => {
+              const today = new Date();
+              const expirationDate = new Date(
+                parseInt(data.expirationYear),
+                parseInt(data.expirationMonth) - 1,
+              );
+              // Check if the expiration date is in the future and that the year field is filled
+              return expirationDate > today && data.expirationYear.length === 4;
+            },
+            {
+              message: "Card has expired. Please use a valid expiration date.",
+              path: ["expirationMonth"], // This will show the error on the year field
+            },
+          ),
       ),
       defaultCreditCardIndex: z.number().min(0),
     }),
@@ -109,7 +112,7 @@ export function CardsPaymentMethod() {
   const transformFormDataToAPI = (data: FormValues): APIPayload => {
     // Get existing credit cards from user context
     const existingCards = user?.wallet?.creditCard || [];
-    
+
     // Create the new card
     const newCard = {
       cardHolderName: data.wallet.creditCard[0].cardHolderName,
@@ -117,7 +120,7 @@ export function CardsPaymentMethod() {
       expirationDate: new Date(
         parseInt(data.wallet.creditCard[0].expirationYear),
         parseInt(data.wallet.creditCard[0].expirationMonth) - 1,
-        1
+        1,
       ),
       cvv: data.wallet.creditCard[0].cvv,
     };
@@ -297,35 +300,36 @@ export function CardsPaymentMethod() {
                   <FormControl>
                     <div className="flex w-full items-center space-x-2 relative">
                       <Input
-                        placeholder="XXXX-XXXX-XXXX-XXXX"
-                        maxLength={16}
-                        {...field}
-                        inputMode="numeric"
-                        onInput={(e) => {
-                          e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, "");
-                          field.onChange(e);
-                        }}
-                        onChange={(e) => {
-                          const cardType = GetCardType(e.target.value);
-                          setCardType(cardType);
-                          field.onChange(e);
-                        }}
+                      placeholder="XXXX-XXXX-XXXX-XXXX"
+                      maxLength={19}
+                      {...field}
+                      inputMode="numeric"
+                      onInput={(e) => {
+                        e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, "");
+                        field.onChange(e);
+                      }}
+                      onChange={(e) => {
+                        const cardType = GetCardType(e.target.value);
+                        setCardType(cardType);
+                        field.onChange(e);
+                      }}
+                      value={field.value.replace(/\d{4}(?=.)/g, '$& ')}
                       />
                       <div className="absolute right-5 flex items-center h-full pointer-events-none">
-                        {cardType === "Visa" && (
-                          <img
-                            src={visaLogo}
-                            alt="Visa Logo"
-                            className="h-11 w-auto object-contain"
-                          />
-                        )}
-                        {cardType === "Mastercard" && (
-                          <img
-                            src={mastercardLogo}
-                            alt="Mastercard Logo"
-                            className="h-8 w-auto object-contain"
-                          />
-                        )}
+                      {cardType === "Visa" && (
+                        <img
+                        src={visaLogo}
+                        alt="Visa Logo"
+                        className="h-11 w-auto object-contain"
+                        />
+                      )}
+                      {cardType === "Mastercard" && (
+                        <img
+                        src={mastercardLogo}
+                        alt="Mastercard Logo"
+                        className="h-8 w-auto object-contain"
+                        />
+                      )}
                       </div>
                     </div>
                   </FormControl>
