@@ -11,7 +11,7 @@ import { GenericSelect } from "@//components/GenericSelect";
 import ReviewDisplay from "@//components/Ratings";
 import EditableTimePicker from "@//components/EditableTimePicker";
 import EditableDatePicker from "@//components/EditableDatePicker";
-import { IMAGES, sampleReviews } from "@/lib/utils";
+import { sampleReviews } from "@/lib/utils";
 import { createActivity, updateActivity } from "@/api-calls/activities-api-calls";
 import { fetchCategories } from "@/api-calls/categories-api-calls";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
@@ -35,6 +35,8 @@ export function ActivitiesModal({ activityData, dialogTrigger, userId }: Activit
     tags: [],
   }); // holds the data fetched from the server like categories and preference tags, etc.
 
+  const [activityPictures, setActivityPictures] = useState<FileList | null>(null); // holds the pictures uploaded by the user
+
   const extractIds = (data: ({ _id: string } & Record<string, any>)[]) => {
     const ids = data.map(({ _id }) => _id);
     const FIRST_ELEMENT = 0;
@@ -43,25 +45,28 @@ export function ActivitiesModal({ activityData, dialogTrigger, userId }: Activit
   };
 
   const handleSubmit = async () => {
+    const { _id, ...rest } = modalActivityData!;
+    
+
     if (isNewActivity) {
       // For fields that are referenced in the database by ids, we need to extract them first
       // since the database will only accept for these field an id or list of ids
       const categoryId = extractIds([modalActivityData!.category]) as string;
       const preferenceTagsIds = extractIds(modalActivityData!.preferenceTags) as string[];
-      const { _id, ...rest } = modalActivityData!;
+      
       const newActivity: TNewActivity = {
         ...rest,
         category: categoryId,
         preferenceTags: preferenceTagsIds,
-
+        
         // TODO - should be removed later when we settle down on its removal
         tags: preferenceTagsIds,
       };
       // I am sure that userId is not null when the modal open from table add button
       // otherwise it opens from an edit action and in that situation userId is not null
       // and already stored in the database and it's not needed in updates
-      await createActivity(newActivity, userId!);
-    } else await updateActivity(modalActivityData!);
+      await createActivity(newActivity, userId!, activityPictures);
+    } else await updateActivity(modalActivityData!, activityPictures);
   };
 
   useEffect(() => {
@@ -241,7 +246,7 @@ export function ActivitiesModal({ activityData, dialogTrigger, userId }: Activit
         }))}
       />
 
-      <PictureCard title={"Photo Tour"} description={"Uploaded Photos"} imageSources={IMAGES} />
+      <PictureCard title={"Photo Tour"} description={"Uploaded Photos"} initialImageSources={activityData?.images ?? []} handleFileUploadCallback={(files) => setActivityPictures(files)} />
       <div className="m-5 mx-6">
         <ReviewDisplay reviews={sampleReviews} />
       </div>

@@ -1,6 +1,8 @@
 import { SERVICES_URLS } from "@/lib/constants";
 import { TNewProduct, TProduct } from "@/features/seller/utils/seller-columns";
 import axios from "axios";
+import { renameProductImage } from "@/features/seller/utils/seller-firebase";
+import { uploadToFirebase } from "@/utils/firebase";
 
 //TODO - later it should be by owner and some other type of handling
 export async function fetchUserProducts(userId: string) {
@@ -13,15 +15,38 @@ export async function fetchProducts() {
   return response.data;
 }
 
-export async function createProduct(newProductData: TNewProduct, userId: string) {
+export async function createProduct(
+  newProductData: TNewProduct,
+  userId: string,
+  productImages: FileList | null,
+) {
+  
+  newProductData.picture = "";
   newProductData.seller = userId;
   newProductData.ratings = [{ rating: Math.floor(Math.random() * 5) + 1, userId: userId }];
-  await axios.post(SERVICES_URLS.PRODUCT + "/products", newProductData);
+  const response = await axios.post(SERVICES_URLS.PRODUCT + "/products", newProductData);
+  const productId = (response.data as TProduct)._id;
+
+ 
+  const urls: string[] = await uploadToFirebase(productImages, userId, productId, renameProductImage);
+
+  newProductData.picture = urls[0];
+
+  await axios.patch(`${SERVICES_URLS.PRODUCT}/products/${productId}`, newProductData);
+
   alert("Product created successfully");
   window.location.reload();
 }
 
-export async function updateProduct(productData: TProduct) {
+export async function updateProduct(productData: TProduct, productImages: FileList | null) {
+  const urls: string[] = await uploadToFirebase(productImages, productData.seller, productData._id, renameProductImage);
+  
+  
+
+  productData.picture = urls[0];
+
+  
+
   await axios.patch(`${SERVICES_URLS.PRODUCT}/products/${productData!._id}`, productData);
   alert("Product updated successfully");
   window.location.reload();

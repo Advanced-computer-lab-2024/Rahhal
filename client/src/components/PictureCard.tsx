@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Camera } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Plus } from "lucide-react";
@@ -8,14 +8,27 @@ import { useRef } from "react";
 interface PictureCardProps {
   title: string;
   description: string;
-  imageSources: string[];
+  initialImageSources: string[];
+  handleFileUploadCallback: (files: FileList) => void;
 }
 
 // Function to handle file upload
-const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, imageSources: string[], imageSourcesCallback: (imageSources: string[]) => void, handleFileUploadCallback: (files: FileList) => void) => {
   const files = e.target.files;
   if (files) {
     // ADD FILE UPLOAD LOGIC HERE
+
+    // Loop through the files and add the image sources to the image sources array
+    for (let i = 0; i < files.length; i++) {
+      imageSourcesCallback([...imageSources, URL.createObjectURL(files[i])]);
+    }
+
+    // Call the handle file upload callback
+    handleFileUploadCallback(files);
+
+
+    
+  
   }
 };
 
@@ -26,11 +39,12 @@ const openFileUploadDialog = (pictureUploadFieldRef: React.RefObject<HTMLInputEl
   }
 };
 
-const PictureCard = ({ title, description, imageSources }: PictureCardProps) => {
+const PictureCard = ({ title, description, initialImageSources, handleFileUploadCallback }: PictureCardProps) => {
   // CONSTANTS
   const MIN_NUMBER_OF_IMAGES: number = 0; // Minimum number of images
   const MAX_NUMBER_OF_IMAGES: number = 3; // Maximum number of images
-
+  
+  const [imageSources, setImageSources] = useState<string[]>(initialImageSources); // Image sources
   const pictureUploadFieldRef: React.RefObject<HTMLInputElement> = useRef(null); // Picture upload field reference to open the file dialog when the plus icon is clicked
 
   const thumbnailImages: string[] = imageSources.slice(MIN_NUMBER_OF_IMAGES, MAX_NUMBER_OF_IMAGES); // Thumbnail images
@@ -95,7 +109,7 @@ const PictureCard = ({ title, description, imageSources }: PictureCardProps) => 
                 ref={pictureUploadFieldRef}
                 multiple={true}
                 accept="image/*"
-                onChange={handleFileUpload}
+                onChange={(e) => handleFileUpload(e, imageSources, setImageSources, handleFileUploadCallback)}
                 hidden
               />
             </div>

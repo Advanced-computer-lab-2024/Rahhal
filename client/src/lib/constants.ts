@@ -4,6 +4,7 @@ export const SERVICES_URLS = {
   ENTERTAINMENT: "http://localhost:3000/api/entertainment",
   USER: "http://localhost:3000/api/user",
   PRODUCT: "http://localhost:3000/api/product",
+  FIREBASE: "http://localhost:3000/api/firebase",
   BOOKING: "http://localhost:3000/api/booking",
 };
 
@@ -27,6 +28,7 @@ export const DEFAULTS = {
     tags: [],
     isAppropriate: true,
     ratings: [],
+    images: [],
   },
   HISTORICAL_PLACE: {
     _id: "",
