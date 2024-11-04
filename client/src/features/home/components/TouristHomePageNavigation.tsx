@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ProfileAvatar } from "./ProfileAvatar";
+
 interface ButtonProps {
   navigation: number;
   setNavigation: (index: number) => void;
@@ -21,12 +21,17 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
   const buttonNames = ["Experiences", "Stays", "Travel", "Shop"];
   const paths = ["/entertainment", "/entertainment", "/travel", "/shop"];
   const { id } = useParams();
+
   return (
-    <div className=" w-full z-10 relative flex">
-      <div className=" w-full h-full"></div>
-      <div className="flex justify-center relative z-10 space-x-12  h-16 pt-2 items-center">
+    <div className="w-full h-16 flex items-center justify-between z-10 relative">
+      {/* Left placeholder to balance layout */}
+      <div className="flex-1"></div>
+
+      {/* Centered Navigation Buttons */}
+      <div className="absolute left-1/2 transform -translate-x-1/2 flex space-x-12 items-center">
         {buttonNames.map((buttonName, index) => (
           <NavigationButton
+            key={index}
             index={index + 1}
             navigation={navigation}
             setNavigation={setNavigation}
@@ -35,9 +40,11 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
           />
         ))}
       </div>
-      <div className=" w-full h-full flex justify-end">
-        {!NavigationProps.loggedIn && (
-          <div className="flex space-x-4 items-center pr-3">
+
+      {/* Right-Side Authentication Buttons or Avatar */}
+      <div className="flex items-center pr-3">
+        {!NavigationProps.loggedIn ? (
+          <div className="flex space-x-4 items-center">
             <Link to="/signin">
               <Button className="text-white bg-red-400 rounded-xl hover:bg-red-500">Sign In</Button>
             </Link>
@@ -45,11 +52,8 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
               <Button className="text-white bg-red-400 rounded-xl hover:bg-red-500">Sign Up</Button>
             </Link>
           </div>
-        )}
-        {NavigationProps.loggedIn && (
-          <div className="flex items-center pr-3">
-            <ProfileAvatar />
-          </div>
+        ) : (
+          <ProfileAvatar />
         )}
       </div>
     </div>
@@ -62,13 +66,12 @@ function NavigationButton(ButtonProps: ButtonProps) {
       <div className="rounded-full hover:bg-gray-300/60 flex justify-center">
         <Button
           className={cn(
-            "rounded-none rounded-t-md relative w-[7%] text-foreground bg-transparent hover:bg-transparent",
-            ButtonProps.navigation == ButtonProps.index ? "font-semibold" : "text-muted-foreground",
+            "rounded-none rounded-t-md relative w-20 text-foreground bg-transparent hover:bg-transparent",
+            ButtonProps.navigation === ButtonProps.index ? "font-semibold" : "text-muted-foreground"
           )}
           onClick={() => ButtonProps.setNavigation(ButtonProps.index)}
         >
-          {" "}
-          {ButtonProps.buttonName}{" "}
+          {ButtonProps.buttonName}
         </Button>
       </div>
     </Link>
