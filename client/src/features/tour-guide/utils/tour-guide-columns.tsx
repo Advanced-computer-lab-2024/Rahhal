@@ -38,7 +38,6 @@ export type TItinerary = {
   owner: string;
 };
 
-// Derive TNewActivity from TActivity
 export type TNewItinerary = Omit<TItinerary, "preferenceTags" | "category" | "_id"> & {
   // Each representing the id(s) of the omitted fields so that they can directly be inserted in the db
   preferenceTags: string[];
