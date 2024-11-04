@@ -12,29 +12,8 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { TermsAndConditionsModal } from "./TermsAndConditionsModal";
 import { termsAndConditions } from "../terms-and-conditions/AdvertiserTermsAndConditions";
-
-const advertiserSchema = z
-  .object({
-    companyName: z.string().min(1, "Required"),
-    email: z.string().email({ message: "Invalid email address" }),
-    username: z.string().regex(/^[A-Za-z0-9_]+$/, {
-      message: "Username can only contain letters, numbers, and underscores",
-    }),
-    password: z.string().min(8, "Password must be at least 8 characters long"),
-    confirmPassword: z.string(),
-    companyWebsite: z.string().min(1, "Required"),
-    hotline: z.string().min(1, "Required"),
-    companyProfile: z.string().min(1, "Required"),
-    nationalID: z.instanceof(File),
-    taxRegistration: z.instanceof(File),
-    acceptTerms: z
-      .boolean()
-      .refine((val) => val === true, "You must accept the terms and conditions"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+import { advertiserSchema } from "../utils/ZodSchemas/advertiserSchema";
+import { createUser } from "@/api-calls/users-api-calls";
 
 type AdvertiserFormData = z.infer<typeof advertiserSchema>;
 
@@ -63,15 +42,6 @@ export default function SignupAdvertiser() {
     },
   });
 
-  const createUser = async (newUser: any) => {
-    const response = await axios.post("http://localhost:3000/api/user/users", newUser, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  };
-
   const onSubmit = async (data: AdvertiserFormData) => {
     setIsSubmitting(true);
     const reqBody = {
@@ -96,6 +66,8 @@ export default function SignupAdvertiser() {
       await delay(4500);
 
       const response: any = await createUser(reqBody);
+      console.log("Server response:", response);
+
       toast({
         title: "User Created",
         description: "User created successfully. Wait for email confirmation of approval!",
@@ -350,7 +322,7 @@ export default function SignupAdvertiser() {
             <Controller
               name="nationalID"
               control={control}
-              render={({ field: { onChange, ...field } }) => (
+              render={({ field: { onChange } }) => (
                 <div>
                   <Label htmlFor="nationalID" className={errors.nationalID ? "text-red-500" : ""}>
                     National ID
@@ -359,7 +331,7 @@ export default function SignupAdvertiser() {
                     id="nationalID"
                     type="file"
                     onChange={(e) => onChange(e.target.files?.[0])}
-                    {...field}
+                    // {...field}
                     className={errors.nationalID ? "border-red-500" : ""}
                     disabled={isSubmitting}
                   />
@@ -373,7 +345,7 @@ export default function SignupAdvertiser() {
             <Controller
               name="taxRegistration"
               control={control}
-              render={({ field: { onChange, ...field } }) => (
+              render={({ field: { onChange } }) => (
                 <div>
                   <Label
                     htmlFor="taxRegistration"
@@ -385,7 +357,7 @@ export default function SignupAdvertiser() {
                     id="taxRegistration"
                     type="file"
                     onChange={(e) => onChange(e.target.files?.[0])}
-                    {...field}
+                    // {...field}
                     className={errors.taxRegistration ? "border-red-500" : ""}
                     disabled={isSubmitting}
                   />

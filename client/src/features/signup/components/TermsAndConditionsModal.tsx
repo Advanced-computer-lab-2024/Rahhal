@@ -31,7 +31,6 @@ export function TermsAndConditionsModal({ sections = [] }: TermsAndConditionsMod
       </DialogTrigger>
       <DialogContent className="max-w-2xl flex flex-col max-h-[80vh]">
         <DialogHeader>
-          {/* <DialogTitle className="text-2xl font-bold">Terms and Conditions <hr/></DialogTitle> */}
           <DialogTitle className="text-4xl font-bold pb-4">
             Terms and Conditions
             <hr className="mt-4" />

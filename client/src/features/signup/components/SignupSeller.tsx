@@ -13,28 +13,9 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { TermsAndConditionsModal } from "./TermsAndConditionsModal";
 import { termsAndConditions } from "../terms-and-conditions/SellerTermsAndConditions";
+import { sellerSchema } from "../utils/ZodSchemas/sellerSchema";
+import { createUser } from "@/api-calls/users-api-calls";
 
-const sellerSchema = z
-  .object({
-    firstName: z.string().min(1, "Required"),
-    lastName: z.string().min(1, "Required"),
-    email: z.string().email({ message: "Invalid email address" }),
-    username: z.string().regex(/^[A-Za-z0-9_]+$/, {
-      message: "Username can only contain letters, numbers, and underscores",
-    }),
-    password: z.string().min(8, "Password must be at least 8 characters long"),
-    confirmPassword: z.string(),
-    description: z.string().min(1, "Required"),
-    nationalID: z.instanceof(File).optional().or(z.string()),
-    taxRegistration: z.instanceof(File).optional().or(z.string()),
-    acceptTerms: z
-      .boolean()
-      .refine((val) => val === true, "You must accept the terms and conditions"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
 
 type SellerFormData = z.infer<typeof sellerSchema>;
 
@@ -61,15 +42,6 @@ export default function SignupSeller() {
       acceptTerms: false,
     },
   });
-
-  const createUser = async (newUser: any) => {
-    const response = await axios.post("http://localhost:3000/api/user/users", newUser, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return response.data;
-  };
 
   const onSubmit = async (data: SellerFormData) => {
     setIsSubmitting(true);

@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,30 +13,9 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { TermsAndConditionsModal } from "./TermsAndConditionsModal";
 import { termsAndConditions } from "../terms-and-conditions/TourGuideTermsAndConditions";
+import { tourGuideSchema } from "../utils/ZodSchemas/tourGuideSchema";
+import { createUser } from "@/api-calls/users-api-calls";
 
-const tourGuideSchema = z
-  .object({
-    firstName: z.string().min(1, "Required"),
-    lastName: z.string().min(1, "Required"),
-    email: z.string().email({ message: "Invalid email address" }),
-    username: z.string().regex(/^[A-Za-z0-9_]+$/, {
-      message: "Username can only contain letters, numbers, and underscores",
-    }),
-    password: z.string().min(8, "Password must be at least 8 characters long"),
-    confirmPassword: z.string(),
-    mobileNumber: z.string().min(1, "Required"),
-    yearsOfExperience: z.number().min(0, "Must be a positive number"),
-    previousWork: z.string().min(1, "Please provide your previous work."),
-    nationalID: z.instanceof(File),
-    certificates: z.array(z.instanceof(File)).min(1, "At least one certificate is required"),
-    acceptTerms: z
-      .boolean()
-      .refine((val) => val === true, "You must accept the terms and conditions"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
 
 type TourGuideFormData = z.infer<typeof tourGuideSchema>;
 
@@ -69,34 +46,8 @@ export default function SignupTourGuide() {
     },
   });
 
-  const createUser = async (newUser: any) => {
-    const response = await axios.post("http://localhost:3000/api/user/users", newUser, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return response.data;
-  };
-
   const onSubmit = async (data: TourGuideFormData) => {
     setIsSubmitting(true);
-    // const formData = new FormData()
-
-    // Object.entries(data).forEach(([key, value]) => {
-    //   if (key === 'certificates') {
-    //     value.forEach((file: File, index: number) => {
-    //       formData.append(`certificates[${index}]`, file)
-    //     })
-    //   } else if (value instanceof File) {
-    //     formData.append(key, value)
-    //   } else if (typeof value === 'boolean') {
-    //     formData.append(key, value.toString())
-    //   } else if (value !== null && value !== undefined) {
-    //     formData.append(key, value.toString())
-    //   }
-    // })
-
-    // formData.append('role', 'tourGuide')
 
     const reqBody = {
       firstName: data.firstName,

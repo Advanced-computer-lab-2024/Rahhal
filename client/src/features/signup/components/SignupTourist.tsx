@@ -20,113 +20,9 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { TermsAndConditionsModal } from "./TermsAndConditionsModal";
 import { termsAndConditions } from "../terms-and-conditions/TouistTermsAndConditions";
-
-const countries = {
-  Afghanistan: "Afghanistan",
-  Albania: "Albania",
-  Algeria: "Algeria",
-  Andorra: "Andorra",
-  Angola: "Angola",
-  Argentina: "Argentina",
-  Armenia: "Armenia",
-  Australia: "Australia",
-  Austria: "Austria",
-  Azerbaijan: "Azerbaijan",
-  Bahamas: "Bahamas",
-  Bahrain: "Bahrain",
-  Brazil: "Brazil",
-  Brunei: "Brunei",
-  Bulgaria: "Bulgaria",
-  Canada: "Canada",
-  Chad: "Chad",
-  Chile: "Chile",
-  China: "China",
-  Dominica: "Dominica",
-  Ecuador: "Ecuador",
-  Egypt: "Egypt",
-  "El Salvador": "El Salvador",
-  Finland: "Finland",
-  France: "France",
-  Germany: "Germany",
-  Guatemala: "Guatemala",
-  Guinea: "Guinea",
-  Italy: "Italy",
-  Jamaica: "Jamaica",
-  Japan: "Japan",
-  Jordan: "Jordan",
-  Kenya: "Kenya",
-  Kiribati: "Kiribati",
-  Kuwait: "Kuwait",
-  Lebanon: "Lebanon",
-  Liberia: "Liberia",
-  Libya: "Libya",
-  Mexico: "Mexico",
-  Mongolia: "Mongolia",
-  Montenegro: "Montenegro",
-  Morocco: "Morocco",
-  Nepal: "Nepal",
-  Netherlands: "Netherlands",
-  "New Zealand": "New Zealand",
-  Niger: "Niger",
-  Nigeria: "Nigeria",
-  "North Korea": "North Korea",
-  Norway: "Norway",
-  Oman: "Oman",
-  Pakistan: "Pakistan",
-  Palau: "Palau",
-  Panama: "Panama",
-  Paraguay: "Paraguay",
-  Peru: "Peru",
-  Poland: "Poland",
-  Portugal: "Portugal",
-  Qatar: "Qatar",
-  Russia: "Russia",
-  Rwanda: "Rwanda",
-  Samoa: "Samoa",
-  "San Marino": "San Marino",
-  "Saudi Arabia": "Saudi Arabia",
-  Singapore: "Singapore",
-  "South Africa": "South Africa",
-  Switzerland: "Switzerland",
-  Syria: "Syria",
-  Tanzania: "Tanzania",
-  Thailand: "Thailand",
-  Tunisia: "Tunisia",
-  Turkey: "Turkey",
-  "United Arab Emirates": "United Arab Emirates",
-  "United Kingdom": "United Kingdom",
-  "United States": "United States",
-  Yemen: "Yemen",
-  Zambia: "Zambia",
-  Zimbabwe: "Zimbabwe",
-};
-const touristSchema = z
-  .object({
-    firstName: z.string().min(1, "Required"),
-    lastName: z.string().min(1, "Required"),
-    email: z.string().email({ message: "Invalid email address" }),
-    username: z.string().regex(/^[A-Za-z0-9_]+$/, {
-      message: "Username can only contain letters, numbers, and underscores",
-    }),
-    password: z.string().min(8, "Password must be at least 8 characters long"),
-    confirmPassword: z.string(),
-    dob: z.coerce.date().max(new Date(), "Date Of Bith cannot be in the future"),
-    nationality: z.enum(Object.keys(countries) as [string, ...string[]]),
-    phoneNumber: z.string().min(1, "Required"),
-    job: z.enum(["Yes", "No"]).default("No"),
-    jobDescription: z.string().optional(),
-    acceptTerms: z
-      .boolean()
-      .refine((val) => val === true, "You must accept the terms and conditions"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  })
-  .refine((data) => data.job === "Yes" || data.jobDescription, {
-    message: "Required",
-    path: ["jobDescription"],
-  });
+import { countries } from "../utils/constants";
+import { touristSchema } from "../utils/ZodSchemas/touristSchema";
+import { createUser } from "@/api-calls/users-api-calls";
 
 type TouristFormData = z.infer<typeof touristSchema>;
 
@@ -156,15 +52,6 @@ export default function SignupTourist() {
   });
 
   const jobValue = watch("job");
-
-  const createUser = async (newUser: any) => {
-    const response = await axios.post("http://localhost:3000/api/user/users", newUser, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  };
 
   const onSubmit = async (data: TouristFormData) => {
     setIsSubmitting(true);
@@ -245,9 +132,6 @@ export default function SignupTourist() {
       }
       setIsSubmitting(false);
     }
-    // finally {
-    //   setIsSubmitting(false)
-    // }
   };
 
   return (
