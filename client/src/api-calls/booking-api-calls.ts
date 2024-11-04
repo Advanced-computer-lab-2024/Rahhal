@@ -1,19 +1,23 @@
 import axios from "axios";
 import { SERVICES_URLS } from "@/lib/constants";
-import type { TBookingType, IBooking } from "@/features/home/types/home-page-types";
+import type {
+  TBookingType,
+  IBooking,
+  TPopulatedBooking,
+} from "@/features/home/types/home-page-types";
 
 export async function fetchAllBookings() {
   const response = await axios.get(SERVICES_URLS.BOOKING + `/bookings`);
   return response.data;
 }
 
-export async function fetchUserBookings(userId: string) {
+export async function fetchUserBookings(userId: string): Promise<TPopulatedBooking[]> {
   const response = await axios.get(SERVICES_URLS.BOOKING + `/bookings`, {
     params: {
       userId: userId,
     },
   });
-  return response.data;
+  return response.data as TPopulatedBooking[];
 }
 
 export async function createBooking(bookingData: TBookingType) {
