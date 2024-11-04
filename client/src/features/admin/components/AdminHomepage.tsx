@@ -1,15 +1,3 @@
-import RatingForm from "@/features/home/components/RatingForm";
-const defaultRatingEntity = {
-  rating: {
-    label: "How was your overall experience?",
-    description: "",
-  },
-  comment: {
-    label: "Care to share more?",
-    description: "Your feedback is important to us!",
-  },
-};
-
 function AdminHomepage() {
   return (
     <div className="flex flex-col items-center justify-center h-screen">
@@ -43,9 +31,6 @@ function AdminHomepage() {
       >
         View Complaints
       </a>
-      <div className="container">
-        <RatingForm ratingEntities={[defaultRatingEntity]} />
-      </div>
     </div>
   );
 }
