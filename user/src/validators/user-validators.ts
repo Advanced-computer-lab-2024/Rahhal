@@ -95,6 +95,14 @@ function validateDefaultCreditCardIndex(defaultCreditCardIndex: number) {
   return typeof defaultCreditCardIndex === "number" && defaultCreditCardIndex >= MIN_LENGTH;
 }
 
+function validateBalance(balance: number) {
+  return typeof balance === "number" && balance >= MIN_LENGTH;
+}
+
+function validatePoints(points: number) {
+  return typeof points === "number" && points >= MIN_LENGTH;
+}
+
 export default {
   validateFirstName,
   validateLastName,
@@ -119,4 +127,6 @@ export default {
   validateExpirationDate,
   validateCVV,
   validateDefaultCreditCardIndex,
+  validateBalance,
+  validatePoints,
 };

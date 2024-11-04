@@ -18,7 +18,6 @@ interface ICreditCard {
 }
 
 interface IWallet {
-  balance: number;
   creditCard: ICreditCard[];
   defaultCreditCardIndex: number;
 }
@@ -256,15 +255,26 @@ const userSchema: Schema = new Schema<IUser>(
         message: "Invalid description entry",
       },
     },
+    points: {
+      type: Number,
+      default: 0,
+      validate: {
+        validator: userValidators.validatePoints,
+        message: "Invalid points entry",
+      },
+    },
     balance: {
       type: Number,
       default: 0,
       validate: {
         validator: userValidators.validateBalance,
-        message: "Invalid balance entry",
+        message: "Invalid wallet balance entry",
+      },
+      required: function () {
+        return this.role === Role.tourist;
       },
     },
-    points: {
+    wallet: {
       type: {
         creditCard: {
           cardNumber: {
