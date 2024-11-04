@@ -3,6 +3,7 @@ import { SERVICES_URLS } from "@/lib/constants";
 import { TActivity, TNewActivity } from "@/features/advertiser/utils/advertiser-columns";
 
 import { renameActivityImage } from "@/features/advertiser/utils/advertiser-firebase";
+import { uploadToFirebase } from "@/utils/firebase";
 
 export const fetchActivities = async () => {
   const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/activities`);
@@ -28,16 +29,8 @@ export const deleteActivity = async (activity: TActivity) => {
 
 export async function updateActivity(activityData: TActivity, activityImages: FileList | null) {
   
-  const urls: string[] = [];
-  if (activityImages) {
-    activityImages = renameActivityImage(activityImages, activityData.owner, activityData._id);
-    for (let i = 0; i < activityImages!.length; i++) {
-      const formData = new FormData();
-      formData.append("image" + i, activityImages![i]);
-      const response = await axios.post(SERVICES_URLS.FIREBASE + "/upload-multiple-files", formData);
-      urls.push((response.data as string[])[0]);
-    }
-  }
+  const urls: string[] = await uploadToFirebase(activityImages, activityData.owner, activityData._id, renameActivityImage);
+  
   activityData.images = [...activityData.images, ...urls];
 
   await axios.patch(`${SERVICES_URLS.ENTERTAINMENT}/activities/${activityData!._id}`, activityData);
@@ -47,22 +40,17 @@ export async function updateActivity(activityData: TActivity, activityImages: Fi
 
 export async function createActivity(newActivityData: TNewActivity, userId: string, activityImages: FileList | null) {
   newActivityData.owner = userId;
-  const urls: string[] = [];
+ 
   
 
-  newActivityData.images = urls;
+  newActivityData.images = [];
 
   const response =  await axios.post(SERVICES_URLS.ENTERTAINMENT + "/activities", newActivityData);
   const activityId = (response.data as TActivity)._id;
-  if (activityImages) {
-    activityImages = renameActivityImage(activityImages, userId, activityId);
-    for (let i = 0; i < activityImages!.length; i++) {
-      const formData = new FormData();
-      formData.append("image" + i, activityImages![i]);
-      const response = await axios.post(SERVICES_URLS.FIREBASE + "/upload-multiple-files", formData);
-      urls.push((response.data as string[])[0]);
-    }
-  }
+  const urls: string[] = await uploadToFirebase(activityImages, userId, activityId, renameActivityImage);
+
+  
+  
   newActivityData.images = urls;
 
   alert("Activity created successfully");

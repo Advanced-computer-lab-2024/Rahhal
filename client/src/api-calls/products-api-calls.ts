@@ -2,6 +2,7 @@ import { SERVICES_URLS } from "@/lib/constants";
 import { TNewProduct, TProduct } from "@/features/seller/utils/seller-columns";
 import axios from "axios";
 import { renameProductImage } from "@/features/seller/utils/seller-firebase";
+import { uploadToFirebase } from "@/utils/firebase";
 
 //TODO - later it should be by owner and some other type of handling
 export async function fetchUserProducts(userId: string) {
@@ -19,8 +20,7 @@ export async function createProduct(
   userId: string,
   productImages: FileList | null,
 ) {
-  const urls: string[] = [];
-
+  
   newProductData.picture = "";
   newProductData.seller = userId;
   newProductData.ratings = [{ rating: Math.floor(Math.random() * 5) + 1, userId: userId }];
@@ -28,17 +28,7 @@ export async function createProduct(
   const productId = (response.data as TProduct)._id;
 
  
-  // adjust name of uploaded pictures
-  if (productImages && productId) {
-    productImages = renameProductImage(productImages, userId, productId);
-  }
-
-  for (let i = 0; i < productImages!.length; i++) {
-    const formData = new FormData();
-    formData.append("image" + i, productImages![i]);
-    const response = await axios.post(SERVICES_URLS.FIREBASE + "/upload-multiple-files", formData);
-    urls.push((response.data as string[])[0]);
-  }
+  const urls: string[] = await uploadToFirebase(productImages, userId, productId, renameProductImage);
 
   newProductData.picture = urls[0];
 
@@ -49,19 +39,9 @@ export async function createProduct(
 }
 
 export async function updateProduct(productData: TProduct, productImages: FileList | null) {
-  const urls: string[] = [];
+  const urls: string[] = await uploadToFirebase(productImages, productData.seller, productData._id, renameProductImage);
   
-  // adjust name of uploaded pictures
-  if (productImages) {
-    productImages = renameProductImage(productImages, productData.seller, productData._id);
-  }
-
-  for (let i = 0; i < productImages!.length; i++) {
-    const formData = new FormData();
-    formData.append("image" + i, productImages![i]);
-    const response = await axios.post(SERVICES_URLS.FIREBASE + "/upload-multiple-files", formData);
-    urls.push((response.data as string[])[0]);
-  }
+  
 
   productData.picture = urls[0];
 
