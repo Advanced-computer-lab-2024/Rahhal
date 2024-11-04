@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useEffect } from "react";
 import { EditContext } from "./SettingsView";
 import { useForm } from "react-hook-form";
+import styles from "../styles/WalletForm.module.css";
 import {
   Form,
   FormControl,
@@ -13,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function AccountForm() {
   const { user } = useContext(EditContext);
@@ -38,10 +40,11 @@ export default function AccountForm() {
   }, [user, form]);
 
   return (
-    <Form {...form}>
-      {/* Wallet */}
-      {user.role === "tourist" && (
-        <div className="space-y-2">
+    <>
+      <h3 className="text-lg font-medium">Payment Information</h3>
+      <Form {...form}>
+        {/* Wallet */}
+        {user.role === "tourist" && (
           <FormField
             control={form.control}
             name="wallet"
@@ -56,8 +59,19 @@ export default function AccountForm() {
               </FormItem>
             )}
           />
+        )}
+      </Form>
+      <div id={styles["NO_CARD_CONTAINER"]} className={styles["hero-body"]}>
+        <h3 className={styles["title"]}>Book Faster!</h3>
+        <h4 id={styles["noCardSubTitle"]} className={styles["subtitle"]}>
+          <div className={styles["subtitleText"]}>
+            Book trips with one easy click when you save a payment method to your Rahhal account.
+          </div>
+        </h4>
+        <div className="grid justify-items-center">
+          <Button id={styles["addBtn"]}>+ Add Payment Method</Button>
         </div>
-      )}
-    </Form>
+      </div>
+    </>
   );
 }

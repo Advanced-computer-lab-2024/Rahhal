@@ -17,7 +17,7 @@ export default function SideBar() {
   ];
 
   if(user.role === "tourist") {
-    sideBarElements.push({ title: "Wallet", to: `/user-settings/wallet/${id}` })
+    sideBarElements.push({ title: "Payment Information", to: `/user-settings/wallet/${id}` })
   }
 
   return (
