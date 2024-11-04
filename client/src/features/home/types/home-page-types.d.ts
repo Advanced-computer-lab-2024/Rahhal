@@ -11,6 +11,7 @@ export interface IBooking {
 }
 
 export type TPopulatedBooking = {
+  _id?: string;
   user: IUser;
   entity: TActivity | TItinerary;
   type: bookingType;
