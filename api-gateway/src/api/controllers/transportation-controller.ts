@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { STATUS_CODES } from "@/utils/constants";
 import * as transportationService from "@/services/transportation-service";
-import type { TransferRequest } from "@/interfaces/transferRequest";
+import type { TransferRequest } from "@/utils/types";
 
 export async function getTransportationOffers(req: Request, res: Response) {
   try {

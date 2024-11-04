@@ -1,4 +1,4 @@
-import type { TransferRequest } from "../interfaces/transferRequest";
+import type { TransferRequest } from "@/utils/types";
 
 import axios from "axios";
 import dotenv from "dotenv";
