@@ -38,6 +38,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { GetCardType } from "../utils/CheckCardType";
+import { editCardContext } from "./WalletForm";
 
 export function CardsPaymentMethod() {
   const { toast } = useToast();
@@ -45,13 +46,40 @@ export function CardsPaymentMethod() {
   const { id } = useParams();
   const [cardType, setCardType] = useState<string | null>(null);
   const existingCards = user?.wallet?.creditCard || [];
+
+  const { editingCard, editedIndex } = useContext(editCardContext);
+
+  let editedCreditCard = {
+    cardHolderName: "",
+    cardNumber: "",
+    expirationMonth: "",
+    expirationYear: "",
+    cvv: "",
+  };
+  if (editingCard) {
+    editedCreditCard = {
+      cardHolderName: existingCards[editedIndex].cardHolderName,
+      cardNumber: existingCards[editedIndex].cardNumber,
+      expirationMonth: new Date(existingCards[editedIndex].expirationDate).getMonth().toString(),
+      expirationYear: new Date(existingCards[editedIndex].expirationDate).getFullYear().toString(),
+      cvv: existingCards[editedIndex].cvv,
+    };
+  } else {
+    editedCreditCard = {
+      cardHolderName: "",
+      cardNumber: "",
+      expirationMonth: "",
+      expirationYear: "",
+      cvv: "",
+    };
+  }
+
   const formSchema = z.object({
     paymentMethod: z.enum(["card", "paypal", "apple"]),
     wallet: z.object({
       creditCard: z.array(
         z
           .object({
-
             cardHolderName: z.string().min(1, "Cardholder name is required"),
             cardNumber: z.string().length(16, "Card number must be 16 digits"),
             expirationMonth: z.string().min(1, "Month is required"),
@@ -98,11 +126,11 @@ export function CardsPaymentMethod() {
       wallet: {
         creditCard: [
           {
-            cardHolderName: "",
-            cardNumber: "",
-            expirationMonth: "",
-            expirationYear: "",
-            cvv: "",
+            cardHolderName: editedCreditCard.cardHolderName,
+            cardNumber: editedCreditCard.cardNumber,
+            expirationMonth: editedCreditCard.expirationMonth,
+            expirationYear: editedCreditCard.expirationYear,
+            cvv: editedCreditCard.cvv,
           },
         ],
         defaultCreditCardIndex: user?.wallet?.creditCard?.length || 0,
@@ -153,13 +181,43 @@ export function CardsPaymentMethod() {
   }
 
   function onSubmit(data: FormValues) {
-    const apiData = transformFormDataToAPI(data);
+    let apiData: APIPayload;
+
+    if (editingCard) {
+      // Update the specific card in the existing array
+      const newCreditCardArray = existingCards.map((card, index) => {
+        if (index === editedIndex) {
+          // Replace with the edited card's values
+          return {
+            cardHolderName: data.wallet.creditCard[0].cardHolderName,
+            cardNumber: data.wallet.creditCard[0].cardNumber,
+            expirationDate: new Date(
+              parseInt(data.wallet.creditCard[0].expirationYear),
+              parseInt(data.wallet.creditCard[0].expirationMonth) - 1,
+              1,
+            ),
+            cvv: data.wallet.creditCard[0].cvv,
+          };
+        }
+        return card;
+      });
+
+      // Prepare the API payload with the modified wallet array
+      apiData = {
+        wallet: {
+          creditCard: newCreditCardArray,
+          defaultCreditCardIndex: user?.wallet?.defaultCreditCardIndex || 0,
+        },
+      };
+    } else {
+      // When adding a new card, transform the form data into API format
+      apiData = transformFormDataToAPI(data);
+    }
+
     updateUser(apiData);
     console.log("Form Data:", data);
     console.log("API Data:", apiData);
   }
-
-
 
   return (
     <Form {...form}>

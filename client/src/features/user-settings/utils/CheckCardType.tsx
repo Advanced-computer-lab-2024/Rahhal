@@ -39,3 +39,4 @@ export function GetCardType(number: string) {
 
     return " ";
   }
+  

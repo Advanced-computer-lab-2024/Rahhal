@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { EditContext } from "./SettingsView";
 import { useForm } from "react-hook-form";
 import styles from "../styles/WalletForm.module.css";
@@ -13,7 +13,6 @@ import {
   FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import {
@@ -38,12 +37,18 @@ import { useToast } from "@/hooks/use-toast";
 import { useParams } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { GetCardType } from "../utils/CheckCardType";
+
+export const editCardContext = createContext({ editingCard: false, editedIndex: 0 });
+
 export default function AccountForm() {
   const { user } = useContext(EditContext);
   const { toast } = useToast();
   const balanceValidator = z.object({
     balance: z.number().optional(),
   });
+
+  const [editingCard, setEditingCard] = useState<boolean>(false);
+  const [editedIndex, setEditedCardIndex] = useState<number>(-1);
 
   type balanceValues = z.infer<typeof balanceValidator>;
   const { id } = useParams();
@@ -102,9 +107,14 @@ export default function AccountForm() {
     if (id === user.wallet?.defaultCreditCardIndex) {
       newDefaultCreditCardIndex = 0;
     }
+    else{
+      if (id < (user.wallet?.defaultCreditCardIndex ?? 0)) {
+        newDefaultCreditCardIndex = (user.wallet?.defaultCreditCardIndex ?? 0) - 1;
+      }
+    }
 
     if (creditCard) {
-      const newCreditCardArray = creditCard.filter((card, index) => index !== id);
+      const newCreditCardArray = creditCard.filter((_, index) => index !== id);
       const data: APIPayload = {
         wallet: {
           creditCard: newCreditCardArray,
@@ -123,6 +133,11 @@ export default function AccountForm() {
       },
     };
     updateUser(data);
+  }
+
+  function editCard(edit: boolean, index: number) {
+    setEditingCard(edit);
+    setEditedCardIndex(index);
   }
 
   return (
@@ -207,19 +222,24 @@ export default function AccountForm() {
                     )}
                   </div>
                   <div className="col-span-3">
-                    {/* <Dialog>
+                    <Dialog>
                       <DialogHeader>
                         <DialogTitle></DialogTitle>
                       </DialogHeader>
-                      <DialogTrigger> */}
-                    <Button className="h-9" style={{ width: "100%" }}>
-                      Edit
-                    </Button>
-                    {/* </DialogTrigger>
+                      <DialogTrigger className="w-full">
+                        <Button
+                          className="h-9 w-full"
+                          onClick={() => editCard(true, index)}
+                        >
+                          Edit
+                        </Button>
+                      </DialogTrigger>
                       <DialogContent>
-                        <CardsPaymentMethod></CardsPaymentMethod>
+                        <editCardContext.Provider value={{ editingCard, editedIndex }}>
+                          <CardsPaymentMethod></CardsPaymentMethod>
+                        </editCardContext.Provider>
                       </DialogContent>
-                    </Dialog> */}
+                    </Dialog>
                   </div>
                   <div className="col-span-1">
                     <DropdownMenu>
@@ -266,7 +286,7 @@ export default function AccountForm() {
               <DialogTitle></DialogTitle>
             </DialogHeader>
             <DialogTrigger>
-              <Button id={styles["addBtn"]}>+ Add Payment Method</Button>
+              <Button id={styles["addBtn"]} onClick={()=>{setEditingCard(false)}}>+ Add Payment Method</Button>
             </DialogTrigger>
             <DialogContent>
               <CardsPaymentMethod></CardsPaymentMethod>
