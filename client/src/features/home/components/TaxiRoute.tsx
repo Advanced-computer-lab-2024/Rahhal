@@ -1,7 +1,7 @@
 "use client";
 
-import { ArrowRight, MapPin, Navigation, DollarSign } from "lucide-react";
-
+import { ArrowRight, MapPin, Navigation } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import PaymentOptions from "@/components/PaymentOptions";
@@ -14,6 +14,8 @@ interface RouteCardProps {
   cancellationRule?: string;
   carType: string;
   currency: string;
+  onConfirmTrip: () => void;
+  loggedIn: boolean;
 }
 
 function TaxiRoute({
@@ -24,6 +26,8 @@ function TaxiRoute({
   cancellationRule,
   carType,
   currency,
+  onConfirmTrip,
+  loggedIn,
 }: RouteCardProps) {
   return (
     <Card
@@ -90,7 +94,14 @@ function TaxiRoute({
       <CardFooter className="flex justify-center">
         <Button
           size="sm"
-          className="px-4 sm:px-8 py-2 sm:py-3 bg-[#E1BC6D] text-black hover:bg-[#c9a75f] text-sm sm:text-base"
+          className={cn(
+            "px-4 sm:px-8 py-2 sm:py-3 text-black text-sm sm:text-base",
+            loggedIn
+              ? "bg-[#E1BC6D] hover:bg-[#c9a75f]"
+              : "bg-[#E1BC6D] opacity-50 cursor-not-allowed pointer-events-none",
+          )}
+          onClick={onConfirmTrip}
+          disabled={!loggedIn}
         >
           <ArrowRight className="mr-2 h-4 w-4" /> Confirm Trip
         </Button>

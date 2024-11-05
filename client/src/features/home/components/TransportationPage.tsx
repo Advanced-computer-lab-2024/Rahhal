@@ -2,43 +2,32 @@ import { useState } from "react";
 import { TaxiCard } from "./TaxiCard";
 import TaxiRoute from "./TaxiRoute";
 import { useSearchBarStore } from "@/stores/transportation-searchbar-slice";
-
-interface CancellationRule {
-  ruleDescription: string;
-}
-interface Vehicle {
-  code: string;
-  category: string;
-  description: string;
-  imageURL?: string;
-  baggages?: { count: number }[];
-  seats?: { count: number }[];
-}
-
-interface ServiceProvider {
-  code: string;
-  name: string;
-  logoUrl?: string;
-}
-
-interface Quotation {
-  monetaryAmount: string;
-  currencyCode: string;
-}
+import { createBooking } from "@/api-calls/booking-api-calls";
+import type { TBookingType, TransportationData } from "../types/home-page-types";
+import { bookingType } from "@/utils/enums";
+import { useParams } from "react-router-dom";
 
 interface TransportationPageProps {
-  data: {
-    vehicle: Vehicle;
-    serviceProvider: ServiceProvider;
-    quotation: Quotation;
-    cancellationRules: CancellationRule[];
-  }[];
+  data: TransportationData["data"];
+  loggedIn: boolean;
 }
 
-function TransportationPage({ data }: TransportationPageProps) {
+function TransportationPage({ data, loggedIn }: TransportationPageProps) {
   const [selectedTaxi, setSelectedTaxi] = useState<number | null>(null);
-  const [isCardSelected, S] = useState(false);
   const { pickupLocation, dropOffLocation } = useSearchBarStore();
+
+  const { id } = useParams<{ id: string }>();
+  const onConfirmTrip = async () => {
+    const bookingRequest: TBookingType = {
+      user: id ? id : "",
+      entity: selectedTaxi !== null ? data[selectedTaxi].id : "",
+      type: bookingType.Transportation,
+    };
+    const booking = await createBooking(bookingRequest);
+    if (booking) {
+      alert("Trip confirmed successfully!");
+    }
+  };
 
   return (
     <div className="w-[100%] flex">
@@ -71,6 +60,8 @@ function TransportationPage({ data }: TransportationPageProps) {
             serviceProvider={data[selectedTaxi].serviceProvider.name}
             cancellationRule={data[selectedTaxi].cancellationRules[0].ruleDescription}
             carType={data[selectedTaxi].vehicle.description}
+            onConfirmTrip={onConfirmTrip}
+            loggedIn={loggedIn}
           />
         )}
       </div>

@@ -1,6 +1,6 @@
 import SearchBar from "@/features/home/components/search-bar/SearchBar";
 import { useState } from "react";
-import { fetchSuggestions } from "@/api-calls/transportation-api-calls";
+import { fetchSuggestions } from "@/api-calls/google-maps-api-calls";
 import { useSearchBarStore } from "@/stores/transportation-searchbar-slice";
 
 interface TransportationSearchBarProps {
@@ -31,7 +31,7 @@ function TransportationSearchBar({ onIconClick }: TransportationSearchBarProps) 
   const handlePickUpChange = async (value: string) => {
     if (value.length > 2) {
       try {
-        const fetchedSugg = await fetchSuggestions(value); // Await the async fetchSuggestions call
+        const fetchedSugg = await fetchSuggestions(value, "establishment");
         if (fetchedSugg) {
           setPickupSuggestions(fetchedSugg.map((suggestion) => suggestion.description));
           setPickupSuggestionsPlaceId(fetchedSugg.map((suggestion) => suggestion.placeId));
@@ -45,7 +45,7 @@ function TransportationSearchBar({ onIconClick }: TransportationSearchBarProps) 
   const handleDropOffChange = async (value: string) => {
     if (value.length > 2) {
       try {
-        const fetchedSugg = await fetchSuggestions(value); // Await the async fetchSuggestions call
+        const fetchedSugg = await fetchSuggestions(value, "establishment");
         if (fetchedSugg) {
           setDropOffSuggestions(fetchedSugg.map((suggestion) => suggestion.description));
           setDropOffSuggestionsPlaceId(fetchedSugg.map((suggestion) => suggestion.placeId));

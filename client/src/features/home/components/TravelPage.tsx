@@ -2,19 +2,21 @@ import { useEffect, useState } from "react";
 import TravelPageHeader from "./TravelPageHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TransferRequest } from "@/features/home/types/home-page-types";
-import {
-  fetchPlaceDetails,
-  getAirportCode,
-  getTransportation,
-} from "@/api-calls/transportation-api-calls";
+import { getAirportCode, getTransportation } from "@/api-calls/transportation-api-calls";
+import { fetchPlaceDetails } from "@/api-calls/google-maps-api-calls";
 import { useSearchBarStore } from "@/stores/transportation-searchbar-slice";
 import { useQuery } from "@tanstack/react-query";
 import TransportationPage from "./TransportationPage";
 
-function TravelPage() {
+interface TravelPageProps {
+  loggedIn: boolean;
+}
+function TravelPage({ loggedIn }: TravelPageProps) {
   const [transferType, setTransferType] = useState("taxis");
   const [transferRequest, setTransferRequest] = useState<TransferRequest | null>(null);
   const [skeleton, setSkeleton] = useState<boolean>(false);
+
+  console.log(loggedIn);
 
   const {
     pickupLocation,
@@ -141,7 +143,7 @@ function TravelPage() {
         </div>
       )}
       {!skeleton && transferType === "taxis" && taxiData?.data && (
-        <TransportationPage data={taxiData.data} />
+        <TransportationPage data={taxiData.data} loggedIn={loggedIn} />
       )}
     </>
   );

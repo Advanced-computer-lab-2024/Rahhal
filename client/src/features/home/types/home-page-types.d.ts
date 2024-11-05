@@ -1,3 +1,6 @@
+import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
+import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
+
 export interface IBooking {
   user: string;
   entity: string;
@@ -10,7 +13,7 @@ export interface IBooking {
 export type TPopulatedBooking = {
   _id?: string;
   user: IUser;
-  entity: Activity | Itinerary;
+  entity: TActivity | TItinerary;
   type: bookingType;
   status: bookingStatus;
   selectedPrice: number;
@@ -24,8 +27,31 @@ export type TBookingType = {
   status?: bookingStatus;
 };
 
-interface TransportationData {
+interface CancellationRule {
+  ruleDescription: string;
+}
+interface Vehicle {
+  code: string;
+  category: string;
+  description: string;
+  imageURL?: string;
+  baggages?: { count: number }[];
+  seats?: { count: number }[];
+}
+
+interface ServiceProvider {
+  code: string;
+  name: string;
+  logoUrl?: string;
+}
+
+interface Quotation {
+  monetaryAmount: string;
+  currencyCode: string;
+}
+export interface TransportationData {
   data: {
+    id: string;
     vehicle: Vehicle;
     serviceProvider: ServiceProvider;
     quotation: Quotation;

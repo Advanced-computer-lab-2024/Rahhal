@@ -74,4 +74,13 @@
     white-space: nowrap; 
 
 }  
-
+@media (max-width: 400px) {
+    .car-info p {
+      display: none;
+    }
+  
+    .car-info span {
+      font-size: 1.2rem;
+    }
+  }
+  
