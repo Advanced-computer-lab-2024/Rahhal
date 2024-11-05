@@ -93,6 +93,6 @@ export async function refundMoney(id: string, amountPaid: number) {
 }
 
 export async function redeemLoyalityPoints(id: string) {
-  const response = await axios.patch(`${SERVICES_URLS.USER}/users/redeem/${id}`);
+  const response = await axios.patch(`${SERVICES_URLS.USER}/users/${id}/redeem`);
   return response.data;
 }
