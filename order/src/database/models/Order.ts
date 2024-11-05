@@ -35,7 +35,7 @@ export interface IOrder {
   totalQuantity: number;
   promoCode?: string;
   discountAmount?: number;
-  billingAddress: string;
+  billingAddress?: string;
   shippingAddress: string;
 }
 
@@ -61,7 +61,7 @@ const orderSchema = new Schema<IOrder>({
   totalQuantity: { type: Number, required: true },
   promoCode: { type: String },
   discountAmount: { type: Number },
-  billingAddress: { type: String, required: true },
+  billingAddress: { type: String },
   shippingAddress: { type: String, required: true },
 });
 
