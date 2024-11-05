@@ -1,5 +1,7 @@
 import axios from "axios";
 import { STATUS_CODES } from "@/utils/constants";
+import { TRating } from "@/utils/types";
+import { entertainmentAxiosInstance } from "@/utils/axios-instances";
 
 const axiosInstance = axios.create({
   baseURL: "http://entertainment:3000",
@@ -22,6 +24,10 @@ export async function getActivityById(id: string) {
 
 export async function createActivity(body: string) {
   return await axiosInstance.post("/activities", body);
+}
+
+export async function addActivityRating(activityId: string, rating: TRating) {
+  return await entertainmentAxiosInstance.post(`/activities/${activityId}/ratings`, rating);
 }
 
 export async function updateActivity(id: string, body: string) {
