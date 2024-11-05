@@ -33,8 +33,10 @@ export interface IUser {
   companyProfile?: string;
   companyName?: string;
   description?: string;
-  wallet?: number;
+  wallet: number;
+  points: number;
   ratings?: TRating[];
+  preferences?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -262,8 +264,23 @@ const userSchema: Schema = new Schema<IUser>(
         message: "Invalid wallet entry",
       },
     },
+    points: {
+      type: Number,
+      default: 0,
+      validate: {
+        validator: userValidators.validatePoints,
+        message: "Invalid points entry",
+      },
+    },
     ratings: {
       type: [ratingSchema],
+    },
+    preferences:{
+      type:[String],
+      // required: function () {
+      //   return this.role === Role.tourist;
+      // },
+      // default:[]
     },
   },
   { timestamps: true },
