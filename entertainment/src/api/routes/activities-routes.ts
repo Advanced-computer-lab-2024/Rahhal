@@ -11,5 +11,6 @@ router.get("/:id", activitiesController.getActivityById); // Get activity by id
 router.post("/", activitiesController.createActivity); // Create a new activity
 router.patch("/:id", activitiesController.updateActivity); // Update an existing activity
 router.delete("/:id", activitiesController.deleteActivity); // Delete an activity
+router.post("/:id/ratings", activitiesController.addRating); // Add rating to an activity
 
 export default router;

@@ -9,6 +9,7 @@ router.patch("/:id", userController.updateUserById);
 
 router.post("/", userController.createUser);
 router.delete("/:id", userController.deleteUser);
+router.post("/:id/ratings", userController.addRating);
 router.post("/login", userController.loginUser);
 
 export default router;

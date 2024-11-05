@@ -1,3 +1,4 @@
+import type { TRating } from "@/types";
 import type { IUser } from "../models/User";
 import User from "../models/User";
 
@@ -42,4 +43,12 @@ export async function createUser(userData: IUser) {
 
 export async function deleteUser(userId: string) {
   return await User.findByIdAndDelete(userId);
+}
+
+export async function addRating(userRating: TRating, ratedUserId: string) {
+  return await User.findByIdAndUpdate(
+    ratedUserId,
+    { $push: { ratings: userRating } },
+    { new: true },
+  );
 }

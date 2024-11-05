@@ -3,6 +3,7 @@ import {
   entertainmentAxiosInstance,
   productAxiosInstance,
 } from "@/utils/axios-instances";
+import type { TRating } from "@/utils/types";
 
 // users service calls
 export async function getApprovedUsers() {
@@ -43,4 +44,8 @@ export async function deleteUser(id: string) {
 
 export async function loginUser(body: string) {
   return await userAxiosInstance.post("/users/login", body);
+}
+
+export async function addUserRating(ratedUserId: string, rating: TRating) {
+  return await userAxiosInstance.post(`/users/${ratedUserId}/ratings`, rating);
 }
