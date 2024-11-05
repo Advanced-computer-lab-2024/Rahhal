@@ -16,8 +16,6 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   const [transferRequest, setTransferRequest] = useState<TransferRequest | null>(null);
   const [skeleton, setSkeleton] = useState<boolean>(false);
 
-  console.log(loggedIn);
-
   const {
     pickupLocation,
     pickupSuggestions,
