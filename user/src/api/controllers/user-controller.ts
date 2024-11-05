@@ -82,65 +82,7 @@ export async function getUserByEmail(req: Request, res: Response) {
       res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
     }
   }
-}
-
-//update user by username
-export async function updateUserByUsername(req: Request, res: Response) {
-  try {
-    const username = req.body.username;
-    const updatedUser = req.body;
-    if (updatedUser.email) {
-      const email = await userService.getUserByEmail(updatedUser.email);
-      if (email && email.username != username) {
-        res
-          .status(STATUS_CODES.CONFLICT)
-          .json({ error: "This email is registered to another user" });
-        return;
-      }
-    }
-    if (req.query.amountPaid) {
-      const amountPaid = parseFloat(req.query.amountPaid as string);
-      if (!isNaN(amountPaid)) {
-        const user = await userService.getUserByUsername(username);
-        if (!user) {
-          res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
-          return;
-        } else if (user.role !== "tourist") {
-          res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Only tourists can have points" });
-          return;
-        } else {
-          if (user.points < points.level1maxPoints)
-            updatedUser.points = Math.ceil(user.points + amountPaid * points.level1PointRate);
-          else if (user.points < points.level2maxPoints)
-            updatedUser.points = Math.ceil(user.points + amountPaid * points.level2PointRate);
-          else updatedUser.points = Math.ceil(user.points + amountPaid * points.level3PointRate);
-        }
-      }
-    }
-    if (req.query.amountRetrieved) {
-      const amountRetrieved = parseFloat(req.query.amountRetrieved as string);
-      if (!isNaN(amountRetrieved)) {
-        const user = await userService.getUserByUsername(username);
-        if (!user) {
-          res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
-          return;
-        } else {
-          updatedUser.wallet = user.wallet + amountRetrieved;
-        }
-      }
-    }
-    const user = await userService.updateUserByUsername(username, updatedUser);
-    if (!user) {
-      res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
-    } else {
-      res.status(STATUS_CODES.STATUS_OK).json(user);
-    }
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
-    }
-  }
-}
+} 
 
 //update user by userId
 export async function updateUserById(req: Request, res: Response) {
