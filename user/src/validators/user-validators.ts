@@ -99,10 +99,6 @@ function validateBalance(balance: number) {
   return typeof balance === "number" && balance >= MIN_LENGTH;
 }
 
-function validatePoints(points: number) {
-  return typeof points === "number" && points >= MIN_LENGTH;
-}
-
 function validateCardHolderName(cardHolderName: string) {
   return typeof cardHolderName === "string" && cardHolderName.length > MIN_LENGTH;
 }

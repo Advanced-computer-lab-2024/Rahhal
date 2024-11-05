@@ -47,7 +47,10 @@ export function CardsPaymentMethod() {
   const [cardType, setCardType] = useState<string | null>(null);
   const existingCards = user?.wallet?.creditCard || [];
 
+
   const { editingCard, editedIndex } = useContext(editCardContext);
+
+
 
   let editedCreditCard = {
     cardHolderName: "",
@@ -166,17 +169,16 @@ export function CardsPaymentMethod() {
       toast({
         title: "Update " + response.statusText,
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
+      // Update the user context with the new data
+      if (user.wallet) {
+        user.wallet.creditCard = data.wallet.creditCard;
+        user.wallet.defaultCreditCardIndex = data.wallet.defaultCreditCardIndex;
+      }
     } catch (error) {
       toast({
         title: "Error: " + (error as any).response.data.error,
         variant: "destructive",
       });
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 3000);
     }
   }
 

@@ -85,17 +85,14 @@ export default function AccountForm() {
       toast({
         title: "Update " + response.statusText,
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
+      // Update user data without reloading the page
+      user.wallet = data.wallet;
+      setEditingCard(false);
     } catch (error) {
       toast({
         title: "Error: " + (error as any).response.data.error,
         variant: "destructive",
       });
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 3000);
     }
   }
 
@@ -205,8 +202,8 @@ export default function AccountForm() {
                     {GetCardType(card.cardNumber) === "Mastercard" && (
                       <img src={mastercardLogo} alt="Mastercard Logo" className="h-12" />
                     )}
-                    {GetCardType(card.cardNumber) === " " && (
-                      <img src={genericCardLogo} alt="Mastercard Logo" className="h-12" />
+                    {GetCardType(card.cardNumber) != "Mastercard" && GetCardType(card.cardNumber) != "Visa" && (
+                      <img src={genericCardLogo} alt="Generic Logo" className="h-12" />
                     )}
                   </div>
                   <div className="col-span-4">
