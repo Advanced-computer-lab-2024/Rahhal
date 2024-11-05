@@ -8,7 +8,7 @@ import FilterSortSearchHeader from "@/features/home/components/FilterSortSearchH
 import FilterSideBar from "@/features/home/components/filter-sidebar/FilterSideBar";
 import { FilterX } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { fetchProducts } from "@/api-calls/products-api-calls";
+import { fetchAvailableProducts } from "@/api-calls/products-api-calls";
 import { Product, IRating, SortOption } from "../types/home-page-types";
 import Hoodie from "@/assets/farmhouse-main.jpeg";
 import MinMaxRangeSlider from "@/features/home/components/filter-sidebar/MinMaxRangeSlider";
@@ -50,7 +50,7 @@ const ProductGridView = () => {
     data: products,
     isLoading: isLoadingProducts,
     error: errorProducts,
-  } = useQuery({ queryKey: ["product", "products"], queryFn: fetchProducts });
+  } = useQuery({ queryKey: ["product", "products"], queryFn: fetchAvailableProducts });
 
   const navigate = useNavigate();
 
