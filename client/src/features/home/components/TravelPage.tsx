@@ -87,6 +87,7 @@ function TravelPage({ loggedIn }: TravelPageProps) {
       if (pickUpGeocode) {
         const code = await getAirportCode(pickUpGeocode.lng, pickUpGeocode.lat);
         if (code && code.length > 0) airportCode = code;
+        else airportCode = pickupLocation[0].match(/\(([^)]+)\)/)?.[1] || "";
       }
     } else if (dropOffLocation[0].toLowerCase().includes("airport")) {
       if (dropOffGeocode) {
@@ -94,7 +95,7 @@ function TravelPage({ loggedIn }: TravelPageProps) {
         if (code && code.length > 0) {
           airportCode = code;
           start = false;
-        }
+        } else airportCode = pickupLocation[0].match(/\(([^)]+)\)/)?.[1] || "";
       }
     }
 

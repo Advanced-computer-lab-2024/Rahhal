@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, MapPin, Navigation } from "lucide-react";
+import { ArrowRight, Info, MapPin, Navigation } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,6 +16,7 @@ interface RouteCardProps {
   currency: string;
   onConfirmTrip: () => void;
   loggedIn: boolean;
+  isAdult?: boolean;
 }
 
 function TaxiRoute({
@@ -28,6 +29,7 @@ function TaxiRoute({
   currency,
   onConfirmTrip,
   loggedIn,
+  isAdult,
 }: RouteCardProps) {
   return (
     <Card
@@ -91,7 +93,7 @@ function TaxiRoute({
         </div>
         <PaymentOptions />
       </CardContent>
-      <CardFooter className="flex justify-center">
+      <CardFooter className="flex flex-col justify-center">
         <Button
           size="sm"
           className={cn(
@@ -101,10 +103,18 @@ function TaxiRoute({
               : "bg-[#E1BC6D] opacity-50 cursor-not-allowed pointer-events-none",
           )}
           onClick={onConfirmTrip}
-          disabled={!loggedIn}
+          disabled={!loggedIn || !isAdult}
         >
           <ArrowRight className="mr-2 h-4 w-4" /> Confirm Trip
         </Button>
+        {loggedIn && !isAdult && (
+          <div className=" flex items-center gap-2 rounded p-2 text-red-700 text-sm">
+            <div className="flex items-center justify-center w-5 h-5 text-red rounded-full">
+              <Info className="h-4 w-4" />
+            </div>
+            <span>You must be 18 or older to be able to book</span>
+          </div>
+        )}
       </CardFooter>
     </Card>
   );

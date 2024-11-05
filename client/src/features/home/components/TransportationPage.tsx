@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TaxiCard } from "./TaxiCard";
 import TaxiRoute from "./TaxiRoute";
 import { useSearchBarStore } from "@/stores/transportation-searchbar-slice";
@@ -6,6 +6,9 @@ import { createBooking } from "@/api-calls/booking-api-calls";
 import type { TBookingType, TransportationData } from "../types/home-page-types";
 import { bookingType } from "@/utils/enums";
 import { useParams } from "react-router-dom";
+import { calculateAge } from "@/utils/age-calculator";
+import { useQuery } from "@tanstack/react-query";
+import { getUserById } from "@/api-calls/users-api-calls";
 
 interface TransportationPageProps {
   data: TransportationData["data"];
@@ -15,8 +18,22 @@ interface TransportationPageProps {
 function TransportationPage({ data, loggedIn }: TransportationPageProps) {
   const [selectedTaxi, setSelectedTaxi] = useState<number | null>(null);
   const { pickupLocation, dropOffLocation } = useSearchBarStore();
+  const [isAdult, setAdult] = useState(true);
 
   const { id } = useParams<{ id: string }>();
+  const { data: userData } = useQuery({
+    queryKey: ["fetchUser"],
+    queryFn: () => getUserById(id ? id : ""),
+    enabled: !!id,
+  });
+
+  useEffect(() => {
+    if (userData) {
+      const { dob } = userData;
+      if (dob) setAdult(calculateAge(dob) >= 18);
+    }
+  }, [userData]);
+
   const onConfirmTrip = async () => {
     const bookingRequest: TBookingType = {
       user: id ? id : "",
@@ -62,6 +79,7 @@ function TransportationPage({ data, loggedIn }: TransportationPageProps) {
             carType={data[selectedTaxi].vehicle.description}
             onConfirmTrip={onConfirmTrip}
             loggedIn={loggedIn}
+            isAdult={isAdult}
           />
         )}
       </div>
