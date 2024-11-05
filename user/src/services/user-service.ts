@@ -1,5 +1,6 @@
 import * as userRepository from "../database/repositories/user-repository";
 import { type IUser } from "../database/models/User";
+import type { TRating } from "@/types";
 
 export async function createUser(userData: IUser) {
   return await userRepository.createUser(userData);
@@ -43,4 +44,6 @@ export async function updateUserById(userId: string, updatedUser: IUser): Promis
   return await userRepository.updateUserById(userId, updatedUser);
 }
 
-
+export async function addRating(userRating: TRating, ratedUserId: string) {
+  return await userRepository.addRating(userRating, ratedUserId);
+}

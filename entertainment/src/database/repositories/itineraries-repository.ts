@@ -1,5 +1,6 @@
 import Itinerary from "../models/Itinerary";
 import type { IItinerary } from "../models/Itinerary";
+import type { IRating } from "@/database/shared";
 
 // Get all itineraries
 export async function getAllItineraries() {
@@ -8,9 +9,7 @@ export async function getAllItineraries() {
 
 // Get all active & appropriate itineraries
 export async function getActiveAppropriateItineraries() {
-  return await Itinerary.find(
-    { active: true, appropriate: true }
-  )
+  return await Itinerary.find({ active: true, appropriate: true })
     .populate("category")
     .populate("preferenceTags")
     .exec();
@@ -38,4 +37,12 @@ export async function updateItinerary(id: string, itineraryData: IItinerary) {
 // Delete an itinerary
 export async function deleteItinerary(id: string) {
   return await Itinerary.findByIdAndDelete(id);
+}
+
+export async function addRating(userRating: IRating, itineraryId: string) {
+  return await Itinerary.findByIdAndUpdate(
+    itineraryId,
+    { $push: { ratings: userRating } },
+    { new: true },
+  );
 }

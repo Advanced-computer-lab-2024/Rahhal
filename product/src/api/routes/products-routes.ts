@@ -7,6 +7,7 @@ router.get("/", productsController.getAllProducts);
 router.get("/available", productsController.getAvailableProducts);
 router.get("/:id", productsController.getProductById);
 router.post("/", productsController.createProduct);
+router.post("/:id/ratings", productsController.addRating);
 router.patch("/:id", productsController.updateProduct);
 router.delete("/:id", productsController.deleteProduct);
 

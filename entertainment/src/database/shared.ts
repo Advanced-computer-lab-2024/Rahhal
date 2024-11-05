@@ -1,13 +1,15 @@
 import { Schema } from "mongoose";
 import { CONSTANTS } from "../utils/constants";
 export interface IRating {
-  user: string;
+  userId: string;
+  userName: string;
   rating: number;
   review?: string;
 }
 
 export const ratingSchema = new Schema<IRating>({
-  user: { type: String, required: true },
+  userId: { type: String, required: true },
+  userName: { type: String, required: true },
   rating: { type: Number, required: true },
   review: { type: String, required: false },
 });

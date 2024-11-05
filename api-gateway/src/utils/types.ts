@@ -1,3 +1,13 @@
+import type { z } from "zod";
+import type { RatingSchema } from "@/utils/zod-schemas";
+
+export enum RateableEntityType {
+  ACTIVITY = "activity",
+  ITINERARY = "itinerary",
+  PRODUCT = "product",
+  USER = "user",
+}
+
 export enum bookingType {
   Activity = "activity",
   Itinerary = "itinerary",
@@ -12,11 +22,10 @@ export enum bookingStatus {
   Cancelled = "cancelled",
 }
 
-export interface IRating {
-  userId: string;
-  rating: number;
-  review?: string;
-}
+// ---------------- ZOD RELATED -----------------
+// TODO: To be moved later in a sperate types file
+export type TRating = z.infer<typeof RatingSchema>;
+// ----------------------------------------------
 
 export interface Category {
   _id: string;
@@ -63,7 +72,7 @@ export interface IItinerary {
   accessibility: string;
   pickUpLocation: { longitude: number; latitude: number };
   dropOffLocation: { longitude: number; latitude: number };
-  ratings?: IRating[];
+  ratings?: TRating[];
   preferenceTags?: PreferenceTag[];
   category?: Category;
   owner: string;
@@ -83,7 +92,7 @@ export interface IActivity {
   specialDiscounts?: number;
   isBookingOpen: boolean;
   preferenceTags?: PreferenceTag[];
-  ratings?: IRating[];
+  ratings?: TRating[];
   owner: string;
 }
 

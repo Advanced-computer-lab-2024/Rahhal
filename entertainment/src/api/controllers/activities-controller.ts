@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import * as activitiesService from "@/services/activities-service";
 import { STATUS_CODES } from "@/utils/constants";
+import type { IRating } from "@/database/shared";
 
 export async function getAllActivities(req: Request, res: Response) {
   try {
@@ -49,6 +50,23 @@ export async function createActivity(req: Request, res: Response) {
   try {
     const activity = await activitiesService.createActivity(req.body);
     res.status(STATUS_CODES.CREATED).json(activity);
+  } catch (error: unknown) {
+    res.status(STATUS_CODES.SERVER_ERROR).json({
+      message: error instanceof Error ? error.message : "An unknown error occurred",
+    });
+  }
+}
+
+export async function addRating(req: Request, res: Response) {
+  try {
+    const activityId = req.params.id;
+    const userRating = req.body as IRating;
+    const rating = await activitiesService.addRating(userRating, activityId);
+    if (!rating) {
+      res.status(STATUS_CODES.NOT_FOUND).json({ message: "Activity not found" });
+    } else {
+      res.status(STATUS_CODES.CREATED).json(rating);
+    }
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
       message: error instanceof Error ? error.message : "An unknown error occurred",

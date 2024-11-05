@@ -1,4 +1,5 @@
 import type { IActivity } from "../database/models/Activity";
+import type { IRating } from "@/database/shared";
 import * as activitiesRepository from "../database/repositories/activities-repository";
 
 // Get all activities
@@ -19,6 +20,10 @@ export async function getActivityById(id: string) {
 // Create a new activity
 export async function createActivity(activitiesData: IActivity) {
   return activitiesRepository.createActivity(activitiesData);
+}
+
+export async function addRating(userRating: IRating, activityId: string) {
+  return activitiesRepository.addRating(userRating, activityId);
 }
 
 // Update an existing activity

@@ -1,4 +1,5 @@
 import type { IItinerary } from "../database/models/Itinerary";
+import type { IRating } from "@/database/shared";
 import * as itinerariesRepository from "../database/repositories/itineraries-repository";
 
 // Get all itineraries
@@ -29,4 +30,8 @@ export async function updateItinerary(id: string, itineraryData: IItinerary) {
 // Delete an itinerary
 export async function deleteItinerary(id: string) {
   return itinerariesRepository.deleteItinerary(id);
+}
+
+export async function addRating(userRating: IRating, itineraryId: string) {
+  return itinerariesRepository.addRating(userRating, itineraryId);
 }

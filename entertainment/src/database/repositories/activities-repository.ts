@@ -1,5 +1,6 @@
 import Activity from "../models/Activity";
 import type { IActivity } from "../models/Activity";
+import type { IRating } from "@/database/shared";
 
 // Get all activities
 export async function getAllActivities() {
@@ -8,9 +9,7 @@ export async function getAllActivities() {
 
 // Get all appropriate activities
 export async function getAppropriateActivities() {
-  return await Activity.find(
-    { isAppropriate: true }
-  )
+  return await Activity.find({ isAppropriate: true })
     .populate("category")
     .populate("preferenceTags")
     .exec();
@@ -32,6 +31,14 @@ export async function getActivitiesByOwner(ownerId: string) {
 export async function createActivity(activitiesData: IActivity) {
   const newActivity = new Activity(activitiesData);
   return await newActivity.save();
+}
+
+export async function addRating(userRating: IRating, activityId: string) {
+  return await Activity.findByIdAndUpdate(
+    activityId,
+    { $push: { ratings: userRating } },
+    { new: true },
+  );
 }
 
 // Update an existing activity
