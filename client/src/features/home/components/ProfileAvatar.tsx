@@ -46,9 +46,8 @@ export const ProfileAvatar = () => {
         <div className={AvatarStyles["menu"]}>
           <Link to={`/user-settings/${id}`} onClick={toggleDropdown}> <div className={AvatarStyles["menuItem"]}>Account</div></Link>
           <Link to={`/my-trips/${id}`} onClick={toggleDropdown}> <div className={AvatarStyles["menuItem"]}>Trips</div></Link>
-          <Link to={`/user-settings/wallet/${id}`}>
-            <div className={AvatarStyles["menuItem"]}>Wallet</div>
-          </Link>
+          <Link to={`/my-orders/${id}`}> <div className={AvatarStyles["menuItem"]} onClick={toggleDropdown}>My Orders</div></Link>
+          <div className={AvatarStyles["menuItem"]} onClick={toggleDropdown}>Wallet</div>
           <div className={AvatarStyles["menuItem"]} onClick={toggleDropdown}>Loyalty</div>
           <Link to={`/help-center/${id}`} onClick={toggleDropdown}>
             <div className={AvatarStyles["menuItem"]}>Help Center</div>
