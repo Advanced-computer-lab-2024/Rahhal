@@ -36,6 +36,7 @@
     "express-fileupload": "^1.5.1",
     "firebase": "^11.0.1",
     "mongoose": "^7.6.8",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "zod": "^3.23.8"
   }
 }
