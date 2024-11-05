@@ -1,6 +1,7 @@
 import type { IItinerary } from "../database/models/Itinerary";
 import type { IRating } from "@/database/shared";
 import * as itinerariesRepository from "../database/repositories/itineraries-repository";
+import { hasBookings } from "@/utils/booking-axios-instance";
 
 // Get all itineraries
 export async function getAllItineraries() {
@@ -29,7 +30,13 @@ export async function updateItinerary(id: string, itineraryData: IItinerary) {
 
 // Delete an itinerary
 export async function deleteItinerary(id: string) {
-  return itinerariesRepository.deleteItinerary(id);
+  const isBooked = await hasBookings(id);
+  if(isBooked) {
+    throw new Error("Cannot delete itinerary with bookings");
+  }
+  else{
+    return itinerariesRepository.deleteItinerary(id);
+  }
 }
 
 export async function addRating(userRating: IRating, itineraryId: string) {

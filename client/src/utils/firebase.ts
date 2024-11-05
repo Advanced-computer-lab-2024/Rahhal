@@ -1,4 +1,5 @@
 import { SERVICES_URLS } from "@/lib/constants";
+import axios from "axios";
 
 export async function uploadToFirebase(
   files: FileList | null,

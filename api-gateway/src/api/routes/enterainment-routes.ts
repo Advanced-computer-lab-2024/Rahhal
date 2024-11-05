@@ -17,7 +17,10 @@ router.delete("/activities/:id", activitiesController.deleteActivity);
 
 //itineraries routes
 router.get("/itineraries", itinerariesController.getAllItineraries);
-router.get("/itineraries/active-appropriate", itinerariesController.getActiveAppropriateItineraries);
+router.get(
+  "/itineraries/active-appropriate",
+  itinerariesController.getActiveAppropriateItineraries,
+);
 router.get("/itineraries/:id", itinerariesController.getAItineraryById);
 router.post("/itineraries", itinerariesController.createItinerary);
 router.patch("/itineraries/:id", itinerariesController.updateItinerary);
