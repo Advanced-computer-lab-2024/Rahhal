@@ -1,29 +1,19 @@
-import axios from "axios";
-import { STATUS_CODES } from "@/utils/constants";
 import { TRating } from "@/utils/types";
 import { entertainmentAxiosInstance } from "@/utils/axios-instances";
 
-const axiosInstance = axios.create({
-  baseURL: "http://entertainment:3000",
-  validateStatus: (status) => {
-    return status < STATUS_CODES.GATEWAY_TIMEOUT;
-  },
-});
-
-// Activites service calls
 export async function getAllActivities() {
-  return await axiosInstance.get("/activities");
+  return await entertainmentAxiosInstance.get("/activities");
 }
 
 export async function getAppropriateActivities() {
-  return axiosInstance.get("/activities/appropriate");
+  return entertainmentAxiosInstance.get("/activities/appropriate");
 }
 export async function getActivityById(id: string) {
-  return await axiosInstance.get(`/activities/${id}`);
+  return await entertainmentAxiosInstance.get(`/activities/${id}`);
 }
 
 export async function createActivity(body: string) {
-  return await axiosInstance.post("/activities", body);
+  return await entertainmentAxiosInstance.post("/activities", body);
 }
 
 export async function addActivityRating(activityId: string, rating: TRating) {
@@ -31,9 +21,9 @@ export async function addActivityRating(activityId: string, rating: TRating) {
 }
 
 export async function updateActivity(id: string, body: string) {
-  return await axiosInstance.patch(`/activities/${id}`, body);
+  return await entertainmentAxiosInstance.patch(`/activities/${id}`, body);
 }
 
 export async function deleteActivity(id: string) {
-  return await axiosInstance.delete(`/activities/${id}`);
+  return await entertainmentAxiosInstance.delete(`/activities/${id}`);
 }

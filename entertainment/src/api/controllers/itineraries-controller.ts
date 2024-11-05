@@ -1,6 +1,7 @@
 import type express from "express";
-import * as itinerariesService from "../../services/itineraries-service";
-import { STATUS_CODES } from "../../utils/constants";
+import * as itinerariesService from "@/services/itineraries-service";
+import { STATUS_CODES } from "@/utils/constants";
+import type { IRating } from "@/database/shared";
 
 export async function getAllItineraries(req: express.Request, res: express.Response) {
   try {
@@ -72,6 +73,23 @@ export async function deleteItinerary(req: express.Request, res: express.Respons
       res.status(STATUS_CODES.NOT_FOUND).json({ message: "Itinerary not found" });
     } else {
       res.status(STATUS_CODES.STATUS_OK).json(itinerary);
+    }
+  } catch (error: unknown) {
+    res.status(STATUS_CODES.SERVER_ERROR).json({
+      message: error instanceof Error ? error.message : "An unknown error occurred",
+    });
+  }
+}
+
+export async function addRating(req: express.Request, res: express.Response) {
+  try {
+    const itineraryId = req.params.id;
+    const userRating = req.body as IRating;
+    const rating = await itinerariesService.addRating(userRating, itineraryId);
+    if (!rating) {
+      res.status(STATUS_CODES.NOT_FOUND).json({ message: "Itinerary not found" });
+    } else {
+      res.status(STATUS_CODES.CREATED).json(rating);
     }
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({

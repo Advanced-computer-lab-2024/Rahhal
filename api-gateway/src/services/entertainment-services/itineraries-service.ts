@@ -1,34 +1,30 @@
-import axios from "axios";
-import { STATUS_CODES } from "@/utils/constants";
+import { entertainmentAxiosInstance } from "@/utils/axios-instances";
+import { TRating } from "@/utils/types";
 
-const axiosInstance = axios.create({
-  baseURL: "http://entertainment:3000",
-  validateStatus: (status) => {
-    return status < STATUS_CODES.GATEWAY_TIMEOUT;
-  },
-});
-
-// Itineraries service calls
 export async function getAllItineraries() {
-  return await axiosInstance.get("/itineraries");
+  return await entertainmentAxiosInstance.get("/itineraries");
 }
 
 export async function getActiveAppropriateItineraries() {
-  return axiosInstance.get("/itineraries/active-appropriate");
+  return entertainmentAxiosInstance.get("/itineraries/active-appropriate");
 }
 
 export async function getItineraryById(id: string) {
-  return await axiosInstance.get(`/itineraries/${id}`);
+  return await entertainmentAxiosInstance.get(`/itineraries/${id}`);
 }
 
 export async function createItinerary(body: string) {
-  return await axiosInstance.post("/itineraries", body);
+  return await entertainmentAxiosInstance.post("/itineraries", body);
+}
+
+export async function addItineraryRating(itineraryId: string, rating: TRating) {
+  return await entertainmentAxiosInstance.post(`/itineraries/${itineraryId}/ratings`, rating);
 }
 
 export async function updateItinerary(id: string, body: string) {
-  return await axiosInstance.patch(`/itineraries/${id}`, body);
+  return await entertainmentAxiosInstance.patch(`/itineraries/${id}`, body);
 }
 
 export async function deleteItinerary(id: string) {
-  return await axiosInstance.delete(`/itineraries/${id}`);
+  return await entertainmentAxiosInstance.delete(`/itineraries/${id}`);
 }
