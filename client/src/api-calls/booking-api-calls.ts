@@ -26,8 +26,12 @@ export async function createBooking(bookingData: TBookingType) {
     entity: bookingData.entity,
     type: bookingData.type,
   };
-  const response = await axios.post(SERVICES_URLS.BOOKING + `/bookings`, newBooking);
-  return response.data;
+  try {
+    const response = await axios.post(SERVICES_URLS.BOOKING + `/bookings`, newBooking);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating booking:", error);
+  }
 }
 
 export async function updateBookingRequest(id: string, bookingData: Partial<IBooking>) {

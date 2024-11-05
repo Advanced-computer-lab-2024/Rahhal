@@ -38,12 +38,13 @@ export default function App() {
             <Route element={<TouristHomePage loggedIn={false} />}>
               <Route path="/entertainment" element={<GeneralGridView />} />
               <Route path="/shop" element={<ProductGridView />} />
-              <Route path="/travel" element={<TravelPage />} />
+              <Route path="/travel" element={<TravelPage loggedIn={false} />} />
             </Route>
             <Route element={<TouristHomePage loggedIn={true} />}>
               <Route path="/entertainment/:id" element={<GeneralGridView />} />
               <Route path="/shop/:id" element={<ProductGridView />} />
               <Route path="/my-trips/:id" element={<MyTripsPage />} />
+              <Route path="/travel/:id" element={<TravelPage loggedIn={true} />} />
             </Route>
             <Route path="/signup" element={<SignupSelector />} />
             <Route path="/signin" element={<Login />} />
@@ -75,8 +76,8 @@ export default function App() {
             <Route path="/tour-guide/:id" element={<TourGuideView />} />
             <Route path="/admin/preference-tags" element={<PreferenceTagsAdminView />} />
             <Route path="/admin/complaints" element={<AdminComplaintsView />} />
-            <Route path="/admin/itineraries" element={<AdminItinerariesView />} />            <Route path="/admin/activities" element={<AdminActivitiesView />} />
-
+            <Route path="/admin/itineraries" element={<AdminItinerariesView />} />{" "}
+            <Route path="/admin/activities" element={<AdminActivitiesView />} />
           </Routes>
         </Router>
       </QueryClientProvider>

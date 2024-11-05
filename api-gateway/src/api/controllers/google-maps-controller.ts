@@ -4,8 +4,12 @@ import * as googleMapsService from "@/services/google-maps-service";
 
 export async function getPlaceAutocomplete(req: Request, res: Response) {
   const place = req.query.input;
+  const filter = req.query.filter ? req.query.filter : "";
   try {
-    const predictions = await googleMapsService.getPlaceAutocomplete(place as string);
+    const predictions = await googleMapsService.getPlaceAutocomplete(
+      place as string,
+      filter as string,
+    );
     res.status(STATUS_CODES.STATUS_OK).json(predictions);
   } catch (error) {
     res.status(STATUS_CODES.BAD_GATEWAY).json(error);

@@ -11,11 +11,20 @@ interface IAutocompletePrediction {
   place_id: string;
   reference: string;
 }
+interface AddressComponent {
+  long_name: string;
+  short_name: string;
+  types: string[];
+}
 
-export async function getPlaceAutocomplete(place: string) {
-  const { data } = await axios.get(
-    `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${place}&key=${GOOGLE_MAPS_API_KEY}`,
-  );
+export async function getPlaceAutocomplete(place: string, filter: string) {
+  const { data } = await axios.get("https://maps.googleapis.com/maps/api/place/autocomplete/json", {
+    params: {
+      input: place,
+      key: GOOGLE_MAPS_API_KEY,
+      types: filter,
+    },
+  });
   const predictions = data.predictions;
   return predictions.map((prediction: IAutocompletePrediction) => {
     return {
@@ -30,10 +39,17 @@ export async function getPlaceDetailsById(placeId: string) {
   const { data } = await axios.get(
     `https://maps.googleapis.com/maps/api/geocode/json?place_id=${placeId}&key=${GOOGLE_MAPS_API_KEY}`,
   );
-  const { formatted_address, geometry } = data.results[CONSTANTS.ZERO];
+  const { formatted_address, geometry, address_components } = data.results[CONSTANTS.ZERO];
+
+  const countryComponent = address_components.find((component: AddressComponent) =>
+    component.types.includes("country"),
+  );
+  const countryCode = countryComponent ? countryComponent.short_name : null;
+
   return {
     description: formatted_address,
     location: geometry.location,
+    countryCode,
   };
 }
 
