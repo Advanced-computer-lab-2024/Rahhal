@@ -37,6 +37,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { GetCardType } from "../utils/CheckCardType";
 
 export function CardsPaymentMethod() {
   const { toast } = useToast();
@@ -50,7 +51,7 @@ export function CardsPaymentMethod() {
       creditCard: z.array(
         z
           .object({
-            typeOfCard: z.string().optional(),
+
             cardHolderName: z.string().min(1, "Cardholder name is required"),
             cardNumber: z.string().length(16, "Card number must be 16 digits"),
             expirationMonth: z.string().min(1, "Month is required"),
@@ -81,7 +82,6 @@ export function CardsPaymentMethod() {
   interface APIPayload {
     wallet: {
       creditCard: Array<{
-        typeOfCard: string;
         cardHolderName: string;
         cardNumber: string;
         expirationDate: Date;
@@ -98,7 +98,6 @@ export function CardsPaymentMethod() {
       wallet: {
         creditCard: [
           {
-            typeOfCard: "",
             cardHolderName: "",
             cardNumber: "",
             expirationMonth: "",
@@ -114,7 +113,6 @@ export function CardsPaymentMethod() {
   const transformFormDataToAPI = (data: FormValues): APIPayload => {
     // Create the new card
     const newCard = {
-      typeOfCard: GetCardType(data.wallet.creditCard[0].cardNumber),
       cardHolderName: data.wallet.creditCard[0].cardHolderName,
       cardNumber: data.wallet.creditCard[0].cardNumber,
       expirationDate: new Date(
@@ -161,47 +159,7 @@ export function CardsPaymentMethod() {
     console.log("API Data:", apiData);
   }
 
-  function GetCardType(number: string) {
-    // visa
-    var re = new RegExp("^4");
-    if (number.match(re) != null) return "Visa";
 
-    // Mastercard
-    if (
-      /^(5[1-5][0-9]{14}|2(22[1-9][0-9]{12}|2[3-9][0-9]{13}|[3-6][0-9]{14}|7[0-1][0-9]{13}|720[0-9]{12}))$/.test(
-        number,
-      )
-    )
-      return "Mastercard";
-
-    // AMEX
-    re = new RegExp("^3[47]");
-    if (number.match(re) != null) return "AMEX";
-
-    // Discover
-    re = new RegExp(
-      "^(6011|622(12[6-9]|1[3-9][0-9]|[2-8][0-9]{2}|9[0-1][0-9]|92[0-5]|64[4-9])|65)",
-    );
-    if (number.match(re) != null) return "Discover";
-
-    // Diners
-    re = new RegExp("^36");
-    if (number.match(re) != null) return "Diners";
-
-    // Diners - Carte Blanche
-    re = new RegExp("^30[0-5]");
-    if (number.match(re) != null) return "Diners - Carte Blanche";
-
-    // JCB
-    re = new RegExp("^35(2[89]|[3-8][0-9])");
-    if (number.match(re) != null) return "JCB";
-
-    // Visa Electron
-    re = new RegExp("^(4026|417500|4508|4844|491(3|7))");
-    if (number.match(re) != null) return "Visa Electron";
-
-    return " ";
-  }
 
   return (
     <Form {...form}>

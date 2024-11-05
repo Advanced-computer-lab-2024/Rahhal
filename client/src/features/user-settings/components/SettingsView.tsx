@@ -15,7 +15,6 @@ export enum Role {
   tourismGovernor = "tourismGovernor",
 }
 interface ICreditCard {
-  typeOfCard: string;
   cardHolderName: string;
   cardNumber: string;
   expirationDate: Date;

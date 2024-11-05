@@ -37,6 +37,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useParams } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import { GetCardType } from "../utils/CheckCardType";
 export default function AccountForm() {
   const { user } = useContext(EditContext);
   const { toast } = useToast();
@@ -63,7 +64,6 @@ export default function AccountForm() {
   interface APIPayload {
     wallet: {
       creditCard: Array<{
-        typeOfCard: string;
         cardHolderName: string;
         cardNumber: string;
         expirationDate: Date;
@@ -184,19 +184,19 @@ export default function AccountForm() {
               <div key={index} className={styles["credit"]}>
                 <div className="grid flex grid-cols-12 gap-4 justify-content-center items-center">
                   <div className="col-span-2">
-                    {card.typeOfCard === "Visa" && (
+                    {GetCardType(card.cardNumber) === "Visa" && (
                       <img src={visaLogo} alt="Visa Logo" className="h-12" />
                     )}
-                    {card.typeOfCard === "Mastercard" && (
+                    {GetCardType(card.cardNumber) === "Mastercard" && (
                       <img src={mastercardLogo} alt="Mastercard Logo" className="h-12" />
                     )}
-                    {card.typeOfCard === " " && (
+                    {GetCardType(card.cardNumber) === " " && (
                       <img src={genericCardLogo} alt="Mastercard Logo" className="h-12" />
                     )}
                   </div>
                   <div className="col-span-4">
                     <h3 className="text-lg font-medium">
-                      {card.typeOfCard} **** {card.cardNumber.slice(-4)}
+                      {GetCardType(card.cardNumber)} **** {card.cardNumber.slice(-4)}
                     </h3>
                   </div>
                   <div className="col-span-2">
