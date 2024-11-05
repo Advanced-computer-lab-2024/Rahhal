@@ -54,6 +54,7 @@ interface SearchBar {
   searchPartsHandlers?: genericHandler[];
   searchPartsOnValueChange?: ((value: string) => void)[];
   inputBox?: boolean;
+  onIconClick?: () => void;
 }
 
 // SearchBar component
@@ -67,6 +68,7 @@ export default function SearchBar({
   searchPartsHandlers,
   searchPartsOnValueChange,
   inputBox = true,
+  onIconClick,
 }: SearchBar) {
   const [focusIndex, setFocusIndex] = useState(0);
   const [hoverIndex, setHoverIndex] = useState(0);
@@ -167,9 +169,10 @@ export default function SearchBar({
           variant="default"
           size="default"
           //bg-[#ff585f] hover:bg-[#ff585f] hover:bg-gradient-to-r hover:from-[#ff111c] to hover:to-[#ff1151]
-          className="absolute right-1 w-9 h-9 rounded-full px-2 py-0 transition duration-300"
+          className="absolute right-1 w-10 h-10 rounded-full px-2 py-0 transition duration-300"
+          onClick={onIconClick}
         >
-          <SearchIcon className="w-6 h-6" />
+          <SearchIcon className="w-7 h-7" />
         </Button>
       )}
     </div>

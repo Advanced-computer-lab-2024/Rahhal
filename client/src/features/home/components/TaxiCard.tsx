@@ -1,39 +1,34 @@
 import TaxiCardStyle from "../styles/TaxiCard.module.css";
 import Van from "@/assets/Van.png";
-import TaxiProvider from "@/assets/providerLogo.png";
 import Car from "@/assets/Car.png";
 import { GoPerson } from "react-icons/go";
 import { MdOutlineLuggage } from "react-icons/md";
-import { useState } from "react";
 interface TaxiCardProps {
   type?: string;
   price?: number;
   guests?: number;
   luggage?: number;
   provider?: string;
-  onclick?: () => void;
+  currency?: string;
+  isSelected?: boolean;
+  onClick?: () => void;
 }
 
 export const TaxiCard: React.FC<TaxiCardProps> = (props) => {
-  const [isSelected, setIsSelected] = useState(false);
-
-  const handleClick = () => {
-    setIsSelected(!isSelected);
-  };
-
   return (
     <div
-      className={`${TaxiCardStyle["card"]} ${isSelected ? TaxiCardStyle["active"] : ""}`}
-      onClick={handleClick}
+      className={`${TaxiCardStyle["card"]} ${props.isSelected ? TaxiCardStyle["active"] : ""}`}
+      onClick={() => props.onClick && props.onClick()}
     >
       <div className={TaxiCardStyle["card-content"]}>
         <div className={TaxiCardStyle["card-content-left"]}>
-          <img src={Car} />
+          <img src={props.type && props.type.includes("CAR") ? Car : Van} />
           <div className={TaxiCardStyle["vehicle-details"]}>
-            {/* <p>{ props.type.includes("CAR")? "Standard Car":"Van"}</p> */}
-            <p>Standard car</p>
-            <p>EGP {props.price ? props.price : 500}</p>
-            <img src={props.provider ? props.provider : TaxiProvider} />
+            <p>{props.type && props.type.includes("CAR") ? "Standard Car" : "Van"}</p>
+            <p>
+              {props.currency} {props.price}
+            </p>
+            <img src={props.provider} />
           </div>
         </div>
 
@@ -48,7 +43,7 @@ export const TaxiCard: React.FC<TaxiCardProps> = (props) => {
             <span>
               <MdOutlineLuggage />
             </span>
-            <p>{props.luggage ? props.luggage : "10 suitcases"}</p>
+            <p>{props.luggage ? props.luggage : ""} suitcases</p>
           </div>
         </div>
       </div>

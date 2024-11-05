@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import PageStyles from "../styles/MyTripsPage.module.css";
 import { MyTripsCard } from "./MyTripsCard";
-import { fetchLocationDetails } from "@/api-calls/google-maps-location-api-call";
+import { fetchLocationDetails } from "@/api-calls/google-maps-api-calls";
 import { fetchUserBookings } from "@/api-calls/booking-api-calls";
 import { useQuery } from "@tanstack/react-query";
 import { TBookingType, TPopulatedBooking } from "@/features/home/types/home-page-types";
@@ -25,13 +25,13 @@ export const MyTripsPage = () => {
     return `${formattedDate} at ${formattedTime}`;
   }
 
-  function isDateInPast(date: string | Date,status:string): boolean {
+  function isDateInPast(date: string | Date, status: string): boolean {
     if (!date) return false;
 
     const dateTimestamp = new Date(date).getTime();
     const currentTimestamp = Date.now();
 
-    return (dateTimestamp < currentTimestamp && status === "upcoming");
+    return dateTimestamp < currentTimestamp && status === "upcoming";
   }
 
   const { id } = useParams<{ id: string }>();
@@ -50,7 +50,12 @@ export const MyTripsPage = () => {
   const { id: userId } = useParams<{ id: string }>(); // Get the userId from URL params
 
   const handleClick = (booking: TPopulatedBooking) => {
-    if (!isDateInPast(booking.entity.date ? booking.entity.date : booking.selectedDate,booking.status)) {
+    if (
+      !isDateInPast(
+        booking.entity.date ? booking.entity.date : booking.selectedDate,
+        booking.status,
+      )
+    ) {
       return navigate(
         `/destination-page?userId=${userId}&bookingId=${booking.entity._id}&status=${booking.status}`,
       );
@@ -76,7 +81,10 @@ export const MyTripsPage = () => {
                 title={booking.entity.name}
                 price={booking.selectedPrice}
                 status={
-                  isDateInPast(booking.entity.date ? booking.entity.date : booking.selectedDate,booking.status)
+                  isDateInPast(
+                    booking.entity.date ? booking.entity.date : booking.selectedDate,
+                    booking.status,
+                  )
                     ? "completed"
                     : booking.status
                 }

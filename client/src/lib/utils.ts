@@ -18,3 +18,13 @@ export const sampleReviews = [
   { userId: "44", userName: "Jane Smith", rating: 5, review: "Exceeded my expectations." },
   { userId: "44", userName: "Bob Johnson", rating: 3 },
 ];
+
+export const calculateAge = (dob: Date) => {
+  const dobDate = new Date(dob);
+  const today = new Date();
+
+  let age = today.getFullYear() - dobDate.getFullYear();
+  const monthDiff = today.getMonth() - dobDate.getMonth();
+
+  return monthDiff < 0 ? --age : age;
+};
