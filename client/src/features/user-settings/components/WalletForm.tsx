@@ -212,10 +212,10 @@ export default function AccountForm() {
                         <DialogTitle></DialogTitle>
                       </DialogHeader>
                       <DialogTrigger> */}
-                        <Button className="h-9" style={{ width: "100%" }}>
-                          Edit
-                        </Button>
-                      {/* </DialogTrigger>
+                    <Button className="h-9" style={{ width: "100%" }}>
+                      Edit
+                    </Button>
+                    {/* </DialogTrigger>
                       <DialogContent>
                         <CardsPaymentMethod></CardsPaymentMethod>
                       </DialogContent>

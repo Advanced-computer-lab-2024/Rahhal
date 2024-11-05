@@ -145,8 +145,8 @@ export function CardsPaymentMethod() {
       }, 1500);
     } catch (error) {
       toast({
-      title: "Error: " + (error as any).response.data.error,
-      variant: "destructive",
+        title: "Error: " + (error as any).response.data.error,
+        variant: "destructive",
       });
       // setTimeout(() => {
       //   window.location.reload();
@@ -300,36 +300,36 @@ export function CardsPaymentMethod() {
                   <FormControl>
                     <div className="flex w-full items-center space-x-2 relative">
                       <Input
-                      placeholder="XXXX-XXXX-XXXX-XXXX"
-                      maxLength={19}
-                      {...field}
-                      inputMode="numeric"
-                      onInput={(e) => {
-                        e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, "");
-                        field.onChange(e);
-                      }}
-                      onChange={(e) => {
-                        const cardType = GetCardType(e.target.value);
-                        setCardType(cardType);
-                        field.onChange(e);
-                      }}
-                      value={field.value.replace(/\d{4}(?=.)/g, '$& ')}
+                        placeholder="XXXX-XXXX-XXXX-XXXX"
+                        maxLength={19}
+                        {...field}
+                        inputMode="numeric"
+                        onInput={(e) => {
+                          e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, "");
+                          field.onChange(e);
+                        }}
+                        onChange={(e) => {
+                          const cardType = GetCardType(e.target.value);
+                          setCardType(cardType);
+                          field.onChange(e);
+                        }}
+                        value={field.value.replace(/\d{4}(?=.)/g, "$& ")}
                       />
                       <div className="absolute right-5 flex items-center h-full pointer-events-none">
-                      {cardType === "Visa" && (
-                        <img
-                        src={visaLogo}
-                        alt="Visa Logo"
-                        className="h-11 w-auto object-contain"
-                        />
-                      )}
-                      {cardType === "Mastercard" && (
-                        <img
-                        src={mastercardLogo}
-                        alt="Mastercard Logo"
-                        className="h-8 w-auto object-contain"
-                        />
-                      )}
+                        {cardType === "Visa" && (
+                          <img
+                            src={visaLogo}
+                            alt="Visa Logo"
+                            className="h-11 w-auto object-contain"
+                          />
+                        )}
+                        {cardType === "Mastercard" && (
+                          <img
+                            src={mastercardLogo}
+                            alt="Mastercard Logo"
+                            className="h-8 w-auto object-contain"
+                          />
+                        )}
                       </div>
                     </div>
                   </FormControl>
