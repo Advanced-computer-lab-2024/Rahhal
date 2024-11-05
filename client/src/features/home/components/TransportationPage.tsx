@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { calculateAge } from "@/utils/age-calculator";
 import { useQuery } from "@tanstack/react-query";
 import { getUserById } from "@/api-calls/users-api-calls";
+import { addLoyalityPoints } from "@/api-calls/users-api-calls";
 
 interface TransportationPageProps {
   data: TransportationData["data"];
@@ -41,6 +42,9 @@ function TransportationPage({ data, loggedIn }: TransportationPageProps) {
       type: bookingType.Transportation,
     };
     const booking = await createBooking(bookingRequest);
+    if (id && selectedTaxi !== null) {
+      await addLoyalityPoints(id, parseFloat(data[selectedTaxi].quotation.monetaryAmount));
+    }
     if (booking) {
       alert("Trip confirmed successfully!");
     }

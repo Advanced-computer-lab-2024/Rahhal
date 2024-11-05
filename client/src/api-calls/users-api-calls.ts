@@ -71,11 +71,28 @@ export async function submitUser(user: TUser | undefined, isNewUser: boolean) {
   }
 }
 
- export async function createUser (newUser: any) {
+export async function createUser(newUser: any) {
   const response = await axios.post(SERVICES_URLS.USER + "/users", newUser, {
     headers: {
       "Content-Type": "application/json",
     },
   });
   return response.data;
-};
+}
+
+export async function addLoyalityPoints(id: string, amountPaid: number) {
+  const response = await axios.patch(`${SERVICES_URLS.USER}/users/${id}?amountPaid=${amountPaid}`);
+  return response.data;
+}
+
+export async function deductLoyalityPoints(id: string, amountPaid: number) {
+  const response = await axios.patch(
+    `${SERVICES_URLS.USER}/users/${id}?amountRetrieved=${amountPaid}`,
+  );
+  return response.data;
+}
+
+export async function redeemLoyalityPoints(id: string) {
+  const response = await axios.patch(`${SERVICES_URLS.USER}/users/redeem/${id}`);
+  return response.data;
+}
