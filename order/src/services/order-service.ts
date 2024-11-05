@@ -48,5 +48,8 @@ export async function getOrdersByProduct(productId: string) {
 
 // Get orders by date range
 export async function getOrdersByDateRange(startDate: Date, endDate: Date) {
+  if (startDate > endDate) {
+    throw new Error("Start date must be before end date");
+  }
   return orderRepository.getOrdersByDateRange(startDate, endDate);
 }
