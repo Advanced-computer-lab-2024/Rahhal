@@ -1,4 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { PiTaxi } from "react-icons/pi";
+import flightIcon from "@/assets/flight-Icon.png";
+import busIcon from "@/assets/Bus Icon.png";
 import TransportationSearchBar from "./TransportationSearchBar";
 //import TravelSearchBar from "./TravelSearchBar";
 
@@ -22,14 +25,26 @@ function TravelPageHeader({
         ) : (
           <TransportationSearchBar onIconClick={onIconClickTaxis} />
         )}
-        <div>
-          <Button className="ml-4" onClick={() => setTransferType("taxis")}>
-            Taxis
+        <div className="flex justify-center">
+          <Button
+            className={`ml-2 rounded-full bg-transparent text-black hover:bg-gray-200 px-6 py-3 text-md ${transferType === "taxis" && "bg-gray-200"} `}
+            onClick={() => setTransferType("taxis")}
+          >
+            <PiTaxi className="mr-2" size={20} />
+            Airport taxis
           </Button>
-          <Button className="ml-4" onClick={() => setTransferType("flights")}>
+          <Button
+            className={`ml-2 rounded-full bg-transparent text-black hover:bg-gray-200 px-6 py-3 text-md ${transferType === "flights" && "bg-gray-200"} `}
+            onClick={() => setTransferType("flights")}
+          >
+            <img src={flightIcon} className="mr-2 w-7 h-7" />
             Flights
           </Button>
-          <Button className="ml-4" onClick={() => setTransferType("buses")}>
+          <Button
+            className={`ml-2 rounded-full bg-transparent text-black  hover:bg-gray-200 px-6 py-3 text-md  ${transferType === "buses" && "bg-gray-200"} `}
+            onClick={() => setTransferType("buses")}
+          >
+            <img src={busIcon} className="mr-2 w-7 h-7" />
             Buses
           </Button>
         </div>
