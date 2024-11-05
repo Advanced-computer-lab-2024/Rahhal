@@ -85,7 +85,7 @@ export async function addLoyalityPoints(id: string, amountPaid: number) {
   return response.data;
 }
 
-export async function deductLoyalityPoints(id: string, amountPaid: number) {
+export async function refundMoney(id: string, amountPaid: number) {
   const response = await axios.patch(
     `${SERVICES_URLS.USER}/users/${id}?amountRetrieved=${amountPaid}`,
   );
