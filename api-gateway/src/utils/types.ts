@@ -5,6 +5,7 @@ export enum RateableEntityType {
   ACTIVITY = "activity",
   ITINERARY = "itinerary",
   PRODUCT = "product",
+  USER = "user",
 }
 
 export enum bookingType {

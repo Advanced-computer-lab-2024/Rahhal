@@ -1,6 +1,8 @@
 import type { Types } from "mongoose";
 import mongoose, { Schema } from "mongoose";
-import userValidators from "../../validators/user-validators";
+import userValidators from "@/validators/user-validators";
+import type { TRating } from "@/types";
+
 export enum Role {
   admin = "admin",
   tourist = "tourist",
@@ -32,6 +34,7 @@ export interface IUser {
   companyName?: string;
   description?: string;
   wallet?: number;
+  ratings?: TRating[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -47,6 +50,13 @@ export interface IUser {
 //   creditCard:ICreditCard;
 
 // }
+
+const ratingSchema = new Schema<TRating>({
+  userName: { type: String, required: true },
+  userId: { type: String, required: true },
+  rating: { type: Number, required: true },
+  review: { type: String, required: false },
+});
 
 const userSchema: Schema = new Schema<IUser>(
   {
@@ -251,6 +261,9 @@ const userSchema: Schema = new Schema<IUser>(
         validator: userValidators.validateWallet,
         message: "Invalid wallet entry",
       },
+    },
+    ratings: {
+      type: [ratingSchema],
     },
   },
   { timestamps: true },
