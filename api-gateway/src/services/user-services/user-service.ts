@@ -34,8 +34,18 @@ export async function createUser(body: string) {
   return await userAxiosInstance.post("/users", body);
 }
 
-export async function updateUser(id: string, body: string) {
-  return await userAxiosInstance.patch(`/users/${id}`, body);
+export async function updateUser(
+  id: string,
+  body: string,
+  amountPaid: string | undefined,
+  amountRetrieved: string | undefined,
+) {
+  const queryParams = amountPaid
+    ? `?amountPaid=${amountPaid}`
+    : amountRetrieved
+      ? `?amountRetrieved=${amountRetrieved}`
+      : "";
+  return await userAxiosInstance.patch(`/users/${id}` + queryParams, body);
 }
 
 export async function deleteUser(id: string) {
@@ -48,4 +58,8 @@ export async function loginUser(body: string) {
 
 export async function addUserRating(ratedUserId: string, rating: TRating) {
   return await userAxiosInstance.post(`/users/${ratedUserId}/ratings`, rating);
+}
+
+export async function redeemPoints(userId: string) {
+  return await userAxiosInstance.patch(`/users/${userId}/redeem`);
 }

@@ -72,6 +72,10 @@ function validateWallet(wallet: number) {
   return typeof wallet === "number" && wallet >= MIN_LENGTH;
 }
 
+function validatePoints(points: number) {
+  return typeof points === "number" && points >= MIN_LENGTH;
+}
+
 export default {
   validateFirstName,
   validateLastName,
@@ -81,7 +85,7 @@ export default {
   validateApproved,
   validateDOB,
   validateNationality,
-
+  validatePoints,
   validateJob,
   validatePhoneNumber,
   validateYearsOfExperience,

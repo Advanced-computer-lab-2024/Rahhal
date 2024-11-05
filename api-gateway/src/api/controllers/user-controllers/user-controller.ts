@@ -72,9 +72,11 @@ export async function createUser(req: Request, res: Response) {
 
 export async function updateUser(req: Request, res: Response) {
   const userId = req.params.id;
+  const amountPaid = req.query.amountPaid as string | undefined;
+  const amountRetrieved = req.query.amountRetrieved as string | undefined;
   const userData = req.body;
   try {
-    const user = await userService.updateUser(userId, userData);
+    const user = await userService.updateUser(userId, userData, amountPaid, amountRetrieved);
     res.status(user.status).json(user.data);
   } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
@@ -95,6 +97,16 @@ export async function loginUser(req: Request, res: Response) {
   const userData = req.body;
   try {
     const user = await userService.loginUser(userData);
+    res.status(user.status).json(user.data);
+  } catch (error) {
+    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
+  }
+}
+
+export async function redeemPoints(req: Request, res: Response) {
+  const userId = req.params.id;
+  try {
+    const user = await userService.redeemPoints(userId);
     res.status(user.status).json(user.data);
   } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
