@@ -112,7 +112,7 @@ export default function ProfileForm() {
       }, 1500);
     } catch (error) {
       toast({
-        title: "Error: " + error,
+        title: "Error: " + (error as any).response.data.error,
         variant: "destructive",
       });
       setTimeout(() => {

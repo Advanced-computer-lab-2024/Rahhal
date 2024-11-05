@@ -43,13 +43,14 @@ export function CardsPaymentMethod() {
   const { user } = useContext(EditContext);
   const { id } = useParams();
   const [cardType, setCardType] = useState<string | null>(null);
-
+  const existingCards = user?.wallet?.creditCard || [];
   const formSchema = z.object({
     paymentMethod: z.enum(["card", "paypal", "apple"]),
     wallet: z.object({
       creditCard: z.array(
         z
           .object({
+            typeOfCard: z.string().optional(),
             cardHolderName: z.string().min(1, "Cardholder name is required"),
             cardNumber: z.string().length(16, "Card number must be 16 digits"),
             expirationMonth: z.string().min(1, "Month is required"),
@@ -63,8 +64,7 @@ export function CardsPaymentMethod() {
                 parseInt(data.expirationYear),
                 parseInt(data.expirationMonth) - 1,
               );
-              // Check if the expiration date is in the future and that the year field is filled
-              return expirationDate > today && data.expirationYear.length === 4;
+              return expirationDate > today;
             },
             {
               message: "Card has expired. Please use a valid expiration date.",
@@ -81,6 +81,7 @@ export function CardsPaymentMethod() {
   interface APIPayload {
     wallet: {
       creditCard: Array<{
+        typeOfCard: string;
         cardHolderName: string;
         cardNumber: string;
         expirationDate: Date;
@@ -97,6 +98,7 @@ export function CardsPaymentMethod() {
       wallet: {
         creditCard: [
           {
+            typeOfCard: "",
             cardHolderName: "",
             cardNumber: "",
             expirationMonth: "",
@@ -110,11 +112,9 @@ export function CardsPaymentMethod() {
   });
 
   const transformFormDataToAPI = (data: FormValues): APIPayload => {
-    // Get existing credit cards from user context
-    const existingCards = user?.wallet?.creditCard || [];
-
     // Create the new card
     const newCard = {
+      typeOfCard: GetCardType(data.wallet.creditCard[0].cardNumber),
       cardHolderName: data.wallet.creditCard[0].cardHolderName,
       cardNumber: data.wallet.creditCard[0].cardNumber,
       expirationDate: new Date(
@@ -145,12 +145,12 @@ export function CardsPaymentMethod() {
       }, 1500);
     } catch (error) {
       toast({
-        title: "Error: " + error,
-        variant: "destructive",
+      title: "Error: " + (error as any).response.data.error,
+      variant: "destructive",
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 3000);
     }
   }
 
@@ -200,7 +200,7 @@ export function CardsPaymentMethod() {
     re = new RegExp("^(4026|417500|4508|4844|491(3|7))");
     if (number.match(re) != null) return "Visa Electron";
 
-    return "";
+    return " ";
   }
 
   return (

@@ -12,6 +12,7 @@ export enum Role {
   tourismGovernor = "tourismGovernor",
 }
 interface ICreditCard {
+  typeOfCard: string;
   cardHolderName: string;
   cardNumber: string;
   expirationDate: Date;
@@ -279,6 +280,15 @@ const userSchema: Schema = new Schema<IUser>(
       type: {
         creditCard: [
           {
+            typeOfCard: {
+              type: String,
+              default: "",
+              required: true,
+              validate: {
+                validator: userValidators.validateTypeOfCard,
+                message: "Invalid type of card entry",
+              },
+            },
             cardHolderName: {
               type: String,
               default: "",

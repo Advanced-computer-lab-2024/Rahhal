@@ -27,6 +27,15 @@
   line-height: 20px;
   text-align: center;
   min-width: 50%;
-  margin: 12px 3% 0;
+  margin: 12px 0% 0;
   overflow: hidden;
+}
+
+
+.credit{
+  margin-top: 10px;
+  border-radius: 3px;
+  border-width: 1px;
+  border-color: #888;
+  padding: 10px 22px;
 }

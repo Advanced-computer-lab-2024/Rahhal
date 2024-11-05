@@ -107,6 +107,10 @@ function validateCardHolderName(cardHolderName: string) {
   return typeof cardHolderName === "string" && cardHolderName.length > MIN_LENGTH;
 }
 
+function validateTypeOfCard(typeOfCard: string) {
+  return typeof typeOfCard === "string";
+}
+
 export default {
   validateFirstName,
   validateLastName,
@@ -132,4 +136,5 @@ export default {
   validateCVV,
   validateDefaultCreditCardIndex,
   validateCardHolderName,
+  validateTypeOfCard,
 };
