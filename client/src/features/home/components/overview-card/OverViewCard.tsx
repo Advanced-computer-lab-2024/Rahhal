@@ -38,7 +38,7 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({
   buttonColor,
 }) => {
   return (
-    <div className={styles.card}>
+    <div className={"sticky top-6 " + styles.card}>
       {/* Header Section */}
       <Header originalPrice={originalPrice} discountedPrice={discountedPrice} />
 

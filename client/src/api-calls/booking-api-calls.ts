@@ -20,6 +20,11 @@ export async function fetchUserBookings(userId: string): Promise<TPopulatedBooki
   return response.data as TPopulatedBooking[];
 }
 
+export async function fetchBookingById(bookingId: string): Promise<TPopulatedBooking> {
+  const response = await axios.get(SERVICES_URLS.BOOKING + `/bookings/${bookingId}`);
+  return response.data as TPopulatedBooking;
+}
+
 export async function createBooking(bookingData: TBookingType) {
   const newBooking = {
     user: bookingData.user,

@@ -15,93 +15,75 @@ import GoogleMap from "@/components/google-maps/GoogleMap";
 import { IoMdPricetag } from "react-icons/io";
 import SharePopover from "@/components/SharePopover";
 import TouristHomePageNavigation from "./TouristHomePageNavigation";
+import { OverviewCard } from "./overview-card/OverViewCard";
+import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
+import { calculateAverageRating } from "@/features/admin/utils/columns-definitions/activities-columns";
+import { TBookingStatus } from "../types/home-page-types";
 
-interface ActivityImage {
-  src: string;
-  alt: string;
-}
 
-interface AvailableDate {
-  date: string;
-  time: string;
-}
 
 interface ActivityDetailsProps {
-  images: ActivityImage[];
-  title: string;
-  rating: number;
-  price: number;
-  description: string;
-  author: string;
-  availableDates: AvailableDate[];
+ activity: TActivity;
+ status: TBookingStatus;
 }
 
-const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
-  images = [
-    {
-      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2qeXRnkbkroTiHZXDhvYgJIoa-0QiLlswJA&s",
-      alt: "Snow park slide",
-    },
-    {
-      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2qeXRnkbkroTiHZXDhvYgJIoa-0QiLlswJA&s",
-      alt: "Pink lit snow park",
-    },
-    {
-      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2qeXRnkbkroTiHZXDhvYgJIoa-0QiLlswJA&s",
-      alt: "Snow globe",
-    },
-    {
-      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2qeXRnkbkroTiHZXDhvYgJIoa-0QiLlswJA&s",
-      alt: "Snow activities",
-    },
-    {
-      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2qeXRnkbkroTiHZXDhvYgJIoa-0QiLlswJA&s",
-      alt: "Snow park structure",
-    },
-  ],
-  title = "Cairo City Tour",
-  rating = 5,
-  price = 200,
-  description = "Spread over 22,000 square meters, our Snow Park caters to all ages. With 7,000 tons of snow spread across the Snow Park, and a variety of rides from the exciting Snake & Bumpy rides and Zorb ball, to the more thrilling Bobsled, run and Snow Rocket, all range from fun to Extremely Fun! Making sure you'll enjoy a unique experience at the largest indoor Snow Park in the region.",
-  author = "Majid AlFutaim",
-  availableDates = [
-    { date: "20th October", time: "8AM" },
-    { date: "21st October", time: "10AM" },
-    { date: "22nd November", time: "11AM" },
-  ],
-}) => {
-  return (
-    <div className="max-w-7xl mx-auto p-6">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {/* Left Column - Images and Details */}
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold">{title}</h1>
-        
-        {/* Rating */}
-        <div className="flex items-center space-x-2">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              className={`w-5 h-5 ${i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
-            />
-          ))}
-        </div>
+const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({ activity, status }) => {
 
-        {/* Image Gallery */}
-        <div className="grid grid-cols-2 gap-4">
-            
-              <img
-                src={images[0].src}
-                alt={images[0].alt}
-                className="w-full h-full object-cover rounded-lg"
+  const [rating, setRating] = React.useState(0);
+
+  React.useEffect(() => {
+    
+    setRating(calculateAverageRating(activity.ratings));
+    
+  }, [activity.ratings]);
+
+  const {
+    name,
+    images,
+    owner,
+    description,
+    tags,
+    location,
+    date,
+    price,
+    ratings,
+  } = activity;
+
+  const activityDate = new Date(date);
+  const formattedDate = activityDate.getDate() + "/" + (activityDate.getMonth() + 1) + "/" + activityDate.getFullYear();
+  const formattedTime = ((activityDate.getHours() % 12) <= 9) ? "0" + (activityDate.getHours() % 12) + ":" + ((activityDate.getMinutes() <= 9) ? "0" + activityDate.getMinutes() : activityDate.getMinutes()) + " " + ((activityDate.getHours() < 12) ? "AM" : "PM") : (activityDate.getHours() % 12) + ":" + ((activityDate.getMinutes() <= 9) ? "0" + activityDate.getMinutes() : activityDate.getMinutes()) + " " + ((activityDate.getHours() < 12) ? "AM" : "PM");
+
+  return (
+    <div>
+      
+      <div className="grid grid-cols-3 gap-8">
+        {/* Left Column - Images and Details */}
+        <div className="space-y-6 col-span-2">
+          <h1 className="text-3xl font-bold">{name}</h1>
+          <SharePopover link="https://rahhal.com" />
+          {/* Rating */}
+          <div className="flex items-center space-x-2">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`w-5 h-5 ${i < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
               />
-            
+            ))}
+          </div>
+
+          {/* Image Gallery */}
+          <div className="grid grid-cols-2 gap-4">
+            <img
+              src={images[0]}
+              
+              className="w-full h-full object-cover rounded-lg"
+            />
+
             <div className="grid grid-cols-2 gap-2">
               {images.slice(1).map((image, index) => (
                 <div key={index} className="relative">
                   <img
-                    src={image.src}
-                    alt={image.alt}
+                    src={image}
                     className="w-full h-full object-cover rounded-lg"
                   />
                 </div>
@@ -109,62 +91,31 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
             </div>
           </div>
 
+          {/* Tags */}
+          <div className="flex space-x-2">
+            <span className="px-3 py-1 bg-gray-100 rounded-full text-sm">{tags.map((tag) => tag.name)}</span>
+          </div>
 
-        {/* Tags */}
-        <div className="flex space-x-2">
-          <span className="px-3 py-1 bg-gray-100 rounded-full text-sm">
-            fun.family.fitness
-          </span>
-        </div>
-
-        {/* Author and Description */}
-        <div className="space-y-4">
-          <p className="font-semibold">By: {author}</p>
-          <p className="text-gray-600">{description}</p>
-        </div>
-        <GoogleMap
+          {/* Author and Description */}
+          <div className="space-y-4">
+            <p className="font-semibold">By: {owner}</p>
+            <p className="text-gray-600">{description}</p>
+          </div>
+          <GoogleMap
             isEditable={false}
             location={{ lat: 30.0444, lng: 31.2357 }}
             setLocation={() => {}}
           />
           {/* Reviews */}
           <Reviews />
+        </div>
 
-      </div>
-
-      {/* Right Column - Booking Card */}
-      <div>
-        <Card className="sticky top-6">
-          <CardContent className="p-6 space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-bold">Total:</h2>
-              <span className="text-xl">EGP {price}</span>
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="font-medium">Select Your Desired Date</h3>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select Value" />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableDates.map((date, index) => (
-                    <SelectItem key={index} value={`${date.date} ${date.time}`}>
-                      {date.date} {date.time}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-black">
-              Book Itinerary
-            </Button>
-          </CardContent>
-        </Card>
+        {/* Right Column - Booking Card */}
+        <div className="justify-center items-center">
+          <OverviewCard originalPrice={price.amount} buttonText={(status === "cancelled") ? "Cancel Activity" : "Review Activity" } buttonColor={ (status === "cancelled") ? "red" : "gold" } date={formattedDate} time={formattedTime} />
+        </div>
       </div>
     </div>
-  </div>
   );
 };
 
