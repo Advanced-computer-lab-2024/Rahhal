@@ -1,5 +1,4 @@
 import { useCurrencyStore , useRatesStore } from '@/stores/currency-exchange-store'
-import AvatarStyles from "../styles/ProfileAvatar.module.css";
 import { ChevronDown , Check } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -16,18 +15,12 @@ import {
     PopoverContent,
     PopoverTrigger,
   } from "@/components/ui/popover"
-import { getCurrencyExchangeRates } from "@/api-calls/currency-exchange-api-calls";
-import { useEffect } from "react";
+
 
 export default function CurrencyDropdown() {
     const { currency, setCurrency } = useCurrencyStore()
-    const { rates , setRates } = useRatesStore()
-    useEffect(() => {
-        if(!rates.rates)
-          getCurrencyExchangeRates().then((data) => {
-            setRates(data);
-          });
-      }, []);
+    const { rates } = useRatesStore()
+
 
 
     const [open, setOpen] = useState(false)

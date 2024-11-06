@@ -26,8 +26,18 @@ import { MyTripsPage } from "@/features/home/components/MyTripsPage";
 import TravelPage from "@/features/home/components/TravelPage";
 import AdminItinerariesView from "@/features/admin/components/AdminItinerariesView";
 import AdminActivitiesView from "@/features/admin/components/AdminActivitiesView";
+import { getCurrencyExchangeRates } from "@/api-calls/currency-exchange-api-calls";
+import { useEffect } from "react";
+import { useRatesStore } from '@/stores/currency-exchange-store'
 
 export default function App() {
+  const { rates, setRates } = useRatesStore();
+  useEffect(() => {
+    if(!rates.rates)
+      getCurrencyExchangeRates().then((data) => {
+        setRates(data);
+      });
+  }, []);
   const queryClient = new QueryClient();
   return (
     <div style={{ overflowY: "scroll", height: "100vh" }}>
