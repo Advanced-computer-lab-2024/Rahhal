@@ -75,7 +75,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
   React.useEffect(() => {
     for (let i = 0; i < itinerary.preferenceTags.length; i++) {
       fetchPreferenceTagById(itinerary.preferenceTags[i]._id).then((tag) => {
-        setPreferenceTagNames((prev) => [...prev, (tag as { _id: string; name: string }).name]);
+        setPreferenceTagNames((prev) => [(tag as { _id: string; name: string }).name]);
       });
     }
   }, [itinerary.preferenceTags]);

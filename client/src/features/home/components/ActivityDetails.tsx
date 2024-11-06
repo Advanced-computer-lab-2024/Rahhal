@@ -55,7 +55,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
   React.useEffect(() => {
     for (let i = 0; i < activity.preferenceTags.length; i++) {
       fetchPreferenceTagById(activity.preferenceTags[i]._id).then((tag) => {
-        setPreferenceTagNames((prev) => [...prev, (tag as { _id: string; name: string }).name]);
+        setPreferenceTagNames((prev) => [(tag as { _id: string; name: string }).name]);
       });
     }
   }, [activity.preferenceTags]);
