@@ -1,11 +1,13 @@
 import MyTripStyles from "../styles/MyTripsCard.module.css";
 import felluca from "@/assets/aswan2.webp";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
+import currencyExchange from "@/utils/currency-exchange";
 import { IoMdMore } from "react-icons/io";
 
 interface MyTripsCardProps {
   image?: string;
   title?: string;
-  price?: number;
+  price: number;
   date?: string;
   status?: string;
   onClick?: () => void;
@@ -14,6 +16,11 @@ interface MyTripsCardProps {
 
 
 export const MyTripsCard: React.FC<MyTripsCardProps> = ({ image, title, price, date, status,onClick }) => {
+
+  const { currency } = useCurrencyStore();
+  const convertedPrice = currencyExchange("EGP", price);
+  const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
+
   return (
     <div className={MyTripStyles["card-container"]} onClick={onClick}>
       <div className={MyTripStyles["trip-details"]}>
@@ -45,7 +52,7 @@ export const MyTripsCard: React.FC<MyTripsCardProps> = ({ image, title, price, d
       </div>
       <div className={MyTripStyles["trip-price-container"]}>
         <div className={MyTripStyles["trip-price-container_text-icon"]}>
-          <p>EGP {price}</p>
+          <p>{currency} {displayPrice}</p>
           <IoMdMore />
         </div>
       </div>

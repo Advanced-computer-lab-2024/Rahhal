@@ -16,7 +16,7 @@ export const fetchUserActivities = async (userId: string) => {
   return response.data;
 };
 
-export const fetchAppropriateActivities = async (userId: string) => {
+export const fetchAppropriateActivities = async () => {
   const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/activities/appropriate`);
   return response.data;
 };
