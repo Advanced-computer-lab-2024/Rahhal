@@ -2,7 +2,7 @@ import GeneralGridStyle from "../styles/GeneralGridView.module.css";
 import EntertainmentCard from "@/features/home/components/EntertainmentCard";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import FilterSortSearchHeader from "./FilterSortSearchHeader";
 import FilterSideBar from "@/features/home/components/filter-sidebar/FilterSideBar";
@@ -33,30 +33,10 @@ import {
   Filter,
 } from "../types/home-page-types";
 import { isWithinInterval } from "date-fns";
+import { getPriceValue } from "../utils/price-calculator";
+import { getUserById } from "@/api-calls/users-api-calls";
 
-export const getPriceValue = (
-  price:
-    | number
-    | { min: number; max: number }
-    | { type: string; price: number }[]
-    | Record<string, number>,
-) => {
-  if (price === undefined || price === null) {
-    return 0; // Return a default value (0) when price is not defined
-  }
-  if (typeof price === "number") return price;
-  if ("min" in price && "max" in price) return price.min;
-  if ("foreigner" in price && "native" in price && "student" in price)
-    return Math.min(price.foreigner, price.native, price.student);
-  if (Array.isArray(price)) {
-    return price.length > 0 ? Math.min(...price.map((p) => p.price)) : 0;
-  }
-
-  return Object.values(price).length > 0 ? Math.min(...Object.values(price)) : 0;
-};
-
-// Fetching logic from the database
-const GeneralGridView = () => {
+function GeneralGridView() {
   const [activeFilter, setActiveFilter] = useState<string[]>([]);
   const [search, setSearch] = useState<string>("");
   const [combined, setCombined] = useState<(Itinerary | Activity | HistoricalPlace)[]>([]);
@@ -72,6 +52,7 @@ const GeneralGridView = () => {
   const [selectedHistoricalTags, setSelectedHistoricalTags] = useState<Option[]>([]);
   const [sortOption, setSortOption] = useState<SortOption | null>(null);
 
+  const { id } = useParams<{ id: string }>();
   // useQueries
   const {
     data: activities,
@@ -126,6 +107,11 @@ const GeneralGridView = () => {
     queryKey: ["entertainment", "categories"],
     queryFn: fetchCategories,
     select: (data) => data as Category[],
+  });
+  const { data: userData } = useQuery({
+    queryKey: ["user", "userData"],
+    queryFn: () => getUserById(id ? id : ""),
+    enabled: !!id,
   });
 
   const navigate = useNavigate();
@@ -223,7 +209,6 @@ const GeneralGridView = () => {
     setSelectedLanguages([]);
     setSelectedHistoricalTags([]);
   };
-
   let combinedSideBarFilters = [
     {
       title: "Reset Filters",
@@ -397,7 +382,11 @@ const GeneralGridView = () => {
     const bRatings = getAverageRating(b.ratings ?? []);
     const aPrice = getPriceValue(a.price);
     const bPrice = getPriceValue(b.price);
-
+    const aPreferenceTags =
+      userData && a.preferenceTags?.some((tag) => userData.preferences?.includes(tag.name));
+    const bPreferenceTags =
+      userData && b.preferenceTags?.some((tag) => userData.preferences?.includes(tag.name));
+    // console.log(aPreferenceTags, bPreferenceTags);
     const sort =
       sortOption === "price-high-low"
         ? bPrice - aPrice
@@ -405,9 +394,17 @@ const GeneralGridView = () => {
           ? aPrice - bPrice
           : sortOption === "rating-low-high"
             ? aRatings - bRatings
-            : bRatings - aRatings;
+            : sortOption === "rating-high-low"
+              ? bRatings - aRatings
+              : aPreferenceTags && !bPreferenceTags
+                ? -1
+                : !aPreferenceTags && bPreferenceTags
+                  ? 1
+                  : 0;
     return sort;
   });
+  console.log(filteredCombinedItems);
+
   return (
     <div className={GeneralGridStyle["general-grid-view"]}>
       <FilterSortSearchHeader
@@ -448,7 +445,7 @@ const GeneralGridView = () => {
               sortedCombinedItems.map((item) => (
                 <EntertainmentCard
                   key={item._id}
-                  image={ski}
+                  image={item.images[0]}
                   rating={getAverageRating(item.ratings)}
                   title={item.name}
                   price={item.price}
@@ -463,6 +460,6 @@ const GeneralGridView = () => {
       </div>
     </div>
   );
-};
+}
 
 export default GeneralGridView;
