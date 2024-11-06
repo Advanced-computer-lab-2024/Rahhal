@@ -1,4 +1,4 @@
-import axios , { AxiosResponse }from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import * as cheerio from 'cheerio';
 import dotenv from "dotenv";
 
@@ -8,7 +8,7 @@ const API_KEY_2 = process.env.SCRAPER_API_KEY_2 || '';
 const API_KEY_3 = process.env.SCRAPER_API_KEY_3 || '';
 
 
-async function scrapeLocationData(query : string) {
+async function scrapeLocationData(query: string) {
     console.log(`Scraping location data: ${query}`);
 
     const randomRequestId = Array.from({ length: 180 }, () =>
@@ -44,7 +44,7 @@ async function scrapeLocationData(query : string) {
 
     const response = await axios.post("https://www.tripadvisor.com/data/graphql/ids", body, {
         headers: {
-            'Content-Type':'application/json',
+            'Content-Type': 'application/json',
             'X-Requested-By': randomRequestId,
             'Referer': 'https://www.tripadvisor.com/Hotels',
             'Origin': 'https://www.tripadvisor.com',
@@ -61,24 +61,24 @@ async function scrapeLocationData(query : string) {
     let detail;
     // Extract results
     const results = response?.data?.data?.Typeahead_autocomplete?.results;
-        for (let i = 0; i < results.length; i++) {
+    for (let i = 0; i < results.length; i++) {
 
 
-            if (results[i].details && results[i].details.locationV2.placeType === "ACCOMMODATION") {
-                scraperHotels.push(results[i].details);
-            }
-            if(flag && results[i].details && (results[i].details.locationV2.placeType == "ISLAND" || results[i].details.locationV2.placeType == "CITY" || results[i].details.locationV2.placeType == "COUNTRY" || results[i].details.locationV2.placeType == "CONTINENT")) {
-                detail = results[i].details;
-                flag = false;
-            }
+        if (results[i].details && results[i].details.locationV2.placeType === "ACCOMMODATION") {
+            scraperHotels.push(results[i].details);
+        }
+        if (flag && results[i].details && (results[i].details.locationV2.placeType == "ISLAND" || results[i].details.locationV2.placeType == "CITY" || results[i].details.locationV2.placeType == "COUNTRY" || results[i].details.locationV2.placeType == "CONTINENT")) {
+            detail = results[i].details;
+            flag = false;
+        }
 
     }
 
-    if(scraperHotels.length > 0) {
+    if (scraperHotels.length > 0) {
         hotels.push(...scrapLister(scraperHotels));
     }
 
-    if(detail) {
+    if (detail) {
         hotels.push(...await scrapeSearch(detail));
     }
 
@@ -87,9 +87,10 @@ async function scrapeLocationData(query : string) {
 
 
 
-async function fetchWithProxy(url:string) {
+async function fetchWithProxy(url: string) {
     try {
-        return await axios.get(url, {method: 'GET',
+        return await axios.get(url, {
+            method: 'GET',
             proxy: {
                 host: 'proxy-server.scraperapi.com',
                 port: 8001,
@@ -98,7 +99,8 @@ async function fetchWithProxy(url:string) {
                     password: API_KEY
                 },
                 protocol: 'http'
-            }});
+            }
+        });
     } catch (error) {
         return null;
     }
@@ -110,12 +112,12 @@ interface Preview {
     name: string;
 }
 
-function parseSearchPage(response : AxiosResponse<string>) {
+function parseSearchPage(response: AxiosResponse<string>) {
     const previews = [] as Preview[];
     const $ = cheerio.load(response.data);
 
     // Location #1
-    $('span.listItem').each((_ , element) => {
+    $('span.listItem').each((_, element) => {
         const name = $(element).find('div[data-automation="hotel-card-title"] a').text();
         const url = $(element).find('div[data-automation="hotel-card-title"] a').attr('href');
         if (name && url) {
@@ -140,14 +142,14 @@ function parseSearchPage(response : AxiosResponse<string>) {
         const url = $(element).find('a').attr('href'); // Get the href attribute
         const name = $(element).find('a').text(); // Get the text content
         if (url && name) {
-            previews.push({url,name})
+            previews.push({ url, name })
         }
     });
 
     return previews;
 }
 
-async function scrapeSearch(locationData : any) {
+async function scrapeSearch(locationData: any) {
     if (!locationData) {
         return [];
     }
@@ -166,12 +168,12 @@ async function scrapeSearch(locationData : any) {
     return results;
 }
 
-function scrapLister(details : any) {
+function scrapLister(details: any) {
     const result = [];
-    for(let detail of details) {
+    for (let detail of details) {
         const name = detail.localizedName;
         const url = detail.url;
-        result.push({name, url});
+        result.push({ name, url });
     }
     return result;
 }
@@ -185,7 +187,7 @@ const client = axios.create({
     timeout: 7000, // 7 seconds timeout
 });
 
-function parseHotelPage(html : string) {
+function parseHotelPage(html: string) {
     const $ = cheerio.load(html);
 
 
@@ -202,7 +204,7 @@ function parseHotelPage(html : string) {
     let avgPrice = ""
     try {
         avgPrice = $("div.biGQs._P.fiohW.uedOM > span.biGQs._P.fiohW.fOtGX").text();
-    }catch(e){
+    } catch (e) {
         console.error("Error parsing average price:", e);
     }
     const newPrice = avgPrice.slice(1);
@@ -220,37 +222,37 @@ function parseHotelPage(html : string) {
     $propertyAmenities.next().children().each((_, el) => {
         const text = $(el).text().trim();
         const svg = $(el).find("svg").html();
-        propertyAmenities.push({ text , svg });
+        propertyAmenities.push({ text, svg });
     });
     propertyAmenities.pop();
     $propertyAmenities.next().children().find("div[data-test-target='amenity_text']").each((_, el) => {
         const text = $(el).text().trim();
         const svg = $(el).find("svg").html();
-        propertyAmenities.push({ text , svg });
+        propertyAmenities.push({ text, svg });
     });
 
     $roomFeatures.next().children().each((_, el) => {
         const text = $(el).text().trim();
         const svg = $(el).find("svg").html();
-        roomFeatures.push({text , svg});
+        roomFeatures.push({ text, svg });
     });
     roomFeatures.pop();
     $roomFeatures.next().children().find("div[data-test-target='amenity_text']").each((_, el) => {
         const text = $(el).text().trim();
         const svg = $(el).find("svg").html();
-        roomFeatures.push({text , svg});
+        roomFeatures.push({ text, svg });
     });
 
     $roomTypes.next().children().each((_, el) => {
         const text = $(el).text().trim();
         const svg = $(el).find("svg").html();
-        roomTypes.push({text , svg});
+        roomTypes.push({ text, svg });
     });
     roomTypes.pop();
     $roomTypes.next().children().find("div[data-test-target='amenity_text']").each((_, el) => {
         const text = $(el).text().trim();
         const svg = $(el).find("svg").html();
-        roomTypes.push({text , svg});
+        roomTypes.push({ text, svg });
     });
 
     const amenities = { propertyAmenities, roomFeatures, roomTypes };
@@ -268,10 +270,10 @@ function parseHotelPage(html : string) {
         ratings.push($(el).text());
     });
     const ratingsModified = [];
-    for (let i = 0; i < ratings.length; i+=2) {
+    for (let i = 0; i < ratings.length; i += 2) {
         const name = ratings[i];
         const rate = parseFloat(ratings[i + 1]);
-        ratingsModified.push({name,rate});
+        ratingsModified.push({ name, rate });
     }
 
     return {
@@ -281,17 +283,18 @@ function parseHotelPage(html : string) {
         mainImage: basicData.image,
         description: description,
         features: amenities,
-        averagePrice : newPrice,
-        images : images,
-        bubbleRating : bubbleRating,
-        ratings : ratingsModified
+        averagePrice: newPrice,
+        images: images,
+        bubbleRating: bubbleRating,
+        ratings: ratingsModified
     };
 }
 
-async function scrapeHotel(url : string,API_KEY : string) {
+async function scrapeHotel(url: string, API_KEY: string) {
     console.log(`Scraping hotel data: ${url}`);
     try {
-        const response = await client.get(url , {method: 'GET',
+        const response = await client.get(url, {
+            method: 'GET',
             proxy: {
                 host: 'proxy-server.scraperapi.com',
                 port: 8001,
@@ -300,14 +303,15 @@ async function scrapeHotel(url : string,API_KEY : string) {
                     password: API_KEY
                 },
                 protocol: 'http'
-            }});
+            }
+        });
         if (response.status === 403) {
             throw new Error("Request is blocked");
         }
         const hotelData = parseHotelPage(response.data);
         console.log("pushed hotel data");
         return hotelData;
-    } catch (error : any) {
+    } catch (error: any) {
         console.error(`Error scraping hotel data from ${url}:`, error.message);
         return;
     }
@@ -315,7 +319,7 @@ async function scrapeHotel(url : string,API_KEY : string) {
 }
 
 
-export default async function entryPoint(query : string) {
+export default async function entryPoint(query: string) {
     const listOfHotels = await scrapeLocationData(query);
 
     const uniqueHotels = listOfHotels.filter((hotel => {
@@ -331,36 +335,34 @@ export default async function entryPoint(query : string) {
 
 
     let results = [];
-    const just = [];
-    const each = Math.floor(uniqueHotels.length/15) * 15;
-    const rest1 = uniqueHotels.length%15;
- 
+    const fullData = [];
+    const each = Math.floor(uniqueHotels.length / 15) * 15;
+    const rest1 = uniqueHotels.length % 15;
 
-   
-    for(let i = 0;i<each;i+=15) {
-        
-        for(let j = i;j<i+5;j++){
-            results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[j].url,API_KEY));
-        }
-        
-        for(let j = i+5;j<i+10;j++){
-            results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[j].url,API_KEY_2));
+
+
+    for (let i = 0; i < each; i += 15) {
+
+        for (let j = i; j < i + 5; j++) {
+            results.push(scrapeHotel("https://www.tripadvisor.com" + uniqueHotels[j].url, API_KEY));
         }
 
-        for(let j = i+10;j<i+15;j++){
-            results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[j].url,API_KEY_3));
+        for (let j = i + 5; j < i + 10; j++) {
+            results.push(scrapeHotel("https://www.tripadvisor.com" + uniqueHotels[j].url, API_KEY_2));
         }
-        just.push(...await Promise.all(results));
-        results=[];
+
+        for (let j = i + 10; j < i + 15; j++) {
+            results.push(scrapeHotel("https://www.tripadvisor.com" + uniqueHotels[j].url, API_KEY_3));
+        }
+        fullData.push(...await Promise.all(results));
+        results = [];
     }
-    const API_KEYS = [API_KEY,API_KEY_2,API_KEY_3];
-    for(let i = each;i<each+rest1;i++) {
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i].url,API_KEYS[i%3]));
+    const API_KEYS = [API_KEY, API_KEY_2, API_KEY_3];
+    for (let i = each; i < each + rest1; i++) {
+        results.push(scrapeHotel("https://www.tripadvisor.com" + uniqueHotels[i].url, API_KEYS[i % 3]));
     }
-    just.push(...await Promise.all(results));
+    fullData.push(...await Promise.all(results));
 
 
-
-
-    return just;
+    return fullData;
 }
