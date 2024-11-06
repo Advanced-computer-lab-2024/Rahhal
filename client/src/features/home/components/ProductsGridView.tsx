@@ -13,27 +13,7 @@ import { Product, IRating, SortOption } from "../types/home-page-types";
 import Hoodie from "@/assets/farmhouse-main.jpeg";
 import MinMaxRangeSlider from "@/features/home/components/filter-sidebar/MinMaxRangeSlider";
 import FilterStarRating from "@/features/home/components/filter-sidebar/FilterStarRating";
-
-export const getPriceValue = (
-  price:
-    | number
-    | { min: number; max: number }
-    | { foreigner: number; native: number; student: number }
-    | { type: string; price: number }[],
-) => {
-  if (price === undefined || price === null) {
-    return 0; // Return a default value (0) when price is not defined
-  }
-  if (typeof price === "number") return price;
-  if ("min" in price && "max" in price) return price.min;
-  if ("foreigner" in price && "native" in price && "student" in price)
-    return Math.min(price.foreigner, price.native, price.student);
-  if (Array.isArray(price)) {
-    return price.length > 0 ? Math.min(...price.map((p) => p.price)) : 0;
-  }
-
-  return 0;
-};
+import { getPriceValue } from "../utils/price-calculator";
 
 // Fetching logic from the database
 const ProductGridView = () => {
