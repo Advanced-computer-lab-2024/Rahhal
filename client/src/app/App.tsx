@@ -34,7 +34,7 @@ export default function App() {
   const { setRates } = useRatesStore();
   useEffect(() => {
     const storedRates = localStorage.getItem("rates");
-    const isNewDay = storedRates ? new Date(JSON.parse(storedRates).date).getDate() < new Date().getDate() : true;
+    const isNewDay = storedRates ? new Date(JSON.parse(storedRates).date).getDate() != new Date().getDate() : true;
 
   if (!storedRates || isNewDay) {
     getCurrencyExchangeRates().then((data) => {
