@@ -4,8 +4,9 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 100%;
+  width: 330px;
   cursor: pointer;
+  transition: filter 0.3s ease;
 }
 
 .product-card-container__image {
