@@ -68,8 +68,8 @@ function validateDescription(description: string) {
   return typeof description === "string" && description.length > MIN_LENGTH;
 }
 
-function validateWallet(wallet: number) {
-  return typeof wallet === "number" && wallet >= MIN_LENGTH;
+function validateBalance(balance: number) {
+  return typeof balance === "number" && balance >= MIN_LENGTH;
 }
 
 function validatePoints(points: number) {
@@ -95,5 +95,5 @@ export default {
   validateCompanyProfile,
   validateCompanyName,
   validateDescription,
-  validateWallet,
+  validateBalance,
 };
