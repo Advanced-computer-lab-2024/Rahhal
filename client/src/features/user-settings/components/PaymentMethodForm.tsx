@@ -167,7 +167,8 @@ export function CardsPaymentMethod() {
         title: "Update " + response.statusText,
       });
       // Update the user context with the new data
-      if (!editingCard && user.wallet?.creditCard.length >= 1) {
+      //test
+      if (!editingCard && user.wallet && user.wallet.creditCard?.length >= 1) {
         // wait two seconds
         setTimeout(() => {
           window.location.reload();

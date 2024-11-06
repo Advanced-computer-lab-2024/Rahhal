@@ -214,7 +214,12 @@ export default function AccountForm() {
                   <div className="col-span-2">
                     {user.wallet?.defaultCreditCardIndex === index && (
                       <div>
-                        <Button disabled id={styles["buttonSize"]} className="h-9" style={{ width: "100%"}}>
+                        <Button
+                          disabled
+                          id={styles["buttonSize"]}
+                          className="h-9"
+                          style={{ width: "100%" }}
+                        >
                           Default
                         </Button>
                       </div>

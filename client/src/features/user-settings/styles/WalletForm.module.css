@@ -1,4 +1,4 @@
-#NO_CARD_CONTAINER{
+#NO_CARD_CONTAINER {
   @media (min-width: 450px) {
     width: 70%;
   }
@@ -44,13 +44,13 @@
   padding: 10px 22px;
 }
 
-#cardWidth{
+#cardWidth {
   @media (min-width: 450px) {
     width: 70%;
   }
 }
 
-#buttonSize{
+#buttonSize {
   @media (max-width: 450px) {
     font-size: 8px;
   }
