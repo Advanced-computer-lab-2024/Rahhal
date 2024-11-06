@@ -1,9 +1,9 @@
 import React from "react";
 
 
-interface EventCardProps {
+export interface EventCardProps {
   title: string;
-  date: string;
+  duration: string;
   imageUrl?: string;
 }
 
@@ -11,7 +11,7 @@ interface TimelineProps {
   events: EventCardProps[];
 }
 
-export const EventCard: React.FC<EventCardProps> = ({ title, date, imageUrl }) => {
+export const EventCard: React.FC<EventCardProps> = ({ title, duration, imageUrl }) => {
   
 
   return (
@@ -29,14 +29,14 @@ export const EventCard: React.FC<EventCardProps> = ({ title, date, imageUrl }) =
       <div className="flex-1">
         <h3 className="text-lg font-medium text-gray-900">{title}</h3>
         <div className="flex items-center mt-1">
-          <span className="text-sm text-gray-500">{date}</span>
+          <span className="text-sm text-gray-500">{duration}</span>
         </div>
       </div>
     </div>
   );
 };
 
-const Timeline: React.FC<TimelineProps> = ({ events }) => {
+export const Timeline: React.FC<TimelineProps> = ({ events }) => {
   return (
     <div className="relative">
       <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gray-300"></div>
@@ -67,26 +67,5 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
   );
 };
 
-// Example usage with sample data
-const sampleEvents: EventCardProps[] = [
-  {
-    title: "Abu Simbel Temple",
-    date: "25 Jul 8:00 AM",
-  },
-  {
-    title: "Pyramids of Giza",
-    date: "26 Jul 9:00 AM",
-  },
-  {
-    title: "Egyptian Museum",
-    date: "27 Jul 10:00 AM",
-    
-  },
-  {
-    title: "Khan el-Khalili",
-    date: "28 Jul 2:00 PM",
-    
-  },
-];
 
-export default () => <Timeline events={sampleEvents} />;
+

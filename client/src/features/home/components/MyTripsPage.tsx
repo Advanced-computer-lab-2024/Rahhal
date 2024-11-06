@@ -57,11 +57,11 @@ export const MyTripsPage = () => {
       )
     ) {
       return navigate(
-        `/my-trips-details?userId=${userId}&eventId=${booking.entity._id}&status=${booking.status}&bookingType=${booking.type}`,
+        `/my-trips-details?userId=${userId}&eventId=${booking.entity._id}&bookingId=${booking._id}`,
       );
     } else {
       return navigate(
-        `/my-trips-details?userId=${userId}&eventId=${booking.entity._id}&status=completed&bookingType=${booking.type}`,
+        `/my-trips-details?userId=${userId}&eventId=${booking.entity._id}&bookingId=${booking._id}`,
       );
     }
   };

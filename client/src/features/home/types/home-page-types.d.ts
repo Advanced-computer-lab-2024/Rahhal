@@ -221,7 +221,7 @@ export type SortOption =
 
 export type Filter = "itinerary" | "place" | "activity";
 
-export type TBookingStatus = "cancelled" | "completed";
+export type TBookingStatus = "cancelled" | "completed" | "upcoming";
 
 // Define interfaces for response structure
 interface AirportData {

@@ -1,174 +1,246 @@
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Star, Tag } from "lucide-react";
-import Reviews from "./Reviews";
-import LocationMap from "@/components/google-maps/LocationMap";
+
+import { Activity, Star, Tag } from "lucide-react";
+import Review from "./Reviews";
+
 import GoogleMap from "@/components/google-maps/GoogleMap";
 import { IoMdPricetag } from "react-icons/io";
 import SharePopover from "@/components/SharePopover";
-import TouristHomePageNavigation from "./TouristHomePageNavigation";
-import Timeline from "./ActivityTimeline";
 
-interface ActivityImage {
-  src: string;
-  alt: string;
+import { OverviewCard } from "./overview-card/OverViewCard";
+import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
+import { calculateAverageRating } from "@/features/admin/utils/columns-definitions/activities-columns";
+import { TBookingStatus, TBookingType, TPopulatedBooking } from "../types/home-page-types";
+import { addLoyaltyPointsByAmountPaid, getUserById, removeLoyaltyPointsByAmountRefunded } from "@/api-calls/users-api-calls";
+import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
+import { updateBookingRequest } from "@/api-calls/booking-api-calls";
+import { toast } from "@/hooks/use-toast";
+import { RatingFormDialog } from "./RatingFormDialog";
+import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
+import { formatDate } from "../utils/filter-lists/overview-card";
+import { format } from "path";
+import { ActivitiesTimeline } from "./ActivitiesTimeline";
+import { fetchActivityById } from "@/api-calls/activities-api-calls";
+
+interface ItineraryDetailsProps {
+  itinerary: TItinerary;
+  initialBooking: TPopulatedBooking | null;
+  userId: string;
 }
 
-interface AvailableDate {
-  date: string;
-  time: string;
-}
-
-interface ActivityDetailsProps {
-  images: ActivityImage[];
-  title: string;
-  rating: number;
-  price: number;
-  description: string;
-  author: string;
-  availableDates: AvailableDate[];
-}
-
-const ItineraryDetailsPage: React.FC<ActivityDetailsProps> = ({
-  images = [
-    {
-      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2qeXRnkbkroTiHZXDhvYgJIoa-0QiLlswJA&s",
-      alt: "Snow park slide",
-    },
-    {
-      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2qeXRnkbkroTiHZXDhvYgJIoa-0QiLlswJA&s",
-      alt: "Pink lit snow park",
-    },
-    {
-      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2qeXRnkbkroTiHZXDhvYgJIoa-0QiLlswJA&s",
-      alt: "Snow globe",
-    },
-    {
-      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2qeXRnkbkroTiHZXDhvYgJIoa-0QiLlswJA&s",
-      alt: "Snow activities",
-    },
-    {
-      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2qeXRnkbkroTiHZXDhvYgJIoa-0QiLlswJA&s",
-      alt: "Snow park structure",
-    },
-  ],
-  title = "Cairo City Tour",
-  rating = 5,
-  price = 200,
-  description = "Spread over 22,000 square meters, our Snow Park caters to all ages. With 7,000 tons of snow spread across the Snow Park, and a variety of rides from the exciting Snake & Bumpy rides and Zorb ball, to the more thrilling Bobsled, run and Snow Rocket, all range from fun to Extremely Fun! Making sure you'll enjoy a unique experience at the largest indoor Snow Park in the region.",
-  author = "Majid AlFutaim",
-  availableDates = [
-    { date: "20th October", time: "8AM" },
-    { date: "21st October", time: "10AM" },
-    { date: "22nd November", time: "11AM" },
-  ],
+const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
+  itinerary,
+  initialBooking,
+  userId,
 }) => {
-  return (
-    <div className="max-w-7xl mx-auto p-6">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {/* Left Column - Images and Details */}
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold">{title}</h1>
-        
-        {/* Rating */}
-        <div className="flex items-center space-x-2">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              className={`w-5 h-5 ${i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
-            />
-          ))}
-        </div>
+  const [rating, setRating] = React.useState(0);
+  const [ownerName, setOwnerName] = React.useState("");
+  const [preferenceTagNames, setPreferenceTagNames] = React.useState<string[]>([]);
+  const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
+  const [booking, setBooking] = React.useState<TPopulatedBooking | null>(initialBooking);
+  
 
-        {/* Image Gallery */}
-        <div className="grid grid-cols-2 gap-4">
-            
-              <img
-                src={images[0].src}
-                alt={images[0].alt}
-                className="w-full h-full object-cover rounded-lg"
-              />
-            
+  const ratingFormRef = React.useRef<HTMLButtonElement>(null);
+
+  React.useEffect(() => {
+    setRating(calculateAverageRating(itinerary.ratings));
+  }, [itinerary.ratings]);
+
+  React.useEffect(() => {
+    getUserById(itinerary.owner).then((user) => {
+      setOwnerName(user.firstName + " " + user.lastName);
+    });
+  }, [itinerary.owner]);
+
+  React.useEffect(() => {
+    for (let i = 0; i < itinerary.preferenceTags.length; i++) {
+      fetchPreferenceTagById(itinerary.preferenceTags[i]._id).then((tag) => {
+        setPreferenceTagNames((prev) => [...prev, (tag as { _id: string; name: string }).name]);
+      });
+    }
+  }, [itinerary.preferenceTags]);
+
+  
+
+  React.useEffect(() => {
+    getUserById(userId).then((user) => {
+      // check if user is not approved or is under 18 years old
+      if (
+        user.approved === false ||
+        (user.dob && user.dob > new Date(new Date().setFullYear(new Date().getFullYear() - 18)))
+      ) {
+        setIsButtonDisabled(true);
+      }
+    });
+  }, []);
+
+  const handleButtonClick = () => {
+    if (booking?.status === "cancelled") {
+      if (booking?._id) {
+        updateBookingRequest(booking._id, { status: "upcoming" });
+        addLoyaltyPointsByAmountPaid(userId, booking.selectedPrice);
+        setBooking({ ...booking, status: "upcoming" });
+      }
+    } else if (booking?.status === "completed") {
+      // redirect to review page
+      ratingFormRef.current?.click();
+
+    } else {
+      // cancel activity if there is still 48 hours left
+      if (booking?._id && booking.selectedDate) {
+        const currentDate = new Date();
+        const selectedDate = new Date(booking.selectedDate);
+        const difference = Math.abs(selectedDate.getTime() - currentDate.getTime());
+        const hours = difference / (1000 * 60 * 60);
+        if (hours > 48) {
+          updateBookingRequest(booking._id, { status: "cancelled" });
+          removeLoyaltyPointsByAmountRefunded(userId, booking.selectedPrice);
+          setBooking({ ...booking, status: "cancelled" });
+        } else {
+          toast({
+            title: "Error",
+            description: "You can't cancel this activity anymore as it is less than 48 hours away",
+            duration: 5000,
+          });
+        }
+      }
+    }
+  };
+  const { name, images, description, activities, durationOfActivities, locations, price, pickUpLocation, dropOffLocation, availableDatesTime, ratings} = itinerary;
+
+  
+
+  const cardButtonText =
+    booking?.status === "cancelled"
+      ? "Book Activity"
+      : booking?.status === "completed"
+        ? "Review Activity"
+        : "Cancel Activity";
+
+  const cardDropdownOptions =
+    booking?.status === "cancelled"
+      ? availableDatesTime.map((date) => ({
+        value: date.Date.toString(),
+        label: formatDate(new Date(date.Date)) + " " + formatDate(new Date(date.Time)),
+      }))
+      : undefined;
+
+  
+  return (
+    <div>
+      <RatingFormDialog buttonRef={ratingFormRef} onSubmit={() => {}} />
+      <div className="grid grid-cols-3 gap-8 px-2">
+        {/* Left Column - Images and Details */}
+        <div className="space-y-6 col-span-2">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex">
+              <h1 className="text-3xl font-bold">{name}</h1>
+
+              {/* Rating */}
+              <div>
+                <div className="flex mt-5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`w-3 h-3 ${i < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
+                    />
+                  ))}
+                </div>
+              </div>
+              <h6 className="flex-1 text-[0.5rem] text-gray-600 mt-5">{ratings.length} reviews</h6>
+            </div>
+
+            <div className="flex justify-end">
+              <div className="p-0">
+                <SharePopover link="https://rahhal.com" />
+              </div>
+              <div className="flex text-[0.5rem] p-0 mt-2.5">Share</div>
+            </div>
+          </div>
+
+          {/* Image Gallery */}
+          <div className="grid grid-cols-2 gap-4">
+            <img src={images[0]} className="w-full h-full object-cover rounded-lg" />
+
             <div className="grid grid-cols-2 gap-2">
               {images.slice(1).map((image, index) => (
                 <div key={index} className="relative">
-                  <img
-                    src={image.src}
-                    alt={image.alt}
-                    className="w-full h-full object-cover rounded-lg"
-                  />
+                  <img src={image} className="w-full h-full object-cover rounded-lg" />
                 </div>
               ))}
             </div>
           </div>
+          
+          {/* Horizontal Line */}
+          <hr className="border-t border-gray-200" />
 
+        
 
-        {/* Tags */}
-        <div className="flex space-x-2">
-          <span className="px-3 py-1 bg-gray-100 rounded-full text-sm">
-            fun.family.fitness
-          </span>
-        </div>
+          {/* Tags */}
+          <div className="flex space-x-2">
+            {preferenceTagNames.map((tag, index) => (
+              <div
+                key={index}
+                className={
+                  "flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700"
+                }
+              >
+                <Tag className="w-4 h-4 mr-1" />
 
-        {/* Author and Description */}
-        <div className="space-y-4">
-          <p className="font-semibold">By: {author}</p>
-          <p className="text-gray-600">{description}</p>
-        </div>
-        <GoogleMap
+                {tag}
+              </div>
+            ))}
+          </div>
+
+          {/* Author and Description */}
+          <div className="space-y-4">
+            <p className="font-semibold">By: {ownerName}</p>
+            <p className="text-gray-600">{description}</p>
+          </div>
+          <h3 className="font-bold"> Pick Up Location: </h3>
+          <GoogleMap
             isEditable={false}
-            location={{ lat: 30.0444, lng: 31.2357 }}
+            location={{ lat: pickUpLocation.latitude, lng: pickUpLocation.longitude }}
             setLocation={() => {}}
           />
+          <h3 className="font-bold"> Drop Off Location: </h3>
+          <GoogleMap
+            isEditable={false}
+            location={{ lat: dropOffLocation.latitude, lng: dropOffLocation.longitude }}
+            setLocation={() => {}}
+          />
+
+          {/* Activities */}
+          <ActivitiesTimeline activities={activities} durationOfActivities={durationOfActivities} locations={locations} />
+
           {/* Reviews */}
-          <Reviews />
+          <Review reviews={ratings} />
+        </div>
 
-          {/* Timeline */}
-          <Timeline />
-
-      </div>
-
-      {/* Right Column - Booking Card */}
-      <div>
-        <Card className="sticky top-6">
-          <CardContent className="p-6 space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-bold">Total:</h2>
-              <span className="text-xl">EGP {price}</span>
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="font-medium">Select Your Desired Date</h3>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select Value" />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableDates.map((date, index) => (
-                    <SelectItem key={index} value={`${date.date} ${date.time}`}>
-                      {date.date} {date.time}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-black">
-              Book Itinerary
-            </Button>
-          </CardContent>
-        </Card>
+        {/* Right Column - Booking Card */}
+        <div className="justify-center items-center">
+          <OverviewCard
+            originalPrice={price}
+            buttonText={cardButtonText}
+            buttonColor={booking?.status === "upcoming" ? "red" : "gold"}
+            date={
+              booking?.status === "upcoming" || booking?.status === "completed"
+                ? formatDate(new Date(booking.selectedDate))
+                : undefined
+            }
+            time={
+              booking?.status === "upcoming" || booking?.status === "completed"
+                ? formatDate(new Date(booking.selectedDate))
+                : undefined
+            }
+            dropdownOptions={cardDropdownOptions}
+            disabled={isButtonDisabled}
+            onButtonClick={handleButtonClick}
+            
+          />
+        </div>
       </div>
     </div>
-  </div>
   );
 };
 

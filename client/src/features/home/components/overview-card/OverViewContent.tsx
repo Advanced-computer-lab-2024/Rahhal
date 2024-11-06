@@ -93,7 +93,7 @@ export const OverViewContent: React.FC<ContentProps> = ({
 
       <OverViewButton
         label={buttonText}
-        onClick={() => {onButtonClick}}
+        onClick={onButtonClick}
         color={buttonColor}
         disabled={isButtonDisabled || disabled}
       />

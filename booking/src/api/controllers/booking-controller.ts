@@ -27,6 +27,7 @@ export async function getBookings(req: Request, res: Response) {
 
 export async function getBookingById(req: Request, res: Response) {
   try {
+    
     const id = req.params.id;
     const booking = await bookingService.getBookingById(id);
     if (booking) {

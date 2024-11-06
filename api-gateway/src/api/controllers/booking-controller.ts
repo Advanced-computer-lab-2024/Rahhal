@@ -12,6 +12,20 @@ export async function getBookings(req: Request, res: Response) {
   }
 }
 
+export async function getBookingById(req: Request, res: Response) {
+  const bookingId = req.params.id;
+  try {
+    const booking = await bookingService.getBookingById(bookingId);
+    if (booking) {
+      res.status(STATUS_CODES.STATUS_OK).json(booking);
+    } else {
+      res.status(STATUS_CODES.NOT_FOUND).json({ message: "Booking not found" });
+    }
+  } catch (error) {
+    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
+  }
+}
+
 export async function createBooking(req: Request, res: Response) {
   const booking = req.body;
   try {

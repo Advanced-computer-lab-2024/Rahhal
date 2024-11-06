@@ -23,7 +23,7 @@ import AdminProductsView from "@/features/admin/components/AdminProductsView";
 import HistoricalPlacesView from "@/features/tourism-governor/components/HistoricalPlacesView";
 import HistoricalTagsView from "@/features/tourism-governor/components/HistoricalTagsTable";
 import UsersPendingRequests from "@/features/admin/components/UsersPendingRequests";
-import ActivityTimeline from "@/features/home/components/ActivityTimeline";
+import ActivityTimeline from "@/features/home/components/Timeline";
 import ActivityDetailsPage from "@/features/home/components/ActivityDetails";
 import ItineraryDetailsPage from "@/features/home/components/ItineraryDetails";
 import ComplaintsTable from "@/features/user-settings/components/TouristComplaintsTable";

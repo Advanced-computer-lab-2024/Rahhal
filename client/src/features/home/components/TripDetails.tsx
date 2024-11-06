@@ -8,47 +8,67 @@ import { TItinerary } from '@/features/tour-guide/utils/tour-guide-columns';
 import { fetchItineraryById } from '@/api-calls/itineraries-api-calls';
 import ActivityDetailsPage from './ActivityDetails';
 import ItineraryDetailsPage from './ItineraryDetails';
+import { fetchBookingById } from '@/api-calls/booking-api-calls';
 
 
 export function TripDetails() {
     const [searchParams] = useSearchParams();
 
     const userId = searchParams.get('userId');
-    const eventId = searchParams.get('eventId');
-    const status = searchParams.get('status');
-    const bookingType = searchParams.get('bookingType');
+    
+    const bookingId = searchParams.get('bookingId');
 
     const [eventDetails, setEventDetails] = React.useState<TActivity | TItinerary | null>(null);
+    const [booking, setBooking] = React.useState<TPopulatedBooking | null>(null);
+    
 
     React.useEffect(() => {
       
-        if (userId && eventId && bookingType) {
-          
-            if (bookingType === 'activity') {
-              fetchActivityById(eventId).then((activity) => {
-                setEventDetails(activity as TActivity);
-              });
-            }
-            if (bookingType === 'itinerary') {
-              fetchItineraryById(eventId).then((itinerary) => {
-                setEventDetails(itinerary as TItinerary);
-              });
-            }
-        }
-    }, [userId, eventId, bookingType]);
+        
+        
+        if (bookingId) {
+          // fetch booking details
+          fetchBookingById(bookingId).then((booking) => {
+            setBooking(booking);
+            
+            if (booking) {
+              
+              if (booking.type === 'activity') {
 
+                if (booking.entity && booking.entity._id){
+                  fetchActivityById(booking.entity._id).then((activity) => {
+                    
+                    setEventDetails(activity as TActivity);
+                  });
+                }
+
+              } else {
+                if (booking.entity && booking.entity._id){
+                  fetchItineraryById(booking.entity._id).then((itinerary) => {
+                    setEventDetails(itinerary as TItinerary);
+                  });
+              }
+            }
+
+          }
+          });
+        }
+        
+    }, [userId, bookingId]);
+
+    console.log(eventDetails);
   return (
     <>
       
       {
-        eventDetails && (bookingType === 'activity') && (
-          <ActivityDetailsPage activity={eventDetails as TActivity} />
+        eventDetails && (booking?.type === 'activity') && (
+          <ActivityDetailsPage activity={eventDetails as TActivity} userId={userId ?? ''} initialBooking={booking} />
         )
       }
 
       {
-        eventDetails && (bookingType === 'itinerary') && (
-          <ItineraryDetailsPage  />
+        eventDetails && (booking?.type === 'itinerary') && (
+          <ItineraryDetailsPage  itinerary={eventDetails as TItinerary} userId={userId ?? ''} initialBooking={booking} />
         )
       }
 

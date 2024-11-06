@@ -36,6 +36,8 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({
   dropdownOptions,
   buttonText,
   buttonColor,
+  onButtonClick,
+  disabled,
 }) => {
   return (
     <div className={"sticky top-6 " + styles.card}>
@@ -52,6 +54,8 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({
         dropdownOptions={dropdownOptions}
         buttonText={buttonText}
         buttonColor={buttonColor}
+        onButtonClick={onButtonClick}
+        disabled={disabled}
       />
     </div>
   );

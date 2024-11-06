@@ -96,3 +96,17 @@ export async function redeemLoyalityPoints(id: string) {
   const response = await axios.patch(`${SERVICES_URLS.USER}/users/${id}/redeem`);
   return response.data;
 }
+
+// add loyalty points to user by user id
+export async function addLoyaltyPointsByAmountPaid(userId: string, amountPaid: number) {
+
+  const response = await axios.patch(`${SERVICES_URLS.USER}/users/${userId}?amountPaid=${amountPaid}`);
+  return response.data;
+}
+
+export async function removeLoyaltyPointsByAmountRefunded(userId: string, amountRefunded: number) {
+
+  const response = await axios.patch(`${SERVICES_URLS.USER}/users/${userId}?amountRetrieved=${amountRefunded}`);
+  return response.data;
+}
+
