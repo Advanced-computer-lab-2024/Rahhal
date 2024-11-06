@@ -3,18 +3,26 @@ import Van from "@/assets/Van.png";
 import Car from "@/assets/Car.png";
 import { GoPerson } from "react-icons/go";
 import { MdOutlineLuggage } from "react-icons/md";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
+import currencyExchange from "@/utils/currency-exchange";
 interface TaxiCardProps {
   type?: string;
-  price?: number;
+  price: number;
   guests?: number;
   luggage?: number;
   provider?: string;
-  currency?: string;
   isSelected?: boolean;
   onClick?: () => void;
 }
 
+
+
 export const TaxiCard: React.FC<TaxiCardProps> = (props) => {
+
+  const { currency } = useCurrencyStore();
+  const convertedPrice = currencyExchange("USD", props.price);
+  const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
+
   return (
     <div
       className={`${TaxiCardStyle["card"]} ${props.isSelected ? TaxiCardStyle["active"] : ""}`}
@@ -26,7 +34,7 @@ export const TaxiCard: React.FC<TaxiCardProps> = (props) => {
           <div className={TaxiCardStyle["vehicle-details"]}>
             <p>{props.type && props.type.includes("CAR") ? "Standard Car" : "Van"}</p>
             <p>
-              {props.currency} {props.price}
+              {currency} {displayPrice}
             </p>
             <img src={props.provider} />
           </div>

@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import PaymentOptions from "@/components/PaymentOptions";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
+import currencyExchange from "@/utils/currency-exchange";
 
 interface RouteCardProps {
   departure: string;
@@ -13,7 +15,6 @@ interface RouteCardProps {
   serviceProvider: string;
   cancellationRule?: string;
   carType: string;
-  currency: string;
   onConfirmTrip: () => void;
   loggedIn: boolean;
   isAdult?: boolean;
@@ -26,11 +27,15 @@ function TaxiRoute({
   serviceProvider,
   cancellationRule,
   carType,
-  currency,
   onConfirmTrip,
   loggedIn,
   isAdult,
 }: RouteCardProps) {
+  
+  const { currency } = useCurrencyStore();
+  const convertedPrice = currencyExchange("USD", amount);
+  const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
+
   return (
     <Card
       className={`w-full max-w-md mx-auto transition-all duration-500 ease-in-out scale-95 opacity-0"}`}
@@ -40,7 +45,7 @@ function TaxiRoute({
         <div className="flex items-center text-xl sm:text-2xl font-bold text-[#E1BC6D]">
           <span>
             {currency + " "}
-            {amount.toFixed(2)}
+            {displayPrice}
           </span>
         </div>
       </CardHeader>
