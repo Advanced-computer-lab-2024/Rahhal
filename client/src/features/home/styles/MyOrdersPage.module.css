@@ -61,3 +61,9 @@
   .itemSection .card:last-child {
     border-bottom: none; /* Remove bottom border from the last card */
   }
+
+  .modalOverlay{
+  
+
+  z-index: 1000; /* Ensure it appears above other elements */
+  }

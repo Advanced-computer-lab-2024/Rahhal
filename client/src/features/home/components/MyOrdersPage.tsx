@@ -1,35 +1,54 @@
 import OrdersPageStyles from "@/features/home/styles/MyOrdersPage.module.css";
 import MyOrdersCard from "@/features/home/components/MyOrdersCard";
-import pyramids from "@/assets/pyramids.webp";
-import pyramids2 from "@/assets/Aswan.webp";
-import pyramids3 from "@/assets/pyramids2.jpg";
 import hoodie from "@/assets/rahhal hoodie.jpeg";
 import tshirt from "@/assets/rahhal tshirt.jpeg";
-import bottle from "@/assets/rahhal bottle.jpeg"
+import bottle from "@/assets/rahhal bottle.jpeg";
 import { useState } from "react";
 import ItemCard from "./ItemCard";
 import RatingForm from "./RatingForm";
+import { createRating } from "@/api-calls/rating-api-calls";
+import { useParams } from "react-router-dom";
+import { RateableEntityType } from "@/utils/enums";
+import { TRating } from "@/features/home/types/home-page-types";
 
 export const MyOrdersPage = () => {
-  // State to control the number of visible cards
+  const { id } = useParams<{ id: string }>();
+
   const [showAll, setShowAll] = useState(false);
   const [showItems, setShowItems] = useState(false);
+  const [showRating, setShowRating] = useState(false);
 
- 
+  const handleShowRating = () => {
+    setShowRating(!showRating);
+  };
   const handleShowItems = () => {
     setShowItems(!showItems);
-  }
-  console.log(showItems);
+  };
+
+  const handleRatingSubmit = async (values: Record<string, any>) => {
+    try {
+      const ratingData: TRating = {
+        userId: id ? id : "",
+        userName: "nanna",
+        rating: values.rating,
+        review: values.comment,
+      };
+      await createRating(ratingData, RateableEntityType.PRODUCT, "672aaa830fcf3a74d27b2f59");
+      console.log("Rating submitted successfully:", ratingData);
+      setShowRating(false);
+    } catch (error) {
+      console.error("Failed to submit rating:", error);
+    }
+  };
+
   const cardsData = [
     { images: [tshirt, hoodie, bottle] },
     { images: [tshirt, bottle, hoodie] },
     { images: [hoodie, tshirt, bottle] },
     { images: [bottle, hoodie, tshirt] },
     { images: [hoodie, tshirt, bottle] },
-    { images: [hoodie, tshirt, bottle] }, 
+    { images: [hoodie, tshirt, bottle] },
   ];
-
- 
   const visibleCards = showAll ? cardsData : cardsData.slice(0, 3);
 
   return (
@@ -52,39 +71,37 @@ export const MyOrdersPage = () => {
             </div>
           )}
         </div>
-        <RatingForm  ratingEntities={
-            {
-            hawater: {
-                label: "How was your overall experience?",
-                description: "",
-                type: "rating",
-              },
-              comment: {
-                label: "Care to share more?",
-                description: "Your feedback is important to us!",
-                type: "comment",
-              },
-              nanna:{
-                label: "How was your overall experience?",
-                description: "",
-                type: "rating",
-              }
-            }
 
-        } onSubmit={(values)=>console.log(values.hawater)}/>
-        
-        <div className={OrdersPageStyles["default-rating div"]}>
+        {showItems && (
+          <div className={OrdersPageStyles["itemSection"]}>
+            <ItemCard
+              imageSrc={hoodie}
+              title={"Rahhal T-shirt"}
+              price={"600 EGP"}
+              onRate={handleShowRating}
+            />
+          </div>
+        )}
 
-        </div>
-        
-        <div className={OrdersPageStyles["itemSection"]}>
-          <ItemCard imageSrc={hoodie} title={"Rahhal T-shirt"} price={"600 EGP"} />
-          <ItemCard imageSrc={bottle} title={"Rahhal T-shirt"} price={"600 EGP"} />
-          <ItemCard imageSrc={tshirt} title={"Rahhal T-shirt"} price={"600 EGP"} />
-          <ItemCard imageSrc={hoodie} title={"Rahhal T-shirt"} price={"600 EGP"} />
-          <ItemCard imageSrc={tshirt} title={"Rahhal T-shirt"} price={"600 EGP"} />
-          
-        </div>
+        {showRating && (
+          <div className={OrdersPageStyles.modalOverlay} >
+            <RatingForm
+              ratingEntities={{
+                rating: {
+                  label: "How good is your Product?",
+                  description: "",
+                  type: "rating",
+                },
+                comment: {
+                  label: "Care to share more?",
+                  description: "Your feedback is important to us!",
+                  type: "comment",
+                },
+              }}
+              onSubmit={handleRatingSubmit}
+            />
+          </div>
+        )}
       </div>
     </>
   );
