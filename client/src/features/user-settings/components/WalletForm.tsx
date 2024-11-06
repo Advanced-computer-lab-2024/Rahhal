@@ -87,7 +87,6 @@ export default function AccountForm() {
       });
       // Update user data without reloading the page
       user.wallet = data.wallet;
-      setEditingCard(false);
     } catch (error) {
       toast({
         title: "Error: " + (error as any).response.data.error,
@@ -179,7 +178,14 @@ export default function AccountForm() {
               </DialogHeader>
               <DialogTrigger>
                 {" "}
-                <Button id={styles["addBtn"]}>+ Add Payment Method</Button>
+                <Button
+                  id={styles["addBtn"]}
+                  onClick={() => {
+                    setEditingCard(false);
+                  }}
+                >
+                  + Add Payment Method
+                </Button>
               </DialogTrigger>
               <DialogContent>
                 <CardsPaymentMethod></CardsPaymentMethod>
