@@ -125,7 +125,7 @@ export async function updateUserById(req: Request, res: Response) {
           res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
           return;
         } else {
-          updatedUser.wallet = user.wallet + amountRetrieved;
+          updatedUser.balance = user.balance + amountRetrieved;
         }
       }
     }
@@ -253,7 +253,7 @@ export async function redeemPoints(req: Request, res: Response) {
         const updatedUser = user;
         const avgBalance = user.points / points.minPoints;
         updatedUser.points = user.points % points.minPoints;
-        updatedUser.wallet = user.wallet + Math.floor(avgBalance) * points.amountForMinPoints;
+        updatedUser.balance = user.balance + Math.floor(avgBalance) * points.amountForMinPoints;
         console.log(updatedUser);
         const newUser = await userService.updateUserById(userId, updatedUser);
         res.status(STATUS_CODES.STATUS_OK).json(newUser);
