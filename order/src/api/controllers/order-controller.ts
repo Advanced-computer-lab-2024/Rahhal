@@ -2,8 +2,8 @@ import type { Request, Response } from "express";
 import * as orderService from "@/services/order-service";
 import { STATUS_CODES } from "@/utils/constants";
 import { OrderStatus } from "@/database/models/Order";
-import { z } from "zod";
 import { OrderQueryParams } from "@/utils/types";
+import { z } from "zod";
 
 export async function getOrders(req: Request, res: Response) {
   try {

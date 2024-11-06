@@ -12,7 +12,7 @@ import flightSearchRoutes from "@/api/routes/flights-search-routes";
 import exchangeRatesRoutes from "@/api/routes/exchange-rates-routes";
 import transportationRoutes from "@/api/routes/trasportation-routes";
 import ratingRoutes from "@/api/routes/rating-routes";
-
+import orderRoutes from "@/api/routes/order-routes";
 const app = express();
 
 // Middleware
@@ -33,5 +33,6 @@ app.use("/api/exchange-rates", exchangeRatesRoutes);
 app.use("/api/transportation", transportationRoutes);
 app.use("/api/booking", bookingRoutes);
 app.use("/api/rating", ratingRoutes);
+app.use("/api/order", orderRoutes);
 
 export default app;

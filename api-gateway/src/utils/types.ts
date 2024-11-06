@@ -120,3 +120,18 @@ export interface TransferRequest {
   startDateTime: string;
   passengers: number;
 }
+
+export interface OrderQueryParams {
+  userId?: string;
+  orderStatus?: OrderStatus;
+  seller?: string;
+  productId?: string;
+}
+
+export enum OrderStatus {
+  received = "received",
+  processing = "processing",
+  shipped = "shipped",
+  delivered = "delivered",
+  cancelled = "cancelled",
+}
