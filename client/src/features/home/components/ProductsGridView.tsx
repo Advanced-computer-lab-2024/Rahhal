@@ -39,18 +39,17 @@ export const getPriceValue = (
 const ProductGridView = () => {
   const [search, setSearch] = useState<string>("");
   const [skeleton, setSkeleton] = useState<boolean>(true);
-  const [finishedLoading, setFinishedLoading] = useState<boolean>(false);
   const [combined, setCombined] = useState<Product[]>([]);
   const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>([0, 1000]);
   const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
   const [sortOption, setSortOption] = useState<SortOption | null>(null);
 
   // useQueries
-  const {
-    data: products,
-    isLoading: isLoadingProducts,
-    error: errorProducts,
-  } = useQuery({ queryKey: ["product", "products"], queryFn: fetchAvailableProducts });
+  const { data: products, isLoading: isLoadingProducts } = useQuery({
+    queryKey: ["product", "products"],
+    queryFn: fetchAvailableProducts,
+    select: (data) => data as Product[],
+  });
 
   const navigate = useNavigate();
 
@@ -58,17 +57,11 @@ const ProductGridView = () => {
     // Navigate to detail page, pass the item data via state
     navigate(`/details/${item._id}`, { state: { item } });
   };
-
-  //fetching data
   useEffect(() => {
-    setFinishedLoading(!isLoadingProducts);
-  }, [isLoadingProducts]);
-
-  useEffect(() => {
-    if (finishedLoading) {
+    if (!isLoadingProducts) {
       setSkeleton(false);
     }
-  }, [finishedLoading]);
+  }, [!isLoadingProducts]);
 
   const handleSort = (sortOption: SortOption) => {
     setSortOption(sortOption);
@@ -81,8 +74,8 @@ const ProductGridView = () => {
 
   useEffect(() => {
     // Combine all data into one array initially
-    if (finishedLoading) setCombined([...products]);
-  }, [finishedLoading, products]);
+    if (!isLoadingProducts && products) setCombined([...products]);
+  }, [isLoadingProducts, products]);
 
   let combinedSideBarFilters = [
     {
@@ -155,7 +148,6 @@ const ProductGridView = () => {
   return (
     <div className={ProductGridStyle["product-grid-view"]}>
       <FilterSortSearchHeader
-        finishedLoading={finishedLoading}
         searchPlaceHolder={"Search for products.. "}
         setSearch={setSearch}
         handleSort={handleSort}
@@ -177,7 +169,7 @@ const ProductGridView = () => {
             )}
 
             {!skeleton &&
-              filteredProducts.map((product: Product) => (
+              sortedProducts.map((product: Product) => (
                 <ProductCard
                   key={product._id}
                   picture={Hoodie}

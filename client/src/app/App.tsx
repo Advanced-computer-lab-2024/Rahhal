@@ -44,6 +44,7 @@ export default function App() {
   } else {
     setRates(JSON.parse(storedRates));
   }
+
   }, []);
   const queryClient = new QueryClient();
   return (

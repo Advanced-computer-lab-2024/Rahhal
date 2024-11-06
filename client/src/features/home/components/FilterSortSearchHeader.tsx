@@ -7,7 +7,6 @@ import FilterButton from "./FilterButton";
 import React from "react";
 
 interface FilterSortSearchHeaderProps {
-  finishedLoading: boolean;
   setSearch: (value: string) => void;
   searchPlaceHolder?: string;
   searchPartsPlaceholders?: string[];
@@ -20,7 +19,6 @@ interface FilterSortSearchHeaderProps {
 }
 
 function FilterSortSearchHeader({
-  finishedLoading,
   setSearch,
   searchPlaceHolder,
   searchPartsPlaceholders,
@@ -35,17 +33,15 @@ function FilterSortSearchHeader({
     <>
       <div className={GeneralGridStyle["general-grid-view__filter-container"]}>
         <div style={{ padding: "10px" }}>
-          {finishedLoading && (
-            <SearchBar
-              onSearch={setSearch}
-              searchPlaceHolder={searchPlaceHolder}
-              searchParts={searchParts}
-              searchPartsValues={searchPartsValues}
-              searchPartsHandlers={searchPartsHandlers}
-              searchPartsTypes={searchPartsTypes}
-              searchPartsPlaceholders={searchPartsPlaceholders}
-            />
-          )}
+          <SearchBar
+            onSearch={setSearch}
+            searchPlaceHolder={searchPlaceHolder}
+            searchParts={searchParts}
+            searchPartsValues={searchPartsValues}
+            searchPartsHandlers={searchPartsHandlers}
+            searchPartsTypes={searchPartsTypes}
+            searchPartsPlaceholders={searchPartsPlaceholders}
+          />
         </div>
         {children && (
           <div className={GeneralGridStyle["general-grid-view__filter-container__icons"]}>
