@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ProfileAvatar } from "./ProfileAvatar";
+import CurrencyDropdown from "./CurrencyDropdown"
 
 interface ButtonProps {
   navigation: number;
@@ -45,6 +46,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
       <div className="flex items-center pr-3">
         {!NavigationProps.loggedIn ? (
           <div className="flex space-x-4 items-center">
+            <CurrencyDropdown />
             <Link to="/signin">
               <Button className="text-white bg-red-400 rounded-xl hover:bg-red-500">Sign In</Button>
             </Link>
@@ -53,7 +55,12 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
             </Link>
           </div>
         ) : (
-          <ProfileAvatar />
+          <>
+          <div className="flex space-x-4 items-center">
+            <CurrencyDropdown />
+            <ProfileAvatar />
+          </div>
+          </>
         )}
       </div>
     </div>
