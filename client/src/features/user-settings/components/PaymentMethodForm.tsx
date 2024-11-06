@@ -47,10 +47,7 @@ export function CardsPaymentMethod() {
   const [cardType, setCardType] = useState<string | null>(null);
   const existingCards = user?.wallet?.creditCard || [];
 
-
   const { editingCard, editedIndex } = useContext(editCardContext);
-
-
 
   let editedCreditCard = {
     cardHolderName: "",
@@ -170,7 +167,14 @@ export function CardsPaymentMethod() {
         title: "Update " + response.statusText,
       });
       // Update the user context with the new data
-      user.wallet = data.wallet;
+      if (!editingCard && user.wallet?.creditCard.length >= 1) {
+        // wait two seconds
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } else {
+        user.wallet = data.wallet;
+      }
     } catch (error) {
       toast({
         title: "Error: " + (error as any).response.data.error,
@@ -430,7 +434,7 @@ export function CardsPaymentMethod() {
           </CardContent>
           <CardFooter>
             <Button className="w-full" type="submit">
-              Continue
+              {editingCard ? "Save" : "Continue"}
             </Button>
           </CardFooter>
         </Card>

@@ -160,7 +160,7 @@ export default function AccountForm() {
         )}
       </Form>
 
-      <Separator className="mt-5 mb-5"></Separator>
+      <Separator id={styles["cardWidth"]} className="mt-5 mb-5"></Separator>
 
       {/* Credit Cards */}
       <h4 className="text-lg font-medium">Credit Cards Information</h4>

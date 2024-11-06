@@ -1,3 +1,8 @@
+#NO_CARD_CONTAINER{
+  @media (min-width: 450px) {
+    width: 70%;
+  }
+}
 #NO_CARD_CONTAINER.hero-body .title {
   margin-top: 2.5rem;
   margin-bottom: 1.5rem;
