@@ -45,7 +45,6 @@ interface User {
   companyProfile?: string;
   companyName?: string;
   description?: string;
-  points?: number;
   balance?: number;
   wallet?: IWallet;
 }
