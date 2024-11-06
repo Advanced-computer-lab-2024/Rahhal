@@ -14,6 +14,17 @@ export enum Role {
   seller = "seller",
   tourismGovernor = "tourismGovernor",
 }
+interface ICreditCard {
+  cardHolderName: string;
+  cardNumber: string;
+  expirationDate: Date;
+  cvv: string;
+}
+
+interface IWallet {
+  creditCard: ICreditCard[];
+  defaultCreditCardIndex: number;
+}
 interface User {
   firstName?: string;
   lastName?: string;
@@ -34,7 +45,8 @@ interface User {
   companyProfile?: string;
   companyName?: string;
   description?: string;
-  wallet?: number;
+  balance?: number;
+  wallet?: IWallet;
 }
 export const EditContext = createContext<{
   user: User;
@@ -91,7 +103,7 @@ export default function SettingsView() {
         <div className="lg:md:col-span-2">
           <SideBar></SideBar>
         </div>
-        <div className="lg:md:col-span-10" style={{ maxWidth: "70%" }}>
+        <div className="lg:md:col-span-10" style={{ maxWidth: "100%" }}>
           <Toaster />
           <EditContext.Provider value={{ user }}>
             <Outlet />

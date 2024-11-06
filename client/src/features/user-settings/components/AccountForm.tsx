@@ -65,8 +65,6 @@ export default function AccountForm() {
       .optional(),
 
     password: z.string().optional(),
-
-    wallet: z.number().optional(),
   });
 
   type AccountFormValues = z.infer<typeof accountFormSchema>;
@@ -80,7 +78,6 @@ export default function AccountForm() {
       username: user.username || "",
       email: user.email || "",
       password: user.password || "",
-      wallet: user.wallet || 0,
     },
   });
   const oldPasswordForm = useForm<passwordValidatorValue>({
@@ -107,7 +104,7 @@ export default function AccountForm() {
       }, 1500);
     } catch (error) {
       toast({
-        title: "Error: " + error,
+        title: "Error: " + (error as any).response.data.error,
         variant: "destructive",
       });
       setTimeout(() => {
@@ -134,7 +131,7 @@ export default function AccountForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex-1 lg:max-w-2xl">
+        <div className="flex-1">
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-medium">Account</h3>
@@ -195,24 +192,6 @@ export default function AccountForm() {
                 )}
               />
             </div>
-            {/* Wallet */}
-            {user.role == "tourist" && (
-              <div className="space-y-2">
-                <FormField
-                  name="wallet"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Wallet</FormLabel>
-                      <FormControl>
-                        <Input type="number" disabled {...field} />
-                      </FormControl>
-                      <FormDescription>This is your wallet balance.</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            )}
             {changePassword && (
               <Form {...oldPasswordForm}>
                 {/* Old Password */}

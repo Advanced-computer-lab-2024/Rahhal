@@ -11,6 +11,17 @@ export enum Role {
   seller = "seller",
   tourismGovernor = "tourismGovernor",
 }
+interface ICreditCard {
+  cardHolderName: string;
+  cardNumber: string;
+  expirationDate: Date;
+  cvv: string;
+}
+
+interface IWallet {
+  creditCard: ICreditCard[];
+  defaultCreditCardIndex: number;
+}
 
 export interface IUser {
   _id: Types.ObjectId;
@@ -37,21 +48,10 @@ export interface IUser {
   points: number;
   ratings?: TRating[];
   preferences?: string[];
+  wallet?: IWallet;
   createdAt: Date;
   updatedAt: Date;
 }
-
-// interface ICreditCard{
-//   cardNumber:string;
-//   expirationDate:Date;
-//   cvv:number;
-// }
-
-// interface IWallet{
-//   balance:number;
-//   creditCard:ICreditCard;
-
-// }
 
 const ratingSchema = new Schema<TRating>({
   userName: { type: String, required: true },
@@ -256,14 +256,6 @@ const userSchema: Schema = new Schema<IUser>(
         message: "Invalid description entry",
       },
     },
-    balance: {
-      type: Number,
-      default: 0,
-      validate: {
-        validator: userValidators.validateBalance,
-        message: "Invalid balance entry",
-      },
-    },
     points: {
       type: Number,
       default: 0,
@@ -272,11 +264,74 @@ const userSchema: Schema = new Schema<IUser>(
         message: "Invalid points entry",
       },
     },
+    balance: {
+      type: Number,
+      default: 0,
+      validate: {
+        validator: userValidators.validateBalance,
+        message: "Invalid wallet balance entry",
+      },
+      required: function () {
+        return this.role === Role.tourist;
+      },
+    },
+    wallet: {
+      type: {
+        creditCard: [
+          {
+            cardHolderName: {
+              type: String,
+              default: "",
+              required: true,
+              validate: {
+                validator: userValidators.validateCardHolderName,
+                message: "Invalid card holder name entry",
+              },
+            },
+            cardNumber: {
+              type: String,
+              default: "",
+              required: true,
+              validate: {
+                validator: userValidators.validateCardNumber,
+                message: "Invalid card number entry",
+              },
+            },
+            expirationDate: {
+              type: Date,
+              default: undefined,
+              required: true,
+              validate: {
+                validator: userValidators.validateExpirationDate,
+                message: "Invalid expiration date entry",
+              },
+            },
+            cvv: {
+              type: String,
+              default: "",
+              required: true,
+              validate: {
+                validator: userValidators.validateCVV,
+                message: "Invalid CVV entry",
+              },
+            },
+          },
+        ],
+        defaultCreditCardIndex: {
+          type: Number,
+          default: 0,
+          validate: {
+            validator: userValidators.validateDefaultCreditCardIndex,
+            message: "Invalid default credit card index entry",
+          },
+        },
+      },
+    },
     ratings: {
       type: [ratingSchema],
     },
-    preferences:{
-      type:[String],
+    preferences: {
+      type: [String],
       // required: function () {
       //   return this.role === Role.tourist;
       // },

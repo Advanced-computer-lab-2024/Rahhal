@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import type { Types } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 
 export enum Status {
