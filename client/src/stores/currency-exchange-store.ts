@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import {CurrencyExchangeRate, getCurrencyExchangeRates} from '@/api-calls/currency-exchange-api-calls'
+import {CurrencyExchangeRate} from '@/api-calls/currency-exchange-api-calls'
 
 interface RateStore {
     rates: CurrencyExchangeRate,
