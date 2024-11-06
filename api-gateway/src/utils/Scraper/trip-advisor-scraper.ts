@@ -199,12 +199,13 @@ function parseHotelPage(html : string) {
         console.error("Error parsing basic data:", e);
     }
 
-    let avgPrice = {}
+    let avgPrice = ""
     try {
         avgPrice = $("div.biGQs._P.fiohW.uedOM > span.biGQs._P.fiohW.fOtGX").text();
     }catch(e){
         console.error("Error parsing average price:", e);
     }
+    const newPrice = avgPrice.slice(1);
 
     const description = $("div._T.FKffI.TPznB.Ci.ajMTa.Ps.Z.BB > div.fIrGe._T").text();
 
@@ -280,7 +281,7 @@ function parseHotelPage(html : string) {
         mainImage: basicData.image,
         description: description,
         features: amenities,
-        averagePrice : avgPrice,
+        averagePrice : newPrice,
         images : images,
         bubbleRating : bubbleRating,
         ratings : ratingsModified
@@ -337,21 +338,18 @@ export default async function entryPoint(query : string) {
 
    
     for(let i = 0;i<each;i+=15) {
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i].url,API_KEY));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+1].url,API_KEY));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+2].url,API_KEY));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+3].url,API_KEY));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+4].url,API_KEY));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+5].url,API_KEY_2));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+6].url,API_KEY_2));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+7].url,API_KEY_2));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+8].url,API_KEY_2));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+9].url,API_KEY_2));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+10].url,API_KEY_3));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+11].url,API_KEY_3));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+12].url,API_KEY_3));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+13].url,API_KEY_3));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+14].url,API_KEY_3));
+        
+        for(let j = i;j<i+5;j++){
+            results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[j].url,API_KEY));
+        }
+        
+        for(let j = i+5;j<i+10;j++){
+            results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[j].url,API_KEY_2));
+        }
+
+        for(let j = i+10;j<i+15;j++){
+            results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[j].url,API_KEY_3));
+        }
         just.push(...await Promise.all(results));
         results=[];
     }
