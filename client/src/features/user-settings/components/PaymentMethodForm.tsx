@@ -170,10 +170,7 @@ export function CardsPaymentMethod() {
         title: "Update " + response.statusText,
       });
       // Update the user context with the new data
-      if (user.wallet) {
-        user.wallet.creditCard = data.wallet.creditCard;
-        user.wallet.defaultCreditCardIndex = data.wallet.defaultCreditCardIndex;
-      }
+      user.wallet = data.wallet;
     } catch (error) {
       toast({
         title: "Error: " + (error as any).response.data.error,
