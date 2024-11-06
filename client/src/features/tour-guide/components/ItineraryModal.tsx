@@ -19,6 +19,8 @@ import ItineraryActivities from "@/features/tour-guide/components/itinerary-acti
 import ItineraryAvailableDatesAndTimes from "@/features/tour-guide/components/itinerary-available-dates-times/ItineraryAvailableDatesAndTimes";
 import ItineraryLocations from "@/features/tour-guide/components/itinerary-locations/ItineraryLocations";
 import { useParams } from "react-router-dom";
+import {Checkbox} from "@/components/ui/checkbox";
+import {Label} from "@/components/ui/label";
 
 interface ItinerariesModalProps {
   itineraryData?: TItinerary;
@@ -50,6 +52,7 @@ export function ItinerariesModal({ itineraryData, dialogTrigger, userId }: Itine
   };
 
   const handleSubmit = async () => {
+    console.log(modalItineraryData);
     if (isNewItinerary) {
       // For fields that are referenced in the database by ids, we need to extract them first
       // since the database will only accept for these field an id or list of ids
@@ -66,7 +69,8 @@ export function ItinerariesModal({ itineraryData, dialogTrigger, userId }: Itine
       // otherwise it opens from an edit action and in that situation userId is not null
       // and already stored in the database and it's not needed in updates
       await createItinerary(newItinerary, id!, itineraryImages);
-    } else await updateItinerary(modalItineraryData!, itineraryImages);
+    } 
+    else await updateItinerary(modalItineraryData!, itineraryImages);
   };
 
   useEffect(() => {
@@ -355,6 +359,27 @@ export function ItinerariesModal({ itineraryData, dialogTrigger, userId }: Itine
       <div className="m-5 mx-6">
         <ReviewDisplay reviews={sampleReviews} />
       </div>
+      <div className="flex items-center space-x-2 pt-4">
+  <Checkbox
+    id="inactive"
+    checked={modalItineraryData?.active === false}
+    onCheckedChange={(checked) => {
+      setModalItinerariesData((prevData) => {
+        if (prevData) {
+          return {
+            ...prevData,
+            active: !checked,
+          };
+        }
+        return prevData;
+      });
+    }}
+  />
+  <Label htmlFor="inactive" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+    Deactivate Itinerary
+  </Label>
+</div>
+     
     </GenericModal>
   );
 }

@@ -30,6 +30,7 @@ export type TItinerary = {
   ratings: TRating[];
   preferenceTags: { _id: string; name: string }[];
   category: { _id: string; name: string };
+  active: boolean;
   owner: string;
 };
 
@@ -53,6 +54,20 @@ export const itinerariesColumns: ColumnDef<TItinerary>[] = [
     accessorKey: "name",
     header: "name",
     cell: ({ row }) => <div className="capitalize">{row.original.name}</div>,
+  },
+  {
+    accessorKey:"status",
+    header: "status",
+    cell: ({ row }) => (
+    <div>
+       {row.original.active ? 
+      (
+        <span className="text-muted-foreground">Active</span>
+      ) : (
+        <span className="text-muted-foreground">Inactive</span>
+      )}
+       </div>
+    ),
   },
   {
     accessorKey: "category",
