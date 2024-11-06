@@ -1,10 +1,9 @@
 import React from "react";
 
-import { Activity, Star, Tag } from "lucide-react";
+import { Star, Tag } from "lucide-react";
 import Review from "./Reviews";
 
 import GoogleMap from "@/components/google-maps/GoogleMap";
-import { IoMdPricetag } from "react-icons/io";
 import SharePopover from "@/components/SharePopover";
 
 import { OverviewCard } from "./overview-card/OverViewCard";
@@ -24,7 +23,7 @@ import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
 import { formatDate, formatTime } from "../utils/filter-lists/overview-card";
 
 import { ActivitiesTimeline } from "./ActivitiesTimeline";
-import { set } from "date-fns";
+import { FaAccessibleIcon, FaLanguage } from "react-icons/fa6";
 
 interface ItineraryDetailsProps {
   itinerary: TItinerary;
@@ -50,6 +49,8 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
     availableDatesTime,
     ratings,
     timeline,
+    accessibility,
+    languages
   } = itinerary;
 
   const [rating, setRating] = React.useState(0);
@@ -200,6 +201,34 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
                 {tag}
               </div>
             ))}
+
+            {/* Accessibility */}
+            {accessibility.trim() !== "" && (
+              <div
+                className={
+                  "flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700"
+                }
+              >
+                <FaAccessibleIcon className="w-4 h-4 mr-1" />
+
+                {accessibility}
+              </div>
+            )}
+
+            {/* Languages */}
+            {languages.map((language, index) => (
+              <div
+                key={index}
+                className={
+                  "flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700"
+                }
+              >
+                <FaLanguage className="w-4 h-4 mr-1" />
+
+                {language}
+              </div>
+            ))}
+
           </div>
 
           {/* Author and Description */}

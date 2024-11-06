@@ -22,7 +22,8 @@ interface OverviewCardProps {
   onButtonClick?: () => void;
   buttonColor: "gold" | "red"; // Color options for the button
   disabled?: boolean;
-  dropdownOptions?: { value: string; label: string }[]
+  dropdownOptions?: { value: string; label: string }[]; // Options for the dropdown
+  onTicketSelect?: (index: number) => void; // Handler for ticket selection
 }
 
 export const OverviewCard: React.FC<OverviewCardProps> = ({
@@ -38,10 +39,11 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({
   buttonColor,
   onButtonClick,
   disabled,
+  onTicketSelect,
 }) => {
   
   return (
-    <div className={"sticky top-6 " + styles.card}>
+    <div className={styles.card}>
       {/* Header Section */}
       <Header originalPrice={originalPrice} discountedPrice={discountedPrice} />
 
@@ -57,6 +59,7 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({
         buttonColor={buttonColor}
         onButtonClick={onButtonClick}
         disabled={disabled}
+        onTicketSelect={onTicketSelect}
       />
     </div>
   );

@@ -21,6 +21,7 @@ interface ContentProps {
   disabled?: boolean;
   dropdownOptions?: { value: string; label: string }[]
   onDateChange?: (selectedDate: string) => void; // Handler for dropdown selection
+  onTicketSelect?: (index: number) => void; // Handler for ticket selection
 }
 
 export const OverViewContent: React.FC<ContentProps> = ({
@@ -34,11 +35,13 @@ export const OverViewContent: React.FC<ContentProps> = ({
   disabled,
   dropdownOptions,
   onDateChange,
+  onTicketSelect,
 }) => {
   const [selectedTicket, setSelectedTicket] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   const handleTicketClick = (index: number) => {
+    onTicketSelect && onTicketSelect(index);
     setSelectedTicket(index);
   };
 

@@ -75,9 +75,16 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
   const handleButtonClick = () => {
     if (booking?.status === "cancelled") {
       if (booking?._id) {
-        updateBookingRequest(booking._id, { status: "upcoming", selectedDate: selectedDate ? new Date(selectedDate) : undefined });
+        updateBookingRequest(booking._id, {
+          status: "upcoming",
+          selectedDate: selectedDate ? new Date(selectedDate) : undefined,
+        });
         addLoyaltyPointsByAmountPaid(userId, booking.selectedPrice);
-        setBooking({ ...booking, status: "upcoming", selectedDate: selectedDate ? new Date(selectedDate) : new Date() });
+        setBooking({
+          ...booking,
+          status: "upcoming",
+          selectedDate: selectedDate ? new Date(selectedDate) : new Date(),
+        });
       }
     } else if (booking?.status === "completed") {
       // redirect to review page
@@ -103,16 +110,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
       }
     }
   };
-  const {
-    name,
-    images,
-    description,
-    location,
-    date,
-    price: priceMap,
-    ratings,
-    specialDiscount,
-  } = activity;
+  const { name, images, description, location, date, price, ratings, specialDiscount } = activity;
 
   const activityDate = new Date(date);
   const formattedDate = formatDate(activityDate);
@@ -130,7 +128,9 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
       ? [{ value: date.toString(), label: formattedDate + " " + formattedTime }]
       : undefined;
 
-  const price = priceMap ? (Object.values(priceMap)[0] as number) : 0;
+  const tickets = Object.keys(price).map((key) => {
+    return key + " - EGP " + price[key];
+  });
   return (
     <div>
       <RatingFormDialog buttonRef={ratingFormRef} onSubmit={() => {}} />
@@ -193,6 +193,9 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
                 {tag}
               </div>
             ))}
+
+          
+
           </div>
 
           {/* Author and Description */}
@@ -214,7 +217,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
         {/* Right Column - Booking Card */}
         <div className="justify-center items-center">
           <OverviewCard
-            originalPrice={price}
+            originalPrice={booking?.selectedPrice ?? 0}
             buttonText={cardButtonText}
             buttonColor={booking?.status === "upcoming" ? "red" : "gold"}
             date={
@@ -232,9 +235,15 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
             disabled={isButtonDisabled}
             onButtonClick={handleButtonClick}
             discountedPrice={
-              specialDiscount != 0 ? price - (price * specialDiscount) / 100 : undefined
+              specialDiscount != 0 && booking?.selectedPrice
+                ? booking.selectedPrice - (booking.selectedPrice * specialDiscount) / 100
+                : undefined
             }
             onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
+            onTicketSelect={(index) => {
+              setBooking({ ...booking!, selectedPrice: price[Object.keys(price)[index]] });
+            }}
+            tickets={tickets}
           />
         </div>
       </div>
