@@ -1,11 +1,26 @@
 import Order from "@/database/models/Order";
 import type { IOrder, OrderStatus } from "@/database/models/Order";
+import { OrderQueryParams } from "@/utils/types";
 
-// Get all orders
-export async function getAllOrders() {
-  return Order.find().exec();
+// Get orders
+export async function getOrders(queryParams: OrderQueryParams) {
+  const query: any = {};
+
+  // Add conditions to the query object based on provided parameters
+  if (queryParams.userId) {
+    query.userId = queryParams.userId;
+  }
+  if (queryParams.orderStatus) {
+    query.orderStatus = queryParams.orderStatus;
+  }
+  if (queryParams.seller) {
+    query["items.seller"] = queryParams.seller;
+  }
+  if (queryParams.productId) {
+    query["items.productId"] = queryParams.productId;
+  }
+  return Order.find(query).exec();
 }
-
 // Get order by id
 export async function getOrderById(id: string) {
   return Order.findById(id).exec();
@@ -30,27 +45,8 @@ export async function deleteOrder(id: string) {
   return Order.findByIdAndDelete(id);
 }
 
-// Get orders by user
-export async function getOrdersByUser(userId: string) {
-  return Order.find({ userId: userId }).exec();
-}
-
-// Get orders by status
-export async function getOrdersByStatus(orderStatus: OrderStatus) {
-  return Order.find({ orderStatus: orderStatus }).exec();
-}
-
-// Get orders by seller
-export async function getOrdersBySeller(seller: string) {
-  return Order.find({ "items.seller": seller }).exec();
-}
-
-// Get orders by product
-export async function getOrdersByProduct(productId: string) {
-  return Order.find({ "items.productId": productId }).exec();
-}
-
 // Get orders by date range
 export async function getOrdersByDateRange(startDate: Date, endDate: Date) {
   return Order.find({ orderDate: { $gte: startDate, $lte: endDate } }).exec();
 }
+
