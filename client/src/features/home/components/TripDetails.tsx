@@ -56,7 +56,7 @@ export function TripDetails() {
         
     }, [userId, bookingId]);
 
-    console.log(eventDetails);
+    
   return (
     <>
       

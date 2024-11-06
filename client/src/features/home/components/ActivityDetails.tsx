@@ -11,7 +11,11 @@ import { OverviewCard } from "./overview-card/OverViewCard";
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { calculateAverageRating } from "@/features/admin/utils/columns-definitions/activities-columns";
 import { TBookingStatus, TBookingType, TPopulatedBooking } from "../types/home-page-types";
-import { addLoyaltyPointsByAmountPaid, getUserById, removeLoyaltyPointsByAmountRefunded } from "@/api-calls/users-api-calls";
+import {
+  addLoyaltyPointsByAmountPaid,
+  getUserById,
+  removeLoyaltyPointsByAmountRefunded,
+} from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
 import { updateBookingRequest } from "@/api-calls/booking-api-calls";
 import { toast } from "@/hooks/use-toast";
@@ -33,6 +37,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
   const [ownerName, setOwnerName] = React.useState("");
   const [preferenceTagNames, setPreferenceTagNames] = React.useState<string[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
+  const [selectedDate, setSelectedDate] = React.useState<string | null>(null);
   const [booking, setBooking] = React.useState<TPopulatedBooking | null>(initialBooking);
 
   const ratingFormRef = React.useRef<HTMLButtonElement>(null);
@@ -70,14 +75,13 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
   const handleButtonClick = () => {
     if (booking?.status === "cancelled") {
       if (booking?._id) {
-        updateBookingRequest(booking._id, { status: "upcoming" });
+        updateBookingRequest(booking._id, { status: "upcoming", selectedDate: selectedDate ? new Date(selectedDate) : undefined });
         addLoyaltyPointsByAmountPaid(userId, booking.selectedPrice);
-        setBooking({ ...booking, status: "upcoming" });
+        setBooking({ ...booking, status: "upcoming", selectedDate: selectedDate ? new Date(selectedDate) : new Date() });
       }
     } else if (booking?.status === "completed") {
       // redirect to review page
       ratingFormRef.current?.click();
-
     } else {
       // cancel activity if there is still 48 hours left
       if (booking?._id && booking.selectedDate) {
@@ -99,7 +103,16 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
       }
     }
   };
-  const { name, images, description, location, date, price: priceMap, ratings, specialDiscount } = activity;
+  const {
+    name,
+    images,
+    description,
+    location,
+    date,
+    price: priceMap,
+    ratings,
+    specialDiscount,
+  } = activity;
 
   const activityDate = new Date(date);
   const formattedDate = formatDate(activityDate);
@@ -117,7 +130,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
       ? [{ value: date.toString(), label: formattedDate + " " + formattedTime }]
       : undefined;
 
-  const price = (priceMap) ? (Object.values(priceMap)[0] as number) : 0;
+  const price = priceMap ? (Object.values(priceMap)[0] as number) : 0;
   return (
     <div>
       <RatingFormDialog buttonRef={ratingFormRef} onSubmit={() => {}} />
@@ -162,11 +175,9 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
               ))}
             </div>
           </div>
-          
+
           {/* Horizontal Line */}
           <hr className="border-t border-gray-200" />
-
-        
 
           {/* Tags */}
           <div className="flex space-x-2">
@@ -189,11 +200,13 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
             <p className="font-semibold">By: {ownerName}</p>
             <p className="text-gray-600">{description}</p>
           </div>
-          <GoogleMap
-            isEditable={false}
-            location={{ lat: location.latitude, lng: location.longitude }}
-            setLocation={() => {}}
-          />
+          <div className="w-1/2 ml-[25%]">
+            <GoogleMap
+              isEditable={false}
+              location={{ lat: location.latitude, lng: location.longitude }}
+              setLocation={() => {}}
+            />
+          </div>
           {/* Reviews */}
           <Review reviews={ratings} />
         </div>
@@ -215,9 +228,13 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
                 : undefined
             }
             dropdownOptions={cardDropdownOptions}
+            dateOptions={booking?.status === "cancelled"}
             disabled={isButtonDisabled}
             onButtonClick={handleButtonClick}
-            discountedPrice={(specialDiscount != 0) ? price - (price * specialDiscount) / 100 : undefined}
+            discountedPrice={
+              specialDiscount != 0 ? price - (price * specialDiscount) / 100 : undefined
+            }
+            onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
           />
         </div>
       </div>

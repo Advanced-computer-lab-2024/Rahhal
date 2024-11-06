@@ -8,19 +8,23 @@ import { IoMdPricetag } from "react-icons/io";
 import SharePopover from "@/components/SharePopover";
 
 import { OverviewCard } from "./overview-card/OverViewCard";
-import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
+
 import { calculateAverageRating } from "@/features/admin/utils/columns-definitions/activities-columns";
-import { TBookingStatus, TBookingType, TPopulatedBooking } from "../types/home-page-types";
-import { addLoyaltyPointsByAmountPaid, getUserById, removeLoyaltyPointsByAmountRefunded } from "@/api-calls/users-api-calls";
+import { TPopulatedBooking } from "../types/home-page-types";
+import {
+  addLoyaltyPointsByAmountPaid,
+  getUserById,
+  removeLoyaltyPointsByAmountRefunded,
+} from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
 import { updateBookingRequest } from "@/api-calls/booking-api-calls";
 import { toast } from "@/hooks/use-toast";
 import { RatingFormDialog } from "./RatingFormDialog";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
-import { formatDate } from "../utils/filter-lists/overview-card";
-import { format } from "path";
+import { formatDate, formatTime } from "../utils/filter-lists/overview-card";
+
 import { ActivitiesTimeline } from "./ActivitiesTimeline";
-import { fetchActivityById } from "@/api-calls/activities-api-calls";
+import { set } from "date-fns";
 
 interface ItineraryDetailsProps {
   itinerary: TItinerary;
@@ -33,12 +37,27 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
   initialBooking,
   userId,
 }) => {
+  const {
+    name,
+    images,
+    description,
+    activities,
+    durationOfActivities,
+    locations,
+    price,
+    pickUpLocation,
+    dropOffLocation,
+    availableDatesTime,
+    ratings,
+    timeline,
+  } = itinerary;
+
   const [rating, setRating] = React.useState(0);
   const [ownerName, setOwnerName] = React.useState("");
   const [preferenceTagNames, setPreferenceTagNames] = React.useState<string[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
+  const [selectedDate, setSelectedDate] = React.useState<string | null>(null);
   const [booking, setBooking] = React.useState<TPopulatedBooking | null>(initialBooking);
-  
 
   const ratingFormRef = React.useRef<HTMLButtonElement>(null);
 
@@ -60,8 +79,6 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
     }
   }, [itinerary.preferenceTags]);
 
-  
-
   React.useEffect(() => {
     getUserById(userId).then((user) => {
       // check if user is not approved or is under 18 years old
@@ -77,14 +94,13 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
   const handleButtonClick = () => {
     if (booking?.status === "cancelled") {
       if (booking?._id) {
-        updateBookingRequest(booking._id, { status: "upcoming" });
+        updateBookingRequest(booking._id, { status: "upcoming", selectedDate: selectedDate ? new Date(selectedDate) : undefined });
         addLoyaltyPointsByAmountPaid(userId, booking.selectedPrice);
-        setBooking({ ...booking, status: "upcoming" });
+        setBooking({ ...booking, status: "upcoming", selectedDate: selectedDate ? new Date(selectedDate) : new Date() });
       }
     } else if (booking?.status === "completed") {
       // redirect to review page
       ratingFormRef.current?.click();
-
     } else {
       // cancel activity if there is still 48 hours left
       if (booking?._id && booking.selectedDate) {
@@ -106,9 +122,6 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
       }
     }
   };
-  const { name, images, description, activities, durationOfActivities, locations, price, pickUpLocation, dropOffLocation, availableDatesTime, ratings} = itinerary;
-
-  
 
   const cardButtonText =
     booking?.status === "cancelled"
@@ -118,22 +131,21 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
         : "Cancel Activity";
 
   const cardDropdownOptions =
-    booking?.status === "cancelled"
+    booking?.status === "cancelled" && availableDatesTime
       ? availableDatesTime.map((date) => ({
-        value: date.Date.toString(),
-        label: formatDate(new Date(date.Date)) + " " + formatDate(new Date(date.Time)),
-      }))
+          value: date.Date.toString(),
+          label: formatDate(new Date(date.Date)) + " " + formatTime(new Date(date.Time)),
+        }))
       : undefined;
 
-  
   return (
     <div>
       <RatingFormDialog buttonRef={ratingFormRef} onSubmit={() => {}} />
       <div className="grid grid-cols-3 gap-8 px-2">
         {/* Left Column - Images and Details */}
         <div className="space-y-6 col-span-2">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex">
+          <div className="grid grid-cols-5 gap-4">
+            <div className="flex col-span-4">
               <h1 className="text-3xl font-bold">{name}</h1>
 
               {/* Rating */}
@@ -170,11 +182,9 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
               ))}
             </div>
           </div>
-          
+
           {/* Horizontal Line */}
           <hr className="border-t border-gray-200" />
-
-        
 
           {/* Tags */}
           <div className="flex space-x-2">
@@ -198,20 +208,29 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
             <p className="text-gray-600">{description}</p>
           </div>
           <h3 className="font-bold"> Pick Up Location: </h3>
-          <GoogleMap
-            isEditable={false}
-            location={{ lat: pickUpLocation.latitude, lng: pickUpLocation.longitude }}
-            setLocation={() => {}}
-          />
+          <div className="w-1/2 ml-[25%]">
+            <GoogleMap
+              isEditable={false}
+              location={{ lat: pickUpLocation.latitude, lng: pickUpLocation.longitude }}
+              setLocation={() => {}}
+            />
+          </div>
           <h3 className="font-bold"> Drop Off Location: </h3>
-          <GoogleMap
-            isEditable={false}
-            location={{ lat: dropOffLocation.latitude, lng: dropOffLocation.longitude }}
-            setLocation={() => {}}
-          />
+          <div className="w-1/2 ml-[25%]">
+            <GoogleMap
+              isEditable={false}
+              location={{ lat: dropOffLocation.latitude, lng: dropOffLocation.longitude }}
+              setLocation={() => {}}
+            />
+          </div>
 
           {/* Activities */}
-          <ActivitiesTimeline activities={activities} durationOfActivities={durationOfActivities} locations={locations} />
+          <h3 className="font-bold"> Timeline: {timeline} </h3>
+          <ActivitiesTimeline
+            activities={activities}
+            durationOfActivities={durationOfActivities}
+            locations={locations}
+          />
 
           {/* Reviews */}
           <Review reviews={ratings} />
@@ -234,9 +253,11 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
                 : undefined
             }
             dropdownOptions={cardDropdownOptions}
+            dateOptions={booking?.status === "cancelled"}
             disabled={isButtonDisabled}
             onButtonClick={handleButtonClick}
-            
+            onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
+
           />
         </div>
       </div>

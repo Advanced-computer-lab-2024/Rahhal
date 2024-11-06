@@ -1,8 +1,7 @@
-import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
+
+import { DEFAULT_ACTIVITY_IMAGE } from "../utils/constants";
 import { EventCardProps, Timeline } from "./Timeline";
 import { useEffect, useState } from "react";
-import { formatDate } from "../utils/filter-lists/overview-card";
-
 interface ActivitiesTimelineProps {
   activities: string[];
   durationOfActivities: string[];
@@ -15,7 +14,7 @@ function activityToEvent(activity: string, durationOfActivity: string): EventCar
 
     duration: durationOfActivity,
 
-    imageUrl: "",
+    imageUrl: DEFAULT_ACTIVITY_IMAGE,
   };
 }
 
