@@ -33,7 +33,7 @@ export interface IUser {
   companyProfile?: string;
   companyName?: string;
   description?: string;
-  wallet: number;
+  balance: number;
   points: number;
   ratings?: TRating[];
   preferences?: string[];
@@ -256,12 +256,12 @@ const userSchema: Schema = new Schema<IUser>(
         message: "Invalid description entry",
       },
     },
-    wallet: {
+    balance: {
       type: Number,
       default: 0,
       validate: {
-        validator: userValidators.validateWallet,
-        message: "Invalid wallet entry",
+        validator: userValidators.validateBalance,
+        message: "Invalid balance entry",
       },
     },
     points: {
