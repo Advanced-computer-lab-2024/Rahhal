@@ -256,6 +256,14 @@ const userSchema: Schema = new Schema<IUser>(
         message: "Invalid description entry",
       },
     },
+    points: {
+      type: Number,
+      default: 0,
+      validate: {
+        validator: userValidators.validatePoints,
+        message: "Invalid points entry",
+      },
+    },
     balance: {
       type: Number,
       default: 0,
@@ -318,16 +326,12 @@ const userSchema: Schema = new Schema<IUser>(
           },
         },
       },
-      // validate: {
-      //   validator: userValidators.validateWallet,
-      //   message: "Invalid wallet entry",
-      // },
     },
     ratings: {
       type: [ratingSchema],
     },
-    preferences:{
-      type:[String],
+    preferences: {
+      type: [String],
       // required: function () {
       //   return this.role === Role.tourist;
       // },
