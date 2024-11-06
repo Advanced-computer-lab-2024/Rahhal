@@ -3,7 +3,10 @@ import * as cheerio from 'cheerio';
 import dotenv from "dotenv";
 
 dotenv.config();
-const API_KEY = process.env.SCRAPER_API_KEY || '';
+const API_KEY = process.env.SCRAPER_API_KEY_1 || '';
+const API_KEY_2 = process.env.SCRAPER_API_KEY_2 || '';
+const API_KEY_3 = process.env.SCRAPER_API_KEY_3 || '';
+
 
 async function scrapeLocationData(query : string) {
     console.log(`Scraping location data: ${query}`);
@@ -179,7 +182,7 @@ const client = axios.create({
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
         'Accept-Language': 'en-US,en;q=0.9',
     },
-    timeout: 15000, // 15 seconds timeout
+    timeout: 7000, // 7 seconds timeout
 });
 
 function parseHotelPage(html : string) {
@@ -284,7 +287,7 @@ function parseHotelPage(html : string) {
     };
 }
 
-async function scrapeHotel(url : string) {
+async function scrapeHotel(url : string,API_KEY : string) {
     console.log(`Scraping hotel data: ${url}`);
     try {
         const response = await client.get(url , {method: 'GET',
@@ -327,19 +330,39 @@ export default async function entryPoint(query : string) {
 
 
     let results = [];
-
-    const n = Math.floor(uniqueHotels.length/5) * 5;
-    console.log(n);
     const just = [];
-    for(let i = 0;i<n;i+=5) {
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i].url));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+1].url));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+2].url));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+3].url));
-        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+4].url));
+    const each = Math.floor(uniqueHotels.length/15) * 15;
+    const rest1 = uniqueHotels.length%15;
+ 
+
+   
+    for(let i = 0;i<each;i+=15) {
+        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i].url,API_KEY));
+        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+1].url,API_KEY));
+        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+2].url,API_KEY));
+        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+3].url,API_KEY));
+        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+4].url,API_KEY));
+        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+5].url,API_KEY_2));
+        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+6].url,API_KEY_2));
+        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+7].url,API_KEY_2));
+        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+8].url,API_KEY_2));
+        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+9].url,API_KEY_2));
+        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+10].url,API_KEY_3));
+        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+11].url,API_KEY_3));
+        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+12].url,API_KEY_3));
+        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+13].url,API_KEY_3));
+        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i+14].url,API_KEY_3));
         just.push(...await Promise.all(results));
         results=[];
     }
+    const API_KEYS = [API_KEY,API_KEY_2,API_KEY_3];
+    for(let i = each;i<each+rest1;i++) {
+        results.push(scrapeHotel("https://www.tripadvisor.com"+uniqueHotels[i].url,API_KEYS[i%3]));
+    }
+    just.push(...await Promise.all(results));
+
+
+
 
     return just;
 }
