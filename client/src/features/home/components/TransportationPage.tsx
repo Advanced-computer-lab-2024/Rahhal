@@ -61,7 +61,6 @@ function TransportationPage({ data, loggedIn }: TransportationPageProps) {
               key={index}
               type={vehicle.code}
               price={parseFloat(quotation.monetaryAmount)}
-              currency={quotation.currencyCode}
               guests={vehicle.seats ? vehicle.seats[0].count : undefined}
               luggage={vehicle.baggages ? vehicle.baggages[0].count : undefined}
               provider={serviceProvider.logoUrl}
@@ -75,7 +74,6 @@ function TransportationPage({ data, loggedIn }: TransportationPageProps) {
         {selectedTaxi !== null && (
           <TaxiRoute
             amount={parseFloat(data[selectedTaxi].quotation.monetaryAmount)}
-            currency={data[selectedTaxi].quotation.currencyCode}
             departure={pickupLocation[0]}
             destination={dropOffLocation[0]}
             serviceProvider={data[selectedTaxi].serviceProvider.name}

@@ -1,5 +1,7 @@
+import currencyExchange from "@/utils/currency-exchange";
 import CardStyles from "../styles/ProductCard.module.css";
 import { IoMdStar } from "react-icons/io";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
 
 interface ProductCardProps {
   title: string;
@@ -45,6 +47,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
   rating,
   onClick,
 }) => {
+
+  const basePrice = getPriceValue(price);
+  const { currency } = useCurrencyStore();
+  const convertedPrice = currencyExchange("EGP", basePrice);
+  const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
   return (
     <>
       <div className={CardStyles["product-card-container"]} onClick={onClick}>
@@ -69,8 +76,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
             {price !== undefined && (
               <p>
-                {price}
-                <strong>{"  EGP"}</strong>
+                {displayPrice}
+                <strong>{currency}</strong>
               </p>
             )}
           </div>
