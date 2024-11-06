@@ -13,6 +13,12 @@ import exchangeRatesRoutes from "@/api/routes/exchange-rates-routes";
 import transportationRoutes from "@/api/routes/trasportation-routes";
 import ratingRoutes from "@/api/routes/rating-routes";
 import orderRoutes from "@/api/routes/order-routes";
+import bookingRoutes from "@/api/routes/booking-routes";
+import cors from "cors";
+import firebaseRoutes from "@/api/routes/firebase-routes";
+import fileUpload from "express-fileupload";
+import externalApiRoutes from "@/api/routes/external-api-routes";
+
 const app = express();
 
 // Middleware
@@ -34,5 +40,6 @@ app.use("/api/transportation", transportationRoutes);
 app.use("/api/booking", bookingRoutes);
 app.use("/api/rating", ratingRoutes);
 app.use("/api/order", orderRoutes);
+app.use("/api/external-api",externalApiRoutes);
 
 export default app;
