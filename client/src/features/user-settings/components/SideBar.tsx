@@ -17,7 +17,7 @@ export default function SideBar() {
   ];
 
   if (user.role === "tourist") {
-    sideBarElements.push({ title: "Payment Information", to: `/user-settings/wallet/${id}` });
+    sideBarElements.push({ title: "Payment", to: `/user-settings/wallet/${id}` });
   }
 
   return (

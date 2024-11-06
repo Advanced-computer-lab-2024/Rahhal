@@ -103,8 +103,7 @@ export default function AccountForm() {
     let newDefaultCreditCardIndex = user.wallet?.defaultCreditCardIndex;
     if (id === user.wallet?.defaultCreditCardIndex) {
       newDefaultCreditCardIndex = 0;
-    }
-    else{
+    } else {
       if (id < (user.wallet?.defaultCreditCardIndex ?? 0)) {
         newDefaultCreditCardIndex = (user.wallet?.defaultCreditCardIndex ?? 0) - 1;
       }
@@ -193,7 +192,7 @@ export default function AccountForm() {
         <>
           {user.wallet?.creditCard?.map((card, index) => (
             <>
-              <div key={index} className={styles["credit"]}>
+              <div key={index} id={styles["cardWidth"]} className={styles["credit"]}>
                 <div className="grid flex grid-cols-12 gap-4 justify-content-center items-center">
                   <div className="col-span-2">
                     {GetCardType(card.cardNumber) === "Visa" && (
@@ -202,9 +201,10 @@ export default function AccountForm() {
                     {GetCardType(card.cardNumber) === "Mastercard" && (
                       <img src={mastercardLogo} alt="Mastercard Logo" className="h-12" />
                     )}
-                    {GetCardType(card.cardNumber) != "Mastercard" && GetCardType(card.cardNumber) != "Visa" && (
-                      <img src={genericCardLogo} alt="Generic Logo" className="h-12" />
-                    )}
+                    {GetCardType(card.cardNumber) != "Mastercard" &&
+                      GetCardType(card.cardNumber) != "Visa" && (
+                        <img src={genericCardLogo} alt="Generic Logo" className="h-12" />
+                      )}
                   </div>
                   <div className="col-span-4">
                     <h3 className="text-lg font-medium">
@@ -213,9 +213,11 @@ export default function AccountForm() {
                   </div>
                   <div className="col-span-2">
                     {user.wallet?.defaultCreditCardIndex === index && (
-                      <Button disabled className="h-9" style={{ width: "100%" }}>
-                        Default
-                      </Button>
+                      <div>
+                        <Button disabled id={styles["buttonSize"]} className="h-9" style={{ width: "100%"}}>
+                          Default
+                        </Button>
+                      </div>
                     )}
                   </div>
                   <div className="col-span-3">
@@ -224,10 +226,7 @@ export default function AccountForm() {
                         <DialogTitle></DialogTitle>
                       </DialogHeader>
                       <DialogTrigger className="w-full">
-                        <Button
-                          className="h-9 w-full"
-                          onClick={() => editCard(true, index)}
-                        >
+                        <Button className="h-9 w-full" onClick={() => editCard(true, index)}>
                           Edit
                         </Button>
                       </DialogTrigger>
@@ -283,7 +282,14 @@ export default function AccountForm() {
               <DialogTitle></DialogTitle>
             </DialogHeader>
             <DialogTrigger>
-              <Button id={styles["addBtn"]} onClick={()=>{setEditingCard(false)}}>+ Add Payment Method</Button>
+              <Button
+                id={styles["addBtn"]}
+                onClick={() => {
+                  setEditingCard(false);
+                }}
+              >
+                + Add Payment Method
+              </Button>
             </DialogTrigger>
             <DialogContent>
               <CardsPaymentMethod></CardsPaymentMethod>

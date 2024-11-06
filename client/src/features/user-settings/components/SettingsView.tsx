@@ -104,7 +104,7 @@ export default function SettingsView() {
         <div className="lg:md:col-span-2">
           <SideBar></SideBar>
         </div>
-        <div className="lg:md:col-span-10" style={{ maxWidth: "70%" }}>
+        <div className="lg:md:col-span-10" style={{ maxWidth: "100%" }}>
           <Toaster />
           <EditContext.Provider value={{ user }}>
             <Outlet />

@@ -131,7 +131,7 @@ export default function AccountForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex-1 lg:max-w-2xl">
+        <div className="flex-1">
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-medium">Account</h3>
