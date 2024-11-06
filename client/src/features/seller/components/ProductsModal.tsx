@@ -10,14 +10,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { TNewProduct, TProduct } from "@/features/seller/utils/seller-columns";
 import { createProduct, updateProduct } from "@/api-calls/products-api-calls";
 
-
 interface ProductModalProps {
   productData?: TProduct;
   dialogTrigger?: React.ReactNode;
   userId?: string;
+  username?: string;
 }
 
-export function ProductModal({ productData, dialogTrigger, userId }: ProductModalProps) {
+export function ProductModal({ productData, dialogTrigger, userId, username }: ProductModalProps) {
   const isNewProduct: boolean = productData === undefined;
   const [modalProductData, setModalProductData] = useState<TProduct | undefined>(productData); // current product data present in the modal
 
@@ -26,16 +26,13 @@ export function ProductModal({ productData, dialogTrigger, userId }: ProductModa
   const handleSubmit = async () => {
     const { _id, ...rest } = modalProductData!;
 
-    
-
     if (isNewProduct) {
-      
       const newProduct: TNewProduct = rest;
 
-      // I am sure that userId is not null when the modal open from table add button
-      // otherwise it opens from an edit action and in that situation userId is not null
+      // I am sure that userName is not null when the modal open from table add button
+      // otherwise it opens from an edit action and in that situation userName is not null
       // and already stored in the database and it's not needed in updates
-      await createProduct(newProduct, userId!, productImages);
+      await createProduct(newProduct, userId!, username!, productImages);
     } else await updateProduct(modalProductData!, productImages);
   };
 
@@ -105,16 +102,16 @@ export function ProductModal({ productData, dialogTrigger, userId }: ProductModa
         initialDisabled={!isNewProduct}
       />
 
-<div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2">
         <Checkbox
           id="archive"
           checked={modalProductData?.archived || false}
           onCheckedChange={(checked) =>
             setModalProductData(
-              modalProductData ? { ...modalProductData, archived: checked as boolean } : undefined
+              modalProductData ? { ...modalProductData, archived: checked as boolean } : undefined,
             )
           }
-         // disabled={isNewProduct} // new products can't be archived "ask about it"
+          // disabled={isNewProduct} // new products can't be archived "ask about it"
         />
         <label
           htmlFor="archive"
@@ -127,7 +124,6 @@ export function ProductModal({ productData, dialogTrigger, userId }: ProductModa
       <PictureCard
         title={"Product Picture"}
         description={"Uploaded Picture"}
-        
         initialImageSources={productData?.picture ? [productData.picture] : []}
         handleFileUploadCallback={(files) => setProductImages(files)}
       />

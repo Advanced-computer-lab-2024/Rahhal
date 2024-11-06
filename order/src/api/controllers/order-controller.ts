@@ -1,12 +1,28 @@
 import type { Request, Response } from "express";
 import * as orderService from "@/services/order-service";
 import { STATUS_CODES } from "@/utils/constants";
-import type { OrderStatus } from "@/database/models/Order";
+import { OrderStatus } from "@/database/models/Order";
+import { OrderQueryParams } from "@/utils/types";
 import { z } from "zod";
 
-export async function getAllOrders(req: Request, res: Response) {
+export async function getOrders(req: Request, res: Response) {
   try {
-    const orders = await orderService.getAllOrders();
+    const queryParametersSchema = z.object({
+      userId : z.string().optional(),
+      orderStatus: z.nativeEnum(OrderStatus).optional(),
+      seller: z.string().optional(),
+      productId: z.string().optional()
+    });
+
+    const validationResult = queryParametersSchema.safeParse(req.query);
+
+    if (!validationResult.success) {
+      res.status(STATUS_CODES.UNPROCESSABLE_ENTITY).json({ error: validationResult.error });
+      return;
+    }
+
+    const filter = validationResult.data;
+    const orders = await orderService.getOrders(filter);
     res.status(STATUS_CODES.STATUS_OK).json(orders);
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
@@ -71,53 +87,8 @@ export async function deleteOrder(req: Request, res: Response) {
   }
 }
 
-export async function getOrdersByUser(req: Request, res: Response) {
-  try {
-    const orders = await orderService.getOrdersByUser(req.params.userId);
-    res.status(STATUS_CODES.STATUS_OK).json(orders);
-  } catch (error: unknown) {
-    res.status(STATUS_CODES.SERVER_ERROR).json({
-      message: error instanceof Error ? error.message : "An unknown error occurred",
-    });
-  }
-}
-
-export async function getOrdersByStatus(req: Request, res: Response) {
-  try {
-    const orderStatus = req.params.status as OrderStatus;
-    const orders = await orderService.getOrdersByStatus(orderStatus);
-    res.status(STATUS_CODES.STATUS_OK).json(orders);
-  } catch (error: unknown) {
-    res.status(STATUS_CODES.SERVER_ERROR).json({
-      message: error instanceof Error ? error.message : "An unknown error occurred",
-    });
-  }
-}
-
-export async function getOrdersBySeller(req: Request, res: Response) {
-  try {
-    const orders = await orderService.getOrdersBySeller(req.params.seller);
-    res.status(STATUS_CODES.STATUS_OK).json(orders);
-  } catch (error: unknown) {
-    res.status(STATUS_CODES.SERVER_ERROR).json({
-      message: error instanceof Error ? error.message : "An unknown error occurred",
-    });
-  }
-}
-
-export async function getOrdersByProduct(req: Request, res: Response) {
-  try {
-    const orders = await orderService.getOrdersByProduct(req.params.productId);
-    res.status(STATUS_CODES.STATUS_OK).json(orders);
-  } catch (error: unknown) {
-    res.status(STATUS_CODES.SERVER_ERROR).json({
-      message: error instanceof Error ? error.message : "An unknown error occurred",
-    });
-  }
-}
-
 export async function getOrdersByDateRange(req: Request, res: Response) {
-    
+
   try {
     const queryParametersSchema = z.object({
       startDate: z.string(),

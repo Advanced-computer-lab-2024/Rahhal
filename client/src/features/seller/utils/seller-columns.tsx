@@ -15,6 +15,7 @@ export type TProduct = {
   description: string;
   archived: boolean;
   seller: string;
+  sellerName: string;
   ratings: TRating[];
 };
 
@@ -37,7 +38,8 @@ export const productsColumns: ColumnDef<TProduct>[] = [
     enableColumnFilter: true,
   },
 
-  {accessorKey: "archived",
+  {
+    accessorKey: "archived",
     header: "Status",
     cell: ({ row }) => (
       <div>
@@ -53,7 +55,7 @@ export const productsColumns: ColumnDef<TProduct>[] = [
       if (value === "archived") return row.original.archived;
       if (value === "available") return !row.original.archived;
       return true;
-    }
+    },
   },
   {
     accessorKey: "price",

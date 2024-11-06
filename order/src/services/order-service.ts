@@ -1,9 +1,10 @@
 import type { IOrder, OrderStatus } from "@/database/models/Order";
 import * as orderRepository from "@/database/repositories/order-repository";
+import { OrderQueryParams } from "@/utils/types";
 
 // Get all orders
-export async function getAllOrders() {
-  return orderRepository.getAllOrders();
+export async function getOrders(filter: OrderQueryParams) {
+  return orderRepository.getOrders(filter);
 }
 
 // Get order by id
@@ -24,26 +25,6 @@ export async function updateOrder(id: string, orderData: IOrder) {
 // Delete an order
 export async function deleteOrder(id: string) {
   return orderRepository.deleteOrder(id);
-}
-
-// Get orders by user
-export async function getOrdersByUser(userId: string) {
-  return orderRepository.getOrdersByUser(userId);
-}
-
-// Get orders by status
-export async function getOrdersByStatus(orderStatus: OrderStatus) {
-  return orderRepository.getOrdersByStatus(orderStatus);
-}
-
-// Get orders by seller
-export async function getOrdersBySeller(seller: string) {
-  return orderRepository.getOrdersBySeller(seller);
-}
-
-// Get orders by product
-export async function getOrdersByProduct(productId: string) {
-  return orderRepository.getOrdersByProduct(productId);
 }
 
 // Get orders by date range

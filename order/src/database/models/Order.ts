@@ -42,7 +42,7 @@ export interface IOrder {
 const orderSchema = new Schema<IOrder>({
   userId: { type: String, required: true },
   orderDate: { type: Date, required: true },
-  orderStatus: { type: String, required: true, enum: Object.values(OrderStatus) },
+  orderStatus: { type: String, enum: Object.values(OrderStatus), default: OrderStatus.processing },
   paymentMethod: { type: String, required: true, enum: Object.values(PaymentMethod) },
   items: {
     type: [
