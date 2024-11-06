@@ -88,12 +88,15 @@ export function CardsPaymentMethod() {
           })
           .refine(
             (data) => {
-              const today = new Date();
-              const expirationDate = new Date(
-                parseInt(data.expirationYear),
-                parseInt(data.expirationMonth) - 1,
-              );
-              return expirationDate > today;
+              if (data.expirationMonth && data.expirationYear) {
+                const today = new Date();
+                const expirationDate = new Date(
+                  parseInt(data.expirationYear),
+                  parseInt(data.expirationMonth) - 1,
+                );
+                return expirationDate > today;
+              }
+              return true;
             },
             {
               message: "Card has expired. Please use a valid expiration date.",
