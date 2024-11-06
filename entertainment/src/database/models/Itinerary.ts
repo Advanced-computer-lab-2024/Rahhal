@@ -29,6 +29,7 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
   name: { type: String, required: true },
   description: { type: String, required: true },
   activities: { type: [String], required: true },
+  images: { type: [String], required: true },
   locations: {
     type: [
       {
