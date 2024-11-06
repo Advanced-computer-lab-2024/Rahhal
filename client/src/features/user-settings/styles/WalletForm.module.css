@@ -1,0 +1,57 @@
+#NO_CARD_CONTAINER {
+  @media (min-width: 450px) {
+    width: 70%;
+  }
+}
+#NO_CARD_CONTAINER.hero-body .title {
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 29px;
+  font-weight: 700;
+  color: #2c2c2c;
+  text-align: center;
+}
+
+#noCardSubTitle.subtitle .subtitleText {
+  max-width: 290px;
+  margin: auto;
+  font-size: 18px;
+  line-height: 24px;
+  color: #666 !important;
+  text-align: center;
+}
+
+#addBtn {
+  border-color: #000;
+  border-radius: 3px;
+  border-width: 1px;
+  background-color: #fff;
+  color: #000;
+  padding: 10px 22px;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+  min-width: 50%;
+  margin: 12px 0% 0;
+  overflow: hidden;
+}
+
+.credit {
+  margin-top: 10px;
+  border-radius: 3px;
+  border-width: 1px;
+  border-color: #888;
+  padding: 10px 22px;
+}
+
+#cardWidth {
+  @media (min-width: 450px) {
+    width: 70%;
+  }
+}
+
+#buttonSize {
+  @media (max-width: 450px) {
+    font-size: 8px;
+  }
+}

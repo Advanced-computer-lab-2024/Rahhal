@@ -1,5 +1,7 @@
 const MIN_LENGTH = 0;
 const MIN_PASSWORD_LENGTH = 7;
+const MIN_CARD_NUMBER_LENGTH = 16;
+const MIN_CVV_LENGTH = 3;
 function validateFirstName(firstName: string) {
   return typeof firstName === "string" && firstName.length > MIN_LENGTH;
 }
@@ -68,12 +70,33 @@ function validateDescription(description: string) {
   return typeof description === "string" && description.length > MIN_LENGTH;
 }
 
+function validatePoints(points: number) {
+  return typeof points === "number" && points >= MIN_LENGTH;
+}
+
+function validateCardNumber(cardNumber: string) {
+  return typeof cardNumber === "string" && cardNumber.length == MIN_CARD_NUMBER_LENGTH;
+}
+
+function validateExpirationDate(expirationDate: Date) {
+  //checks if expirationDate is a date and if it is not in the past
+  return expirationDate instanceof Date && expirationDate > new Date();
+}
+
+function validateCVV(cvv: string) {
+  return typeof cvv === "string" && cvv.length == MIN_CVV_LENGTH;
+}
+
+function validateDefaultCreditCardIndex(defaultCreditCardIndex: number) {
+  return typeof defaultCreditCardIndex === "number" && defaultCreditCardIndex >= MIN_LENGTH;
+}
+
 function validateBalance(balance: number) {
   return typeof balance === "number" && balance >= MIN_LENGTH;
 }
 
-function validatePoints(points: number) {
-  return typeof points === "number" && points >= MIN_LENGTH;
+function validateCardHolderName(cardHolderName: string) {
+  return typeof cardHolderName === "string" && cardHolderName.length > MIN_LENGTH;
 }
 
 export default {
@@ -96,4 +119,9 @@ export default {
   validateCompanyName,
   validateDescription,
   validateBalance,
+  validateCardNumber,
+  validateExpirationDate,
+  validateCVV,
+  validateDefaultCreditCardIndex,
+  validateCardHolderName,
 };

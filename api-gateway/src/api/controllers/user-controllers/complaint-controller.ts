@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { STATUS_CODES } from "@/utils/constants";
 import * as complaintService from "@/services/user-services/complaint-service";
 
