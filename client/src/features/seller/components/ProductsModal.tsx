@@ -13,10 +13,11 @@ import { createProduct, updateProduct } from "@/api-calls/products-api-calls";
 interface ProductModalProps {
   productData?: TProduct;
   dialogTrigger?: React.ReactNode;
+  userId?: string;
   username?: string;
 }
 
-export function ProductModal({ productData, dialogTrigger, username }: ProductModalProps) {
+export function ProductModal({ productData, dialogTrigger, userId, username }: ProductModalProps) {
   const isNewProduct: boolean = productData === undefined;
   const [modalProductData, setModalProductData] = useState<TProduct | undefined>(productData); // current product data present in the modal
 
@@ -31,7 +32,7 @@ export function ProductModal({ productData, dialogTrigger, username }: ProductMo
       // I am sure that userName is not null when the modal open from table add button
       // otherwise it opens from an edit action and in that situation userName is not null
       // and already stored in the database and it's not needed in updates
-      await createProduct(newProduct, username!, productImages);
+      await createProduct(newProduct, userId!, username!, productImages);
     } else await updateProduct(modalProductData!, productImages);
   };
 

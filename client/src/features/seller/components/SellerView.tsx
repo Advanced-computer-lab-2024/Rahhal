@@ -54,6 +54,7 @@ function SellerView() {
           enableFilters={true}
           newRowModal={
             <ProductModal
+              userId={id}
               username={username}
               productData={undefined}
               dialogTrigger={<DataTableAddButton />}

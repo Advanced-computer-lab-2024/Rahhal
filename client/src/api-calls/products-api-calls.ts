@@ -23,17 +23,22 @@ export async function fetchAvailableProducts() {
 export async function createProduct(
   newProductData: TNewProduct,
   userId: string,
+  userName: string,
   productImages: FileList | null,
 ) {
-  
   newProductData.picture = "placeholder"; // TODO: Change this to Rahhal logo
   newProductData.seller = userId;
+  newProductData.sellerName = userName;
   newProductData.ratings = [{ rating: Math.floor(Math.random() * 5) + 1, userId: userId }];
   const response = await axios.post(SERVICES_URLS.PRODUCT + "/products", newProductData);
   const productId = (response.data as TProduct)._id;
 
- 
-  const urls: string[] = await uploadToFirebase(productImages, userId, productId, renameProductImage);
+  const urls: string[] = await uploadToFirebase(
+    productImages,
+    userId,
+    productId,
+    renameProductImage,
+  );
 
   newProductData.picture = urls[0];
 
@@ -44,13 +49,14 @@ export async function createProduct(
 }
 
 export async function updateProduct(productData: TProduct, productImages: FileList | null) {
-  const urls: string[] = await uploadToFirebase(productImages, productData.seller, productData._id, renameProductImage);
-  
-  
+  const urls: string[] = await uploadToFirebase(
+    productImages,
+    productData.seller,
+    productData._id,
+    renameProductImage,
+  );
 
   productData.picture = urls[0];
-
-  
 
   await axios.patch(`${SERVICES_URLS.PRODUCT}/products/${productData!._id}`, productData);
   alert("Product updated successfully");

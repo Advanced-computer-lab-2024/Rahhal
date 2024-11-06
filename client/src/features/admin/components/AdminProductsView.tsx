@@ -4,6 +4,7 @@ import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { ProductModal } from "@/features/seller/components/ProductsModal";
 import { productsColumns, TProduct } from "@/features/seller/utils/seller-columns";
 import { fetchProducts } from "@/api-calls/products-api-calls";
+import { SUPER_ADMIN_ID } from "@/lib/constants";
 
 function AdminProductsView() {
   const [products, setProducts] = useState<TProduct[]>([]);
@@ -24,6 +25,7 @@ function AdminProductsView() {
         enableFilters={true}
         newRowModal={
           <ProductModal
+            userId={SUPER_ADMIN_ID}
             username={"Rahhal"}
             productData={undefined}
             dialogTrigger={<DataTableAddButton />}
