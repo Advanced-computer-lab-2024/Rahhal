@@ -31,12 +31,20 @@ import { useEffect } from "react";
 import { useRatesStore } from '@/stores/currency-exchange-store'
 
 export default function App() {
-  const { rates, setRates } = useRatesStore();
+  const { setRates } = useRatesStore();
   useEffect(() => {
-    if(!rates.rates)
-      getCurrencyExchangeRates().then((data) => {
-        setRates(data);
-      });
+    const storedRates = localStorage.getItem("rates");
+    const isNewDay = storedRates ? new Date(JSON.parse(storedRates).date).getDate() != new Date().getDate() : true;
+
+  if (!storedRates || isNewDay) {
+    getCurrencyExchangeRates().then((data) => {
+      setRates(data);
+      localStorage.setItem("rates", JSON.stringify(data));
+    });
+  } else {
+    setRates(JSON.parse(storedRates));
+  }
+
   }, []);
   const queryClient = new QueryClient();
   return (
