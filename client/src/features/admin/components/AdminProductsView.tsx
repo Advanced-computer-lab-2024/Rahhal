@@ -26,6 +26,7 @@ function AdminProductsView() {
         newRowModal={
           <ProductModal
             userId={SUPER_ADMIN_ID}
+            username={"Rahhal"}
             productData={undefined}
             dialogTrigger={<DataTableAddButton />}
           />

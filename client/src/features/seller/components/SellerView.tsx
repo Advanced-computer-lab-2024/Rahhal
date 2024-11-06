@@ -7,8 +7,11 @@ import { productsColumns, TProduct } from "@/features/seller/utils/seller-column
 import { fetchUserProducts } from "@/api-calls/products-api-calls";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
+import { getUserById } from "@/api-calls/users-api-calls";
+import { useQuery } from "@tanstack/react-query";
 function SellerView() {
   const [products, setProducts] = useState<TProduct[]>([]);
+  const [username, setUsername] = useState<string>("");
   const { id } = useParams();
 
   useEffect(() => {
@@ -20,6 +23,18 @@ function SellerView() {
     };
     init();
   }, []);
+
+  const { data: userData } = useQuery({
+    queryKey: ["fetchUser"],
+    queryFn: () => getUserById(id ? id : ""),
+    enabled: !!id,
+  });
+
+  useEffect(() => {
+    if (userData) {
+      setUsername(userData.username);
+    }
+  }, [userData]);
 
   return (
     <>
@@ -40,6 +55,7 @@ function SellerView() {
           newRowModal={
             <ProductModal
               userId={id}
+              username={username}
               productData={undefined}
               dialogTrigger={<DataTableAddButton />}
             />

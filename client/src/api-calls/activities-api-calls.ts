@@ -28,9 +28,13 @@ export const deleteActivity = async (activity: TActivity) => {
 };
 
 export async function updateActivity(activityData: TActivity, activityImages: FileList | null) {
-  
-  const urls: string[] = await uploadToFirebase(activityImages, activityData.owner, activityData._id, renameActivityImage);
-  
+  const urls: string[] = await uploadToFirebase(
+    activityImages,
+    activityData.owner,
+    activityData._id,
+    renameActivityImage,
+  );
+
   activityData.images = [...activityData.images, ...urls];
 
   await axios.patch(`${SERVICES_URLS.ENTERTAINMENT}/activities/${activityData!._id}`, activityData);
@@ -38,19 +42,24 @@ export async function updateActivity(activityData: TActivity, activityImages: Fi
   window.location.reload();
 }
 
-export async function createActivity(newActivityData: TNewActivity, userId: string, activityImages: FileList | null) {
+export async function createActivity(
+  newActivityData: TNewActivity,
+  userId: string,
+  activityImages: FileList | null,
+) {
   newActivityData.owner = userId;
- 
-  
 
   newActivityData.images = [];
 
-  const response =  await axios.post(SERVICES_URLS.ENTERTAINMENT + "/activities", newActivityData);
+  const response = await axios.post(SERVICES_URLS.ENTERTAINMENT + "/activities", newActivityData);
   const activityId = (response.data as TActivity)._id;
-  const urls: string[] = await uploadToFirebase(activityImages, userId, activityId, renameActivityImage);
+  const urls: string[] = await uploadToFirebase(
+    activityImages,
+    userId,
+    activityId,
+    renameActivityImage,
+  );
 
-  
-  
   newActivityData.images = urls;
 
   alert("Activity created successfully");
