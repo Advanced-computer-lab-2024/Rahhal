@@ -26,7 +26,7 @@ export async function createProduct(
   productImages: FileList | null,
 ) {
   
-  newProductData.picture = "";
+  newProductData.picture = "placeholder"; // TODO: Change this to Rahhal logo
   newProductData.seller = userId;
   newProductData.ratings = [{ rating: Math.floor(Math.random() * 5) + 1, userId: userId }];
   const response = await axios.post(SERVICES_URLS.PRODUCT + "/products", newProductData);
