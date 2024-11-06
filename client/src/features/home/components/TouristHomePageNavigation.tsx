@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ProfileAvatar } from "./ProfileAvatar";
+import CurrencyDropdown from "./CurrencyDropdown"
 
 interface ButtonProps {
   navigation: number;
@@ -53,7 +54,12 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
             </Link>
           </div>
         ) : (
-          <ProfileAvatar />
+          <>
+          <div className="flex space-x-4 items-center">
+            <CurrencyDropdown />
+            <ProfileAvatar />
+          </div>
+          </>
         )}
       </div>
     </div>
