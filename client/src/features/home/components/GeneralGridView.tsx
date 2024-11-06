@@ -76,33 +76,57 @@ const GeneralGridView = () => {
   const {
     data: activities,
     isLoading: isLoadingActivities,
-    error: errorActivities,
-  } = useQuery({ queryKey: ["entertainment", "activities"], queryFn: fetchAppropriateActivities });
+    isSuccess: isSuccessActivities,
+  } = useQuery({
+    queryKey: ["entertainment", "activities"],
+    queryFn: fetchAppropriateActivities,
+    select: (data) => data as Activity[],
+  });
   const {
     data: itineraries,
     isLoading: isLoadingItineraries,
-    error: errorItenaries,
-  } = useQuery({ queryKey: ["entertainment", "itineraries"], queryFn: fetchActiveAppropriateItineraries });
+    isSuccess: isSuccessItineraries,
+  } = useQuery({
+    queryKey: ["entertainment", "itineraries"],
+    queryFn: fetchActiveAppropriateItineraries,
+    select: (data) => data as Itinerary[],
+  });
   const {
     data: historicalPlaces,
     isLoading: isHistoricalPlaces,
-    error: errorHistorical,
-  } = useQuery({ queryKey: ["entertainment", "historicalPlaces"], queryFn: fetchHistoricalPlaces });
+    isSuccess: isSuccessHistorical,
+  } = useQuery({
+    queryKey: ["entertainment", "historicalPlaces"],
+    queryFn: fetchHistoricalPlaces,
+    select: (data) => data as HistoricalPlace[],
+  });
   const {
     data: preferenceTags,
     isLoading: isPreferenceTags,
-    error: errorPreferenceTags,
-  } = useQuery({ queryKey: ["entertainment", "preferenceTags"], queryFn: fetchPreferenceTags });
+    isSuccess: isSuccessPreferenceTags,
+  } = useQuery({
+    queryKey: ["entertainment", "preferenceTags"],
+    queryFn: fetchPreferenceTags,
+    select: (data) => data as PreferenceTag[],
+  });
   const {
     data: historicalTags,
     isLoading: isHistoricalTags,
-    error: errorHistoricalTags,
-  } = useQuery({ queryKey: ["entertainment", "historicalTags"], queryFn: fetchHistoricalTags });
+    isSuccess: isSuccessHistoricalTags,
+  } = useQuery({
+    queryKey: ["entertainment", "historicalTags"],
+    queryFn: fetchHistoricalTags,
+    select: (data) => data as HistoricalTag[],
+  });
   const {
     data: categories,
     isLoading: isLoadingCategories,
-    error: errorCategories,
-  } = useQuery({ queryKey: ["entertainment", "categories"], queryFn: fetchCategories });
+    isSuccess: isSuccessCategories,
+  } = useQuery({
+    queryKey: ["entertainment", "categories"],
+    queryFn: fetchCategories,
+    select: (data) => data as Category[],
+  });
 
   const navigate = useNavigate();
 
@@ -138,7 +162,7 @@ const GeneralGridView = () => {
 
   const searchParts = ["Category", "Tag"];
   useEffect(() => {
-    if (finishedLoading) {
+    if (isSuccessCategories && isSuccessPreferenceTags && isSuccessHistoricalTags) {
       const categoryNames = categories.map((category: Category) => category.name);
       const preferenceTagsNames = preferenceTags.map(
         (preferenceTag: PreferenceTag) => preferenceTag.name,
@@ -148,12 +172,20 @@ const GeneralGridView = () => {
       );
       setSearchPartsValues([categoryNames, [...preferenceTagsNames, ...historicalTagsNames]]);
     }
-  }, [finishedLoading]);
+  }, [isSuccessCategories, isSuccessPreferenceTags, isSuccessHistoricalTags]);
 
   useEffect(() => {
     // Combine all data into one array initially
-    if (finishedLoading) setCombined([...activities, ...itineraries, ...historicalPlaces]);
-  }, [activities, itineraries, finishedLoading, historicalPlaces]);
+    if (isSuccessActivities && isSuccessItineraries && isSuccessHistorical)
+      setCombined([...activities, ...itineraries, ...historicalPlaces]);
+  }, [
+    activities,
+    itineraries,
+    historicalPlaces,
+    isSuccessActivities,
+    isSuccessItineraries,
+    isSuccessHistorical,
+  ]);
 
   const handleSort = (sortOption: SortOption) => {
     setSortOption(sortOption);
@@ -213,7 +245,7 @@ const GeneralGridView = () => {
       activeFilter.includes("itinerary") && activeFilter.length === 1,
     ),
   );
-  if (activeFilter.includes("place")) {
+  if (historicalTags && activeFilter.includes("place")) {
     const historicalTagsNames = historicalTags
       .map((historicalTag: HistoricalTag) => historicalTag.name)
       .map((tag: string) => ({ label: tag, value: tag }));
@@ -221,7 +253,7 @@ const GeneralGridView = () => {
       HistoricalPlacesFilter(historicalTagsNames, setSelectedHistoricalTags),
     );
   }
-  if (activeFilter.includes("itinerary")) {
+  if (itineraries && activeFilter.includes("itinerary")) {
     const languages: Option[] = Array.from(
       new Set<string>(
         itineraries.flatMap((itinerary: Itinerary) => (itinerary as Itinerary).languages),
@@ -379,7 +411,6 @@ const GeneralGridView = () => {
   return (
     <div className={GeneralGridStyle["general-grid-view"]}>
       <FilterSortSearchHeader
-        finishedLoading={finishedLoading}
         searchPlaceHolder={"Name"}
         setSearch={setSearch}
         searchParts={searchParts}
