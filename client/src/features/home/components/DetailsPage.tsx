@@ -6,6 +6,9 @@ import { IoMdStar } from "react-icons/io";
 import { CiGlobe } from "react-icons/ci";
 import TouristHomePageNavigation from "@/features/home/components/TouristHomePageNavigation";
 import GoogleMap from "@/components/google-maps/GoogleMap";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
+import currencyExchange from "@/utils/currency-exchange";
+
 
 const DetailsPage = () => {
   const location = useLocation();
@@ -26,6 +29,8 @@ const DetailsPage = () => {
       />
     );
   };
+
+  const { currency } = useCurrencyStore();
 
   return (
     <div className={DetailsPageStyles["full-page-container"]}>
@@ -188,13 +193,22 @@ const DetailsPage = () => {
           <div className={DetailsPageStyles["price-section"]}>
             <div>
               {typeof item.price === "number" ? (
-                <h1>Price: {item.price} EGP</h1>
+                <h1>
+                  Price: {item.price ? currencyExchange("EGP", item.price)?.toFixed(0) : "N/A"}{" "}
+                  {currency}
+                </h1>
               ) : (
-                Object.entries(item.price).map(([key, value], index) => (
-                  <h1 key={index}>
-                    {key}: {value as string | number} EGP
-                  </h1>
-                ))
+                item.price &&
+                Object.entries(item.price).map(([key, value], index) => {
+                  const convertedValue = value ? currencyExchange("EGP", Number(value)) : undefined;
+                  const displayConvertedValue = convertedValue ? convertedValue.toFixed(0) : "N/A";
+
+                  return (
+                    <h1 key={index}>
+                      {key}: {displayConvertedValue} {currency}
+                    </h1>
+                  );
+                })
               )}
             </div>
           </div>
