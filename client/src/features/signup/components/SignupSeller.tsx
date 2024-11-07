@@ -66,11 +66,7 @@ export default function SignupSeller() {
         description: "Please wait while we create your account",
         duration: 1500,
       });
-      // const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-      // await delay(4500);
-
-      
 
       const response: any = await createUser(reqBody);
       let urls: string[] = new Array();
@@ -108,7 +104,7 @@ export default function SignupSeller() {
         description: "User created successfully. Wait for email confirmation of approval!",
         style: {
           backgroundColor: "#34D399",
-          color: "#000000",
+          color: "#FFFFFF",
         },
         duration: 3000,
       });

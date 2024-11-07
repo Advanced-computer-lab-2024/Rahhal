@@ -109,7 +109,7 @@ export default function SignupTourGuide() {
         description: "User created successfully. Wait for email confirmation of approval!",
         style: {
           backgroundColor: "#34D399",
-          color: "#000000",
+          color: "#FFFFFF",
         },
         duration: 3000,
       });
