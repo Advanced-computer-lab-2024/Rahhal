@@ -7,15 +7,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 
-import RatingForm from "./RatingForm"
+import RatingForm, { TRatingEntity } from "./RatingForm"
 
 
 interface RatingFormDialogProps {
     buttonRef: React.RefObject<HTMLButtonElement>;
+    ratingEntities: Record<string, TRatingEntity>;
     onSubmit: () => void;
     }
 
-export function RatingFormDialog({ buttonRef, onSubmit }: RatingFormDialogProps) {
+export function RatingFormDialog({ buttonRef, ratingEntities, onSubmit }: RatingFormDialogProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -26,7 +27,7 @@ export function RatingFormDialog({ buttonRef, onSubmit }: RatingFormDialogProps)
           <DialogTitle>Rate Your Experience</DialogTitle>
           
         </DialogHeader>
-        <RatingForm onSubmit={onSubmit} ratingEntities={{}} />
+        <RatingForm onSubmit={onSubmit} ratingEntities={ratingEntities} />
         
       </DialogContent>
     </Dialog>

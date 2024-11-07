@@ -10,7 +10,20 @@ import ActivityDetailsPage from './ActivityDetails';
 import ItineraryDetailsPage from './ItineraryDetails';
 import { fetchBookingById } from '@/api-calls/booking-api-calls';
 import { DEFAULT_ACTIVITY_BOOKING, DEFAULT_ITINERARY_BOOKING } from '../utils/constants';
+import { TRatingEntity } from './RatingForm';
 
+export const tripRatingEntity: Record<string, TRatingEntity> = {
+  rating: {
+    label: "How was your overall experience?",
+    description: "",
+    type: "rating",
+  },
+  comment: {
+    label: "Care to share more?",
+    description: "Your feedback is important to us!",
+    type: "comment",
+  },
+};
 
 export function TripDetails() {
     const [searchParams] = useSearchParams();

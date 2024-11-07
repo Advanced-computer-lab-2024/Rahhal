@@ -21,6 +21,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { RatingFormDialog } from "./RatingFormDialog";
 import { formatDate, formatTime } from "../utils/filter-lists/overview-card";
+import { tripRatingEntity } from "./TripDetails";
 
 interface ActivityDetailsProps {
   activity: TActivity;
@@ -209,11 +210,11 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
     return key + " - EGP " + price[key];
   });
 
-  console.log("selectedTicket", selectedTicket);
+  
 
   return (
     <div>
-      <RatingFormDialog buttonRef={ratingFormRef} onSubmit={() => {}} />
+      <RatingFormDialog buttonRef={ratingFormRef} onSubmit={() => {}} ratingEntities={tripRatingEntity} />
       <div className="grid grid-cols-3 gap-8 px-2">
         {/* Left Column - Images and Details */}
         <div className="space-y-6 col-span-2">
