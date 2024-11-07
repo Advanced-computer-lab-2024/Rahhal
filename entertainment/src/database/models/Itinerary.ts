@@ -9,7 +9,7 @@ export interface IItinerary {
   activities: string[];
   locations: [{ longitude: number; latitude: number; placeId?: string }];
   timeline: string;
-  duarationOfActivities: string[];
+  durationOfActivities: string[];
   images: string[];
   languages: string[];
   price: number | { min: number; max: number };
@@ -45,7 +45,7 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
     ],
   },
   timeline: { type: String, required: true },
-  duarationOfActivities: { type: [String], required: true },
+  durationOfActivities: { type: [String], required: true },
   languages: { type: [String], required: true },
   price: {
     type: mongoose.Schema.Types.Mixed,
