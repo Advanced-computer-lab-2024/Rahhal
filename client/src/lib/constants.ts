@@ -129,7 +129,7 @@ export const DEFAULTS = {
     },
     replies: [],
   },
-  TOURISTCOMPLAINT: {
+  TOURIST_COMPLAINT: {
     _id: "",
     title: "",
     body: "",

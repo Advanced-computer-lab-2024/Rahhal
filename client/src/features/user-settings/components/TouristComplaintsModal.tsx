@@ -20,12 +20,12 @@ export function TouristComplaintsModal({
 }: ComplaintsModalProps) {
   const isNewComplaint: boolean = complaintData == undefined;
   const [modalComplaintData, setModalComplaintData] = useState<TComplaint>(
-    complaintData ?? DEFAULTS.TOURISTCOMPLAINT,
+    complaintData ?? DEFAULTS.TOURIST_COMPLAINT,
   );
 
   useEffect(() => {
     if (isNewComplaint) {
-      setModalComplaintData(DEFAULTS.TOURISTCOMPLAINT);
+      setModalComplaintData(DEFAULTS.TOURIST_COMPLAINT);
     } else {
       setModalComplaintData(complaintData!);
     }
@@ -37,7 +37,7 @@ export function TouristComplaintsModal({
       const newComplaint = { ...complaintData, owner: id };
       onCreateComplaint!(newComplaint);
     }
-    setModalComplaintData(DEFAULTS.TOURISTCOMPLAINT);
+    setModalComplaintData(DEFAULTS.TOURIST_COMPLAINT);
   };
 
   return (
@@ -58,7 +58,7 @@ export function TouristComplaintsModal({
             setModalComplaintData(
               modalComplaintData
                 ? { ...modalComplaintData, title: value }
-                : DEFAULTS.TOURISTCOMPLAINT,
+                : DEFAULTS.TOURIST_COMPLAINT,
             )
           }
           placeholder={"Enter Complaint Title"}
@@ -73,7 +73,7 @@ export function TouristComplaintsModal({
             setModalComplaintData(
               modalComplaintData
                 ? { ...modalComplaintData, body: value }
-                : DEFAULTS.TOURISTCOMPLAINT,
+                : DEFAULTS.TOURIST_COMPLAINT,
             )
           }
           placeholder={"Enter Complaint Body"}
