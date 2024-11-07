@@ -2,16 +2,15 @@ import type { Request, Response } from "express";
 import * as orderService from "@/services/order-service";
 import { STATUS_CODES } from "@/utils/constants";
 import { OrderStatus } from "@/database/models/Order";
-import { OrderQueryParams } from "@/utils/types";
 import { z } from "zod";
 
 export async function getOrders(req: Request, res: Response) {
   try {
     const queryParametersSchema = z.object({
-      userId : z.string().optional(),
+      userId: z.string().optional(),
       orderStatus: z.nativeEnum(OrderStatus).optional(),
       seller: z.string().optional(),
-      productId: z.string().optional()
+      productId: z.string().optional(),
     });
 
     const validationResult = queryParametersSchema.safeParse(req.query);
@@ -88,7 +87,6 @@ export async function deleteOrder(req: Request, res: Response) {
 }
 
 export async function getOrdersByDateRange(req: Request, res: Response) {
-
   try {
     const queryParametersSchema = z.object({
       startDate: z.string(),
@@ -106,6 +104,23 @@ export async function getOrdersByDateRange(req: Request, res: Response) {
 
     const orders = await orderService.getOrdersByDateRange(new Date(startDate), new Date(endDate));
     res.status(STATUS_CODES.STATUS_OK).json(orders);
+  } catch (error: unknown) {
+    res.status(STATUS_CODES.SERVER_ERROR).json({
+      message: error instanceof Error ? error.message : "An unknown error occurred",
+    });
+  }
+}
+
+export async function rateProduct(req: Request, res: Response) {
+  try {
+    const { productId, rating, review } = req.body;
+    const orderId = req.params.id;
+    const order = await orderService.rateProduct(orderId, productId, rating, review);
+    if (!order) {
+      res.status(STATUS_CODES.NOT_FOUND).json({ message: "Order to be rated not found" });
+    } else {
+      res.status(STATUS_CODES.STATUS_OK).json(order);
+    }
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
       message: error instanceof Error ? error.message : "An unknown error occurred",

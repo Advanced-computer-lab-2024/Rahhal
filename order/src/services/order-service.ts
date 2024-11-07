@@ -1,6 +1,6 @@
-import type { IOrder, OrderStatus } from "@/database/models/Order";
+import type { IOrder } from "@/database/models/Order";
 import * as orderRepository from "@/database/repositories/order-repository";
-import { OrderQueryParams } from "@/utils/types";
+import type { OrderQueryParams } from "@/utils/types";
 
 // Get all orders
 export async function getOrders(filter: OrderQueryParams) {
@@ -33,4 +33,13 @@ export async function getOrdersByDateRange(startDate: Date, endDate: Date) {
     throw new Error("Start date must be before end date");
   }
   return orderRepository.getOrdersByDateRange(startDate, endDate);
+}
+
+export async function rateProduct(
+  orderId: string,
+  productId: string,
+  rating: number,
+  review: string,
+) {
+  return orderRepository.rateProduct(orderId, productId, rating, review);
 }

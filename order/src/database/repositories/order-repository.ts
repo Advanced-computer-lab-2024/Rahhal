@@ -1,6 +1,6 @@
 import Order from "@/database/models/Order";
-import type { IOrder, OrderStatus } from "@/database/models/Order";
-import { OrderQueryParams } from "@/utils/types";
+import type { IOrder } from "@/database/models/Order";
+import type { OrderQueryParams } from "@/utils/types";
 
 // Get orders
 export async function getOrders(queryParams: OrderQueryParams) {
@@ -21,9 +21,15 @@ export async function getOrders(queryParams: OrderQueryParams) {
   }
   return Order.find(query).exec();
 }
+
 // Get order by id
 export async function getOrderById(id: string) {
   return Order.findById(id).exec();
+}
+
+// Get orders by date range
+export async function getOrdersByDateRange(startDate: Date, endDate: Date) {
+  return Order.find({ createdAt: { $gte: startDate, $lte: endDate } }).exec();
 }
 
 // Create a new order
@@ -45,8 +51,15 @@ export async function deleteOrder(id: string) {
   return Order.findByIdAndDelete(id);
 }
 
-// Get orders by date range
-export async function getOrdersByDateRange(startDate: Date, endDate: Date) {
-  return Order.find({ createdAt: { $gte: startDate, $lte: endDate } }).exec();
+// Rate a product in an order
+export async function rateProduct(
+  orderId: string,
+  productId: string,
+  rating: number,
+  review: string,
+) {
+  return Order.updateOne(
+    { _id: orderId, "items.productId": productId },
+    { $set: { "items.$.rating": { rating, review } } },
+  );
 }
-
