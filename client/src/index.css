@@ -31,6 +31,8 @@
     --radius: 0.5rem;
 
     --primary-color: #e1bc6d;
+    --primary-color-dark: #c1a25f;
+
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -66,5 +68,6 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Poppins'
   }
 }
