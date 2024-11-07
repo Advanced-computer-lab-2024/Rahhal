@@ -78,6 +78,11 @@ function validatePoints(points: number) {
   return typeof points === "number" && points >= MIN_LENGTH;
 }
 
+function validateAccumulativePoints(accumulativePoints: number) {
+  return typeof accumulativePoints === "number" && accumulativePoints >= MIN_LENGTH;
+}
+
+
 function validateCardNumber(cardNumber: string) {
   return typeof cardNumber === "string" && cardNumber.length == MIN_CARD_NUMBER_LENGTH;
 }
@@ -109,6 +114,7 @@ export default {
   validateDOB,
   validateNationality,
   validatePoints,
+  validateAccumulativePoints,
   validateJob,
   validatePhoneNumber,
   validateYearsOfExperience,

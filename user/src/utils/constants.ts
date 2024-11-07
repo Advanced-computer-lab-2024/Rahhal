@@ -17,3 +17,9 @@ export const points = {
   minPoints: 10000,
   amountForMinPoints: 100,
 };
+
+export const levels = {
+  level1: 1,
+  level2: 2,
+  level3: 3,
+}
