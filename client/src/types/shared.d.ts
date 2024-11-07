@@ -32,7 +32,6 @@ export type TOrderProduct = {
 export type TOrder = {
   _id: Types.ObjectId;
   userId: string;
-  orderDate: Date;
   orderStatus: OrderStatus;
   paymentMethod: PaymentMethod;
   items: TOrderProduct[];
