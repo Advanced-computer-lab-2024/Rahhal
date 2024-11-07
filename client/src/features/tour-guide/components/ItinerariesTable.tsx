@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/data-table/DataTable";
 import { itinerariesColumns, TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
-import { fetchItineraries } from "@/api-calls/itineraries-api-calls";
+import { fetchItineraries, fetchUserItineraries } from "@/api-calls/itineraries-api-calls";
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { ItinerariesModal } from "./ItineraryModal";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -10,12 +10,15 @@ import { Link, useParams } from "react-router-dom";
 function TourGuideView() {
   const [itineraries, setItineraries] = useState<TItinerary[]>([]);
 
+  const { id } = useParams<{ id: string }>();
+
   useEffect(() => {
-    fetchItineraries().then((data) => {
-      setItineraries(data);
-    });
+    if (id) {
+      fetchUserItineraries(id).then((data) => {
+        setItineraries(data);
+      });
+    }
   }, []);
-  const id = useParams<{ id: string }>().id;
   return (
     <>
       <div className=" w-full h-4 flex justify-end">
