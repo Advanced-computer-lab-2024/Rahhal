@@ -10,11 +10,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { TermsAndConditionsModal } from "./TermsAndConditionsModal";
 import { termsAndConditions } from "../terms-and-conditions/SellerTermsAndConditions";
 import { sellerSchema } from "../utils/ZodSchemas/sellerSchema";
-import { createUser } from "@/api-calls/users-api-calls";
+import { createUser,updateUser } from "@/api-calls/users-api-calls";
+import { uploadToFirebaseReady } from "@/utils/firebase";
 
 type SellerFormData = z.infer<typeof sellerSchema>;
 
@@ -22,6 +23,7 @@ export default function SignupSeller() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
 
   const {
     control,
@@ -52,21 +54,55 @@ export default function SignupSeller() {
       password: data.password,
       description: data.description,
       role: "seller",
+      nationalId: "",
+      taxRegistration: "",
+      balance : 0
     };
 
+    
     try {
       toast({
         title: "Creating User",
         description: "Please wait while we create your account",
         duration: 1500,
       });
-      const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+      // const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-      await delay(4500);
+      // await delay(4500);
+
+      
 
       const response: any = await createUser(reqBody);
-      console.log("Server response:", response);
+      let urls: string[] = new Array();
+      
 
+      if(data.nationalID && data.taxRegistration){
+        const nationalId:string = `documents/${response._id}/nationalID`;
+        const newFileNationalId = new File([data.nationalID ], nationalId,{ type: data.nationalID.type });
+
+        const taxReg: string = `documents/${response._id}/taxRegistration`;
+        const newFileTaxReg = new File([data.taxRegistration ], taxReg,{ type: data.taxRegistration.type });
+
+       
+        const filesFileList: File[] = [newFileNationalId, newFileTaxReg];
+        urls = await uploadToFirebaseReady(filesFileList);
+
+
+        const documents = {
+          "nationalID" : urls[0],
+          "taxRegistration" : urls[1]
+        };
+
+        const responseUpdate: any = updateUser(response, documents);
+
+        console.log("Server response:", responseUpdate);
+      }
+      console.log(data.nationalID);
+      console.log("Server response:", response);
+      console.log("Firebase URLs:", urls);
+
+      
+      console.log("Server response:", response);
       toast({
         title: "User Created",
         description: "User created successfully. Wait for email confirmation of approval!",
@@ -77,7 +113,7 @@ export default function SignupSeller() {
         duration: 3000,
       });
       setTimeout(() => {
-        navigate("/login");
+        navigate("/signin");
       }, 3000);
     } catch (error: any) {
       console.error("Error during form submission:", error);
