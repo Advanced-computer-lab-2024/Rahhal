@@ -116,8 +116,7 @@ function ProductReport() {
   return (
     <div className="container mx-auto p-4">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Smartphone</h1>
-        <p className="text-gray-600 mb-4">Product ID: {productId}</p>
+        <p className="text-3xl font-bold mb-2">Product ID: {productId}</p>
 
         {/* Date Range Picker */}
         <div className="mb-4">
