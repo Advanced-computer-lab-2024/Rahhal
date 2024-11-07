@@ -38,7 +38,9 @@ import { useParams } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { GetCardType } from "../utils/CheckCardType";
 import { redeemLoyalityPoints } from "@/api-calls/users-api-calls";
-
+import BronzeRBadge from "@/assets/BronzeRBadge2.png";
+import SilverRBadge from "@/assets/SilverRBadge.png";
+import GoldRBadge from "@/assets/GoldRBadge.png";
 export const editCardContext = createContext({ editingCard: false, editedIndex: 0 });
 
 export default function AccountForm() {
@@ -49,6 +51,25 @@ export default function AccountForm() {
     points: z.number().optional(),
   });
 
+  // Handling Displaying of Badge 
+  // May need to handle maxPoints reached pending Noha
+  // ================================================
+  let badgeImage = BronzeRBadge;
+  let badgeLevelColor = "Bronze";
+  let badgeLevel = "1";
+
+    if (user.points && user.points > 100000) {
+      badgeLevelColor = "Silver";
+      badgeLevel = "2";
+      badgeImage = SilverRBadge;
+    }
+    if (user.points && user.points > 500000) {
+      badgeLevelColor = "Gold";
+      badgeLevel = "3";
+      badgeImage = GoldRBadge;
+    }
+  // ================================================
+  
   const [editingCard, setEditingCard] = useState<boolean>(false);
   const [editedIndex, setEditedCardIndex] = useState<number>(-1);
 
@@ -172,8 +193,20 @@ export default function AccountForm() {
 
   return (
     <>
-      <h3 className="text-lg font-medium">Payment Information</h3>
-      <Separator className="mt-5 mb-5"></Separator>
+      <div className="flex items-center gap-4">
+        <h3 className="text-lg font-medium">Payment Information</h3>
+        {/* <div className="flex items-center"> */}
+        <div className="ml-auto flex items-center" style={{ width: "52%" }}>
+          <p style={{ fontSize: "0.875rem" }}>
+            <i>
+              Experience Level {badgeLevel}: <b>{badgeLevelColor}</b>
+            </i>
+          </p>
+          <img src={badgeImage} alt="" className="ml-2 h-10" />
+        </div>
+        {/* </div> */}
+      </div>
+      <Separator id={styles["cardWidth"]} className="mt-5 mb-5"></Separator>
       <Form {...form}>
         {/* Wallet */}
         {user.role === "tourist" && (
@@ -202,16 +235,24 @@ export default function AccountForm() {
                   <FormItem>
                     <h4 className="text-lg font-medium">Points</h4>
                     <FormControl>
-                      <div className="grid grid-cols-12 gap-6">
+                      <div className="grid grid-cols-12 gap-1">
                         <div className="col-span-10">
                           <Input type="number" disabled {...field} />
                         </div>
                         <div className="col-span-2">
-                          <Button disabled={user.points && user.points > 10000 ? false : true} onClick={redeemPoints}>Redeem</Button>
+                          <Button
+                            disabled={user.points && user.points >= 10000 ? false : true}
+                            onClick={redeemPoints}
+                          >
+                            Redeem
+                          </Button>
                         </div>
                       </div>
                     </FormControl>
-                    <FormDescription>You have {user.points ? user.points - (user.points % 10000) : 0} points to redeem.</FormDescription>
+                    <FormDescription>
+                      You have {user.points ? user.points - (user.points % 10000) : 0} points to
+                      redeem.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
