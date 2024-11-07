@@ -1,6 +1,8 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { getPriceValue } from "./GeneralGridView";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import {
   Carousel,
   CarouselContent,
@@ -9,25 +11,35 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
+import imagePlaceHolder from "@/assets/imageNotavail.png";
+import currencyExchange from "@/utils/currency-exchange";
+
 interface OrderCardProps {
-  date?: string;
-  price?: string;
+  date: string;
+  price: number;
   itemsCount?: number;
   status?: string;
-  images?: string[];
+  images: string[];
   onView?: () => void;
 }
 
-export default function Component({
-  date = "Thu 24 Oct",
-  price = "EGP 2300",
-  itemsCount = 4,
-  status = "Delivered",
-  images = ["/placeholder.svg?height=200&width=200"],
+export default function MyOrdersCard({
+  date,
+  price,
+  itemsCount,
+  status,
+  images,
   onView = () => {},
 }: OrderCardProps) {
+
+  const { currency } = useCurrencyStore(); 
+  const convertedPrice = currencyExchange("EGP", price);
+  const displayPrice = convertedPrice ? convertedPrice.toFixed(0): "N/A";
+
+
+
   return (
-    <Card className="w-full max-w-xl overflow-hidden"> 
+    <Card className="w-full max-w-xl overflow-hidden">
       <div className="flex flex-col sm:flex-row items-center" onClick={onView}>
         <div className="relative w-full sm:w-1/5 min-w-[80px] p-1">
           <Carousel className="w-full h-full rounded-lg overflow-hidden">
@@ -38,6 +50,7 @@ export default function Component({
                     <img
                       src={image}
                       alt={`Product image ${index + 1}`}
+                      onError={(e) => (e.currentTarget.src = imagePlaceHolder)}
                       className="h-full w-full object-cover"
                     />
                   </div>
@@ -64,7 +77,7 @@ export default function Component({
               </Button>
             </div>
             <div className="flex items-center gap-1 text-muted-foreground text-sm">
-              <span>{price}</span>
+              <span>{currency} {displayPrice}</span>
               <span className="text-xs">•</span>
               <span>{itemsCount} items</span>
             </div>
