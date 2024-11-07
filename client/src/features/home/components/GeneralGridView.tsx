@@ -376,32 +376,32 @@ function GeneralGridView() {
       return matchDate;
     });
 
-  // Sort combined items
-  const sortedCombinedItems = filteredCombinedItems.sort((a, b) => {
-    const aRatings = getAverageRating(a.ratings ?? []);
-    const bRatings = getAverageRating(b.ratings ?? []);
-    const aPrice = getPriceValue(a.price);
-    const bPrice = getPriceValue(b.price);
-    const aPreferenceTags =
-      userData && a.preferenceTags?.some((tag) => userData.preferences?.includes(tag.name));
-    const bPreferenceTags =
-      userData && b.preferenceTags?.some((tag) => userData.preferences?.includes(tag.name));
-    // console.log(aPreferenceTags, bPreferenceTags);
-    const sort =
-      sortOption === "price-high-low"
-        ? bPrice - aPrice
-        : sortOption === "price-low-high"
-          ? aPrice - bPrice
-          : sortOption === "rating-low-high"
-            ? aRatings - bRatings
-            : sortOption === "rating-high-low"
-              ? bRatings - aRatings
-              : aPreferenceTags && !bPreferenceTags
-                ? -1
-                : !aPreferenceTags && bPreferenceTags
-                  ? 1
-                  : 0;
-    return sort;
+  const sortedCombinedItems = filteredCombinedItems.sort((firstItem, secondItem) => {
+    const firstItemRating = getAverageRating(firstItem.ratings ?? []);
+    const secondItemRating = getAverageRating(secondItem.ratings ?? []);
+    const firstItemPrice = getPriceValue(firstItem.price);
+    const secondItemPrice = getPriceValue(secondItem.price);
+    switch (sortOption) {
+      case "price-high-low":
+        return secondItemPrice - firstItemPrice;
+      case "price-low-high":
+        return firstItemPrice - secondItemPrice;
+      case "rating-high-low":
+        return secondItemRating - firstItemRating;
+      case "rating-low-high":
+        return firstItemRating - secondItemRating;
+      default:
+        // Sort by user preferences
+        const aPreferenceTags =
+          userData &&
+          firstItem.preferenceTags?.some((tag) => userData.preferences?.includes(tag.name));
+        const bPreferenceTags =
+          userData &&
+          secondItem.preferenceTags?.some((tag) => userData.preferences?.includes(tag.name));
+        if (aPreferenceTags && !bPreferenceTags) return -1;
+        if (!aPreferenceTags && bPreferenceTags) return 1;
+        return 0;
+    }
   });
   console.log(filteredCombinedItems);
 
