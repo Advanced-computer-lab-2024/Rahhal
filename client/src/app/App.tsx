@@ -32,22 +32,24 @@ import { getCurrencyExchangeRates } from "@/api-calls/currency-exchange-api-call
 import { useEffect } from "react";
 import { useRatesStore } from '@/stores/currency-exchange-store'
 import ProductReport from "@/features/seller/components/ProductReport";
+import HotelsPage from "@/features/home/components/HotelsPage";
 
 export default function App() {
   const { setRates } = useRatesStore();
   useEffect(() => {
     const storedRates = localStorage.getItem("rates");
-    const isNewDay = storedRates ? new Date(JSON.parse(storedRates).date).getDate() != new Date().getDate() : true;
+    const isNewDay = storedRates
+      ? new Date(JSON.parse(storedRates).date).getDate() != new Date().getDate()
+      : true;
 
-  if (!storedRates || isNewDay) {
-    getCurrencyExchangeRates().then((data) => {
-      setRates(data);
-      localStorage.setItem("rates", JSON.stringify(data));
-    });
-  } else {
-    setRates(JSON.parse(storedRates));
-  }
-
+    if (!storedRates || isNewDay) {
+      getCurrencyExchangeRates().then((data) => {
+        setRates(data);
+        localStorage.setItem("rates", JSON.stringify(data));
+      });
+    } else {
+      setRates(JSON.parse(storedRates));
+    }
   }, []);
   const queryClient = new QueryClient();
   return (
@@ -60,6 +62,7 @@ export default function App() {
               <Route path="/entertainment" element={<GeneralGridView />} />
               <Route path="/shop" element={<ProductGridView />} />
               <Route path="/travel" element={<TravelPage loggedIn={false} />} />
+              <Route path="/stays" element={<HotelsPage loggedIn={false} />} />
             </Route>
             <Route element={<TouristHomePage loggedIn={true} />}>
               <Route path="/entertainment/:id" element={<GeneralGridView />} />

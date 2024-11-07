@@ -38,6 +38,7 @@ export const fetchPlaceDetails = async (placeId: string) => {
     return {
       location: (data as IPlaceDetails).location,
       countryCode: (data as IPlaceDetails).countryCode,
+      name: (data as IPlaceDetails).name,
     };
   } catch (error) {
     console.error("Error fetching place details:", error);

@@ -223,4 +223,5 @@ export interface IPlaceDetails {
   };
   description: string[];
   countryCode: string;
+  name: string;
 }
