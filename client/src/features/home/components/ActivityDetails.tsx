@@ -33,24 +33,37 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
   initialBooking,
   userId,
 }) => {
+  const {
+    name,
+    images,
+    description,
+    location,
+    date,
+    price,
+    ratings,
+    specialDiscount,
+    owner,
+    preferenceTags,
+  } = activity;
   const [rating, setRating] = React.useState(0);
   const [ownerName, setOwnerName] = React.useState("");
   const [preferenceTagNames, setPreferenceTagNames] = React.useState<string[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState<string | null>(null);
+  const [selectedTicket, setSelectedTicket] = React.useState<string | null>(null);
   const [booking, setBooking] = React.useState<TPopulatedBooking | null>(initialBooking);
 
   const ratingFormRef = React.useRef<HTMLButtonElement>(null);
 
   React.useEffect(() => {
     setRating(calculateAverageRating(activity.ratings));
-  }, [activity.ratings]);
+  }, [ratings]);
 
   React.useEffect(() => {
     getUserById(activity.owner).then((user) => {
       setOwnerName(user.firstName + " " + user.lastName);
     });
-  }, [activity.owner]);
+  }, [owner]);
 
   React.useEffect(() => {
     for (let i = 0; i < activity.preferenceTags.length; i++) {
@@ -58,7 +71,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
         setPreferenceTagNames((prev) => [(tag as { _id: string; name: string }).name]);
       });
     }
-  }, [activity.preferenceTags]);
+  }, [preferenceTags]);
 
   React.useEffect(() => {
     if (userId == "undefined" || userId == undefined) {
@@ -84,6 +97,15 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
 
   // check if user has already booked this activity if booking is null
   React.useEffect(() => {
+    if (booking && booking._id !== "") {
+      // set the selected ticket based on the selected price and price object
+      // NOTE: THIS WILL NOT WORK IF THE PRICES ARE NOT UNIQUE
+      const selectedPrice = booking.selectedPrice;
+      console.log("selectedPrice", selectedPrice);
+      const foundKey = Object.keys(price).find((key) => price[key] === selectedPrice);
+      setSelectedTicket(foundKey ? `${foundKey} - EGP ${selectedPrice}` : null);
+    }
+
     if (booking?._id !== "" || userId === "undefined") return;
 
     const bookingType: TBookingType = {
@@ -166,7 +188,6 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
       }
     }
   };
-  const { name, images, description, location, date, price, ratings, specialDiscount } = activity;
 
   const activityDate = new Date(date);
   const formattedDate = formatDate(activityDate);
@@ -187,6 +208,9 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
   const tickets = Object.keys(price).map((key) => {
     return key + " - EGP " + price[key];
   });
+
+  console.log("selectedTicket", selectedTicket);
+
   return (
     <div>
       <RatingFormDialog buttonRef={ratingFormRef} onSubmit={() => {}} />
@@ -291,7 +315,11 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
                 : undefined
             }
             tickets={
-              booking && booking?.status === "cancelled" ? tickets : [`${booking?.selectedPrice}`]
+              booking && booking?.status === "cancelled"
+                ? tickets
+                : selectedTicket
+                  ? [selectedTicket]
+                  : []
             }
           />
         </div>

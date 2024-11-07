@@ -24,6 +24,7 @@ interface OverviewCardProps {
   disabled?: boolean;
   dropdownOptions?: { value: string; label: string }[]; // Options for the dropdown
   onTicketSelect?: (index: number) => void; // Handler for ticket selection
+  selectedTicketIndex?: number; // Index of the selected ticket
 }
 
 export const OverviewCard: React.FC<OverviewCardProps> = ({
