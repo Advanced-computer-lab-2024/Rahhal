@@ -65,6 +65,8 @@ export default function SignupTourist() {
       role: "tourist",
       nationality: data.nationality,
       job: data.job === "Yes" ? "Student" : data.jobDescription,
+      points: 0,
+      balance: 0
     };
 
     try {

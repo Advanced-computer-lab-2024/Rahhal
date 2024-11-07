@@ -44,11 +44,14 @@ export interface IUser {
   companyProfile?: string;
   companyName?: string;
   description?: string;
-  balance: number;
-  points: number;
+  balance?: number;
+  points?: number;
   ratings?: TRating[];
   preferences?: string[];
   wallet?: IWallet;
+  nationalID?: string;
+  taxRegistration?: string;
+  certeficates?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -178,6 +181,7 @@ const userSchema: Schema = new Schema<IUser>(
     },
     addresses: {
       type: [String],
+      default: [],
     },
     phoneNumber: {
       type: String,
@@ -258,7 +262,9 @@ const userSchema: Schema = new Schema<IUser>(
     },
     points: {
       type: Number,
-      default: 0,
+      required: function () {
+        return this.role === Role.tourist;
+      },
       validate: {
         validator: userValidators.validatePoints,
         message: "Invalid points entry",
@@ -337,6 +343,21 @@ const userSchema: Schema = new Schema<IUser>(
       // },
       // default:[]
     },
+    nationalID:{
+      type:String,
+      // required:function(){
+      //   return this.role === Role.tourGuide || this.role === Role.advertiser || this.role === Role.seller;
+      // },
+    },
+    taxRegistration:{
+      type:String,
+      // required:function(){
+      //   return this.role === Role.advertiser || this.role === Role.seller;
+      // },
+    },
+    certeficates:{
+      type:[String],
+    }
   },
   { timestamps: true },
 );

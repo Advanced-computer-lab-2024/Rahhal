@@ -1,13 +1,13 @@
 import { Role } from "../utils/enums";
 
 export type TUser = {
-  _id?: string;
-  username: string;
-  email: string;
-  role: Role;
+  _id: Types.ObjectId;
   firstName?: string;
   lastName?: string;
+  username: string;
+  email: string;
   password: string;
+  role: Role;
   approved: boolean;
   dob?: Date;
   nationality?: string;
@@ -21,6 +21,13 @@ export type TUser = {
   companyProfile?: string;
   companyName?: string;
   description?: string;
+  balance?: number;
+  points?: number;
+  ratings?: TRating[];
+  preferences?: string[];
+  nationalID?: string;
+  taxRegistration?: string;
+  certeficates?: string[];
   createdAt: Date;
   updatedAt: Date;
 };
