@@ -120,6 +120,12 @@ interface IAutocompletePrediction {
   reference: string;
 }
 
+export interface IRating {
+  userId: string;
+  userName: string;
+  rating: number;
+  review?: string;
+}
 
 export type TRating={
   userId: string;
