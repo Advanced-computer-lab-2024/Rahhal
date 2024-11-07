@@ -4,6 +4,7 @@ import { useState } from "react";
 import ItemCard from "./ItemCard";
 import RatingForm from "./RatingForm";
 import { createRating } from "@/api-calls/rating-api-calls";
+import { rateProduct } from "@/api-calls/order-api-calls";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { RateableEntityType } from "@/utils/enums";
@@ -12,10 +13,12 @@ import { fetchUserOrders } from "@/api-calls/order-api-calls";
 import { TOrder } from "@/features/home/types/home-page-types";
 import { useToast } from "@/hooks/use-toast";
 
+const formatOrderDate = (dateString: string | undefined) => {
+  if (!dateString) return "Invalid Date";
 
-
-const formatOrderDate = (dateString: Date) => {
   const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "Invalid Date"; 
+
   return new Intl.DateTimeFormat("en-US", {
     weekday: "short",
     month: "short",
@@ -24,30 +27,25 @@ const formatOrderDate = (dateString: Date) => {
 };
 
 export const MyOrdersPage = () => {
-
   const { toast } = useToast();
   const { id } = useParams<{ id: string }>();
   const [showAll, setShowAll] = useState(false);
   const [showItems, setShowItems] = useState(false);
   const [showRating, setShowRating] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null); 
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(null); // State to hold product ID
-
-
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
   const handleShowRating = (productId: string) => {
     setSelectedProductId(productId); // Set the product ID for the rating
     setShowRating(!showRating); // Show the rating form
   };
-  
+
   const handleShowItems = (orderId: string) => {
     setShowItems(true);
-    setSelectedOrderId(orderId); 
-    if(showRating && showItems)
-      setShowRating(!showRating);
-    
+    setSelectedOrderId(orderId);
+    if (showRating && showItems) setShowRating(!showRating);
   };
-  
+
   const handleRatingSubmit = async (values: Record<string, any>) => {
     try {
       const ratingData: TRating = {
@@ -56,23 +54,34 @@ export const MyOrdersPage = () => {
         rating: values.rating,
         review: values.comment,
       };
-      await createRating(ratingData, RateableEntityType.PRODUCT, selectedProductId as string); // Use selectedProductId here
+      await createRating(ratingData, RateableEntityType.PRODUCT, selectedProductId as string);
       toast({
         title: "success Rating submitted successfully",
-        style:{
+        style: {
           backgroundColor: "#34D399",
           color: "white",
           height: "11vh",
         },
-        duration:3500
-
+        duration: 3500,
       });
       setShowRating(false);
     } catch (error) {
       console.error("Failed to submit rating:", error);
       toast({
-        title: "error Failed to submit rating"+error,
-      })
+        title: "error Failed to submit rating" + error,
+      });
+    }
+
+    try {
+      const response = await rateProduct(
+        selectedProductId as string,
+        selectedOrderId as string,
+        values.rating,
+        values.comment,
+      );
+      console.log(response);
+    } catch (error) {
+      console.error("Failed to submit rating:", error);
     }
   };
   const {
@@ -84,10 +93,8 @@ export const MyOrdersPage = () => {
     queryFn: () => fetchUserOrders(id as string),
     enabled: !!id,
   });
-
-
+  console.log(order);
   const visibleOrders = showAll ? order : order?.slice(0, 3);
-
   return (
     <>
       <div className={OrdersPageStyles["order-page-header"]}>
@@ -100,7 +107,7 @@ export const MyOrdersPage = () => {
             visibleOrders.map((card, index) => (
               <MyOrdersCard
                 key={index}
-                date={formatOrderDate(card.orderDate)}
+                date={formatOrderDate(card.createdAt.toString())}
                 itemsCount={card.totalQuantity}
                 status={card.orderStatus}
                 price={card.totalPrice}
@@ -108,8 +115,7 @@ export const MyOrdersPage = () => {
                 onView={() => handleShowItems(card._id)}
               />
             ))}
-          
-         
+
           {order && order.length > 3 && (
             <div className={OrdersPageStyles["show-more"]}>
               <button onClick={() => setShowAll(!showAll)}>
@@ -117,17 +123,17 @@ export const MyOrdersPage = () => {
               </button>
             </div>
           )}
-
         </div>
 
-          {showItems && order && order.find((order) => order._id === selectedOrderId)?.items && (
-            <div className={OrdersPageStyles["itemSection"]}>
-              {order.find((order) => order._id === selectedOrderId)?.items.map((item, index) => (
-                <ItemCard key={index} title={item.name} price={item.price} image={item.picture} onRate={()=>handleShowRating(item.productId)}/>
+        {showItems && order && order.find((order) => order._id === selectedOrderId)?.items && (
+          <div className={OrdersPageStyles["itemSection"]}>
+            {order
+              .find((order) => order._id === selectedOrderId)
+              ?.items.map((item, index) => (
+                <ItemCard key={index} item={item} onRate={() => handleShowRating(item.productId)} />
               ))}
-            </div>
-          )}
-       
+          </div>
+        )}
 
         {showRating && (
           <div className={OrdersPageStyles.modalOverlay}>
@@ -146,7 +152,6 @@ export const MyOrdersPage = () => {
               }}
               onSubmit={handleRatingSubmit}
             />
-
           </div>
         )}
       </div>
