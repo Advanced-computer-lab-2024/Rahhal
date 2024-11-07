@@ -15,7 +15,7 @@ export async function fetchUserOrders(userId: string) {
       userId: userId,
     },
   });
-  return response.data;
+  return response.data as TOrder[];
 }
 
 // fetch orders by product id
