@@ -52,6 +52,7 @@ export default function App() {
       setRates(JSON.parse(storedRates));
     }
     console.log(localStorage.getItem("rates"));
+    ApiCurrencyCall();
   }, []);
   const queryClient = new QueryClient();
   return (
@@ -113,4 +114,22 @@ export default function App() {
       </QueryClientProvider>
     </div>
   );
+
+  function ApiCurrencyCall() {
+    const storedRates = localStorage.getItem("rates");
+    const isNewDay = storedRates
+      ? new Date(JSON.parse(storedRates).date).getDate() != new Date().getDate()
+      : true;
+
+    if (!storedRates || isNewDay) {
+      getCurrencyExchangeRates().then((data) => {
+        setRates(data);
+        localStorage.setItem("rates", JSON.stringify(data));
+
+      });
+    } else {
+      setRates(JSON.parse(storedRates));
+    }
+    console.log(localStorage.getItem("rates"));
+  }
 }
