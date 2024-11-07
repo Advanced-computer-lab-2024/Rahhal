@@ -28,6 +28,7 @@ function ProductReport() {
   const { id: productId } = useParams<{ id: string }>();
 
   const [productOrders, setProductOrders] = useState<TOrder[]>([]);
+  const [productName, setProductName] = useState<string>("Product Name");
   const [stats, setStats] = useState<ProductStats>({
     totalRevenue: 0,
     totalQuantitySold: 0,
@@ -46,7 +47,19 @@ function ProductReport() {
   useEffect(() => {
     // Fetch product orders
     if (!productId) return;
-    fetchProductOrders(productId).then((orders) => setProductOrders(orders as TOrder[]));
+    fetchProductOrders(productId).then((data) => {
+      const orders = data as TOrder[];
+      
+      setProductOrders(orders);
+
+      // search for the product name
+      if (orders.length > 0) {
+        const productName = orders[0].items.find((item) => item.productId === productId)?.name;
+        setProductName(productName || "Product Name");
+      }
+      
+    }
+    );
   }, []);
 
   useEffect(() => {
@@ -116,7 +129,8 @@ function ProductReport() {
   return (
     <div className="container mx-auto p-4">
       <div className="mb-8">
-        <p className="text-3xl font-bold mb-2">Product ID: {productId}</p>
+        <h1 className="text-3xl font-bold mb-2">{productName}</h1>
+        <p className="text-gray-600 mb-4">Product ID: {productId}</p>
 
         {/* Date Range Picker */}
         <div className="mb-4">
