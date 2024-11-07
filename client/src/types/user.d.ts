@@ -35,8 +35,11 @@ export type TUser = {
   description?: string;
   balance?: number;
   points?: number;
+  accumulativePoints?: number;
+  level?: Level;
   ratings?: TRating[];
   preferences?: string[];
+  wallet?: IWallet;
   nationalID?: string;
   taxRegistration?: string;
   certificates?: string[];

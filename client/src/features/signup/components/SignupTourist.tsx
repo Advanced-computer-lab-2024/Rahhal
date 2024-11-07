@@ -66,7 +66,9 @@ export default function SignupTourist() {
       nationality: data.nationality,
       job: data.job === "Yes" ? "Student" : data.jobDescription,
       points: 0,
-      balance: 0
+      balance: 0,
+      accumulativePoints: 0,
+      level: 1,
     };
 
     try {
@@ -85,7 +87,7 @@ export default function SignupTourist() {
         description: "User created successfully!",
         style: {
           backgroundColor: "#34D399",
-          color: "#000000",
+          color: "#FFFFFF",
         },
         duration: 3000,
       });
