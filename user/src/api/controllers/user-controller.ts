@@ -3,7 +3,7 @@ import * as userService from "@/services/user-service";
 import { STATUS_CODES } from "@/utils/constants";
 import { z } from "zod";
 import type { TRating } from "@/types";
-import { points , levels } from "@/utils/constants";
+import { POINTS , LEVELS } from "@/utils/constants";
 
 export async function getUserByUsername(req: Request, res: Response) {
   try {
@@ -111,24 +111,21 @@ export async function updateUserById(req: Request, res: Response) {
           return;
         } else { 
 
-          if(user.level === levels.level1) {
-            updatedUser.points = Math.ceil(user.points as number + amountPaid * points.level1PointRate);
-            updatedUser.accumulativePoints = Math.ceil(user.accumulativePoints as number + amountPaid * points.level1PointRate);
-           
+          if(user.level === levels.LEVEL1) {
+            updatedUser.points = Math.ceil(user.points as number + amountPaid * points.LEVEL1POINTRATE);  
           }
-          else if(user.level === levels.level2) {
-            updatedUser.points = Math.ceil(user.points as number + amountPaid * points.level2PointRate);
-            updatedUser.accumulativePoints = Math.ceil(user.accumulativePoints as number + amountPaid * points.level2PointRate);
+          else if(user.level === levels.LEVEL2) {
+            updatedUser.points = Math.ceil(user.points as number + amountPaid * points.LEVEL2POINTRATE); 
           }
           else {
-            updatedUser.points = Math.ceil(user.points as number + amountPaid * points.level3PointRate);
-            updatedUser.accumulativePoints = Math.ceil(user.accumulativePoints as number + amountPaid * points.level3PointRate);
+            updatedUser.points = Math.ceil(user.points as number + amountPaid * points.LEVEL3POINTRATE);
           }
+          updatedUser.accumulativePoints = Math.ceil(user.accumulativePoints as number + amountPaid * points.LEVEL1POINTRATE);
 
-          if(updatedUser.accumulativePoints >= points.level1maxPoints) {
-            updatedUser.level = levels.level2;
-          } else if(updatedUser.accumulativePoints >= points.level2maxPoints) {
-            updatedUser.level = levels.level3;
+          if(updatedUser.accumulativePoints >= points.LEVEL1MAXPOINTS) {
+            updatedUser.level = levels.LEVEL2;
+          } else if(updatedUser.accumulativePoints >= points.LEVEL2MAXPOINTS) {
+            updatedUser.level = levels.LEVEL3;
           } 
         }
       }
@@ -260,16 +257,16 @@ export async function redeemPoints(req: Request, res: Response) {
       res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Only tourists can redeem points" });
       return;
     } else if(user.points) {
-      if (user.points < points.minPoints) {
+      if (user.points < points.MINPOINTS) {
         res
           .status(STATUS_CODES.BAD_REQUEST)
           .json({ error: "You Have to have at least 10000 points to be able to redeem them!" });
         return;
       } else{
         const updatedUser = user;
-        const avgBalance = user.points / points.minPoints;
-        updatedUser.points = user.points % points.minPoints;
-        updatedUser.balance = user.balance as number + Math.floor(avgBalance) * points.amountForMinPoints;
+        const avgBalance = user.points / points.MINPOINTS;
+        updatedUser.points = user.points % points.MINPOINTS;
+        updatedUser.balance = user.balance as number + Math.floor(avgBalance) * points.AMOUNTFORMINPOINTS;
         console.log(updatedUser);
         const newUser = await userService.updateUserById(userId, updatedUser);
         res.status(STATUS_CODES.STATUS_OK).json(newUser);
