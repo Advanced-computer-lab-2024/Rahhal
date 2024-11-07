@@ -274,3 +274,69 @@ export interface IPlaceDetails {
   countryCode: string;
   name: string;
 }
+
+export interface FlightRequest {
+  originDestinations: {
+    originLocationCode: string;
+    destinationLocationCode: string;
+    departureDateTimeRange: {
+      date: string;
+      time: string;
+    };
+  }[];
+  travelers: {
+    id: string;
+    travelerType: string;
+  }[];
+  sources: string[];
+  searchCriteria: {
+    maxFlightOffers: number;
+  };
+}
+
+export interface FlightData {
+  meta: {
+    count: number;
+  };
+  data: {
+    offers?: FlightOffer
+  }[];
+  dictionaries: {
+    carriers: { [key: string]: string }
+  }
+}
+
+export interface FlightOffer {
+  id: string;
+  source: string;
+  instantTicketingRequired: boolean;
+  nonHomogeneous: boolean;
+  oneWay: boolean;
+  lastTicketingDate: string;
+  numberOfBookableSeats: number;
+  itineraries: {
+    segments: {
+      departure: {
+        iataCode: string;
+        at: string;
+      };
+      arrival: {
+        iataCode: string;
+        at: string;
+      };
+      carrierCode: string;
+      number: string;
+      aircraft: {
+        code: string;
+      };
+      operating: {
+        carrierCode: string;
+      };
+      duration: string;
+    }[];
+  }[];
+  price: {
+    currency: string;
+    total: string;
+  }
+}
