@@ -16,6 +16,9 @@ export async function createOrder(body: string) {
 export async function updateOrder(id: string, body: string) {
   return orderAxiosInstance.patch(`/orders/${id}`, body);
 }
+export async function rateProduct(id: string, body: string) {
+  return orderAxiosInstance.patch(`/orders/rate-product/${id}`, body);
+}
 export async function deleteOrder(id: string) {
   return orderAxiosInstance.delete(`/orders/${id}`);
 }

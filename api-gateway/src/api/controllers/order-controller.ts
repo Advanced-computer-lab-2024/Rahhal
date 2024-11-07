@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import * as orderService from "@/services/order-service";
 import { STATUS_CODES } from "@/utils/constants";
-import { OrderQueryParams } from "@/utils/types";
+import type { OrderQueryParams } from "@/utils/types";
 
 export async function getOrders(req: Request, res: Response) {
   try {
@@ -49,6 +49,17 @@ export async function updateOrder(req: Request, res: Response) {
     const orderData = req.body;
     const order = await orderService.updateOrder(orderId, orderData);
     res.status(order.status).json(order.data);
+  } catch (error) {
+    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
+  }
+}
+
+export async function rateProduct(req: Request, res: Response) {
+  try {
+    const orderId = req.params.id;
+    const ratingData = req.body;
+    const rating = await orderService.rateProduct(orderId, ratingData);
+    res.status(rating.status).json(rating.data);
   } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }

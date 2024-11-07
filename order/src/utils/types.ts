@@ -1,8 +1,8 @@
-import { OrderStatus } from "@/database/models/Order";
+import type { OrderStatus } from "@/database/models/Order";
 
 export interface OrderQueryParams {
-    userId?: string;
-    orderStatus?: OrderStatus;
-    seller?: string;
-    productId?: string;
-  }
+  userId?: string;
+  orderStatus?: OrderStatus;
+  seller?: string;
+  productId?: string;
+}
