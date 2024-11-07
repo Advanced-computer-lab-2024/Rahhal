@@ -34,22 +34,28 @@ export async function getPlaceAutocomplete(place: string, filter: string) {
     };
   });
 }
-
 export async function getPlaceDetailsById(placeId: string) {
-  const { data } = await axios.get(
-    `https://maps.googleapis.com/maps/api/geocode/json?place_id=${placeId}&key=${GOOGLE_MAPS_API_KEY}`,
-  );
-  const { formatted_address, geometry, address_components } = data.results[CONSTANTS.ZERO];
+  const { data } = await axios.get("https://maps.googleapis.com/maps/api/place/details/json", {
+    params: {
+      place_id: placeId,
+      fields: "name,formatted_address,geometry,address_component",
+      key: GOOGLE_MAPS_API_KEY,
+    },
+  });
 
+  const { name, formatted_address, geometry, address_components } = data.result;
+
+  // Extract country code from address components
   const countryComponent = address_components.find((component: AddressComponent) =>
     component.types.includes("country"),
   );
   const countryCode = countryComponent ? countryComponent.short_name : null;
 
   return {
+    name: name,
     description: formatted_address,
     location: geometry.location,
-    countryCode,
+    countryCode: countryCode,
   };
 }
 
