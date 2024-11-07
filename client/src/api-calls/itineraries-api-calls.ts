@@ -11,9 +11,25 @@ export const fetchItineraries = async () => {
   return response.data;
 };
 
+// fetch itinerary by id
+export const fetchItineraryById = async (itineraryId: string) => {
+  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/itineraries/${itineraryId}`);
+  return response.data;
+};
+
 // fetch only active-appropriate itineraries
 export const fetchActiveAppropriateItineraries = async () => {
   const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + "/itineraries/active-appropriate");
+  return response.data;
+};
+
+export const fetchUserItineraries = async (userId: string) => {
+  const response = await axios.get(SERVICES_URLS.USER + `/users/${userId}/itineraries`);
+  return response.data;
+};
+
+export const fetchItinerariesByOwner = async (ownerId: string) => {
+  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/itineraries/${ownerId}`);
   return response.data;
 };
 
@@ -27,9 +43,13 @@ export const deleteItinerary = async (itinerary: TItinerary) => {
 
 // submit itinerary to the itineraries endpoint
 export async function updateItinerary(itineraryData: TItinerary, itineraryImages: FileList | null) {
-  const urls: string[] = await uploadToFirebase(itineraryImages, itineraryData.owner, itineraryData._id, renameItineraryImage);
+  const urls: string[] = await uploadToFirebase(
+    itineraryImages,
+    itineraryData.owner,
+    itineraryData._id,
+    renameItineraryImage,
+  );
 
-  
   itineraryData.images = [...itineraryData.images, ...urls];
 
   await axios.patch(
@@ -40,13 +60,21 @@ export async function updateItinerary(itineraryData: TItinerary, itineraryImages
   window.location.reload();
 }
 
-export async function createItinerary(newItineraryData: TNewItinerary, userId: string, itineraryImages: FileList | null) {
+export async function createItinerary(
+  newItineraryData: TNewItinerary,
+  userId: string,
+  itineraryImages: FileList | null,
+) {
   newItineraryData.owner = userId;
   const response = await axios.post(SERVICES_URLS.ENTERTAINMENT + "/itineraries", newItineraryData);
   const itineraryId = (response.data as TItinerary)._id;
-  const urls: string[] = await uploadToFirebase(itineraryImages, userId, itineraryId, renameItineraryImage);
+  const urls: string[] = await uploadToFirebase(
+    itineraryImages,
+    userId,
+    itineraryId,
+    renameItineraryImage,
+  );
 
-  
   newItineraryData.images = urls;
 
   await axios.patch(`${SERVICES_URLS.ENTERTAINMENT}/itineraries/${itineraryId}`, newItineraryData);
