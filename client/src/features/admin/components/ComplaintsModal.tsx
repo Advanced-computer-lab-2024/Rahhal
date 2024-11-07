@@ -101,12 +101,18 @@ export function ComplaintsModal({ complaintData, dialogTrigger }: ComplaintsModa
       </div>
       <div className="pt-4 space-y-4">
         <Label>Previous Replies</Label>
-        {modalComplaintData?.replies.map((reply, index) => (
-          <li className="text-sm font-medium" key={index}>
-            {" "}
-            {reply}{" "}
-          </li>
-        ))}
+        {modalComplaintData?.replies.length !== 0 ? (
+          modalComplaintData?.replies.map((reply, index) => (
+            <li className="text-sm font-medium" key={index}>
+              {" "}
+              {reply}{" "}
+            </li>
+          ))
+        ) : (
+          <p className="text-sm" style={{ color: "gray" }}>
+            No Replies Yet
+          </p>
+        )}
       </div>
       <ShortText
         title="Add a Reply"

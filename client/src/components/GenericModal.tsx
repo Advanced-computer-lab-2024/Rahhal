@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import React from "react";
+import React, { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface GenericModalProps {
@@ -26,17 +26,19 @@ export function GenericModal({
   children,
   onSubmit,
 }: GenericModalProps) {
-  const handleSubmit = (event: any) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
-    onSubmit();
+    await onSubmit();
+    setIsOpen(false);
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>{dialogTrigger}</DialogTrigger>
+    <Dialog open = {isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger onClick={()=>setIsOpen(true)} asChild>{dialogTrigger}</DialogTrigger>
 
       <DialogContent className="max-w-[90vw] max-h-[90vh] w-1/2 h-full flex flex-col">
-        <DialogHeader>
+        <DialogHeader >
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
