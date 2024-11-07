@@ -4,7 +4,6 @@
     align-items: center;
     
     border-bottom: 1px solid #e0e0e0;
-   
     margin-bottom: 1rem;
   }
   
@@ -36,8 +35,10 @@
     color: #007bff;
     text-decoration: none;
     margin-top: 0.5rem;
+    cursor: pointer;
   }
   
   .rate:hover {
     text-decoration: underline;
+
   }
