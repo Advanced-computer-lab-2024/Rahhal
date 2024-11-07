@@ -27,3 +27,11 @@ export enum RateableEntityType {
   PRODUCT = "product",
   USER = "user",
 }
+
+export enum OrderStatus {
+  received = "received",
+  processing = "processing",
+  shipped = "shipped",
+  delivered = "delivered",
+  cancelled = "cancelled",
+}

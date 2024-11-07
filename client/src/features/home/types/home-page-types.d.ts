@@ -1,6 +1,46 @@
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
 
+
+export interface IOrder {
+  _id: Types.ObjectId;
+  userId: string;
+  orderDate: Date;
+  orderStatus: OrderStatus;
+  paymentMethod: PaymentMethod;
+  items: IItem[];
+  totalPrice: number;
+  totalQuantity: number;
+  promoCode?: string;
+  discountAmount?: number;
+  billingAddress?: string;
+  shippingAddress: string;
+}
+export interface IItem {
+  name: string;
+  price: number;
+  quantity: number;
+  seller: string;
+  picture: string; // this will be needed if we want to display the item picture in the order history
+  productId: string;
+}
+
+export type TOrder = {
+  _id: string;
+  userId: string;
+  orderDate: Date;
+  orderStatus: OrderStatus;
+  paymentMethod: PaymentMethod;
+  items: IItem[];
+  totalPrice: number;
+  totalQuantity: number;
+  promoCode?: string;
+  discountAmount?: number;
+  billingAddress?: string;
+  shippingAddress: string;
+}
+
+
 export interface IBooking {
   user: string;
   entity: string;
