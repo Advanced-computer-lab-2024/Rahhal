@@ -10,6 +10,7 @@ import { RateableEntityType } from "@/utils/enums";
 import { TRating } from "@/features/home/types/home-page-types";
 import { fetchUserOrders } from "@/api-calls/order-api-calls";
 import { TOrder } from "@/features/home/types/home-page-types";
+import { useToast } from "@/hooks/use-toast";
 
 
 
@@ -23,6 +24,8 @@ const formatOrderDate = (dateString: Date) => {
 };
 
 export const MyOrdersPage = () => {
+
+  const { toast } = useToast();
   const { id } = useParams<{ id: string }>();
   const [showAll, setShowAll] = useState(false);
   const [showItems, setShowItems] = useState(false);
@@ -38,7 +41,7 @@ export const MyOrdersPage = () => {
   };
   
   const handleShowItems = (orderId: string) => {
-    setShowItems(!showItems);
+    setShowItems(true);
     setSelectedOrderId(orderId); 
     if(showRating && showItems)
       setShowRating(!showRating);
@@ -54,10 +57,22 @@ export const MyOrdersPage = () => {
         review: values.comment,
       };
       await createRating(ratingData, RateableEntityType.PRODUCT, selectedProductId as string); // Use selectedProductId here
-      console.log("Rating submitted successfully:", ratingData);
+      toast({
+        title: "success Rating submitted successfully",
+        style:{
+          backgroundColor: "#34D399",
+          color: "white",
+          height: "11vh",
+        },
+        duration:3500
+
+      });
       setShowRating(false);
     } catch (error) {
       console.error("Failed to submit rating:", error);
+      toast({
+        title: "error Failed to submit rating"+error,
+      })
     }
   };
   const {
