@@ -9,11 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { TermsAndConditionsModal } from "./TermsAndConditionsModal";
 import { termsAndConditions } from "../terms-and-conditions/AdvertiserTermsAndConditions";
 import { advertiserSchema } from "../utils/ZodSchemas/advertiserSchema";
-import { createUser } from "@/api-calls/users-api-calls";
+import { createUser,updateUser } from "@/api-calls/users-api-calls";
+import { uploadToFirebaseReady } from "@/utils/firebase";
+
 
 type AdvertiserFormData = z.infer<typeof advertiserSchema>;
 
@@ -53,19 +55,48 @@ export default function SignupAdvertiser() {
       hotline: data.hotline,
       companyProfile: data.companyProfile,
       role: "advertiser",
+      nationalId: "",
+      taxRegistration: "",
+      balance : 0
     };
 
     try {
       toast({
         title: "Creating User",
         description: "Please wait while we create your account",
-        duration: 1500,
+        duration: 4500,
       });
-      const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-      await delay(4500);
-
+      let urls: string[] = new Array();
+      
       const response: any = await createUser(reqBody);
+
+
+      if(data.nationalID && data.taxRegistration){
+        const nationalId:string = `documents/${response._id}/nationalID`;
+        const newFileNationalId = new File([data.nationalID ], nationalId,{ type: data.nationalID.type });
+
+        const taxReg: string = `documents/${response._id}/taxRegistration`;
+        const newFileTaxReg = new File([data.taxRegistration ], taxReg,{ type: data.taxRegistration.type });
+
+       
+        const filesFileList: File[] = [newFileNationalId, newFileTaxReg];
+        urls = await uploadToFirebaseReady(filesFileList);
+
+
+        const documents = {
+          "nationalID" : urls[0],
+          "taxRegistration" : urls[1]
+        };
+
+        const responseUpdate: any = updateUser(response, documents);
+
+        console.log("Server response:", responseUpdate);
+      }
+      console.log(data.nationalID);
+      console.log("Server response:", response);
+      console.log("Firebase URLs:", urls);
+
+      
       console.log("Server response:", response);
 
       toast({
@@ -110,6 +141,7 @@ export default function SignupAdvertiser() {
           title: "Error",
           description: error.response.data.error,
           variant: "destructive",
+
           duration: 3000,
         });
       } else {
@@ -118,9 +150,8 @@ export default function SignupAdvertiser() {
           description: "An unexpected error occurred",
           variant: "destructive",
           duration: 3000,
-        });
+        });   
       }
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -322,7 +353,7 @@ export default function SignupAdvertiser() {
             <Controller
               name="nationalID"
               control={control}
-              render={({ field: { onChange } }) => (
+              render={({ field: { onChange, value, ...field } }) => (
                 <div>
                   <Label htmlFor="nationalID" className={errors.nationalID ? "text-red-500" : ""}>
                     National ID
@@ -330,8 +361,13 @@ export default function SignupAdvertiser() {
                   <Input
                     id="nationalID"
                     type="file"
-                    onChange={(e) => onChange(e.target.files?.[0])}
-                    // {...field}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        onChange(file);
+                      }
+                    }}
+                    {...field}
                     className={errors.nationalID ? "border-red-500" : ""}
                     disabled={isSubmitting}
                   />
@@ -345,7 +381,7 @@ export default function SignupAdvertiser() {
             <Controller
               name="taxRegistration"
               control={control}
-              render={({ field: { onChange } }) => (
+              render={({ field: { onChange, value, ...field } }) => (
                 <div>
                   <Label
                     htmlFor="taxRegistration"
@@ -356,8 +392,13 @@ export default function SignupAdvertiser() {
                   <Input
                     id="taxRegistration"
                     type="file"
-                    onChange={(e) => onChange(e.target.files?.[0])}
-                    // {...field}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        onChange(file);
+                      }
+                    }}
+                    {...field}
                     className={errors.taxRegistration ? "border-red-500" : ""}
                     disabled={isSubmitting}
                   />

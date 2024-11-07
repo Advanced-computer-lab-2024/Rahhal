@@ -87,7 +87,6 @@ const SignupSelector = () => {
           transition-all duration-500 ease-in-out transform h-full p-6
           ${selectedRole ? "w-1/2 translate-x-0" : "w-1/2 translate-x-full"}
         `}
-        // style={{backgroundColor: '#E1BC60'}}
       >
         {selectedRole ? (
           <div className="h-full flex flex-col opacity-100 transition-opacity duration-300 delay-300">
