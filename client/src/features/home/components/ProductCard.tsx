@@ -2,6 +2,7 @@ import currencyExchange from "@/utils/currency-exchange";
 import CardStyles from "../styles/ProductCard.module.css";
 import { IoMdStar } from "react-icons/io";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
+import { getPriceValue } from "../utils/price-calculator";
 
 interface ProductCardProps {
   title: string;
@@ -18,27 +19,6 @@ export interface IRating {
   review?: string;
 }
 
-export const getPriceValue = (
-  price:
-    | number
-    | { min: number; max: number }
-    | { foreigner: number; native: number; student: number }
-    | { type: string; price: number }[],
-) => {
-  if (price === undefined || price === null) {
-    return 0; // Return a default value (0) when price is not defined
-  }
-  if (typeof price === "number") return price;
-  if ("min" in price && "max" in price) return price.min;
-  if ("foreigner" in price && "native" in price && "student" in price)
-    return Math.min(price.foreigner, price.native, price.student);
-  if (Array.isArray(price)) {
-    return price.length > 0 ? Math.min(...price.map((p) => p.price)) : 0;
-  }
-
-  return 0;
-};
-
 const ProductCard: React.FC<ProductCardProps> = ({
   title,
   picture,
@@ -47,7 +27,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   rating,
   onClick,
 }) => {
-
   const basePrice = getPriceValue(price);
   const { currency } = useCurrencyStore();
   const convertedPrice = currencyExchange("EGP", basePrice);

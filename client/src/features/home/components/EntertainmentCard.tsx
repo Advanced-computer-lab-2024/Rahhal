@@ -2,7 +2,7 @@ import CardStyles from "../styles/EntertainmentCard.module.css";
 import { IoMdStar } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
 import { GrLanguage } from "react-icons/gr";
-import { getPriceValue } from "./GeneralGridView";
+import { getPriceValue } from "../utils/price-calculator";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import currencyExchange from "@/utils/currency-exchange";
 interface EntertainmentCardProps {
@@ -34,11 +34,10 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
   seller,
   onClick,
 }) => {
-
   const basePrice = getPriceValue(price);
-  const { currency } = useCurrencyStore(); 
+  const { currency } = useCurrencyStore();
   const convertedPrice = currencyExchange("EGP", basePrice);
-  const displayPrice = convertedPrice ? convertedPrice.toFixed(0): "N/A";
+  const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
 
   return (
     <>
@@ -105,7 +104,11 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
           </div>
 
           <div className={CardStyles["entertainment-card-container__price"]}>
-            {seller === undefined && <p>From {displayPrice} {currency}</p>}
+            {seller === undefined && (
+              <p>
+                From {displayPrice} {currency}
+              </p>
+            )}
           </div>
         </div>
       </div>
