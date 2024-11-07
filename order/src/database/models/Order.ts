@@ -27,7 +27,6 @@ export interface IItem {
 export interface IOrder {
   _id: Types.ObjectId;
   userId: string;
-  orderDate: Date;
   orderStatus: OrderStatus;
   paymentMethod: PaymentMethod;
   items: IItem[];
@@ -37,33 +36,41 @@ export interface IOrder {
   discountAmount?: number;
   billingAddress?: string;
   shippingAddress: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const orderSchema = new Schema<IOrder>({
-  userId: { type: String, required: true },
-  orderDate: { type: Date, required: true },
-  orderStatus: { type: String, enum: Object.values(OrderStatus), default: OrderStatus.processing },
-  paymentMethod: { type: String, required: true, enum: Object.values(PaymentMethod) },
-  items: {
-    type: [
-      {
-        name: String,
-        price: Number,
-        quantity: Number,
-        seller: String,
-        picture: String,
-        productId: String,
-      },
-    ],
-    required: true,
+const orderSchema = new Schema<IOrder>(
+  {
+    userId: { type: String, required: true },
+    orderStatus: {
+      type: String,
+      enum: Object.values(OrderStatus),
+      default: OrderStatus.processing,
+    },
+    paymentMethod: { type: String, required: true, enum: Object.values(PaymentMethod) },
+    items: {
+      type: [
+        {
+          name: String,
+          price: Number,
+          quantity: Number,
+          seller: String,
+          picture: String,
+          productId: String,
+        },
+      ],
+      required: true,
+    },
+    totalPrice: { type: Number, required: true },
+    totalQuantity: { type: Number, required: true },
+    promoCode: { type: String },
+    discountAmount: { type: Number },
+    billingAddress: { type: String },
+    shippingAddress: { type: String, required: true },
   },
-  totalPrice: { type: Number, required: true },
-  totalQuantity: { type: Number, required: true },
-  promoCode: { type: String },
-  discountAmount: { type: Number },
-  billingAddress: { type: String },
-  shippingAddress: { type: String, required: true },
-});
+  { timestamps: true },
+);
 
 const Order = model<IOrder>("Order", orderSchema);
 
