@@ -8,18 +8,18 @@ export const STATUS_CODES = {
   UNPROCESSABLE_ENTITY: 422,
 };
 
-export const points = {
-  level1maxPoints: 100000,
-  level1PointRate: 0.5,
-  level2maxPoints: 500000,
-  level2PointRate: 1,
-  level3PointRate: 1.5,
-  minPoints: 10000,
-  amountForMinPoints: 100,
+export const POINTS = {
+  LEVEL1MAXPOINTS: 100000,
+  LEVEL1POINTRATE: 0.5,
+  LEVEL2MAXPOINTS: 500000,
+  LEVEL2POINTRATE: 1,
+  LEVEL3POINTRATE: 1.5,
+  MINPOINTS: 10000,
+  AMOUNTFORMINPOINTS: 100,
 };
 
-export const levels = {
-  level1: 1,
-  level2: 2,
-  level3: 3,
+export const LEVELS = {
+  LEVEL1: 1,
+  LEVEL2: 2,
+  LEVEL3: 3,
 }
