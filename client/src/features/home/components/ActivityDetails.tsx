@@ -10,14 +10,18 @@ import SharePopover from "@/components/SharePopover";
 import { OverviewCard } from "./overview-card/OverViewCard";
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { calculateAverageRating } from "@/features/admin/utils/columns-definitions/activities-columns";
-import { TBookingStatus, TBookingType, TPopulatedBooking } from "../types/home-page-types";
+import { IBooking, TBookingType, TPopulatedBooking } from "../types/home-page-types";
 import {
   addLoyaltyPointsByAmountPaid,
   getUserById,
   removeLoyaltyPointsByAmountRefunded,
 } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
-import { updateBookingRequest } from "@/api-calls/booking-api-calls";
+import {
+  createBooking,
+  fetchUserBookings,
+  updateBookingRequest,
+} from "@/api-calls/booking-api-calls";
 import { toast } from "@/hooks/use-toast";
 import { RatingFormDialog } from "./RatingFormDialog";
 import { formatDate, formatTime } from "../utils/filter-lists/overview-card";
@@ -61,19 +65,75 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
   }, [activity.preferenceTags]);
 
   React.useEffect(() => {
+    if (userId == "undefined" || userId == undefined) {
+      setIsButtonDisabled(true);
+      return;
+    }
     getUserById(userId).then((user) => {
-      // check if user is not approved or is under 18 years old
+      // check if user is not approved or is under 18 years old or if the booking is cancelled & the selected date has passed
       if (
         user.approved === false ||
-        (user.dob && user.dob > new Date(new Date().setFullYear(new Date().getFullYear() - 18)))
+        (user.dob && user.dob > new Date(new Date().setFullYear(new Date().getFullYear() - 18))) ||
+        (booking &&
+          booking?.status === "cancelled" &&
+          booking?.selectedDate &&
+          selectedDate &&
+          new Date(selectedDate) < new Date()) ||
+        (!booking && selectedDate && new Date(selectedDate) < new Date())
       ) {
         setIsButtonDisabled(true);
       }
     });
   }, []);
 
+  // check if user has already booked this activity if booking is null
+  React.useEffect(() => {
+    if (booking?._id !== "" || userId === "undefined") return;
+
+    const bookingType: TBookingType = {
+      user: userId,
+      entity: activity._id ?? "",
+      type: "activity",
+    };
+
+    fetchUserBookings(userId).then((bookings) => {
+      const userBookings = bookings as unknown as TPopulatedBooking[];
+      const userBooking = userBookings.find(
+        (booking) => booking.entity._id === activity._id && booking.type === "activity",
+      );
+
+      if (userBooking) {
+        setBooking(userBooking);
+        // change bookingId in URL
+        setTimeout(() => {
+          window.location.href = `/my-trips-details?userId=${userId}&eventId=${activity._id}&bookingId=${userBooking._id}&type=activity`;
+        }, 500);
+      }
+    });
+  }, []);
+
   const handleButtonClick = () => {
-    if (booking?.status === "cancelled") {
+    if (booking?._id === "") {
+      createBooking({
+        user: userId,
+        entity: activity._id ?? "",
+        type: "activity",
+        status: "upcoming",
+        selectedPrice: booking.selectedPrice,
+        selectedDate: selectedDate ? new Date(selectedDate) : new Date(),
+      }).then((response) => {
+        const booking = response as TPopulatedBooking;
+
+        // update bookingId in URL
+        setTimeout(() => {
+          window.location.href = `/my-trips-details?userId=${userId}&eventId=${activity._id}&bookingId=${booking._id}&type=activity`;
+        }, 500);
+      });
+
+      return;
+    }
+
+    if (booking && booking?.status === "cancelled") {
       if (booking?._id) {
         updateBookingRequest(booking._id, {
           status: "upcoming",
@@ -86,12 +146,12 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
           selectedDate: selectedDate ? new Date(selectedDate) : new Date(),
         });
       }
-    } else if (booking?.status === "completed") {
+    } else if (booking && booking?.status === "completed") {
       // redirect to review page
       ratingFormRef.current?.click();
     } else {
       // cancel activity if there is still 48 hours left
-      if (booking?._id && booking.selectedDate) {
+      if (booking && booking?._id && booking.selectedDate) {
         const currentDate = new Date();
         const selectedDate = new Date(booking.selectedDate);
         const difference = Math.abs(selectedDate.getTime() - currentDate.getTime());
@@ -117,14 +177,14 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
   const formattedTime = formatTime(activityDate);
 
   const cardButtonText =
-    booking?.status === "cancelled"
+    !booking || booking?.status === "cancelled"
       ? "Book Activity"
-      : booking?.status === "completed"
+      : booking && booking?.status === "completed"
         ? "Review Activity"
         : "Cancel Activity";
 
   const cardDropdownOptions =
-    booking?.status === "cancelled"
+    booking && booking?.status === "cancelled"
       ? [{ value: date.toString(), label: formattedDate + " " + formattedTime }]
       : undefined;
 
@@ -193,9 +253,6 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
                 {tag}
               </div>
             ))}
-
-          
-
           </div>
 
           {/* Author and Description */}
@@ -220,30 +277,22 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
             originalPrice={booking?.selectedPrice ?? 0}
             buttonText={cardButtonText}
             buttonColor={booking?.status === "upcoming" ? "red" : "gold"}
-            date={
-              booking?.status === "upcoming" || booking?.status === "completed"
-                ? formattedDate
-                : undefined
-            }
-            time={
-              booking?.status === "upcoming" || booking?.status === "completed"
-                ? formattedTime
-                : undefined
-            }
+            date={booking ? formattedDate : undefined}
+            time={booking ? formattedTime : undefined}
             dropdownOptions={cardDropdownOptions}
-            dateOptions={booking?.status === "cancelled"}
+            
             disabled={isButtonDisabled}
             onButtonClick={handleButtonClick}
             discountedPrice={
-              specialDiscount != 0 && booking?.selectedPrice
+              specialDiscount != 0 && booking && booking?.selectedPrice
                 ? booking.selectedPrice - (booking.selectedPrice * specialDiscount) / 100
                 : undefined
             }
-            onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
-            onTicketSelect={(index) => {
+            
+            onTicketSelect={(booking && booking?.status === "cancelled") ? (index) => {
               setBooking({ ...booking!, selectedPrice: price[Object.keys(price)[index]] });
-            }}
-            tickets={tickets}
+            } : undefined}
+            tickets={(booking && booking?.status === "cancelled" ? tickets : [`${booking?.selectedPrice}`])}
           />
         </div>
       </div>

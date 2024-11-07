@@ -9,14 +9,14 @@ import SharePopover from "@/components/SharePopover";
 import { OverviewCard } from "./overview-card/OverViewCard";
 
 import { calculateAverageRating } from "@/features/admin/utils/columns-definitions/activities-columns";
-import { TPopulatedBooking } from "../types/home-page-types";
+import { TBookingType, TPopulatedBooking } from "../types/home-page-types";
 import {
   addLoyaltyPointsByAmountPaid,
   getUserById,
   removeLoyaltyPointsByAmountRefunded,
 } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
-import { updateBookingRequest } from "@/api-calls/booking-api-calls";
+import { createBooking, fetchUserBookings, updateBookingRequest } from "@/api-calls/booking-api-calls";
 import { toast } from "@/hooks/use-toast";
 import { RatingFormDialog } from "./RatingFormDialog";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
@@ -50,7 +50,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
     ratings,
     timeline,
     accessibility,
-    languages
+    languages,
   } = itinerary;
 
   const [rating, setRating] = React.useState(0);
@@ -85,26 +85,97 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
       // check if user is not approved or is under 18 years old
       if (
         user.approved === false ||
-        (user.dob && user.dob > new Date(new Date().setFullYear(new Date().getFullYear() - 18)))
+        (user.dob && user.dob > new Date(new Date().setFullYear(new Date().getFullYear() - 18))) ||
+        (booking && booking?.status === "cancelled" &&
+          booking?.selectedDate &&
+          selectedDate &&
+          new Date(selectedDate) < new Date())
       ) {
         setIsButtonDisabled(true);
       }
     });
+  }, [selectedDate]);
+
+
+  React.useEffect(() => {
+    if (userId == "undefined" || userId == undefined) {
+      setIsButtonDisabled(true);
+      return;
+    }
+  }
+  , [userId]);
+
+  // check if user has already booked this activity if booking is null
+  React.useEffect(() => {
+    if (booking?._id !== "" || userId === "undefined") return;
+
+    const bookingType: TBookingType = {
+      user: userId,
+      entity: itinerary._id ?? "",
+      type: "itinerary",
+    };
+
+    fetchUserBookings(userId).then((bookings) => {
+      const userBookings = bookings as unknown as TPopulatedBooking[];
+      const userBooking = userBookings.find(
+        (booking) => booking.entity._id === itinerary._id && booking.type === "itinerary"
+      );
+
+      if (userBooking) {
+        setBooking(userBooking);
+        // change bookingId in URL
+        setTimeout(() => {
+          window.location.href = `/my-trips-details?userId=${userId}&eventId=${itinerary._id}&bookingId=${userBooking._id}&type=itinerary`;
+        }, 500);
+      }
+    });
   }, []);
+  
 
   const handleButtonClick = () => {
-    if (booking?.status === "cancelled") {
-      if (booking?._id) {
-        updateBookingRequest(booking._id, { status: "upcoming", selectedDate: selectedDate ? new Date(selectedDate) : undefined });
-        addLoyaltyPointsByAmountPaid(userId, booking.selectedPrice);
-        setBooking({ ...booking, status: "upcoming", selectedDate: selectedDate ? new Date(selectedDate) : new Date() });
+
+    if (booking?._id == ""){
+      createBooking({
+        user: userId,
+        entity: itinerary._id ?? "",
+        type: "itinerary",
+        status: "upcoming",
+        selectedPrice: price,
+        selectedDate: selectedDate ? new Date(selectedDate) : new Date(),
+      }).then((booking) => {
+        const response = booking as TPopulatedBooking;
+        setBooking(response);
+        // update bookingId in the URL
+        setTimeout(() => {
+          window.location.href = `/my-trips-details?userId=${userId}&eventId=${itinerary._id}&bookingId=${response._id}&type=itinerary`;
+        }, 500);
       }
-    } else if (booking?.status === "completed") {
+      );
+
+      return;
+
+    }
+
+
+    if (booking && booking?.status === "cancelled") {
+      if (booking?._id) {
+        updateBookingRequest(booking._id, {
+          status: "upcoming",
+          selectedDate: selectedDate ? new Date(selectedDate) : undefined,
+        });
+        addLoyaltyPointsByAmountPaid(userId, booking.selectedPrice);
+        setBooking({
+          ...booking,
+          status: "upcoming",
+          selectedDate: selectedDate ? new Date(selectedDate) : new Date(),
+        });
+      }
+    } else if (booking && booking?.status === "completed") {
       // redirect to review page
       ratingFormRef.current?.click();
     } else {
       // cancel activity if there is still 48 hours left
-      if (booking?._id && booking.selectedDate) {
+      if (booking && booking?._id && booking.selectedDate) {
         const currentDate = new Date();
         const selectedDate = new Date(booking.selectedDate);
         const difference = Math.abs(selectedDate.getTime() - currentDate.getTime());
@@ -125,14 +196,14 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
   };
 
   const cardButtonText =
-    booking?.status === "cancelled"
+    booking && booking?.status === "cancelled" || !booking
       ? "Book Activity"
-      : booking?.status === "completed"
+      : booking && booking?.status === "completed"
         ? "Review Activity"
         : "Cancel Activity";
 
   const cardDropdownOptions =
-    booking?.status === "cancelled" && availableDatesTime
+    booking && booking?.status === "cancelled" && availableDatesTime
       ? availableDatesTime.map((date) => ({
           value: date.Date.toString(),
           label: formatDate(new Date(date.Date)) + " " + formatTime(new Date(date.Time)),
@@ -228,7 +299,6 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
                 {language}
               </div>
             ))}
-
           </div>
 
           {/* Author and Description */}
@@ -272,21 +342,20 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
             buttonText={cardButtonText}
             buttonColor={booking?.status === "upcoming" ? "red" : "gold"}
             date={
-              booking?.status === "upcoming" || booking?.status === "completed"
+              booking && booking?.status === "upcoming" || booking && booking?.status === "completed"
                 ? formatDate(new Date(booking.selectedDate))
                 : undefined
             }
             time={
-              booking?.status === "upcoming" || booking?.status === "completed"
+              booking && booking?.status === "upcoming" || booking && booking?.status === "completed"
                 ? formatDate(new Date(booking.selectedDate))
                 : undefined
             }
             dropdownOptions={cardDropdownOptions}
-            dateOptions={booking?.status === "cancelled"}
+            dateOptions={booking ? booking.status === "cancelled" : undefined}
             disabled={isButtonDisabled}
             onButtonClick={handleButtonClick}
             onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
-
           />
         </div>
       </div>

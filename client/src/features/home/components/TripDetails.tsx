@@ -9,6 +9,7 @@ import { fetchItineraryById } from '@/api-calls/itineraries-api-calls';
 import ActivityDetailsPage from './ActivityDetails';
 import ItineraryDetailsPage from './ItineraryDetails';
 import { fetchBookingById } from '@/api-calls/booking-api-calls';
+import { DEFAULT_ACTIVITY_BOOKING, DEFAULT_ITINERARY_BOOKING } from '../utils/constants';
 
 
 export function TripDetails() {
@@ -18,6 +19,10 @@ export function TripDetails() {
     
     const bookingId = searchParams.get('bookingId');
 
+    const eventId = searchParams.get('eventId');
+
+    const type = searchParams.get('type');
+
     const [eventDetails, setEventDetails] = React.useState<TActivity | TItinerary | null>(null);
     const [booking, setBooking] = React.useState<TPopulatedBooking | null>(null);
     
@@ -26,7 +31,7 @@ export function TripDetails() {
       
         
         
-        if (bookingId) {
+        if (bookingId && bookingId !== 'null') {
           // fetch booking details
           fetchBookingById(bookingId).then((booking) => {
             setBooking(booking);
@@ -52,9 +57,24 @@ export function TripDetails() {
 
           }
           });
+        }else if (eventId) {
+          
+          if (type === 'activity') {
+            fetchActivityById(eventId).then((activity) => {
+              setEventDetails(activity as TActivity);
+              setBooking(({...DEFAULT_ACTIVITY_BOOKING, entity: activity} as TPopulatedBooking));
+            });
+          } else if (type === 'itinerary') {
+            fetchItineraryById(eventId).then((itinerary) => {
+              setEventDetails(itinerary as TItinerary);
+              setBooking(({...DEFAULT_ITINERARY_BOOKING, entity: itinerary} as TPopulatedBooking));
+            });
+          }
+
+
         }
         
-    }, [userId, bookingId]);
+    }, [userId, bookingId, eventId, type]);
 
     
   return (
@@ -62,13 +82,13 @@ export function TripDetails() {
       
       {
         eventDetails && (booking?.type === 'activity') && (
-          <ActivityDetailsPage activity={eventDetails as TActivity} userId={userId ?? ''} initialBooking={booking} />
+          <ActivityDetailsPage activity={eventDetails as TActivity} userId={userId ?? ''} initialBooking={(booking) ? booking : DEFAULT_ACTIVITY_BOOKING} />
         )
       }
 
       {
         eventDetails && (booking?.type === 'itinerary') && (
-          <ItineraryDetailsPage  itinerary={eventDetails as TItinerary} userId={userId ?? ''} initialBooking={booking} />
+          <ItineraryDetailsPage  itinerary={eventDetails as TItinerary} userId={userId ?? ''} initialBooking={(booking) ? booking : DEFAULT_ITINERARY_BOOKING} />
         )
       }
 

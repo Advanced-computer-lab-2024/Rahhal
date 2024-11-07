@@ -3,6 +3,7 @@ import EntertainmentCard from "@/features/home/components/EntertainmentCard";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import FilterSortSearchHeader from "./FilterSortSearchHeader";
 import FilterSideBar from "@/features/home/components/filter-sidebar/FilterSideBar";
@@ -51,6 +52,8 @@ function GeneralGridView() {
   const [selectedLanguages, setSelectedLanguages] = useState<Option[]>([]);
   const [selectedHistoricalTags, setSelectedHistoricalTags] = useState<Option[]>([]);
   const [sortOption, setSortOption] = useState<SortOption | null>(null);
+
+  
 
   const { id } = useParams<{ id: string }>();
   // useQueries
@@ -118,7 +121,12 @@ function GeneralGridView() {
 
   const handleCardClick = (item: Itinerary | Activity | HistoricalPlace) => {
     // Navigate to detail page, pass the item data via state
-    navigate(`/details/${item._id}`, { state: { item } });
+    const type = 'languages' in item ? "itinerary" : 'isBookingOpen' in item ? "activity" : "historicalPlace";
+    if (type === "historicalPlace"){
+      navigate(`/details/${item._id}`, { state: { item } });
+      return;
+    }
+    navigate(`/my-trips-details?userId=${id}&eventId=${item._id}&bookingId=null&type=${type}`, { state: { item } });
   };
 
   //fetching data

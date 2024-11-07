@@ -25,19 +25,17 @@ export async function fetchBookingById(bookingId: string): Promise<TPopulatedBoo
   return response.data as TPopulatedBooking;
 }
 
-export async function createBooking(bookingData: TBookingType) {
-  const newBooking = {
-    user: bookingData.user,
-    entity: bookingData.entity,
-    type: bookingData.type,
-  };
+export async function createBooking(bookingData: TBookingType | IBooking) {
+  
   try {
-    const response = await axios.post(SERVICES_URLS.BOOKING + `/bookings`, newBooking);
+    const response = await axios.post(SERVICES_URLS.BOOKING + `/bookings`, bookingData);
     return response.data;
   } catch (error) {
     console.error("Error creating booking:", error);
   }
 }
+
+
 
 export async function updateBookingRequest(id: string, bookingData: Partial<IBooking>) {
   const response = await axios.patch(`${SERVICES_URLS.BOOKING}/bookings/${id}`, bookingData);
