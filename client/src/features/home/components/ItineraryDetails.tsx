@@ -10,13 +10,13 @@ import { OverviewCard } from "./overview-card/OverViewCard";
 
 import { calculateAverageRating } from "@/features/admin/utils/columns-definitions/activities-columns";
 import { TBookingType, TPopulatedBooking } from "../types/home-page-types";
-import {
-  addLoyaltyPointsByAmountPaid,
-  getUserById,
-  removeLoyaltyPointsByAmountRefunded,
-} from "@/api-calls/users-api-calls";
+import { addLoyalityPoints, getUserById, refundMoney } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
-import { createBooking, fetchUserBookings, updateBookingRequest } from "@/api-calls/booking-api-calls";
+import {
+  createBooking,
+  fetchUserBookings,
+  updateBookingRequest,
+} from "@/api-calls/booking-api-calls";
 import { toast } from "@/hooks/use-toast";
 import { RatingFormDialog } from "./RatingFormDialog";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
@@ -86,7 +86,8 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
       if (
         user.approved === false ||
         (user.dob && user.dob > new Date(new Date().setFullYear(new Date().getFullYear() - 18))) ||
-        (booking && booking?.status === "cancelled" &&
+        (booking &&
+          booking?.status === "cancelled" &&
           booking?.selectedDate &&
           selectedDate &&
           new Date(selectedDate) < new Date())
@@ -96,14 +97,12 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
     });
   }, [selectedDate]);
 
-
   React.useEffect(() => {
     if (userId == "undefined" || userId == undefined) {
       setIsButtonDisabled(true);
       return;
     }
-  }
-  , [userId]);
+  }, [userId]);
 
   // check if user has already booked this activity if booking is null
   React.useEffect(() => {
@@ -118,7 +117,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
     fetchUserBookings(userId).then((bookings) => {
       const userBookings = bookings as unknown as TPopulatedBooking[];
       const userBooking = userBookings.find(
-        (booking) => booking.entity._id === itinerary._id && booking.type === "itinerary"
+        (booking) => booking.entity._id === itinerary._id && booking.type === "itinerary",
       );
 
       if (userBooking) {
@@ -130,11 +129,9 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
       }
     });
   }, []);
-  
 
   const handleButtonClick = () => {
-
-    if (booking?._id == ""){
+    if (booking?._id == "") {
       createBooking({
         user: userId,
         entity: itinerary._id ?? "",
@@ -149,13 +146,10 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
         setTimeout(() => {
           window.location.href = `/my-trips-details?userId=${userId}&eventId=${itinerary._id}&bookingId=${response._id}&type=itinerary`;
         }, 500);
-      }
-      );
+      });
 
       return;
-
     }
-
 
     if (booking && booking?.status === "cancelled") {
       if (booking?._id) {
@@ -163,7 +157,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
           status: "upcoming",
           selectedDate: selectedDate ? new Date(selectedDate) : undefined,
         });
-        addLoyaltyPointsByAmountPaid(userId, booking.selectedPrice);
+        addLoyalityPoints(userId, booking.selectedPrice);
         setBooking({
           ...booking,
           status: "upcoming",
@@ -182,7 +176,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
         const hours = difference / (1000 * 60 * 60);
         if (hours > 48) {
           updateBookingRequest(booking._id, { status: "cancelled" });
-          removeLoyaltyPointsByAmountRefunded(userId, booking.selectedPrice);
+          refundMoney(userId, booking.selectedPrice);
           setBooking({ ...booking, status: "cancelled" });
         } else {
           toast({
@@ -196,7 +190,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
   };
 
   const cardButtonText =
-    booking && booking?.status === "cancelled" || !booking
+    (booking && booking?.status === "cancelled") || !booking
       ? "Book Activity"
       : booking && booking?.status === "completed"
         ? "Review Activity"
@@ -342,12 +336,14 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
             buttonText={cardButtonText}
             buttonColor={booking?.status === "upcoming" ? "red" : "gold"}
             date={
-              booking && booking?.status === "upcoming" || booking && booking?.status === "completed"
+              (booking && booking?.status === "upcoming") ||
+              (booking && booking?.status === "completed")
                 ? formatDate(new Date(booking.selectedDate))
                 : undefined
             }
             time={
-              booking && booking?.status === "upcoming" || booking && booking?.status === "completed"
+              (booking && booking?.status === "upcoming") ||
+              (booking && booking?.status === "completed")
                 ? formatDate(new Date(booking.selectedDate))
                 : undefined
             }

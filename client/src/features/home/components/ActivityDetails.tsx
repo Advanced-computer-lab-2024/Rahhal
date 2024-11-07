@@ -10,12 +10,8 @@ import SharePopover from "@/components/SharePopover";
 import { OverviewCard } from "./overview-card/OverViewCard";
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { calculateAverageRating } from "@/features/admin/utils/columns-definitions/activities-columns";
-import { IBooking, TBookingType, TPopulatedBooking } from "../types/home-page-types";
-import {
-  addLoyaltyPointsByAmountPaid,
-  getUserById,
-  removeLoyaltyPointsByAmountRefunded,
-} from "@/api-calls/users-api-calls";
+import { TBookingType, TPopulatedBooking } from "../types/home-page-types";
+import { addLoyalityPoints, getUserById, refundMoney } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
 import {
   createBooking,
@@ -139,7 +135,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
           status: "upcoming",
           selectedDate: selectedDate ? new Date(selectedDate) : undefined,
         });
-        addLoyaltyPointsByAmountPaid(userId, booking.selectedPrice);
+        addLoyalityPoints(userId, booking.selectedPrice);
         setBooking({
           ...booking,
           status: "upcoming",
@@ -158,7 +154,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
         const hours = difference / (1000 * 60 * 60);
         if (hours > 48) {
           updateBookingRequest(booking._id, { status: "cancelled" });
-          removeLoyaltyPointsByAmountRefunded(userId, booking.selectedPrice);
+          refundMoney(userId, booking.selectedPrice);
           setBooking({ ...booking, status: "cancelled" });
         } else {
           toast({
@@ -280,7 +276,6 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
             date={booking ? formattedDate : undefined}
             time={booking ? formattedTime : undefined}
             dropdownOptions={cardDropdownOptions}
-            
             disabled={isButtonDisabled}
             onButtonClick={handleButtonClick}
             discountedPrice={
@@ -288,11 +283,16 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
                 ? booking.selectedPrice - (booking.selectedPrice * specialDiscount) / 100
                 : undefined
             }
-            
-            onTicketSelect={(booking && booking?.status === "cancelled") ? (index) => {
-              setBooking({ ...booking!, selectedPrice: price[Object.keys(price)[index]] });
-            } : undefined}
-            tickets={(booking && booking?.status === "cancelled" ? tickets : [`${booking?.selectedPrice}`])}
+            onTicketSelect={
+              booking && booking?.status === "cancelled"
+                ? (index) => {
+                    setBooking({ ...booking!, selectedPrice: price[Object.keys(price)[index]] });
+                  }
+                : undefined
+            }
+            tickets={
+              booking && booking?.status === "cancelled" ? tickets : [`${booking?.selectedPrice}`]
+            }
           />
         </div>
       </div>
