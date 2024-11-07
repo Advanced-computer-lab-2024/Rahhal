@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Camera } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Plus } from "lucide-react";
@@ -16,12 +16,18 @@ interface PictureCardProps {
 const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, imageSources: string[], imageSourcesCallback: (imageSources: string[]) => void, handleFileUploadCallback: (files: FileList) => void) => {
   const files = e.target.files;
   if (files) {
+    
     // ADD FILE UPLOAD LOGIC HERE
 
     // Loop through the files and add the image sources to the image sources array
+    const newPictures: string[] = [];
     for (let i = 0; i < files.length; i++) {
-      imageSourcesCallback([...imageSources, URL.createObjectURL(files[i])]);
+      newPictures.push(URL.createObjectURL(files[i]));
+      
     }
+
+    // Update the image sources
+    imageSourcesCallback([...imageSources, ...newPictures]);
 
     // Call the handle file upload callback
     handleFileUploadCallback(files);
@@ -58,6 +64,8 @@ const PictureCard = ({ title, description, initialImageSources, handleFileUpload
   } else {
     plusIconRotation = "rotate-3";
   }
+
+  
 
   return (
     <Card>

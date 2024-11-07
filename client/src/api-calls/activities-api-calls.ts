@@ -62,6 +62,10 @@ export async function createActivity(
 
   newActivityData.images = urls;
 
+  console.log(urls);
+
+  await axios.patch(`${SERVICES_URLS.ENTERTAINMENT}/activities/${activityId}`, newActivityData);
+
   alert("Activity created successfully");
   window.location.reload();
 }
