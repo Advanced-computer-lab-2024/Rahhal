@@ -40,28 +40,27 @@ export interface IOrder {
   updatedAt: Date;
 }
 
-const orderSchema = new Schema<IOrder>(
-  {
-    userId: { type: String, required: true },
-    orderStatus: {
-      type: String,
-      enum: Object.values(OrderStatus),
-      default: OrderStatus.processing,
-    },
-    paymentMethod: { type: String, required: true, enum: Object.values(PaymentMethod) },
-    items: {
-      type: [
-        {
-          name: String,
-          price: Number,
-          quantity: Number,
-          seller: String,
-          picture: String,
-          productId: String,
+const orderSchema = new Schema<IOrder>({
+  userId: { type: String, required: true },
+  orderStatus: { type: String, enum: Object.values(OrderStatus), default: OrderStatus.processing },
+  paymentMethod: { type: String, required: true, enum: Object.values(PaymentMethod) },
+  items: {
+    type: [
+      {
+        name: String,
+        price: Number,
+        quantity: Number,
+        seller: String,
+        picture: String,
+        productId: String,
+        rating: {
+          rating: Number,
+          review: String,
         },
-      ],
-      required: true,
-    },
+      },
+    ],
+    required: true,
+  },
     totalPrice: { type: Number, required: true },
     totalQuantity: { type: Number, required: true },
     promoCode: { type: String },
