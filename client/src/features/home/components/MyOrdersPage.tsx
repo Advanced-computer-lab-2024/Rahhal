@@ -57,11 +57,6 @@ export const MyOrdersPage = () => {
       await createRating(ratingData, RateableEntityType.PRODUCT, selectedProductId as string);
       toast({
         title: "success Rating submitted successfully",
-        style: {
-          backgroundColor: "#34D399",
-          color: "white",
-          height: "11vh",
-        },
         duration: 3500,
       });
       setShowRating(false);
