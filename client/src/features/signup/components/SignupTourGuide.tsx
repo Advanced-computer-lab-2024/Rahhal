@@ -10,11 +10,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { TermsAndConditionsModal } from "./TermsAndConditionsModal";
 import { termsAndConditions } from "../terms-and-conditions/TourGuideTermsAndConditions";
 import { tourGuideSchema } from "../utils/ZodSchemas/tourGuideSchema";
-import { createUser } from "@/api-calls/users-api-calls";
+import { createUser,updateUser } from "@/api-calls/users-api-calls";
+import { uploadToFirebaseReady } from "@/utils/firebase";
 
 type TourGuideFormData = z.infer<typeof tourGuideSchema>;
 
@@ -58,6 +59,9 @@ export default function SignupTourGuide() {
       yearsOfExperience: data.yearsOfExperience,
       previousWork: data.previousWork,
       role: "tourGuide",
+      balance : 0,
+      nationalID: "",
+      certificates: []
     };
 
     try {
@@ -66,11 +70,38 @@ export default function SignupTourGuide() {
         description: "Please wait while we create your account",
         duration: 1500,
       });
-      const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+      // const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-      await delay(4500);
+      // await delay(4500);
+
+      let urls: string[] = new Array();
 
       const response: any = await createUser(reqBody);
+
+      if(data.nationalID && data.certificates){
+        const nationalId : string = `documents/${response._id}/nationalID`;
+        const newFileNationalId = new File([data.nationalID] , nationalId , {type : data.nationalID.type});
+
+        const certificates: File[] = Array.isArray(data.certificates) 
+        ? data.certificates.map((file, index) => {
+            const certeficate: string = `documents/${response._id}/certeficate${index + 1}`;
+            return new File([file], certeficate, { type: file.type });
+        }):[new File([data.certificates],`documents/${response._id}/certeficate`,
+          { type: (data.certificates as any) instanceof File ? (data.certificates as File).type : 'application/octet-stream' })];
+
+        const filesFileList: File[] = [newFileNationalId, ...certificates];
+        urls = await uploadToFirebaseReady(filesFileList);
+
+        const documents = {
+          "nationalID" : urls[0],
+          "certeficates" : urls.slice(1)
+        }
+
+        const responseUpdate: any = updateUser(response, documents);
+
+        console.log("Server response:", responseUpdate);
+
+      }
       console.log("Server response:", response);
 
       toast({
@@ -83,7 +114,7 @@ export default function SignupTourGuide() {
         duration: 3000,
       });
       setTimeout(() => {
-        navigate("/login");
+        navigate("/signin");
       }, 3000);
     } catch (error: any) {
       console.error("Error during form submission:", error);

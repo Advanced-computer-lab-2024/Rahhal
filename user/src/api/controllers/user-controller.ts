@@ -108,7 +108,7 @@ export async function updateUserById(req: Request, res: Response) {
         } else if (user.role !== "tourist") {
           res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Only tourists can have points" });
           return;
-        } else {
+        } else if(user.points) {
           if (user.points < points.level1maxPoints)
             updatedUser.points = Math.ceil(user.points + amountPaid * points.level1PointRate);
           else if (user.points < points.level2maxPoints)
@@ -124,7 +124,7 @@ export async function updateUserById(req: Request, res: Response) {
         if (!user) {
           res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
           return;
-        } else {
+        } else if(user.balance) {
           updatedUser.balance = user.balance + amountRetrieved;
         }
       }
@@ -164,6 +164,8 @@ export async function createUser(req: Request, res: Response) {
           .json({ error: "This email is registered to another user" });
         return;
       }
+
+      
 
       const user = await userService.createUser(userData);
       res.status(STATUS_CODES.CREATED).json(user);
@@ -243,13 +245,13 @@ export async function redeemPoints(req: Request, res: Response) {
     } else if (user.role !== "tourist") {
       res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Only tourists can redeem points" });
       return;
-    } else {
+    } else if(user.points) {
       if (user.points < points.minPoints) {
         res
           .status(STATUS_CODES.BAD_REQUEST)
           .json({ error: "You Have to have at least 10000 points to be able to redeem them!" });
         return;
-      } else {
+      } else if(user.balance) {
         const updatedUser = user;
         const avgBalance = user.points / points.minPoints;
         updatedUser.points = user.points % points.minPoints;

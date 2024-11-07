@@ -11,8 +11,8 @@ export const sellerSchema = z
   password: z.string().min(8, "Password must be at least 8 characters long"),
   confirmPassword: z.string(),
   description: z.string().min(1, "Required"),
-  nationalID: z.instanceof(File).optional().or(z.string()),
-  taxRegistration: z.instanceof(File).optional().or(z.string()),
+  nationalID: z.instanceof(File).optional(),
+  taxRegistration: z.instanceof(File).optional(),
   acceptTerms: z
     .boolean()
     .refine((val) => val === true, "You must accept the terms and conditions"),
