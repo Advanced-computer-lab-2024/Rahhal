@@ -15,6 +15,13 @@ export async function getActiveAppropriateItineraries() {
     .exec();
 }
 
+export async function getItinerariesByOwner(ownerId: string) {
+  return await Itinerary.find({ owner: ownerId })
+    .populate("category")
+    .populate("preferenceTags")
+    .exec();
+}
+
 // Get itinerary by id
 export async function getItineraryById(id: string) {
   return await Itinerary.findById(id).populate("category").populate("preferenceTags").exec();

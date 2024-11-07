@@ -18,6 +18,11 @@ export async function getItineraryById(id: string) {
   return itinerariesRepository.getItineraryById(id);
 }
 
+// Get itineraries by owner
+export async function getItinerariesByOwner(ownerId: string) {
+  return itinerariesRepository.getItinerariesByOwner(ownerId);
+}
+
 // Create a new itinerary
 export async function createItinerary(itineraryData: IItinerary) {
   return itinerariesRepository.createItinerary(itineraryData);
@@ -31,10 +36,9 @@ export async function updateItinerary(id: string, itineraryData: IItinerary) {
 // Delete an itinerary
 export async function deleteItinerary(id: string) {
   const isBooked = await hasBookings(id);
-  if(isBooked) {
+  if (isBooked) {
     throw new Error("Cannot delete itinerary with bookings");
-  }
-  else{
+  } else {
     return itinerariesRepository.deleteItinerary(id);
   }
 }
