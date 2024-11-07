@@ -32,7 +32,7 @@ const complaintSchema: Schema = new Schema<IComplaint>(
     },
     status: {
       type: String,
-      required: true,
+      required: false,
       enum: Status,
       default: Status.pending,
     },

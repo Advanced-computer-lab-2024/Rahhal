@@ -23,6 +23,7 @@ import AdminProductsView from "@/features/admin/components/AdminProductsView";
 import HistoricalPlacesView from "@/features/tourism-governor/components/HistoricalPlacesView";
 import HistoricalTagsView from "@/features/tourism-governor/components/HistoricalTagsTable";
 import UsersPendingRequests from "@/features/admin/components/UsersPendingRequests";
+import ComplaintsTable from "@/features/user-settings/components/TouristComplaintsTable";
 import { MyTripsPage } from "@/features/home/components/MyTripsPage";
 import TravelPage from "@/features/home/components/TravelPage";
 import AdminItinerariesView from "@/features/admin/components/AdminItinerariesView";
@@ -74,6 +75,7 @@ export default function App() {
               <Route path="/user-settings/account/:id" element={<AccountForm />} />
               <Route path="/user-settings/wallet/:id" element={<WalletForm />} />
             </Route>
+            <Route path="/help-center/:id" element={<ComplaintsTable />} />
             <Route path="/user-settings/:id" element={<SettingsView />}>
               <Route index element={<ProfileForm />} />
               <Route path="account" element={<AccountForm />} />

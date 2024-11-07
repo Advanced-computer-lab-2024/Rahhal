@@ -130,6 +130,15 @@ export const DEFAULTS = {
     },
     replies: [],
   },
+  TOURIST_COMPLAINT: {
+    _id: "",
+    title: "",
+    body: "",
+    status: "",
+    date: new Date(),
+    owner: "",
+    replies: [],
+  },
 };
 export const NATIONALITIES = [
   { value: "Afghanistan", label: "Afghanistan" },
