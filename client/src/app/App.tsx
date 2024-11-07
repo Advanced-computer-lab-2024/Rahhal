@@ -30,7 +30,8 @@ import AdminItinerariesView from "@/features/admin/components/AdminItinerariesVi
 import AdminActivitiesView from "@/features/admin/components/AdminActivitiesView";
 import { getCurrencyExchangeRates } from "@/api-calls/currency-exchange-api-calls";
 import { useEffect } from "react";
-import { useRatesStore } from '@/stores/currency-exchange-store'
+import { useRatesStore } from "@/stores/currency-exchange-store";
+import { MyOrdersPage } from "@/features/home/components/MyOrdersPage";
 import ProductReport from "@/features/seller/components/ProductReport";
 import HotelsPage from "@/features/home/components/HotelsPage";
 
@@ -50,6 +51,7 @@ export default function App() {
     } else {
       setRates(JSON.parse(storedRates));
     }
+    console.log(localStorage.getItem("rates"));
   }, []);
   const queryClient = new QueryClient();
   return (
@@ -69,6 +71,7 @@ export default function App() {
               <Route path="/shop/:id" element={<ProductGridView />} />
               <Route path="/my-trips/:id" element={<MyTripsPage />} />
               <Route path="/travel/:id" element={<TravelPage loggedIn={true} />} />
+              <Route path="/my-orders/:id" element={<MyOrdersPage />} />
             </Route>
             <Route path="/signup" element={<SignupSelector />} />
             <Route path="/signin" element={<Login />} />
