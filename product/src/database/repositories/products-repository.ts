@@ -35,6 +35,17 @@ export async function addRating(userRating: IRating, productId: string) {
   );
 }
 
+export async function editRating(userId: string, productId: string, rating: Partial<IRating>) {
+  if (!userId) {
+    throw new Error("User ID is required to edit a rating.");
+  }
+  return await Product.findOneAndUpdate(
+    { _id: productId, "ratings.userId": userId },
+    { $set: { "ratings.$.rating": rating.rating, "ratings.$.review": rating.review } },
+    { new: true },
+  );
+}
+
 // Update an existing product
 export async function updateProduct(id: string, productData: IProduct) {
   return await Product.findByIdAndUpdate(id, productData, {

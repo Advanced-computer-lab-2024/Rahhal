@@ -29,3 +29,11 @@ export async function deleteProduct(id: string) {
 export async function addProductRating(productId: string, rating: TRating) {
   return await productAxiosInstance.post(`/products/${productId}/ratings`, rating);
 }
+
+export async function updateProductRating(
+  productId: string,
+  userId: string,
+  rating: Partial<TRating>,
+) {
+  return await productAxiosInstance.patch(`/products/ratings/${productId}`, { userId, rating });
+}

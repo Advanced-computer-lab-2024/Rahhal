@@ -74,6 +74,24 @@ export async function addRating(req: express.Request, res: express.Response) {
   }
 }
 
+export async function editRating(req: express.Request, res: express.Response) {
+  try {
+    const productId = req.params.id;
+    const userId = req.body.userId;
+    const rating = req.body.rating as Partial<IRating>;
+    const updatedRating = await productsService.editRating(userId, productId, rating);
+    if (!updatedRating) {
+      res.status(STATUS_CODES.NOT_FOUND).json({ message: "Rating not found" });
+    } else {
+      res.status(STATUS_CODES.STATUS_OK).json(updatedRating);
+    }
+  } catch (error) {
+    res
+      .status(STATUS_CODES.SERVER_ERROR)
+      .json({ message: error instanceof Error ? error.message : "An unknown error occurred" });
+  }
+}
+
 export async function updateProduct(req: express.Request, res: express.Response) {
   try {
     const product = await productsService.updateProduct(req.params.id, req.body);

@@ -22,3 +22,14 @@ export async function createRating(req: Request, res: Response) {
 
   res.status(response.status).send(response.data);
 }
+
+export async function updateRating(req: Request, res: Response) {
+  try {
+    const productId = req.params.id;
+    const { userId, rating, entityType } = req.body;
+    const response = await ratingService.updateRating(rating, entityType, productId, userId);
+    res.status(response.status).send(response.data);
+  } catch (error) {
+    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
+  }
+}

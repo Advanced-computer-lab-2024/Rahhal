@@ -29,6 +29,10 @@ export async function addRating(userRating: IRating, productId: string) {
   return await productsRepository.addRating(userRating, productId);
 }
 
+export async function editRating(userId: string, productId: string, rating: Partial<IRating>) {
+  return await productsRepository.editRating(userId, productId, rating);
+}
+
 // Update an existing product
 export async function updateProduct(id: string, product: IProduct) {
   return await productsRepository.updateProduct(id, product);
