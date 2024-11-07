@@ -53,8 +53,14 @@ function ProductReport() {
     const startDate = dateRange[0];
     const endDate = dateRange[1];
 
+    // filter orders by date range
+    const filteredOrders = productOrders.filter((order) => {
+      const orderDate = new Date(order.createdAt);
+      return orderDate >= startDate && orderDate <= endDate;
+    });
+
     // Calculate stats
-    const stats = productOrders.reduce(
+    const stats = filteredOrders.reduce(
       (acc, order) => ({
         totalRevenue: acc.totalRevenue + order.totalPrice, // TODO: Revenue calculation here is incorrect
         totalQuantitySold: acc.totalQuantitySold + order.totalQuantity,
@@ -80,7 +86,7 @@ function ProductReport() {
 
     // Aggregate daily data for charts
     const dailyMap = new Map<string, DailyData>();
-    productOrders.forEach((order) => {
+    filteredOrders.forEach((order) => {
       const dateStr = new Date(order.createdAt).toISOString().split("T")[0];
       const existing = dailyMap.get(dateStr) || {
         date: dateStr,
@@ -150,7 +156,7 @@ function ProductReport() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center">
               <div className="text-lg font-bold text-blue-500">{stats.pendingOrders}</div>
-              <div className="text-gray-500">Pending</div>
+              <div className="text-gray-500">Processing</div>
             </div>
             <div className="text-center">
               <div className="text-lg font-bold text-green-500">{stats.completedOrders}</div>
