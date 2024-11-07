@@ -9,6 +9,7 @@ export const SERVICES_URLS = {
   TRANSPORTATION: "http://localhost:3000/api/transportation",
   GOOGLE_MAPS: "http://localhost:3000/api/google-maps",
   EXCHANGERATES: "http://localhost:3000/api/exchange-rates",
+  ORDER: "http://localhost:3000/api/order",
 
 };
 

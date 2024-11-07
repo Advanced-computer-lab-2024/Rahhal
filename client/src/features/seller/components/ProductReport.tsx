@@ -1,16 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { DateRangePicker } from '@/components/date-picker/date-range-picker';
-import StatCard from './StatCard';
-import BarChartCard from '@/features/charts/BarChartCard';
-import LineChartCard from '@/features/charts/LineChartCard';
-
-interface ProductOrder {
-  date: Date;
-  quantity: number;
-  revenue: number;
-  orderStatus: 'pending' | 'completed' | 'cancelled' | 'shipped';
-}
+import React, { useState, useEffect } from "react";
+import { DateRangePicker } from "@/components/date-picker/date-range-picker";
+import StatCard from "./StatCard";
+import BarChartCard from "@/features/charts/BarChartCard";
+import LineChartCard from "@/features/charts/LineChartCard";
+import { TOrder } from "@/types/shared";
+import { useParams } from "react-router-dom";
+import { fetchProductOrders } from "@/api-calls/order-api-calls";
 
 interface ProductStats {
   totalRevenue: number;
@@ -30,7 +25,9 @@ interface DailyData {
 }
 
 function ProductReport() {
-  const [productOrders, setProductOrders] = useState<ProductOrder[]>([]);
+  const { id: productId } = useParams<{ id: string }>();
+
+  const [productOrders, setProductOrders] = useState<TOrder[]>([]);
   const [stats, setStats] = useState<ProductStats>({
     totalRevenue: 0,
     totalQuantitySold: 0,
@@ -38,96 +35,73 @@ function ProductReport() {
     pendingOrders: 0,
     cancelledOrders: 0,
     completedOrders: 0,
-    shippedOrders: 0
+    shippedOrders: 0,
   });
   const [dailyData, setDailyData] = useState<DailyData[]>([]);
   const [dateRange, setDateRange] = useState<[Date, Date]>([
     new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7),
-    new Date()
-    ]);
-
-  // Generate mock data for a single product
-  const generateMockData = (startDate?: Date, endDate?: Date) => {
-    
-    const orders: ProductOrder[] = [];
-    const today = new Date();
-    
-    // Generate 30 days of data
-    for (let i = 0; i < 30; i++) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      
-      // Generate 0-5 orders for each day
-      const dailyOrderCount = Math.floor(Math.random() * 6);
-      
-      for (let j = 0; j < dailyOrderCount; j++) {
-        const quantity = Math.floor(Math.random() * 3) + 1;
-        const price = 599.99;
-        orders.push({
-          date: date,
-          quantity: quantity,
-          revenue: quantity * price,
-          orderStatus: ['pending', 'completed', 'cancelled', 'shipped'][Math.floor(Math.random() * 4)] as any
-        });
-      }
-    }
-
-
-    return orders;
-  };
+    new Date(),
+  ]);
 
   useEffect(() => {
-    
+    // Fetch product orders
+    if (!productId) return;
+    fetchProductOrders(productId).then((orders) => setProductOrders(orders as TOrder[]));
+  }, []);
+
+  useEffect(() => {
     const startDate = dateRange[0];
     const endDate = dateRange[1];
-    const mockOrders = generateMockData(startDate, endDate);
-    setProductOrders(mockOrders);
 
     // Calculate stats
-    const stats = mockOrders.reduce((acc, order) => ({
-      totalRevenue: acc.totalRevenue + order.revenue,
-      totalQuantitySold: acc.totalQuantitySold + order.quantity,
-      pendingOrders: acc.pendingOrders + (order.orderStatus === 'pending' ? 1 : 0),
-      cancelledOrders: acc.cancelledOrders + (order.orderStatus === 'cancelled' ? 1 : 0),
-      completedOrders: acc.completedOrders + (order.orderStatus === 'completed' ? 1 : 0),
-      shippedOrders: acc.shippedOrders + (order.orderStatus === 'shipped' ? 1 : 0),
-      averagePrice: 0
-    }), {
-      totalRevenue: 0,
-      totalQuantitySold: 0,
-      pendingOrders: 0,
-      cancelledOrders: 0,
-      completedOrders: 0,
-      shippedOrders: 0,
-      averagePrice: 0
-    });
+    const stats = productOrders.reduce(
+      (acc, order) => ({
+        totalRevenue: acc.totalRevenue + order.totalPrice, // TODO: Revenue calculation here is incorrect
+        totalQuantitySold: acc.totalQuantitySold + order.totalQuantity,
+        pendingOrders: acc.pendingOrders + (order.orderStatus === "processing" ? 1 : 0),
+        cancelledOrders: acc.cancelledOrders + (order.orderStatus === "cancelled" ? 1 : 0),
+        completedOrders: acc.completedOrders + (order.orderStatus === "received" ? 1 : 0),
+        shippedOrders: acc.shippedOrders + (order.orderStatus === "shipped" ? 1 : 0),
+        averagePrice: 0,
+      }),
+      {
+        totalRevenue: 0,
+        totalQuantitySold: 0,
+        pendingOrders: 0,
+        cancelledOrders: 0,
+        completedOrders: 0,
+        shippedOrders: 0,
+        averagePrice: 0,
+      },
+    );
 
     stats.averagePrice = stats.totalRevenue / stats.totalQuantitySold;
     setStats(stats);
 
     // Aggregate daily data for charts
     const dailyMap = new Map<string, DailyData>();
-    mockOrders.forEach(order => {
-      const dateStr = order.date.toISOString().split('T')[0];
-      const existing = dailyMap.get(dateStr) || { 
-        date: dateStr, 
-        revenue: 0, 
+    productOrders.forEach((order) => {
+      const dateStr = new Date(order.createdAt).toISOString().split("T")[0];
+      const existing = dailyMap.get(dateStr) || {
+        date: dateStr,
+        revenue: 0,
         quantity: 0,
-        averagePrice: 0
+        averagePrice: 0,
       };
-      
-      existing.revenue += order.revenue;
-      existing.quantity += order.quantity;
+
+      existing.revenue += order.totalPrice;
+      existing.quantity += order.totalQuantity;
       existing.averagePrice = existing.revenue / existing.quantity;
-      
+
       dailyMap.set(dateStr, existing);
     });
 
-    const sortedDailyData = Array.from(dailyMap.values())
-      .sort((a, b) => a.date.localeCompare(b.date));
-    
+    const sortedDailyData = Array.from(dailyMap.values()).sort((a, b) =>
+      a.date.localeCompare(b.date),
+    );
+
     setDailyData(sortedDailyData);
-  }, [dateRange]);
+  }, [dateRange, productOrders]);
 
   const handleDateRangeChange = (range: [Date | null, Date | null]) => {
     setDateRange([range[0] ?? new Date(), range[1] ?? new Date()]);
@@ -137,13 +111,19 @@ function ProductReport() {
     <div className="container mx-auto p-4">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Smartphone</h1>
-        <p className="text-gray-600 mb-4">Product ID: PRD-001</p>
+        <p className="text-gray-600 mb-4">Product ID: {productId}</p>
 
         {/* Date Range Picker */}
         <div className="mb-4">
-          <DateRangePicker  initialDateFrom={dateRange[0]}  initialDateTo={dateRange[1]} onUpdate={ (range) => handleDateRangeChange([range.range.from, range.range.to ?? new Date()]) } />
+          <DateRangePicker
+            initialDateFrom={dateRange[0]}
+            initialDateTo={dateRange[1]}
+            onUpdate={(range) =>
+              handleDateRangeChange([range.range.from, range.range.to ?? new Date()])
+            }
+          />
         </div>
-        
+
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <StatCard title="Total Revenue" value={"$" + stats.totalRevenue.toFixed(2)} />
@@ -153,7 +133,13 @@ function ProductReport() {
         </div>
 
         {/* Revenue Trend Line Chart */}
-        <LineChartCard title="Revenue Trend" data={dailyData} dataKey="date" lineDataKey="revenue" lineDataName="Revenue" />
+        <LineChartCard
+          title="Revenue Trend"
+          data={dailyData}
+          dataKey="date"
+          lineDataKey="revenue"
+          lineDataName="Revenue"
+        />
 
         {/* Sales Quantity Bar Chart */}
         <BarChartCard title="Daily Sales Quantity" data={dailyData} dataKey="date" />
@@ -183,6 +169,6 @@ function ProductReport() {
       </div>
     </div>
   );
-};
+}
 
 export default ProductReport;
