@@ -47,6 +47,6 @@ export async function deleteOrder(id: string) {
 
 // Get orders by date range
 export async function getOrdersByDateRange(startDate: Date, endDate: Date) {
-  return Order.find({ orderDate: { $gte: startDate, $lte: endDate } }).exec();
+  return Order.find({ createdAt: { $gte: startDate, $lte: endDate } }).exec();
 }
 
