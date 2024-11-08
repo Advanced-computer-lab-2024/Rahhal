@@ -1,0 +1,49 @@
+
+.card {
+    display: flex;
+    align-items: center;
+    
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 1rem;
+  }
+  
+  .image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 1rem;
+  }
+  
+  .details {
+    flex-grow: 1;
+  }
+  
+  .title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .price {
+    font-size: 0.875rem;
+    color: #666;
+  }
+  
+  .rate {
+    font-size: 0.875rem;
+    color: #007bff;
+    text-decoration: none;
+    margin-top: 0.5rem;
+    cursor: pointer;
+  }
+  
+  .rate:hover {
+    text-decoration: underline;
+
+  }
+
+  .star{
+    color: var(--primary-color);
+    font-size: 0.9rem;
+  }

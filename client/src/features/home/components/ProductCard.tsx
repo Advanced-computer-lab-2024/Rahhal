@@ -15,6 +15,7 @@ interface ProductCardProps {
 
 export interface IRating {
   userId: string;
+  userName: string;
   rating: number;
   review?: string;
 }
