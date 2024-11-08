@@ -281,7 +281,7 @@ export interface FlightRequest {
     destinationLocationCode: string;
     departureDateTimeRange: {
       date: string;
-      time: string;
+      time?: string;
     };
   }[];
   travelers: {
@@ -299,11 +299,11 @@ export interface FlightData {
     count: number;
   };
   data: {
-    offers?: FlightOffer
+    offers: FlightOffer;
   }[];
   dictionaries: {
-    carriers: { [key: string]: string }
-  }
+    carriers: { [key: string]: string };
+  };
 }
 
 export interface FlightOffer {
@@ -338,5 +338,5 @@ export interface FlightOffer {
   price: {
     currency: string;
     total: string;
-  }
+  };
 }

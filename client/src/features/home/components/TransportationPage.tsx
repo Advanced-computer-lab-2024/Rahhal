@@ -1,39 +1,28 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TaxiCard } from "./TaxiCard";
 import TaxiRoute from "./TaxiRoute";
 import { useSearchBarStore } from "@/stores/transportation-searchbar-slice";
 import { createBooking } from "@/api-calls/booking-api-calls";
 import type { TBookingType, TransportationData } from "../types/home-page-types";
 import { bookingType } from "@/utils/enums";
-import { useParams } from "react-router-dom";
-import { calculateAge } from "@/utils/age-calculator";
-import { useQuery } from "@tanstack/react-query";
-import { getUserById } from "@/api-calls/users-api-calls";
 import { addLoyalityPoints } from "@/api-calls/users-api-calls";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
+import currencyExchange from "@/utils/currency-exchange";
+import { set } from "lodash";
 
 interface TransportationPageProps {
   data: TransportationData["data"];
   loggedIn: boolean;
+  id?: string;
+  isAdult?: boolean;
 }
 
-function TransportationPage({ data, loggedIn }: TransportationPageProps) {
+function TransportationPage({ data, loggedIn, id, isAdult }: TransportationPageProps) {
   const [selectedTaxi, setSelectedTaxi] = useState<number | null>(null);
+  const [prices, setPrices] = useState<number[]>([]);
+
   const { pickupLocation, dropOffLocation } = useSearchBarStore();
-  const [isAdult, setAdult] = useState(true);
-
-  const { id } = useParams<{ id: string }>();
-  const { data: userData } = useQuery({
-    queryKey: ["fetchUser"],
-    queryFn: () => getUserById(id ? id : ""),
-    enabled: !!id,
-  });
-
-  useEffect(() => {
-    if (userData) {
-      const { dob } = userData;
-      if (dob) setAdult(calculateAge(dob) >= 18);
-    }
-  }, [userData]);
+  const { currency } = useCurrencyStore();
 
   const onConfirmTrip = async () => {
     const bookingRequest: TBookingType = {
@@ -43,7 +32,10 @@ function TransportationPage({ data, loggedIn }: TransportationPageProps) {
     };
     const booking = await createBooking(bookingRequest);
     if (id && selectedTaxi !== null) {
-      await addLoyalityPoints(id, parseFloat(data[selectedTaxi].quotation.monetaryAmount));
+      const convertedPrice = currencyExchange("EGP", prices[selectedTaxi]);
+      if (convertedPrice !== undefined) {
+        await addLoyalityPoints(id, convertedPrice);
+      }
     }
     if (booking) {
       alert("Trip confirmed successfully!");
@@ -56,11 +48,20 @@ function TransportationPage({ data, loggedIn }: TransportationPageProps) {
         {data.map((offer, index) => {
           const { vehicle, serviceProvider, quotation } = offer;
 
+          const convertedPrice = currencyExchange(
+            offer.quotation.currencyCode,
+            parseFloat(quotation.monetaryAmount),
+          );
+          const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
+
+          setPrices([...prices, convertedPrice ? convertedPrice : 0]);
+
           return (
             <TaxiCard
               key={index}
               type={vehicle.code}
-              price={parseFloat(quotation.monetaryAmount)}
+              price={displayPrice}
+              currency={currency}
               guests={vehicle.seats ? vehicle.seats[0].count : undefined}
               luggage={vehicle.baggages ? vehicle.baggages[0].count : undefined}
               provider={serviceProvider.logoUrl}
@@ -73,7 +74,8 @@ function TransportationPage({ data, loggedIn }: TransportationPageProps) {
       <div className="p-10">
         {selectedTaxi !== null && (
           <TaxiRoute
-            amount={parseFloat(data[selectedTaxi].quotation.monetaryAmount)}
+            amount={prices[selectedTaxi] ? prices[selectedTaxi].toFixed(0) : "N/A"}
+            currency={data[selectedTaxi].quotation.currencyCode}
             departure={pickupLocation[0]}
             destination={dropOffLocation[0]}
             serviceProvider={data[selectedTaxi].serviceProvider.name}
