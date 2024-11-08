@@ -7,7 +7,7 @@ services:
       - ./client:/usr/src/app
       - /usr/src/app/node_modules
     environment:
-      - CHOKIDAR_USEPOLLING=${CHOKIDAR_USEPOLLING:-false}
+      - CHOKIDAR_USEPOLLING=true
     depends_on: 
       - backend
   backend:
