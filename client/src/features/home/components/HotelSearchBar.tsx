@@ -64,8 +64,8 @@ function HotelSearchBar({ onIconClick }: HotelSearchBarProps) {
     setGuests(adults[0] + children[0] + infants[0]);
   };
 
-  const searchParts = ["Where", "Check-in", "Check-out", "Guests"];
-  const searchPartsPlaceholders = ["Destination", "Check-in", "Check-out", "Guests"];
+  const searchParts = ["Where", "Check-in", "Check-out", "guests"];
+  const searchPartsPlaceholders = ["Destination", "Check-in", "Check-out", "guests"];
   const searchPartsValues = [destinationSuggestions, [], [], []];
   return (
     <SearchBar

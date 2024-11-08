@@ -1,8 +1,9 @@
 import { useHotelSearchBarStore } from "@/stores/hotel-search-bar-slice";
 import HotelSearchBar from "./HotelSearchBar";
 import { fetchPlaceDetails } from "@/api-calls/google-maps-api-calls";
+import HotelGridView from "./HotelGridView";
 
-//it will be used to see if you can book (based on being tourist/ guest user)
+
 interface HotelPageProps {
   loggedIn: boolean;
 }
@@ -23,9 +24,14 @@ function HotelsPage({ loggedIn }: HotelPageProps) {
   };
 
   return (
-    <div className=" w-[100%] flex">
+    <>
+    <div className=" w-[100%] flex justify-center">
       <HotelSearchBar onIconClick={onIconClick} />
     </div>
+    <hr className="border-1 border-black w-full my-5" />
+    <HotelGridView />
+  </>
+    
   );
 }
 
