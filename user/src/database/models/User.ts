@@ -51,7 +51,7 @@ export interface IUser {
   wallet?: IWallet;
   nationalID?: string;
   taxRegistration?: string;
-  certeficates?: string[];
+  certificates?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -343,21 +343,21 @@ const userSchema: Schema = new Schema<IUser>(
       // },
       // default:[]
     },
-    nationalID:{
-      type:String,
+    nationalID: {
+      type: String,
       // required:function(){
       //   return this.role === Role.tourGuide || this.role === Role.advertiser || this.role === Role.seller;
       // },
     },
-    taxRegistration:{
-      type:String,
+    taxRegistration: {
+      type: String,
       // required:function(){
       //   return this.role === Role.advertiser || this.role === Role.seller;
       // },
     },
-    certeficates:{
-      type:[String],
-    }
+    certificates: {
+      type: [String],
+    },
   },
   { timestamps: true },
 );

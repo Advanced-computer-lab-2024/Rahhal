@@ -6,6 +6,7 @@ import axios from "axios";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
 import { CONNECTION_STRING } from "@/utils/constants";
+import { TUser } from "@/types/user";
 export enum Role {
   admin = "admin",
   tourist = "tourist",
@@ -14,44 +15,12 @@ export enum Role {
   seller = "seller",
   tourismGovernor = "tourismGovernor",
 }
-interface ICreditCard {
-  cardHolderName: string;
-  cardNumber: string;
-  expirationDate: Date;
-  cvv: string;
-}
 
-interface IWallet {
-  creditCard: ICreditCard[];
-  defaultCreditCardIndex: number;
-}
-interface User {
-  firstName?: string;
-  lastName?: string;
-  username: string;
-  email: string;
-  password: string;
-  role: Role;
-  approved: boolean;
-  dob?: Date;
-  nationality?: string;
-  job?: string;
-  addresses?: string[];
-  phoneNumber?: string;
-  yearsOfExperience?: number;
-  previousWork?: string;
-  website?: string;
-  hotline?: string;
-  companyProfile?: string;
-  companyName?: string;
-  description?: string;
-  balance?: number;
-  wallet?: IWallet;
-}
 export const EditContext = createContext<{
-  user: User;
+  user: TUser;
 }>({
   user: {
+    _id: "",
     username: "",
     email: "",
     password: "",
@@ -64,7 +33,8 @@ export default function SettingsView() {
   const { id } = useParams();
 
   const USER_SERVICE_URL = CONNECTION_STRING + `${id}`;
-  const [user, setUser] = useState<User>({
+  const [user, setUser] = useState<TUser>({
+    _id: "",
     username: "",
     email: "",
     password: "",
@@ -76,6 +46,7 @@ export default function SettingsView() {
       .get(USER_SERVICE_URL)
       .then((response) => {
         setUser(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         toast({

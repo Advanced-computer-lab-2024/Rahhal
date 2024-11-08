@@ -14,7 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { TermsAndConditionsModal } from "./TermsAndConditionsModal";
 import { termsAndConditions } from "../terms-and-conditions/TourGuideTermsAndConditions";
 import { tourGuideSchema } from "../utils/ZodSchemas/tourGuideSchema";
-import { createUser,updateUser } from "@/api-calls/users-api-calls";
+import { createUser, updateUser } from "@/api-calls/users-api-calls";
 import { uploadToFirebaseReady } from "@/utils/firebase";
 
 type TourGuideFormData = z.infer<typeof tourGuideSchema>;
@@ -59,9 +59,9 @@ export default function SignupTourGuide() {
       yearsOfExperience: data.yearsOfExperience,
       previousWork: data.previousWork,
       role: "tourGuide",
-      balance : 0,
+      balance: 0,
       nationalID: "",
-      certificates: []
+      certificates: [],
     };
 
     try {
@@ -78,29 +78,37 @@ export default function SignupTourGuide() {
 
       const response: any = await createUser(reqBody);
 
-      if(data.nationalID && data.certificates){
-        const nationalId : string = `documents/${response._id}/nationalID.${data.nationalID.type.split("/")[1]}`;
-        const newFileNationalId = new File([data.nationalID] , nationalId , {type : data.nationalID.type});
+      if (data.nationalID && data.certificates) {
+        const nationalId: string = `documents/${response._id}/nationalID.${data.nationalID.type.split("/")[1]}`;
+        const newFileNationalId = new File([data.nationalID], nationalId, {
+          type: data.nationalID.type,
+        });
 
-        const certificates: File[] = Array.isArray(data.certificates) 
-        ? data.certificates.map((file, index) => {
-            const certeficate: string = `documents/${response._id}/certeficate_${index + 1}.${(file as File).type.split("/")[1]}`;
-            return new File([file], certeficate, { type: file.type });
-        }):[new File([data.certificates],`documents/${response._id}/certeficate`,
-          { type: (data.certificates as any) instanceof File ? (data.certificates as File).type : 'application/octet-stream' })];
+        const certificates: File[] = Array.isArray(data.certificates)
+          ? data.certificates.map((file, index) => {
+              const certeficate: string = `documents/${response._id}/certeficate_${index + 1}.${(file as File).type.split("/")[1]}`;
+              return new File([file], certeficate, { type: file.type });
+            })
+          : [
+              new File([data.certificates], `documents/${response._id}/certeficate`, {
+                type:
+                  (data.certificates as any) instanceof File
+                    ? (data.certificates as File).type
+                    : "application/octet-stream",
+              }),
+            ];
 
         const filesFileList: File[] = [newFileNationalId, ...certificates];
         urls = await uploadToFirebaseReady(filesFileList);
 
         const documents = {
-          "nationalID" : urls[0],
-          "certeficates" : urls.slice(1)
-        }
+          nationalID: urls[0],
+          certificates: urls.slice(1),
+        };
 
         const responseUpdate: any = updateUser(response, documents);
 
         console.log("Server response:", responseUpdate);
-
       }
       console.log("Server response:", response);
 
