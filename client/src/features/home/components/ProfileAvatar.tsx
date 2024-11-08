@@ -4,7 +4,17 @@ import AvatarStyles from "../styles/ProfileAvatar.module.css";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
+
+function useIdFromParamsOrQuery() {
+  const { id: paramId } = useParams<{ id?: string }>();
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const queryId = queryParams.get("userId");
+
+  return paramId || queryId;
+}
 
 export const ProfileAvatar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,12 +23,14 @@ export const ProfileAvatar = () => {
     setIsOpen(!isOpen);
   };
 
-
-
-  const { id } = useParams<{ id: string }>();
+  const id = useIdFromParamsOrQuery();
   console.log(id);
 
-  const { data: user, isLoading, isError } = useQuery({
+  const {
+    data: user,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["user", id],
     queryFn: () => getUserById(id as string),
     enabled: !!id,
@@ -44,17 +56,32 @@ export const ProfileAvatar = () => {
       </button>
       {isOpen && (
         <div className={AvatarStyles["menu"]}>
-          <Link to={`/user-settings/${id}`} onClick={toggleDropdown}> <div className={AvatarStyles["menuItem"]}>Account</div></Link>
-          <Link to={`/my-trips/${id}`} onClick={toggleDropdown}> <div className={AvatarStyles["menuItem"]}>Trips</div></Link>
-          <Link to={`/my-orders/${id}`}> <div className={AvatarStyles["menuItem"]} onClick={toggleDropdown}>My Orders</div></Link>
+          <Link to={`/user-settings/${id}`} onClick={toggleDropdown}>
+            {" "}
+            <div className={AvatarStyles["menuItem"]}>Account</div>
+          </Link>
+          <Link to={`/my-trips/${id}`} onClick={toggleDropdown}>
+            {" "}
+            <div className={AvatarStyles["menuItem"]}>Trips</div>
+          </Link>
+          <Link to={`/my-orders/${id}`}>
+            {" "}
+            <div className={AvatarStyles["menuItem"]} onClick={toggleDropdown}>
+              My Orders
+            </div>
+          </Link>
           <Link to={`/user-settings/wallet/${id}`}>
             <div className={AvatarStyles["menuItem"]}>Wallet</div>
           </Link>
-          <div className={AvatarStyles["menuItem"]} onClick={toggleDropdown}>Loyalty</div>
+          <div className={AvatarStyles["menuItem"]} onClick={toggleDropdown}>
+            Loyalty
+          </div>
           <Link to={`/help-center/${id}`} onClick={toggleDropdown}>
             <div className={AvatarStyles["menuItem"]}>Help Center</div>
           </Link>
-          <Link to="/entertainment" onClick={toggleDropdown}><div className={AvatarStyles["logout"]}>Log Out</div></Link>
+          <Link to="/entertainment" onClick={toggleDropdown}>
+            <div className={AvatarStyles["logout"]}>Log Out</div>
+          </Link>
         </div>
       )}
     </div>
