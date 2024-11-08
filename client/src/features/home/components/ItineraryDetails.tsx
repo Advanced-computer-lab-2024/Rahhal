@@ -24,17 +24,23 @@ import { formatDate, formatTime } from "../utils/filter-lists/overview-card";
 
 import { ActivitiesTimeline } from "./ActivitiesTimeline";
 import { FaAccessibleIcon, FaLanguage } from "react-icons/fa6";
+import { handleTripRatingSubmit, tripRatingEntity } from "./TripDetails";
+import { values } from "lodash";
+import { RateableEntityType } from "@/utils/enums";
+import { it } from "node:test";
 
 interface ItineraryDetailsProps {
   itinerary: TItinerary;
   initialBooking: TPopulatedBooking | null;
   userId: string;
+  ratingFormRef: React.RefObject<HTMLButtonElement>;
 }
 
 const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
   itinerary,
   initialBooking,
   userId,
+  ratingFormRef,
 }) => {
   const {
     name,
@@ -59,8 +65,6 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState<string | null>(null);
   const [booking, setBooking] = React.useState<TPopulatedBooking | null>(initialBooking);
-
-  const ratingFormRef = React.useRef<HTMLButtonElement>(null);
 
   React.useEffect(() => {
     setRating(calculateAverageRating(itinerary.ratings));
@@ -206,7 +210,20 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
 
   return (
     <div>
-      <RatingFormDialog buttonRef={ratingFormRef} onSubmit={() => {}} />
+      <RatingFormDialog
+        buttonRef={ratingFormRef}
+        ratingEntities={tripRatingEntity}
+        onSubmit={(values) => {
+          itinerary._id &&
+            handleTripRatingSubmit(
+              values,
+              itinerary._id,
+              RateableEntityType.ITINERARY,
+              userId,
+              ratingFormRef,
+            );
+        }}
+      />
       <div className="grid grid-cols-3 gap-8 px-2">
         {/* Left Column - Images and Details */}
         <div className="space-y-6 col-span-2">

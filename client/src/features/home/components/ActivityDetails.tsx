@@ -21,9 +21,9 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { RatingFormDialog } from "./RatingFormDialog";
 import { formatDate, formatTime } from "../utils/filter-lists/overview-card";
-import { tripRatingEntity } from "./TripDetails";
-import { createRating } from "@/api-calls/rating-api-calls";
+import { handleTripRatingSubmit, tripRatingEntity } from "./TripDetails";
 import { RateableEntityType } from "@/utils/enums";
+
 
 
 
@@ -32,12 +32,14 @@ interface ActivityDetailsProps {
   activity: TActivity;
   initialBooking: TPopulatedBooking | null;
   userId: string;
+  ratingFormRef: React.RefObject<HTMLButtonElement>;
 }
 
 const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
   activity,
   initialBooking,
   userId,
+  ratingFormRef,
 }) => {
   const {
     name,
@@ -59,7 +61,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
   const [selectedTicket, setSelectedTicket] = React.useState<string | null>(null);
   const [booking, setBooking] = React.useState<TPopulatedBooking | null>(initialBooking);
 
-  const ratingFormRef = React.useRef<HTMLButtonElement>(null);
+  
 
   React.useEffect(() => {
     setRating(calculateAverageRating(activity.ratings));
@@ -195,29 +197,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
     }
   };
 
-  const submitRating = async (values: Record<string, any>, eventId: string) => {
-    const user = userId ? await getUserById(userId) : null;
-
-      const ratingData: TRating = {
-        userId: userId || "",
-        userName: user?.username || "",
-        rating: values.rating,
-        review: values.comment,
-      };
-
-
-    await createRating(ratingData, RateableEntityType.ACTIVITY, eventId);
-
-    toast({
-      title: "Success",
-      description: "Rating submitted successfully",
-      duration: 5000,
-    });
-
-    // close the dialog
-    ratingFormRef.current?.click();
-    
-  }
+  
 
   const activityDate = new Date(date);
   const formattedDate = formatDate(activityDate);
@@ -245,7 +225,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
 
   return (
     <div>
-      <RatingFormDialog buttonRef={ratingFormRef} ratingEntities={tripRatingEntity} onSubmit={(values: Record<string, any>) => activity._id ? submitRating(values, activity._id) : undefined} />
+      <RatingFormDialog buttonRef={ratingFormRef} ratingEntities={tripRatingEntity} onSubmit={(values: Record<string, any>) => activity._id ? handleTripRatingSubmit(values, activity._id, RateableEntityType.ACTIVITY, userId, ratingFormRef) : null} />
       <div className="grid grid-cols-3 gap-8 px-2">
         {/* Left Column - Images and Details */}
         <div className="space-y-6 col-span-2">
