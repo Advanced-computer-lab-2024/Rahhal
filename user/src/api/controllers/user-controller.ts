@@ -137,8 +137,8 @@ export async function updateUserById(req: Request, res: Response) {
         if (!user) {
           res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
           return;
-        } else if(user.balance) {
-          updatedUser.balance = user.balance + amountRetrieved;
+        } else{
+          updatedUser.balance = user.balance as number + amountRetrieved;
         }
       }
     }
