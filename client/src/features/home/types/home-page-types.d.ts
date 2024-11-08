@@ -298,12 +298,12 @@ export interface FlightData {
   meta: {
     count: number;
   };
-  data: {
-    offers: FlightOffer;
-  }[];
-  dictionaries: {
-    carriers: { [key: string]: string };
-  };
+  data: FlightOffer[];
+  dictionaries: Dictionaries;
+}
+
+export interface Dictionaries {
+  carriers: { [key: string]: string };
 }
 
 export interface FlightOffer {
@@ -339,4 +339,30 @@ export interface FlightOffer {
     currency: string;
     total: string;
   };
+}
+
+interface FlightOfferDisplay {
+  id: string;
+  airline: string;
+  oneway: boolean;
+  departure: {
+    time: string;
+    code: string;
+    date: string;
+  };
+  arrival: {
+    time: string;
+    date: string;
+    code: string;
+  };
+  price: {
+    amount: number;
+    currency: string;
+  };
+  duration: string;
+  stops: Array<{
+    code: string;
+    time: string;
+    duration: string;
+  }>;
 }

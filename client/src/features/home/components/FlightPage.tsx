@@ -1,47 +1,33 @@
-import { useState } from "react";
-import { createBooking } from "@/api-calls/booking-api-calls";
-import type { FlightData, TBookingType } from "../types/home-page-types";
-import { bookingType } from "@/utils/enums";
-import { addLoyalityPoints } from "@/api-calls/users-api-calls";
-import { useFlightSearchBarStore } from "@/stores/flight-searchbar-slice";
-import { useCurrencyStore } from "@/stores/currency-exchange-store";
-import FlightCard from "./FlightCard";
-import currencyExchange from "@/utils/currency-exchange";
+import type { FlightData } from "../types/home-page-types";
+import { parseFlightOfferData } from "@/lib/utils";
+import FlightAccordion from "./FlightAccordion";
 
 interface TransportationPageProps {
-  data: FlightData["data"];
+  rawData: FlightData;
   loggedIn: boolean;
-  id?: string;
-  isAdult?: boolean;
+  userId: string;
+  isAdult: boolean;
 }
 
-function FlightPage({ data, loggedIn, id, isAdult }: TransportationPageProps) {
-  const [selectedFlight, setSelectedFlight] = useState<number | null>(null);
-  const [prices, setPrices] = useState<number[]>([]);
-
-  const { currency } = useCurrencyStore();
-
-  const onConfirmTrip = async () => {
-    const bookingRequest: TBookingType = {
-      user: id ? id : "",
-      entity: selectedFlight !== null ? data[selectedFlight]?.offers?.id || "" : "",
-      type: bookingType.Flight,
-    };
-    const booking = await createBooking(bookingRequest);
-    if (id && selectedFlight !== null) {
-      const convertedPrice = currencyExchange("EGP", prices[selectedFlight]);
-      if (convertedPrice !== undefined) {
-        await addLoyalityPoints(id, convertedPrice);
-      }
-    }
-    if (booking) {
-      alert("Flight booked successfully!");
-    }
-  };
+function FlightPage({ rawData, loggedIn, userId, isAdult }: TransportationPageProps) {
+  const { data, dictionaries } = rawData;
 
   return (
-    <div className="w-[100%] flex">
-      <div className="w-[60%] flex flex-col p-10 gap-8">{JSON.stringify(data)}</div>
+    <div className="w-full flex">
+      <div className="w-[60%] flex flex-col p-10 gap-8">
+        {data.map((offer, index) => {
+          const parsedOffer = parseFlightOfferData(offer, dictionaries);
+          return (
+            <FlightAccordion
+              key={index}
+              isAdult={isAdult}
+              loggedIn={loggedIn}
+              offer={parsedOffer}
+              userID={userId}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
