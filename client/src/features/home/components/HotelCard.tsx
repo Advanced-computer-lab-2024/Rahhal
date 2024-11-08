@@ -5,9 +5,6 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel"
-import { type CarouselApi } from "@/components/ui/carousel"
-import { useState, useEffect } from "react"
-import { Button } from "react-day-picker";
 interface Hotel {
     name: string;
     bubbleRating: string;

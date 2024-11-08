@@ -10,6 +10,7 @@ interface GuestSelectorProps {
   infants: number;
   setInfants: (value: number) => void;
   placeholder: string;
+  className?: string
 }
 
 function GuestSelector({
@@ -20,12 +21,14 @@ function GuestSelector({
   infants,
   setInfants,
   placeholder,
+  className = "",
+
 }: GuestSelectorProps) {
   const sum = adults + children + infants;
   let displayedText;
   let guestsText;
 
-  if (placeholder === "Guests")
+  if (placeholder === "Guests" || placeholder === "guests")
     guestsText = adults + children === 0 ? "" : adults + children === 1 ? "guest" : "guests";
   else
     guestsText =
@@ -48,7 +51,7 @@ function GuestSelector({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="w-[200px] h-[66px] justify-start text-left font-normal rounded-full border-none"
+          className={"w-[200px] h-[66px] justify-start text-left font-normal rounded-full border-none " + className}
         >
           <div className="flex flex-col">
             <span className="text-black text-sm">Who</span>
