@@ -48,7 +48,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             {/* rating goes here */}
             <IoMdStar style={{ fontSize: "0.8rem" }} />
 
-            <p>{rating?.toPrecision(2)}</p>
+            <p>{rating?.toFixed(2)}</p>
           </div>
           <div className={CardStyles["product-card-container__language-time"]}>
             {/* language and opening time and availability goes here */}
