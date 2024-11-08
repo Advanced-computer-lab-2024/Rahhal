@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import ReservationDetails from './ReservationDetails';
 import { addDays, format, isSameMonth, isSameDay, startOfToday, differenceInDays } from "date-fns"
+import { ChevronDown, ChevronUp } from 'lucide-react';
 interface HotelDetails {
     name: string,
     address: {
@@ -60,6 +61,10 @@ export default function HotelDetails({ hotel }: HotelDetailsProps) {
         return result;
     };
 
+    const [showMoreProperty, setShowMoreProperty] = useState(false);
+    const [showMoreFeat, setShowMoreFeat] = useState(false);
+    const [showMoreType, setShowMoreType] = useState(false);
+
     const propertyAmenities = chunkArray(hotel.features.propertyAmenities, 2);
     const roomFeatures = chunkArray(hotel.features.roomFeatures, 2);
     const roomTypes = chunkArray(hotel.features.roomTypes, 2);
@@ -104,7 +109,7 @@ export default function HotelDetails({ hotel }: HotelDetailsProps) {
                             <div className="flex justify-end w-full pr-4">
                                 <SharePopover link={""} />
                             </div>
-                
+
                             <div className="flex justify-start w-64 p-2">
                                 <span className="text-left font-semibold">{hotel.averagePrice} </span> <span className="pl-1 ">night</span>
                             </div>
@@ -194,59 +199,138 @@ export default function HotelDetails({ hotel }: HotelDetailsProps) {
                                 <hr className="border-1 border-gray-300 my-4" />
                                 <span>{hotel.description}</span>
                                 <hr className="border-1 border-gray-300 my-4" />
-                                <div className="flex flex-col py-3 gap-4">
-                                <span className="font-medium text-md">Room features</span>
-                                {
-                                    roomFeatures.map((arr) => (
 
-                                        <div className="flex justify-between">
-                                            <div className="flex justify-start gap-2 w-1/2">
-                                                <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[0].svg) }} className="h-5" viewBox="0 0 24 24" />
-                                                <span className="text-sm text-gray-700">{arr[0].text}</span>
-                                            </div>
-                                            {arr[1] && <div className="flex justify-start gap-2 w-1/2">
-                                                <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[1].svg) }} className="h-5" viewBox="0 0 24 24" />
-                                                <span className="text-sm text-gray-700">{arr[1].text}</span>
-                                            </div>}
-                                        </div>
-                                    ))
-                                }
-                                </div>
                             </div>
+
 
                             <div className="flex flex-col py-3 gap-4">
                                 <span className="font-medium text-md">Property amenities</span>
                                 {
-                                    propertyAmenities.map((arr) => (
+                                    !showMoreProperty && (propertyAmenities.length > 4) && (
+                                        <>
+                                            {
+                                                propertyAmenities.slice(0, 4).map((arr) => (
 
-                                        <div className="flex justify-between">
-                                            <div className="flex justify-start gap-2 w-1/2">
-                                                <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[0].svg) }} className="h-5" viewBox="0 0 24 24" />
-                                                <span className="text-sm text-gray-700">{arr[0].text}</span>
-                                            </div>
-                                            {arr[1] && <div className="flex justify-start gap-2 w-1/2">
-                                                <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[1].svg) }} className="h-5" viewBox="0 0 24 24" />
-                                                <span className="text-sm text-gray-700">{arr[1].text}</span>
-                                            </div>}
-                                        </div>
-                                    ))
+                                                    <div className="flex justify-between">
+                                                        <div className="flex justify-start gap-2 w-1/2">
+                                                            <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[0].svg) }} className="h-5" viewBox="0 0 24 24" />
+                                                            <span className="text-sm text-gray-700">{arr[0].text}</span>
+                                                        </div>
+                                                        {arr[1] && <div className="flex justify-start gap-2 w-1/2">
+                                                            <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[1].svg) }} className="h-5" viewBox="0 0 24 24" />
+                                                            <span className="text-sm text-gray-700">{arr[1].text}</span>
+                                                        </div>}
+                                                    </div>
+                                                ))
+                                            }
+                                            <span className="flex gap-2 mb-4"> <button onClick={() => setShowMoreProperty(true)} className="underline font-semibold">Show more</button> <ChevronDown onClick={() => setShowMoreProperty(true)} className="hover:cursor-pointer"/></span> </>)
                                 }
 
-                                <span className="font-medium text-md mt-5">Room types</span>
                                 {
-                                    roomTypes.map((arr) => (
+                                    showMoreProperty &&
+                                    (<>
+                                        {
+                                            propertyAmenities.map((arr) => (
 
-                                        <div className="flex justify-between">
-                                            <div className="flex justify-start gap-2 w-1/2">
-                                                <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[0].svg) }} className="h-5" viewBox="0 0 24 24" />
-                                                <span className="text-sm text-gray-700">{arr[0].text}</span>
-                                            </div>
-                                            {arr[1] && <div className="flex justify-start gap-2 w-1/2">
-                                                <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[1].svg) }} className="h-5" viewBox="0 0 24 24" />
-                                                <span className="text-sm text-gray-700">{arr[1].text}</span>
-                                            </div>}
-                                        </div>
-                                    ))
+                                                <div className="flex justify-between">
+                                                    <div className="flex justify-start gap-2 w-1/2">
+                                                        <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[0].svg) }} className="h-5" viewBox="0 0 24 24" />
+                                                        <span className="text-sm text-gray-700">{arr[0].text}</span>
+                                                    </div>
+                                                    {arr[1] && <div className="flex justify-start gap-2 w-1/2">
+                                                        <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[1].svg) }} className="h-5" viewBox="0 0 24 24" />
+                                                        <span className="text-sm text-gray-700">{arr[1].text}</span>
+                                                    </div>}
+                                                </div>
+                                            ))
+                                        }
+                                        {(propertyAmenities.length > 4) && <span className="flex gap-2 mb-4"> <button onClick={() => setShowMoreProperty(false)} className="underline font-semibold">Show less</button> <ChevronUp onClick={() => setShowMoreProperty(false)} className="hover:cursor-pointer"/></span>} </>)
+                                }
+
+                                <span className="font-medium text-md">Room features</span>
+                                {
+                                    !showMoreFeat && (roomFeatures.length > 4) && (
+                                        <>
+                                            {
+                                                roomFeatures.slice(0, 4).map((arr) => (
+
+                                                    <div className="flex justify-between">
+                                                        <div className="flex justify-start gap-2 w-1/2">
+                                                            <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[0].svg) }} className="h-5" viewBox="0 0 24 24" />
+                                                            <span className="text-sm text-gray-700">{arr[0].text}</span>
+                                                        </div>
+                                                        {arr[1] && <div className="flex justify-start gap-2 w-1/2">
+                                                            <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[1].svg) }} className="h-5" viewBox="0 0 24 24" />
+                                                            <span className="text-sm text-gray-700">{arr[1].text}</span>
+                                                        </div>}
+                                                    </div>
+                                                ))
+                                            }
+                                            <span className="flex gap-2 mb-4"> <button onClick={() => setShowMoreFeat(true)} className="underline font-semibold">Show more</button> <ChevronDown onClick={() => setShowMoreFeat(true)} className="hover:cursor-pointer" /></span> </>)
+                                }
+
+                                {
+                                    showMoreFeat &&
+                                    (<>
+                                        {
+                                            roomFeatures.map((arr) => (
+
+                                                <div className="flex justify-between">
+                                                    <div className="flex justify-start gap-2 w-1/2">
+                                                        <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[0].svg) }} className="h-5" viewBox="0 0 24 24" />
+                                                        <span className="text-sm text-gray-700">{arr[0].text}</span>
+                                                    </div>
+                                                    {arr[1] && <div className="flex justify-start gap-2 w-1/2">
+                                                        <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[1].svg) }} className="h-5" viewBox="0 0 24 24" />
+                                                        <span className="text-sm text-gray-700">{arr[1].text}</span>
+                                                    </div>}
+                                                </div>
+                                            ))
+                                        }
+                                        {(roomFeatures.length > 4) && <span className="flex gap-2 mb-4"> <button onClick={() => setShowMoreFeat(false)} className="underline font-semibold">Show less</button> <ChevronUp onClick={() => setShowMoreFeat(false)} className="hover:cursor-pointer" /></span>} </>)
+                                }
+
+                                <span className="font-medium text-md">Room types</span>
+                                {
+                                    !showMoreType && (roomTypes.length > 4) && (
+                                        <>
+                                            {
+                                                roomTypes.slice(0, 4).map((arr) => (
+
+                                                    <div className="flex justify-between">
+                                                        <div className="flex justify-start gap-2 w-1/2">
+                                                            <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[0].svg) }} className="h-5" viewBox="0 0 24 24" />
+                                                            <span className="text-sm text-gray-700">{arr[0].text}</span>
+                                                        </div>
+                                                        {arr[1] && <div className="flex justify-start gap-2 w-1/2">
+                                                            <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[1].svg) }} className="h-5" viewBox="0 0 24 24" />
+                                                            <span className="text-sm text-gray-700">{arr[1].text}</span>
+                                                        </div>}
+                                                    </div>
+                                                ))
+                                            }
+                                            <span className="flex gap-2 mb-4"> <button onClick={() => setShowMoreType(true)} className="underline font-semibold">Show more</button> <ChevronDown onClick={() => setShowMoreType(true)} className="hover:cursor-pointer" /></span> </>)
+                                }
+
+                                {
+                                    (showMoreFeat || (roomTypes.length <= 4)) &&
+                                    (<>
+                                        {
+                                            roomTypes.map((arr) => (
+
+                                                <div className="flex justify-between">
+                                                    <div className="flex justify-start gap-2 w-1/2">
+                                                        <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[0].svg) }} className="h-5" viewBox="0 0 24 24" />
+                                                        <span className="text-sm text-gray-700">{arr[0].text}</span>
+                                                    </div>
+                                                    {arr[1] && <div className="flex justify-start gap-2 w-1/2">
+                                                        <svg dangerouslySetInnerHTML={{ __html: decodeURI(arr[1].svg) }} className="h-5" viewBox="0 0 24 24" />
+                                                        <span className="text-sm text-gray-700">{arr[1].text}</span>
+                                                    </div>}
+                                                </div>
+                                            ))
+                                        }
+                                        {(roomTypes.length > 4) && <span className="flex gap-2 mb-4"> <button onClick={() => setShowMoreType(false)} className="underline font-semibold">Show less</button> <ChevronUp onClick={() => setShowMoreType(false)} className="hover:cursor-pointer" /></span>} </>)
                                 }
                             </div>
                         </div>
