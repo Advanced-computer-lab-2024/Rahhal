@@ -44,29 +44,3 @@ export type TUser = {
   createdAt?: Date;
   updatedAt?: Date;
 };
-
-interface User {
-  firstName?: string;
-  lastName?: string;
-  username: string;
-  email: string;
-  password: string;
-  role: Role;
-  approved: boolean;
-  dob?: Date;
-  nationality?: string;
-  job?: string;
-  addresses?: string[];
-  phoneNumber?: string;
-  yearsOfExperience?: number;
-  previousWork?: string;
-  website?: string;
-  hotline?: string;
-  companyProfile?: string;
-  companyName?: string;
-  description?: string;
-  balance?: number;
-  nationalID?: string;
-  taxRegistration?: string;
-  certificates?: string[];
-}
