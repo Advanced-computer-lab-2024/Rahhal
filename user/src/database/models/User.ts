@@ -2,6 +2,7 @@ import type { Types } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 import userValidators from "@/validators/user-validators";
 import type { TRating } from "@/types";
+import { LEVELS } from "@/utils/constants";
 
 export enum Role {
   admin = "admin",
@@ -11,6 +12,10 @@ export enum Role {
   seller = "seller",
   tourismGovernor = "tourismGovernor",
 }
+
+
+
+
 interface ICreditCard {
   cardHolderName: string;
   cardNumber: string;
@@ -46,6 +51,8 @@ export interface IUser {
   description?: string;
   balance?: number;
   points?: number;
+  accumulativePoints?: number;
+  level?: number;
   ratings?: TRating[];
   preferences?: string[];
   wallet?: IWallet;
@@ -270,6 +277,22 @@ const userSchema: Schema = new Schema<IUser>(
         message: "Invalid points entry",
       },
     },
+    accumulativePoints: {
+      type: Number,
+      required: function () {
+        return this.role === Role.tourist;
+      },
+      validate: {
+        validator: userValidators.validateAccumulativePoints,
+        message: "Invalid accumulative points entry",
+      },
+    },
+    level: {
+      type: Number,
+      required: function () {
+        return this.role === Role.tourist;
+      },
+    },
     balance: {
       type: Number,
       default: 0,
@@ -338,22 +361,12 @@ const userSchema: Schema = new Schema<IUser>(
     },
     preferences: {
       type: [String],
-      // required: function () {
-      //   return this.role === Role.tourist;
-      // },
-      // default:[]
     },
-    nationalID: {
-      type: String,
-      // required:function(){
-      //   return this.role === Role.tourGuide || this.role === Role.advertiser || this.role === Role.seller;
-      // },
+    nationalID:{
+      type:String,
     },
-    taxRegistration: {
-      type: String,
-      // required:function(){
-      //   return this.role === Role.advertiser || this.role === Role.seller;
-      // },
+    taxRegistration:{
+      type:String,
     },
     certificates: {
       type: [String],
