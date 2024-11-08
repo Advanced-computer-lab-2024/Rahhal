@@ -158,10 +158,10 @@ export async function updateUserById(req: Request, res: Response) {
 export async function createUser(req: Request, res: Response) {
   try {
     const userData = req.body;
-    if (userData.email && userData.username && userData.password) {
+    if (userData.username && userData.password) {
       const shouldCheckEmail = userData.role !== "admin" && userData.role !== "tourismGovernor";
       const userUsername = await userService.getUserByUsername(userData.username);
-      const userEmail = await userService.getUserByEmail(userData.email);
+      const userEmail = userData.email? await userService.getUserByEmail(userData.email) : undefined;
 
       if (userUsername && userEmail && shouldCheckEmail) {
         res
