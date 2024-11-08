@@ -274,3 +274,95 @@ export interface IPlaceDetails {
   countryCode: string;
   name: string;
 }
+
+export interface FlightRequest {
+  originDestinations: {
+    originLocationCode: string;
+    destinationLocationCode: string;
+    departureDateTimeRange: {
+      date: string;
+      time?: string;
+    };
+  }[];
+  travelers: {
+    id: string;
+    travelerType: string;
+  }[];
+  sources: string[];
+  searchCriteria: {
+    maxFlightOffers: number;
+  };
+}
+
+export interface FlightData {
+  meta: {
+    count: number;
+  };
+  data: FlightOffer[];
+  dictionaries: Dictionaries;
+}
+
+export interface Dictionaries {
+  carriers: { [key: string]: string };
+}
+
+export interface FlightOffer {
+  id: string;
+  source: string;
+  instantTicketingRequired: boolean;
+  nonHomogeneous: boolean;
+  oneWay: boolean;
+  lastTicketingDate: string;
+  numberOfBookableSeats: number;
+  itineraries: {
+    segments: {
+      departure: {
+        iataCode: string;
+        at: string;
+      };
+      arrival: {
+        iataCode: string;
+        at: string;
+      };
+      carrierCode: string;
+      number: string;
+      aircraft: {
+        code: string;
+      };
+      operating: {
+        carrierCode: string;
+      };
+      duration: string;
+    }[];
+  }[];
+  price: {
+    currency: string;
+    total: string;
+  };
+}
+
+interface FlightOfferDisplay {
+  id: string;
+  airline: string;
+  oneway: boolean;
+  departure: {
+    time: string;
+    code: string;
+    date: string;
+  };
+  arrival: {
+    time: string;
+    date: string;
+    code: string;
+  };
+  price: {
+    amount: number;
+    currency: string;
+  };
+  duration: string;
+  stops: Array<{
+    code: string;
+    time: string;
+    duration: string;
+  }>;
+}

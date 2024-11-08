@@ -8,6 +8,7 @@ import currencyExchange from "@/utils/currency-exchange";
 interface TaxiCardProps {
   type?: string;
   price: number;
+  originalCurrency: string;
   guests?: number;
   luggage?: number;
   provider?: string;
@@ -15,12 +16,9 @@ interface TaxiCardProps {
   onClick?: () => void;
 }
 
-
-
 export const TaxiCard: React.FC<TaxiCardProps> = (props) => {
-
   const { currency } = useCurrencyStore();
-  const convertedPrice = currencyExchange("USD", props.price);
+  const convertedPrice = currencyExchange(props.originalCurrency, props.price);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
 
   return (
