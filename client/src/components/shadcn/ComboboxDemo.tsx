@@ -46,7 +46,7 @@ export function ComboboxDemo({ data = [], onSelect }: ComboboxDemoProps) { // De
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full justify-between"
         >
           {value
             ? data.find((item) => item.value === value)?.label
@@ -54,7 +54,7 @@ export function ComboboxDemo({ data = [], onSelect }: ComboboxDemoProps) { // De
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-full p-0">
         <Command>
           <CommandList>
             <CommandEmpty>No options found.</CommandEmpty>

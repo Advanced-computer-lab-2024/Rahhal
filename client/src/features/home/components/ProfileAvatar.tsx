@@ -24,7 +24,6 @@ export const ProfileAvatar = () => {
   };
 
   const id = useIdFromParamsOrQuery();
-  console.log(id);
 
   const {
     data: user,
@@ -40,7 +39,6 @@ export const ProfileAvatar = () => {
   const firstName = user?.firstName;
   const lastName = user?.lastName;
   const avatarLetters = firstName && lastName ? `${firstName[0]}${lastName[0]}` : "US";
-  console.log(firstName); // This will log the firstName once the data is fetched
 
   return (
     <div className={AvatarStyles["dropdown"]}>

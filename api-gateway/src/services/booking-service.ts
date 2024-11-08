@@ -1,5 +1,5 @@
 import { bookingAxiosInstance } from "@/utils/axios-instances";
-import { populateBookings } from "@/utils/booking-populator";
+import { populateBooking, populateBookings } from "@/utils/booking-populator";
 
 import type { IBooking } from "@/utils/types";
 
@@ -9,6 +9,17 @@ export async function getBookings(filter: Partial<IBooking>) {
     return populateBookings(bookings.data, filter);
   } catch (error) {
     return new Error("Failed to fetch bookings from booking server\n" + error);
+  }
+}
+
+export async function getBookingById(id: string) {
+  
+  try {
+    const booking = await bookingAxiosInstance.get(`/bookings/${id}`);
+    return populateBooking(booking.data, {});
+    
+  } catch (error) {
+    return new Error("Failed to fetch booking from booking server\n" + error);
   }
 }
 

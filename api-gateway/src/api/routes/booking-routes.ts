@@ -4,6 +4,7 @@ import * as bookingController from "@/api/controllers/booking-controller";
 const router = express.Router();
 
 router.get("/bookings", bookingController.getBookings);
+router.get("/bookings/:id", bookingController.getBookingById);
 router.post("/bookings", bookingController.createBooking);
 router.patch("/bookings/:id", bookingController.updateBooking);
 router.delete("/bookings/:id", bookingController.deleteBooking);

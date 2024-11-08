@@ -4,7 +4,8 @@ import { ChevronRight } from "lucide-react";
 import { ActivityView } from "@/features/admin/components/ActivityView";
 
 export type TRating = {
-  user: string;
+  userId: string;
+  userName: string;
   rating: number;
   review?: string;
 };
@@ -28,7 +29,7 @@ export type TActivity = {
 };
 
 
-function calculateAverageRating(ratings: TRating[]) {
+export function calculateAverageRating(ratings: TRating[]) {
   if (ratings.length === 0) {
     return 0;
   }

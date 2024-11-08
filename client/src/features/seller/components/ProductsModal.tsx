@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { TNewProduct, TProduct } from "@/features/seller/utils/seller-columns";
 import { createProduct, updateProduct } from "@/api-calls/products-api-calls";
 
+
 interface ProductModalProps {
   productData?: TProduct;
   dialogTrigger?: React.ReactNode;

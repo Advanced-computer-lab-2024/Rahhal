@@ -52,7 +52,7 @@ function StarIcon() {
   );
 }
 
-function RatingStars({
+export function RatingStars({
   rating,
   onRateChange,
 }: {
