@@ -17,20 +17,20 @@ interface NavigationProps {
   loggedIn: boolean;
 }
 
-function useIdFromParamsOrQuery() {
+export default function TouristHomePageNavigation(NavigationProps: NavigationProps) {
   const { id: paramId } = useParams<{ id?: string }>();
   const location = useLocation();
-
-  const queryParams = new URLSearchParams(location.search);
-  const queryId = queryParams.get("userId");
-
-  return paramId || queryId;
-}
-
-export default function TouristHomePageNavigation(NavigationProps: NavigationProps) {
   const [navigation, setNavigation] = useState(1);
   const buttonNames = ["Experiences", "Stays", "Travel", "Shop"];
   const paths = ["/entertainment", "/stays", "/travel", "/shop"];
+
+  function useIdFromParamsOrQuery() {
+    const queryParams = new URLSearchParams(location.search);
+    const queryId = queryParams.get("userId");
+
+    return paramId || queryId;
+  }
+
   const [id, setId] = useState(useIdFromParamsOrQuery);
 
   return (
