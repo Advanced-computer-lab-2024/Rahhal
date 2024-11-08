@@ -11,8 +11,9 @@ interface Ticket {
 }
 
 interface OverviewCardProps {
-  originalPrice: number;
-  discountedPrice?: number; // Optional for cases without a discount
+  currency: string;
+  originalPrice: number | string;
+  discountedPrice?: number | string; // Optional for cases without a discount
   tickets?: string[];
   date?: string;
   time?: string;
@@ -28,6 +29,7 @@ interface OverviewCardProps {
 }
 
 export const OverviewCard: React.FC<OverviewCardProps> = ({
+  currency,
   originalPrice,
   discountedPrice,
   tickets,
@@ -46,7 +48,7 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({
   return (
     <div className={styles.card}>
       {/* Header Section */}
-      <Header originalPrice={originalPrice} discountedPrice={discountedPrice} />
+      <Header originalPrice={originalPrice} discountedPrice={discountedPrice} currency={currency} />
 
       {/* Content Section */}
       <OverViewContent

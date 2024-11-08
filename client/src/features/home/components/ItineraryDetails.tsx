@@ -25,9 +25,10 @@ import { formatDate, formatTime } from "../utils/filter-lists/overview-card";
 import { ActivitiesTimeline } from "./ActivitiesTimeline";
 import { FaAccessibleIcon, FaLanguage } from "react-icons/fa6";
 import { handleTripRatingSubmit, tripRatingEntity } from "./TripDetails";
-import { values } from "lodash";
+
 import { RateableEntityType } from "@/utils/enums";
-import { it } from "node:test";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
+import currencyExchange from "@/utils/currency-exchange";
 
 interface ItineraryDetailsProps {
   itinerary: TItinerary;
@@ -65,6 +66,8 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState<string | null>(null);
   const [booking, setBooking] = React.useState<TPopulatedBooking | null>(initialBooking);
+
+  const { currency } = useCurrencyStore();
 
   React.useEffect(() => {
     setRating(calculateAverageRating(itinerary.ratings));
@@ -208,6 +211,9 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
         }))
       : undefined;
 
+  const convertedPrice = currencyExchange("EGP", booking?.selectedPrice ?? 0);
+  const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
+
   return (
     <div>
       <RatingFormDialog
@@ -349,7 +355,8 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
         {/* Right Column - Booking Card */}
         <div className="justify-center items-center">
           <OverviewCard
-            originalPrice={price}
+            currency={currency}
+            originalPrice={displayPrice}
             buttonText={cardButtonText}
             buttonColor={booking?.status === "upcoming" ? "red" : "gold"}
             date={

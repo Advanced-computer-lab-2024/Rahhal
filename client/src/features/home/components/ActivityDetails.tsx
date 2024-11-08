@@ -9,7 +9,10 @@ import SharePopover from "@/components/SharePopover";
 
 import { OverviewCard } from "./overview-card/OverViewCard";
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
-import { calculateAverageRating, TRating } from "@/features/admin/utils/columns-definitions/activities-columns";
+import {
+  calculateAverageRating,
+  TRating,
+} from "@/features/admin/utils/columns-definitions/activities-columns";
 import { TBookingType, TPopulatedBooking } from "../types/home-page-types";
 import { addLoyalityPoints, getUserById, refundMoney } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
@@ -23,10 +26,8 @@ import { RatingFormDialog } from "./RatingFormDialog";
 import { formatDate, formatTime } from "../utils/filter-lists/overview-card";
 import { handleTripRatingSubmit, tripRatingEntity } from "./TripDetails";
 import { RateableEntityType } from "@/utils/enums";
-
-
-
-
+import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
+import currencyExchange from "@/utils/currency-exchange";
 
 interface ActivityDetailsProps {
   activity: TActivity;
@@ -60,12 +61,33 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
   const [selectedDate, setSelectedDate] = React.useState<string | null>(null);
   const [selectedTicket, setSelectedTicket] = React.useState<string | null>(null);
   const [booking, setBooking] = React.useState<TPopulatedBooking | null>(initialBooking);
-
-  
+  const { currency } = useCurrencyStore();
+  const { rates } = useRatesStore();
 
   React.useEffect(() => {
     setRating(calculateAverageRating(activity.ratings));
   }, [ratings]);
+
+  // update selectedTicket every time currency changes
+  React.useEffect(() => {
+    if (booking) {
+      // adjust the selected ticket price based on the currency
+      const selectedPrice = booking.selectedPrice;
+
+      const foundKey = Object.keys(price).find((key) => price[key] === selectedPrice);
+
+      let convertedSelectedPrice = selectedPrice;
+
+      if (rates.rates) {
+        const rateOfEURToOld = rates.rates["EGP"];
+        const rateOfEURToNew = rates.rates[currency];
+        convertedSelectedPrice = (selectedPrice * rateOfEURToNew) / rateOfEURToOld;
+      }
+      const selectedDisplayPrice = convertedSelectedPrice.toFixed(0);
+
+      setSelectedTicket(foundKey ? `${foundKey} - ${currency} ${selectedDisplayPrice}` : null);
+    }
+  }, [currency]);
 
   React.useEffect(() => {
     getUserById(activity.owner).then((user) => {
@@ -108,10 +130,20 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
     if (booking && booking._id !== "") {
       // set the selected ticket based on the selected price and price object
       // NOTE: THIS WILL NOT WORK IF THE PRICES ARE NOT UNIQUE
-      const selectedPrice = booking.selectedPrice;
-      console.log("selectedPrice", selectedPrice);
+      let selectedPrice = booking.selectedPrice;
+
       const foundKey = Object.keys(price).find((key) => price[key] === selectedPrice);
-      setSelectedTicket(foundKey ? `${foundKey} - EGP ${selectedPrice}` : null);
+
+      let convertedSelectedPrice = selectedPrice;
+
+      if (rates.rates) {
+        const rateOfEURToOld = rates.rates["EGP"];
+        const rateOfEURToNew = rates.rates[currency];
+        convertedSelectedPrice = (selectedPrice * rateOfEURToNew) / rateOfEURToOld;
+      }
+      const selectedDisplayPrice = convertedSelectedPrice.toFixed(0);
+
+      setSelectedTicket(foundKey ? `${foundKey} - ${currency} ${selectedDisplayPrice}` : null);
     }
 
     if (booking?._id !== "" || userId === "undefined") return;
@@ -164,6 +196,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
         updateBookingRequest(booking._id, {
           status: "upcoming",
           selectedDate: selectedDate ? new Date(selectedDate) : undefined,
+          selectedPrice: booking.selectedPrice,
         });
         addLoyalityPoints(userId, booking.selectedPrice);
         setBooking({
@@ -197,7 +230,23 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
     }
   };
 
-  
+  const onTicketSelect = (index: number) => {
+    let selectedPrice = price[Object.keys(price)[index]];
+
+    let convertedSelectedPrice = selectedPrice;
+
+    if (rates.rates) {
+      const rateOfEURToOld = rates.rates["EGP"];
+      const rateOfEURToNew = rates.rates[currency];
+      convertedSelectedPrice = (selectedPrice * rateOfEURToNew) / rateOfEURToOld;
+    }
+
+    const selectedDisplayPrice = convertedSelectedPrice.toFixed(0);
+    
+    setBooking({ ...booking!, selectedPrice: selectedPrice });
+
+    setSelectedTicket(`${Object.keys(price)[index]} - ${currency} ${selectedDisplayPrice}`);
+  };
 
   const activityDate = new Date(date);
   const formattedDate = formatDate(activityDate);
@@ -216,16 +265,39 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
       : undefined;
 
   const tickets = Object.keys(price).map((key) => {
-    return key + " - EGP " + price[key];
+    let convertedTicketPrice = price[key];
+
+    if (rates.rates) {
+      const rateOfEURToOld = rates.rates["EGP"];
+      const rateOfEURToNew = rates.rates[currency];
+      convertedTicketPrice = (price[key] * rateOfEURToNew) / rateOfEURToOld;
+    }
+
+    const displayPrice = convertedTicketPrice.toFixed(0);
+
+    return `${key} - ${currency} ${displayPrice}`;
   });
 
-  
-
-  
+  const convertedPrice = currencyExchange("EGP", booking?.selectedPrice ?? 0);
+  const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
 
   return (
     <div>
-      <RatingFormDialog buttonRef={ratingFormRef} ratingEntities={tripRatingEntity} onSubmit={(values: Record<string, any>) => activity._id ? handleTripRatingSubmit(values, activity._id, RateableEntityType.ACTIVITY, userId, ratingFormRef) : null} />
+      <RatingFormDialog
+        buttonRef={ratingFormRef}
+        ratingEntities={tripRatingEntity}
+        onSubmit={(values: Record<string, any>) =>
+          activity._id
+            ? handleTripRatingSubmit(
+                values,
+                activity._id,
+                RateableEntityType.ACTIVITY,
+                userId,
+                ratingFormRef,
+              )
+            : null
+        }
+      />
       <div className="grid grid-cols-3 gap-8 px-2">
         {/* Left Column - Images and Details */}
         <div className="space-y-6 col-span-2">
@@ -306,7 +378,8 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
         {/* Right Column - Booking Card */}
         <div className="justify-center items-center">
           <OverviewCard
-            originalPrice={booking?.selectedPrice ?? 0}
+            currency={currency}
+            originalPrice={displayPrice}
             buttonText={cardButtonText}
             buttonColor={booking?.status === "upcoming" ? "red" : "gold"}
             date={booking ? formattedDate : undefined}
@@ -315,17 +388,11 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
             disabled={isButtonDisabled}
             onButtonClick={handleButtonClick}
             discountedPrice={
-              specialDiscount != 0 && booking && booking?.selectedPrice
-                ? booking.selectedPrice - (booking.selectedPrice * specialDiscount) / 100
+              specialDiscount != 0 && booking && convertedPrice
+                ? convertedPrice - (convertedPrice * specialDiscount) / 100
                 : undefined
             }
-            onTicketSelect={
-              booking && booking?.status === "cancelled"
-                ? (index) => {
-                    setBooking({ ...booking!, selectedPrice: price[Object.keys(price)[index]] });
-                  }
-                : undefined
-            }
+            onTicketSelect={booking && booking?.status === "cancelled" ? onTicketSelect : undefined}
             tickets={
               booking && booking?.status === "cancelled"
                 ? tickets

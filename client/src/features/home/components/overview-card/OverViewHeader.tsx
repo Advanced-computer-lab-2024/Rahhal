@@ -3,11 +3,12 @@ import { TbRosetteDiscount } from "react-icons/tb";
 import styles from "../../styles/Overview-card-styles/OverViewHeader.module.css";
 
 interface HeaderProps {
+  currency: string;
   originalPrice: number;
   discountedPrice?: number; // Optional for cases without discount
 }
 
-const Header: React.FC<HeaderProps> = ({ originalPrice, discountedPrice }) => {
+const Header: React.FC<HeaderProps> = ({ currency, originalPrice, discountedPrice }) => {
   return (
     <div className={styles.header}>
       <div className={styles.priceInfo}>
@@ -19,7 +20,7 @@ const Header: React.FC<HeaderProps> = ({ originalPrice, discountedPrice }) => {
             </span>
           </>
         ) : (
-          <span className={styles.noDiscountPrice}>Total: EGP {originalPrice}</span>
+          <span className={styles.noDiscountPrice}>Total: {currency} {originalPrice}</span>
         )}
       </div>
       <hr className={styles.separator} />
