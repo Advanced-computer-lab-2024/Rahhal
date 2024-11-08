@@ -31,8 +31,11 @@ export async function uploadToFirebaseReady(
   for (let i = 0; i < files!.length; i++) {
    
     formData.append("image" + i, files![i]);
-    
+    console.log("formData", formData );
+    console.log("files", files);
+
   }
+
 
   const response = await axios.post(SERVICES_URLS.FIREBASE + "/upload-multiple-files", formData);
   const urls: string[] = response.data as string[];
