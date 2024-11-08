@@ -2,7 +2,7 @@ import type { Types } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 import userValidators from "@/validators/user-validators";
 import type { TRating } from "@/types";
-import { levels } from "@/utils/constants";
+import { LEVELS } from "@/utils/constants";
 
 export enum Role {
   admin = "admin",
@@ -13,11 +13,7 @@ export enum Role {
   tourismGovernor = "tourismGovernor",
 }
 
-export enum Level {
-  level1 = levels.level1,
-  level2 = levels.level2,
-  level3 = levels.level3,
-}
+
 
 
 interface ICreditCard {
@@ -56,7 +52,7 @@ export interface IUser {
   balance?: number;
   points?: number;
   accumulativePoints?: number;
-  level?: Level;
+  level?: number;
   ratings?: TRating[];
   preferences?: string[];
   wallet?: IWallet;

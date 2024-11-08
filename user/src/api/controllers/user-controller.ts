@@ -111,21 +111,21 @@ export async function updateUserById(req: Request, res: Response) {
           return;
         } else { 
 
-          if(user.level === levels.LEVEL1) {
-            updatedUser.points = Math.ceil(user.points as number + amountPaid * points.LEVEL1POINTRATE);  
+          if(user.level === LEVELS.LEVEL1) {
+            updatedUser.points = Math.ceil(user.points as number + amountPaid * POINTS.LEVEL1POINTRATE);  
           }
-          else if(user.level === levels.LEVEL2) {
-            updatedUser.points = Math.ceil(user.points as number + amountPaid * points.LEVEL2POINTRATE); 
+          else if(user.level === LEVELS.LEVEL2) {
+            updatedUser.points = Math.ceil(user.points as number + amountPaid * POINTS.LEVEL2POINTRATE); 
           }
           else {
-            updatedUser.points = Math.ceil(user.points as number + amountPaid * points.LEVEL3POINTRATE);
+            updatedUser.points = Math.ceil(user.points as number + amountPaid * POINTS.LEVEL3POINTRATE);
           }
-          updatedUser.accumulativePoints = Math.ceil(user.accumulativePoints as number + amountPaid * points.LEVEL1POINTRATE);
+          updatedUser.accumulativePoints = Math.ceil(user.accumulativePoints as number + amountPaid * POINTS.LEVEL1POINTRATE);
 
-          if(updatedUser.accumulativePoints >= points.LEVEL1MAXPOINTS) {
-            updatedUser.level = levels.LEVEL2;
-          } else if(updatedUser.accumulativePoints >= points.LEVEL2MAXPOINTS) {
-            updatedUser.level = levels.LEVEL3;
+          if(updatedUser.accumulativePoints >= POINTS.LEVEL1MAXPOINTS) {
+            updatedUser.level = LEVELS.LEVEL2;
+          } else if(updatedUser.accumulativePoints >= POINTS.LEVEL2MAXPOINTS) {
+            updatedUser.level = LEVELS.LEVEL3;
           } 
         }
       }
@@ -257,16 +257,16 @@ export async function redeemPoints(req: Request, res: Response) {
       res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Only tourists can redeem points" });
       return;
     } else if(user.points) {
-      if (user.points < points.MINPOINTS) {
+      if (user.points < POINTS.MINPOINTS) {
         res
           .status(STATUS_CODES.BAD_REQUEST)
           .json({ error: "You Have to have at least 10000 points to be able to redeem them!" });
         return;
       } else{
         const updatedUser = user;
-        const avgBalance = user.points / points.MINPOINTS;
-        updatedUser.points = user.points % points.MINPOINTS;
-        updatedUser.balance = user.balance as number + Math.floor(avgBalance) * points.AMOUNTFORMINPOINTS;
+        const avgBalance = user.points / POINTS.MINPOINTS;
+        updatedUser.points = user.points % POINTS.MINPOINTS;
+        updatedUser.balance = user.balance as number + Math.floor(avgBalance) * POINTS.AMOUNTFORMINPOINTS;
         console.log(updatedUser);
         const newUser = await userService.updateUserById(userId, updatedUser);
         res.status(STATUS_CODES.STATUS_OK).json(newUser);
