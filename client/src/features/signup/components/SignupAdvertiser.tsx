@@ -13,9 +13,8 @@ import { useToast } from "@/hooks/use-toast";
 import { TermsAndConditionsModal } from "./TermsAndConditionsModal";
 import { termsAndConditions } from "../terms-and-conditions/AdvertiserTermsAndConditions";
 import { advertiserSchema } from "../utils/ZodSchemas/advertiserSchema";
-import { createUser,updateUser } from "@/api-calls/users-api-calls";
+import { createUser, updateUser } from "@/api-calls/users-api-calls";
 import { uploadToFirebaseReady } from "@/utils/firebase";
-
 
 type AdvertiserFormData = z.infer<typeof advertiserSchema>;
 
@@ -55,9 +54,9 @@ export default function SignupAdvertiser() {
       hotline: data.hotline,
       companyProfile: data.companyProfile,
       role: "advertiser",
-      nationalId: "",
+      nationalID: "",
       taxRegistration: "",
-      balance : 0
+      balance: 0,
     };
 
     try {
@@ -67,25 +66,26 @@ export default function SignupAdvertiser() {
         duration: 4500,
       });
       let urls: string[] = new Array();
-      
+
       const response: any = await createUser(reqBody);
 
-
-      if(data.nationalID && data.taxRegistration){
-        const nationalId:string = `documents/${response._id}/nationalID.${data.nationalID.type.split("/")[1]}`;
-        const newFileNationalId = new File([data.nationalID ], nationalId,{ type: data.nationalID.type });
+      if (data.nationalID && data.taxRegistration) {
+        const nationalId: string = `documents/${response._id}/nationalID.${data.nationalID.type.split("/")[1]}`;
+        const newFileNationalId = new File([data.nationalID], nationalId, {
+          type: data.nationalID.type,
+        });
 
         const taxReg: string = `documents/${response._id}/taxRegistration.${data.taxRegistration.type.split("/")[1]}`;
-        const newFileTaxReg = new File([data.taxRegistration ], taxReg,{ type: data.taxRegistration.type });
+        const newFileTaxReg = new File([data.taxRegistration], taxReg, {
+          type: data.taxRegistration.type,
+        });
 
-       
         const filesFileList: File[] = [newFileNationalId, newFileTaxReg];
         urls = await uploadToFirebaseReady(filesFileList);
 
-
         const documents = {
-          "nationalID" : urls[0],
-          "taxRegistration" : urls[1]
+          nationalID: urls[0],
+          taxRegistration: urls[1],
         };
 
         const responseUpdate: any = updateUser(response, documents);
@@ -96,7 +96,6 @@ export default function SignupAdvertiser() {
       console.log("Server response:", response);
       console.log("Firebase URLs:", urls);
 
-      
       console.log("Server response:", response);
 
       toast({
@@ -150,7 +149,7 @@ export default function SignupAdvertiser() {
           description: "An unexpected error occurred",
           variant: "destructive",
           duration: 3000,
-        });   
+        });
       }
       setIsSubmitting(false);
     }

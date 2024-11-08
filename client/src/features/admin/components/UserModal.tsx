@@ -11,6 +11,7 @@ import type { TUser } from "@/types/user";
 import ShortText from "@/components/ShortText";
 import { GenericSelect } from "@/components/GenericSelect";
 import { UserRoleEnum } from "@/utils/enums";
+import UserDocuments from "@/components/UserDocuments";
 
 interface UserModalProps {
   userData?: TUser;
@@ -143,6 +144,16 @@ export function UserModal({ userData, dialogTrigger }: UserModalProps) {
             description={"Check if user is approved"}
             icon={<FaCircleCheck />}
           />
+          <div>
+            <h1 className="text-2xl font-semibold mt-6 mb-4">Uploaded Documents</h1>
+            <UserDocuments
+              certificatesUrls={modalUserData.certificates}
+              governmentalDocumentsUrls={[
+                ...(modalUserData.nationalID ? [modalUserData.nationalID] : []),
+                ...(modalUserData.taxRegistration ? [modalUserData.taxRegistration] : []),
+              ]}
+            />
+          </div>
         </>
       )}
     </GenericModal>

@@ -34,11 +34,13 @@ export function GenericModal({
   };
 
   return (
-    <Dialog open = {isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger onClick={()=>setIsOpen(true)} asChild>{dialogTrigger}</DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger onClick={() => setIsOpen(true)} asChild>
+        {dialogTrigger}
+      </DialogTrigger>
 
       <DialogContent className="max-w-[90vw] max-h-[90vh] w-1/2 h-full flex flex-col">
-        <DialogHeader >
+        <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
