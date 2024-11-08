@@ -212,8 +212,8 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
       // cancel activity if there is still 48 hours left
       if (booking && booking?._id && booking.selectedDate) {
         const currentDate = new Date();
-        const selectedDate = new Date(booking.selectedDate);
-        const difference = Math.abs(selectedDate.getTime() - currentDate.getTime());
+        const activityDate = new Date(activity.date);
+        const difference = Math.abs(activityDate.getTime() - currentDate.getTime());
         const hours = difference / (1000 * 60 * 60);
         if (hours > 48) {
           updateBookingRequest(booking._id, { status: "cancelled" });
@@ -242,7 +242,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
     }
 
     const selectedDisplayPrice = convertedSelectedPrice.toFixed(0);
-    
+
     setBooking({ ...booking!, selectedPrice: selectedPrice });
 
     setSelectedTicket(`${Object.keys(price)[index]} - ${currency} ${selectedDisplayPrice}`);
