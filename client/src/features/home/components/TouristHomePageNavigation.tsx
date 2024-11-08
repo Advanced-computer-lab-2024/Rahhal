@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { ProfileAvatar } from "./ProfileAvatar";
-import CurrencyDropdown from "./CurrencyDropdown"
+import CurrencyDropdown from "./CurrencyDropdown";
 
 interface ButtonProps {
   navigation: number;
@@ -17,11 +17,21 @@ interface NavigationProps {
   loggedIn: boolean;
 }
 
+function useIdFromParamsOrQuery() {
+  const { id: paramId } = useParams<{ id?: string }>();
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const queryId = queryParams.get("userId");
+
+  return paramId || queryId;
+}
+
 export default function TouristHomePageNavigation(NavigationProps: NavigationProps) {
   const [navigation, setNavigation] = useState(1);
   const buttonNames = ["Experiences", "Stays", "Travel", "Shop"];
   const paths = ["/entertainment", "/stays", "/travel", "/shop"];
-  const { id } = useParams();
+  const [id, setId] = useState(useIdFromParamsOrQuery);
 
   return (
     <div className="w-full h-16 flex items-center justify-between z-10 relative">
@@ -55,10 +65,10 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
           </div>
         ) : (
           <>
-          <div className="flex space-x-4 items-center">
-            <CurrencyDropdown />
-            <ProfileAvatar />
-          </div>
+            <div className="flex space-x-4 items-center">
+              <CurrencyDropdown />
+              <ProfileAvatar />
+            </div>
           </>
         )}
       </div>
