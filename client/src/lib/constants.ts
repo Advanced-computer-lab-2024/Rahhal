@@ -11,6 +11,7 @@ export const SERVICES_URLS = {
   EXCHANGERATES: "http://localhost:3000/api/exchange-rates",
   ORDER: "http://localhost:3000/api/order",
   RATING: "http://localhost:3000/api/rating",
+  FLIGHTS: "http://localhost:3000/api/flights-search",
 };
 
 export const TEMP_USER_ID = "67032b20ffa86f21339f6cad";
