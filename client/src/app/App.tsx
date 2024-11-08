@@ -28,6 +28,7 @@ import { MyTripsPage } from "@/features/home/components/MyTripsPage";
 import TravelPage from "@/features/home/components/TravelPage";
 import AdminItinerariesView from "@/features/admin/components/AdminItinerariesView";
 import AdminActivitiesView from "@/features/admin/components/AdminActivitiesView";
+import { TripDetails } from "@/features/home/components/TripDetails";
 import { getCurrencyExchangeRates } from "@/api-calls/currency-exchange-api-calls";
 import { useEffect } from "react";
 import { useRatesStore } from "@/stores/currency-exchange-store";
@@ -51,7 +52,6 @@ export default function App() {
     } else {
       setRates(JSON.parse(storedRates));
     }
-    console.log(localStorage.getItem("rates"));
     ApiCurrencyCall();
   }, []);
   const queryClient = new QueryClient();
@@ -71,6 +71,7 @@ export default function App() {
               <Route path="/entertainment/:id" element={<GeneralGridView />} />
               <Route path="/shop/:id" element={<ProductGridView />} />
               <Route path="/my-trips/:id" element={<MyTripsPage />} />
+              <Route path="/my-trips-details" element={<TripDetails />} />
               <Route path="/travel/:id" element={<TravelPage loggedIn={true} />} />
               <Route path="/my-orders/:id" element={<MyOrdersPage />} />
             </Route>
@@ -107,7 +108,7 @@ export default function App() {
             <Route path="/tour-guide/:id" element={<TourGuideView />} />
             <Route path="/admin/preference-tags" element={<PreferenceTagsAdminView />} />
             <Route path="/admin/complaints" element={<AdminComplaintsView />} />
-            <Route path="/admin/itineraries" element={<AdminItinerariesView />} />{" "}
+            <Route path="/admin/itineraries" element={<AdminItinerariesView />} />
             <Route path="/admin/activities" element={<AdminActivitiesView />} />
           </Routes>
         </Router>
@@ -125,11 +126,9 @@ export default function App() {
       getCurrencyExchangeRates().then((data) => {
         setRates(data);
         localStorage.setItem("rates", JSON.stringify(data));
-
       });
     } else {
       setRates(JSON.parse(storedRates));
     }
-    console.log(localStorage.getItem("rates"));
   }
 }

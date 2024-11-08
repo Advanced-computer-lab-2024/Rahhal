@@ -8,6 +8,12 @@ export const fetchPreferenceTags = async () => {
   return data;
 };
 
+// fetch preference tag by id
+export const fetchPreferenceTagById = async (id: string) => {
+  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + "/preference-tags/" + id);
+  return response.data;
+};
+
 //delete preference tag by id
 export const deletePreferenceTag = async (id: string) => {
   const response = await axios.delete(SERVICES_URLS.ENTERTAINMENT + "/preference-tags/" + id);

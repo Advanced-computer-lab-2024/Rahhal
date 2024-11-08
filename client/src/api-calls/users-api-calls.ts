@@ -96,3 +96,4 @@ export async function redeemLoyalityPoints(id: string) {
   const response = await axios.patch(`${SERVICES_URLS.USER}/users/${id}/redeem`);
   return response.data;
 }
+

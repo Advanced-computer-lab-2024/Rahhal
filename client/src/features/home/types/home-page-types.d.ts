@@ -46,7 +46,7 @@ export interface IBooking {
   user: string;
   entity: string;
   type: bookingType;
-  status?: bookingStatus;
+  status?: TBookingStatus;
   selectedPrice?: number;
   selectedDate?: Date;
 }
@@ -56,7 +56,7 @@ export type TPopulatedBooking = {
   user: IUser;
   entity: TActivity | TItinerary;
   type: bookingType;
-  status: bookingStatus;
+  status: TBookingStatus;
   selectedPrice: number;
   selectedDate: Date;
 };
@@ -65,7 +65,7 @@ export type TBookingType = {
   user: string;
   entity: string;
   type: bookingType;
-  status?: bookingStatus;
+  status?: TBookingStatus;
 };
 
 interface CancellationRule {
@@ -220,6 +220,8 @@ export type SortOption =
   | "rating-low-high";
 
 export type Filter = "itinerary" | "place" | "activity";
+
+export type TBookingStatus = "cancelled" | "completed" | "upcoming";
 
 // Define interfaces for response structure
 interface AirportData {

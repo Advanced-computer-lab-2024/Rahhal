@@ -15,7 +15,7 @@ export const fetchItineraries = async () => {
 export const fetchItineraryById = async (itineraryId: string) => {
   const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/itineraries/${itineraryId}`);
   return response.data;
-};
+}
 
 // fetch only active-appropriate itineraries
 export const fetchActiveAppropriateItineraries = async () => {

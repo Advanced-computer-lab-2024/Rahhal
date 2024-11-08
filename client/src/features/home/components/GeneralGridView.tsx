@@ -20,7 +20,6 @@ import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { fetchHistoricalPlaces } from "@/api-calls/historical-places-api-calls";
 import { fetchHistoricalTags } from "@/api-calls/historical-tags-api-calls";
 import { fetchActiveAppropriateItineraries } from "@/api-calls/itineraries-api-calls";
-import ski from "@/assets/ski egypt.jpg";
 import {
   Activity,
   Category,
@@ -118,7 +117,15 @@ function GeneralGridView() {
 
   const handleCardClick = (item: Itinerary | Activity | HistoricalPlace) => {
     // Navigate to detail page, pass the item data via state
-    navigate(`/details/${item._id}`, { state: { item } });
+    const type =
+      "languages" in item ? "itinerary" : "isBookingOpen" in item ? "activity" : "historicalPlace";
+    if (type === "historicalPlace") {
+      navigate(`/details/${item._id}`, { state: { item } });
+      return;
+    }
+    navigate(`/my-trips-details?userId=${id}&eventId=${item._id}&bookingId=null&type=${type}`, {
+      state: { item },
+    });
   };
 
   //fetching data
@@ -403,7 +410,6 @@ function GeneralGridView() {
         return 0;
     }
   });
-  console.log(filteredCombinedItems);
 
   return (
     <div className={GeneralGridStyle["general-grid-view"]}>

@@ -58,6 +58,8 @@ export async function updateProduct(productData: TProduct, productImages: FileLi
 
   productData.picture = urls[0];
 
+  
+
   await axios.patch(`${SERVICES_URLS.PRODUCT}/products/${productData!._id}`, productData);
   alert("Product updated successfully");
   window.location.reload();

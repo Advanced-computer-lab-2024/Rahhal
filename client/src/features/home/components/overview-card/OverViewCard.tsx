@@ -11,8 +11,9 @@ interface Ticket {
 }
 
 interface OverviewCardProps {
-  originalPrice: number;
-  discountedPrice?: number; // Optional for cases without a discount
+  currency: string;
+  originalPrice: number | string;
+  discountedPrice?: number | string; // Optional for cases without a discount
   tickets?: string[];
   date?: string;
   time?: string;
@@ -22,10 +23,13 @@ interface OverviewCardProps {
   onButtonClick?: () => void;
   buttonColor: "gold" | "red"; // Color options for the button
   disabled?: boolean;
-  dropdownOptions?: { value: string; label: string }[]
+  dropdownOptions?: { value: string; label: string }[]; // Options for the dropdown
+  onTicketSelect?: (index: number) => void; // Handler for ticket selection
+  selectedTicketIndex?: number; // Index of the selected ticket
 }
 
 export const OverviewCard: React.FC<OverviewCardProps> = ({
+  currency,
   originalPrice,
   discountedPrice,
   tickets,
@@ -36,11 +40,15 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({
   dropdownOptions,
   buttonText,
   buttonColor,
+  onButtonClick,
+  disabled,
+  onTicketSelect,
 }) => {
+  
   return (
     <div className={styles.card}>
       {/* Header Section */}
-      <Header originalPrice={originalPrice} discountedPrice={discountedPrice} />
+      <Header originalPrice={originalPrice} discountedPrice={discountedPrice} currency={currency} />
 
       {/* Content Section */}
       <OverViewContent
@@ -52,6 +60,9 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({
         dropdownOptions={dropdownOptions}
         buttonText={buttonText}
         buttonColor={buttonColor}
+        onButtonClick={onButtonClick}
+        disabled={disabled}
+        onTicketSelect={onTicketSelect}
       />
     </div>
   );
