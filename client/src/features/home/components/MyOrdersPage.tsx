@@ -36,6 +36,13 @@ export const MyOrdersPage = () => {
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
+  const { data: user } = useQuery({
+    queryKey: ["user", id],
+    queryFn: () => getUserById(id as string),
+    enabled: !!id,
+  });
+
+
   const handleShowRating = (productId: string) => {
     setSelectedProductId(productId); // Set the product ID for the rating
     setShowRating(!showRating); // Show the rating form
@@ -47,9 +54,12 @@ export const MyOrdersPage = () => {
     if (showRating && showItems) setShowRating(!showRating);
   };
 
+
+
+
   const handleRatingSubmit = async (values: Record<string, any>) => {
     try {
-      const user = id ? await getUserById(id) : null;
+     
 
       const ratingData: TRating = {
         userId: id || "",
