@@ -4,12 +4,12 @@ import { Star, Tag } from "lucide-react";
 import Review from "./Reviews";
 
 import GoogleMap from "@/components/google-maps/GoogleMap";
-import { IoMdPricetag } from "react-icons/io";
+
 import SharePopover from "@/components/SharePopover";
 
 import { OverviewCard } from "./overview-card/OverViewCard";
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
-import { calculateAverageRating } from "@/features/admin/utils/columns-definitions/activities-columns";
+import { calculateAverageRating, TRating } from "@/features/admin/utils/columns-definitions/activities-columns";
 import { TBookingType, TPopulatedBooking } from "../types/home-page-types";
 import { addLoyalityPoints, getUserById, refundMoney } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
@@ -22,6 +22,11 @@ import { toast } from "@/hooks/use-toast";
 import { RatingFormDialog } from "./RatingFormDialog";
 import { formatDate, formatTime } from "../utils/filter-lists/overview-card";
 import { tripRatingEntity } from "./TripDetails";
+import { createRating } from "@/api-calls/rating-api-calls";
+import { RateableEntityType } from "@/utils/enums";
+
+
+
 
 interface ActivityDetailsProps {
   activity: TActivity;
@@ -190,6 +195,30 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
     }
   };
 
+  const submitRating = async (values: Record<string, any>, eventId: string) => {
+    const user = userId ? await getUserById(userId) : null;
+
+      const ratingData: TRating = {
+        userId: userId || "",
+        userName: user?.username || "",
+        rating: values.rating,
+        review: values.comment,
+      };
+
+
+    await createRating(ratingData, RateableEntityType.ACTIVITY, eventId);
+
+    toast({
+      title: "Success",
+      description: "Rating submitted successfully",
+      duration: 5000,
+    });
+
+    // close the dialog
+    ratingFormRef.current?.click();
+    
+  }
+
   const activityDate = new Date(date);
   const formattedDate = formatDate(activityDate);
   const formattedTime = formatTime(activityDate);
@@ -212,9 +241,11 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
 
   
 
+  
+
   return (
     <div>
-      <RatingFormDialog buttonRef={ratingFormRef} onSubmit={() => {}} ratingEntities={tripRatingEntity} />
+      <RatingFormDialog buttonRef={ratingFormRef} ratingEntities={tripRatingEntity} onSubmit={(values: Record<string, any>) => activity._id ? submitRating(values, activity._id) : undefined} />
       <div className="grid grid-cols-3 gap-8 px-2">
         {/* Left Column - Images and Details */}
         <div className="space-y-6 col-span-2">

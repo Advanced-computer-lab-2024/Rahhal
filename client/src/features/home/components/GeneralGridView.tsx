@@ -3,7 +3,6 @@ import EntertainmentCard from "@/features/home/components/EntertainmentCard";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { useNavigate, useParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import FilterSortSearchHeader from "./FilterSortSearchHeader";
 import FilterSideBar from "@/features/home/components/filter-sidebar/FilterSideBar";
@@ -21,7 +20,6 @@ import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { fetchHistoricalPlaces } from "@/api-calls/historical-places-api-calls";
 import { fetchHistoricalTags } from "@/api-calls/historical-tags-api-calls";
 import { fetchActiveAppropriateItineraries } from "@/api-calls/itineraries-api-calls";
-import ski from "@/assets/ski egypt.jpg";
 import {
   Activity,
   Category,

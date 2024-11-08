@@ -13,7 +13,7 @@ import RatingForm, { TRatingEntity } from "./RatingForm"
 interface RatingFormDialogProps {
     buttonRef: React.RefObject<HTMLButtonElement>;
     ratingEntities: Record<string, TRatingEntity>;
-    onSubmit: () => void;
+    onSubmit: (values: Record<string, any>) => void
     }
 
 export function RatingFormDialog({ buttonRef, ratingEntities, onSubmit }: RatingFormDialogProps) {
