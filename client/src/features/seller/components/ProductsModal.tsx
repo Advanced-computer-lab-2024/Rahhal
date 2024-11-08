@@ -125,7 +125,11 @@ export function ProductModal({ productData, dialogTrigger, userId, username }: P
         title={"Product Picture"}
         description={"Uploaded Picture"}
         initialImageSources={productData?.picture ? [productData.picture] : []}
-        handleFileUploadCallback={(files) => setProductImages(files)}
+        handleFileUploadCallback={(files) => {
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(files[files.length - 1]);
+          setProductImages(dataTransfer.files);
+        }}
       />
       {!isNewProduct && <ReviewDisplay reviews={modalProductData?.ratings ?? sampleReviews} />}
       {!isNewProduct && <a className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" href={"/seller/product/" + productData?._id}>View Product Stats</a>}
