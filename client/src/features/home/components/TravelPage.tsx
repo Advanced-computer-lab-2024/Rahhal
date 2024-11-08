@@ -48,11 +48,14 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     dropOffSuggestionsPlaceId,
     departureTime,
     passengers,
+    setSelectedPickupLocation,
+    setSelectedDropOffLocation,
   } = useSearchBarStore();
 
   const {
     data: taxiData,
     isSuccess: isTaxisSuccess,
+    isLoading: isLoadingTaxis,
     isError: isTaxisError,
     error: transportationError,
   } = useQuery({
@@ -80,6 +83,7 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     data: flightData,
     isSuccess: isFlightsSuccess,
     isLoading: isFlightsLoading,
+    isError: isFLightError,
     error: flightError,
   } = useQuery({
     queryKey: ["flights", flightRequest],
@@ -99,6 +103,8 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     if (transferRequest) {
       setTransferRequest(transferRequest);
     }
+    setSelectedPickupLocation(pickupLocation[0]);
+    setSelectedDropOffLocation(dropOffLocation[0]);
   };
 
   const onIconClickFlights = async () => {
@@ -121,11 +127,11 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   useEffect(() => {
     if (
       (transferType === "taxis" && (isTaxisSuccess || isTaxisError)) ||
-      (transferType === "flights" && (isFlightsSuccess || isFlightsLoading))
+      (transferType === "flights" && (isFlightsSuccess || isFLightError))
     ) {
       setSkeleton(false);
     }
-  }, [isTaxisSuccess, isTaxisError, isFlightsSuccess, isFlightsLoading]);
+  }, [isLoadingTaxis, isFlightsLoading]);
 
   const prepareTransferRequest = async () => {
     let airportCode = "";

@@ -9,6 +9,8 @@ interface SearchBarState {
   dropOffSuggestionsPlaceId: string[];
   departureTime: Date[];
   passengers: number;
+  selectedPickupLocation: string;
+  selectedDropOffLocation: string;
   setPickupLocation: (location: string) => void;
   setPickupSuggestions: (suggestions: string[]) => void;
   setPickupSuggestionsPlaceId: (placeId: string[]) => void;
@@ -17,6 +19,8 @@ interface SearchBarState {
   setDropOffSuggestionsPlaceId: (placeId: string[]) => void;
   setDepartureTime: (time: Date | undefined) => void;
   setPassengers: (count: number) => void;
+  setSelectedPickupLocation: (location: string) => void;
+  setSelectedDropOffLocation: (location: string) => void;
   resetSearchBar: () => void;
 }
 
@@ -29,6 +33,8 @@ export const useSearchBarStore = create<SearchBarState>()((set) => ({
   dropOffSuggestionsPlaceId: [],
   departureTime: [],
   passengers: 0,
+  selectedPickupLocation: "",
+  selectedDropOffLocation: "",
   setPickupLocation: (location) => set({ pickupLocation: [location] }),
   setPickupSuggestions: (suggestions) => set({ pickupSuggestions: suggestions }),
   setPickupSuggestionsPlaceId: (placeId) => set({ pickupSuggestionsPlaceId: placeId }),
@@ -37,6 +43,8 @@ export const useSearchBarStore = create<SearchBarState>()((set) => ({
   setDropOffSuggestionsPlaceId: (placeId) => set({ dropOffSuggestionsPlaceId: placeId }),
   setDepartureTime: (time) => set({ departureTime: time ? [time] : [] }),
   setPassengers: (count) => set({ passengers: count }),
+  setSelectedPickupLocation: (location) => set({ selectedPickupLocation: location }),
+  setSelectedDropOffLocation: (location) => set({ selectedDropOffLocation: location }),
   resetSearchBar: () =>
     set({
       pickupLocation: [],

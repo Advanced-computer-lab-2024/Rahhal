@@ -1,16 +1,17 @@
 "use client";
-
 import { ArrowRight, Info, MapPin, Navigation } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import PaymentOptions from "@/components/PaymentOptions";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
+import currencyExchange from "@/utils/currency-exchange";
 
 interface RouteCardProps {
   departure: string;
   destination: string;
-  amount: string;
-  currency: string;
+  amount: number;
+  originalCurrency: string;
   serviceProvider: string;
   cancellationRule?: string;
   carType: string;
@@ -23,7 +24,7 @@ function TaxiRoute({
   departure,
   destination,
   amount,
-  currency,
+  originalCurrency,
   serviceProvider,
   cancellationRule,
   carType,
@@ -31,6 +32,10 @@ function TaxiRoute({
   loggedIn,
   isAdult,
 }: RouteCardProps) {
+  const { currency } = useCurrencyStore();
+  const convertedPrice = currencyExchange(originalCurrency, amount);
+  const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
+
   return (
     <Card
       className={`w-full max-w-md mx-auto transition-all duration-500 ease-in-out scale-95 opacity-0"}`}
@@ -40,7 +45,7 @@ function TaxiRoute({
         <div className="flex items-center text-xl sm:text-2xl font-bold text-[#E1BC6D]">
           <span>
             {currency + " "}
-            {amount}
+            {displayPrice}
           </span>
         </div>
       </CardHeader>
