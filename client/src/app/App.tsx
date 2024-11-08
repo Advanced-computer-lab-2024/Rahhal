@@ -52,7 +52,6 @@ export default function App() {
     } else {
       setRates(JSON.parse(storedRates));
     }
-    console.log(localStorage.getItem("rates"));
     ApiCurrencyCall();
   }, []);
   const queryClient = new QueryClient();
@@ -109,9 +108,8 @@ export default function App() {
             <Route path="/tour-guide/:id" element={<TourGuideView />} />
             <Route path="/admin/preference-tags" element={<PreferenceTagsAdminView />} />
             <Route path="/admin/complaints" element={<AdminComplaintsView />} />
-            <Route path="/admin/itineraries" element={<AdminItinerariesView />} />            
+            <Route path="/admin/itineraries" element={<AdminItinerariesView />} />
             <Route path="/admin/activities" element={<AdminActivitiesView />} />
-
           </Routes>
         </Router>
       </QueryClientProvider>
@@ -128,11 +126,9 @@ export default function App() {
       getCurrencyExchangeRates().then((data) => {
         setRates(data);
         localStorage.setItem("rates", JSON.stringify(data));
-
       });
     } else {
       setRates(JSON.parse(storedRates));
     }
-    console.log(localStorage.getItem("rates"));
   }
 }
