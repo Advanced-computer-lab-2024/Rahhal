@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { RateableEntityType } from "@/utils/enums";
 import { TRating } from "@/features/home/types/home-page-types";
 import { fetchUserOrders } from "@/api-calls/order-api-calls";
+import { getUserById } from "@/api-calls/users-api-calls";
 import { TOrder } from "@/features/home/types/home-page-types";
 import { useToast } from "@/hooks/use-toast";
 
@@ -17,7 +18,7 @@ const formatOrderDate = (dateString: string | undefined) => {
   if (!dateString) return "Invalid Date";
 
   const date = new Date(dateString);
-  if (isNaN(date.getTime())) return "Invalid Date"; 
+  if (isNaN(date.getTime())) return "Invalid Date";
 
   return new Intl.DateTimeFormat("en-US", {
     weekday: "short",
@@ -48,37 +49,41 @@ export const MyOrdersPage = () => {
 
   const handleRatingSubmit = async (values: Record<string, any>) => {
     try {
+      const user = id ? await getUserById(id) : null;
+
       const ratingData: TRating = {
-        userId: id ? id : "",
-        userName: "nanna",
+        userId: id || "",
+        userName: user?.username || "",
         rating: values.rating,
         review: values.comment,
       };
+
       await createRating(ratingData, RateableEntityType.PRODUCT, selectedProductId as string);
+
       toast({
-        title: "success Rating submitted successfully",
+        title: "Rating submitted successfully",
         duration: 3500,
       });
-      setShowRating(false);
-    } catch (error) {
-      console.error("Failed to submit rating:", error);
-      toast({
-        title: "error Failed to submit rating" + error,
-      });
-    }
 
-    try {
+      setShowRating(false);
+
       const response = await rateProduct(
         selectedProductId as string,
         selectedOrderId as string,
         values.rating,
         values.comment,
       );
-      console.log(response);
+      console.log("Product rating response:", response);
     } catch (error) {
       console.error("Failed to submit rating:", error);
+      toast({
+        title: `Failed to submit rating: ${error instanceof Error ? error.message : error}`,
+        variant: "destructive",
+        duration: 3500,
+      });
     }
   };
+
   const {
     data: order,
     isLoading,
@@ -88,7 +93,7 @@ export const MyOrdersPage = () => {
     queryFn: () => fetchUserOrders(id as string),
     enabled: !!id,
   });
-  console.log(order);
+
   const visibleOrders = showAll ? order : order?.slice(0, 3);
   return (
     <>
