@@ -65,7 +65,7 @@ export default function HotelDetails({ hotel }: HotelDetailsProps) {
     const roomTypes = chunkArray(hotel.features.roomTypes, 2);
 
     return (
-        <div className="py-8 px-96">
+        <div className="py-8 px-[20%]">
 
             <div className="flex flex-col gap-2">
                 <span className="text-4xl font-semibold">{hotel.name}</span>
