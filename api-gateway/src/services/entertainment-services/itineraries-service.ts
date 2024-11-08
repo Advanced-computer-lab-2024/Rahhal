@@ -1,5 +1,5 @@
 import { entertainmentAxiosInstance } from "@/utils/axios-instances";
-import { TRating } from "@/utils/types";
+import type { TRating } from "@/utils/types";
 
 export async function getAllItineraries() {
   return await entertainmentAxiosInstance.get("/itineraries");
@@ -11,6 +11,14 @@ export async function getActiveAppropriateItineraries() {
 
 export async function getItineraryById(id: string) {
   return await entertainmentAxiosInstance.get(`/itineraries/${id}`);
+}
+
+export async function getItineraryByOwnerId(ownerId: string) {
+  return await entertainmentAxiosInstance.get(`/itineraries`, {
+    params: {
+      ownerId: ownerId,
+    },
+  });
 }
 
 export async function createItinerary(body: string) {

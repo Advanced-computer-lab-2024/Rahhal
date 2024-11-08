@@ -29,16 +29,21 @@ export const fetchUserItineraries = async (userId: string) => {
 };
 
 export const fetchItinerariesByOwner = async (ownerId: string) => {
-  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/itineraries/${ownerId}`);
+  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/itineraries/`, {
+    params: {
+      ownerId: ownerId,
+    },
+  });
   return response.data;
 };
 
 // delete itinerary from itineraries endpoint
 export const deleteItinerary = async (itinerary: TItinerary) => {
   console.log(itinerary);
-  await axios.delete(`${SERVICES_URLS.ENTERTAINMENT}/itineraries/${itinerary._id}`);
-  alert("Itinerary deleted successfully");
-  window.location.reload();
+  const response = await axios.delete(
+    `${SERVICES_URLS.ENTERTAINMENT}/itineraries/${itinerary._id}`,
+  );
+  return response;
 };
 
 // submit itinerary to the itineraries endpoint
