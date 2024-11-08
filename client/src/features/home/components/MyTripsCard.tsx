@@ -1,5 +1,5 @@
 import MyTripStyles from "../styles/MyTripsCard.module.css";
-import felluca from "@/assets/aswan2.webp";
+import unAvaialableImage from "@/assets/imageNotavail.png"
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import currencyExchange from "@/utils/currency-exchange";
 import { IoMdMore } from "react-icons/io";
@@ -26,7 +26,7 @@ export const MyTripsCard: React.FC<MyTripsCardProps> = ({ image, title, price, d
       <div className={MyTripStyles["trip-details"]}>
         <div className={MyTripStyles["trip-details_image-container"]}>
           <img
-            src={image ? image : felluca}
+            src={image?image : unAvaialableImage}
             className={MyTripStyles["trip-details_image-container_image"]}
             alt="felluca"
           />

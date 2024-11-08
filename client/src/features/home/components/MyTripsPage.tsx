@@ -89,6 +89,7 @@ export const MyTripsPage = () => {
                     : booking.status
                 }
                 date={formatDate(booking.entity.date ? booking.entity.date : booking.selectedDate)}
+                image={booking.entity.images[0]}
                 onClick={() => handleClick(booking)}
               />
             ))
