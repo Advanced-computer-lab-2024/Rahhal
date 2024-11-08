@@ -19,6 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import { CONNECTION_STRING } from "@/utils/constants";
 import { Role } from "./SettingsView";
 import { Button } from "@/components/ui/button";
+import UserDocuments from "@/components/UserDocuments";
 export default function ProfileForm() {
   const { toast } = useToast();
   const { id } = useParams();
@@ -72,6 +73,9 @@ export default function ProfileForm() {
     website: z.string().url().optional(),
     companyProfile: z.string().url().optional(),
     addresses: z.string().array().optional().optional(),
+    nationalID: z.string().url().optional(),
+    taxRegistration: z.string().url().optional(),
+    certificates: z.string().array().optional(),
   });
 
   type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -93,6 +97,9 @@ export default function ProfileForm() {
       website: user.website || "",
       companyProfile: user.companyProfile || "",
       addresses: user.addresses || [],
+      certificates: user.certificates || [],
+      nationalID: user.nationalID || "",
+      taxRegistration: user.taxRegistration || "",
     },
   });
 
@@ -443,6 +450,18 @@ export default function ProfileForm() {
                 />
               </div>
             </>
+          )}
+          {user.role !== "tourist" && (
+            <div>
+              <h1 className="font-medium mt-6 mb-4">Uploaded Documents</h1>
+              <UserDocuments
+                certificatesUrls={user.certificates}
+                governmentalDocumentsUrls={[
+                  ...(user.nationalID ? [user.nationalID] : []),
+                  ...(user.taxRegistration ? [user.taxRegistration] : []),
+                ]}
+              />
+            </div>
           )}
           {/* URLs */}
           {/* Website */}

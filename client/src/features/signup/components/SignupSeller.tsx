@@ -14,7 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { TermsAndConditionsModal } from "./TermsAndConditionsModal";
 import { termsAndConditions } from "../terms-and-conditions/SellerTermsAndConditions";
 import { sellerSchema } from "../utils/ZodSchemas/sellerSchema";
-import { createUser,updateUser } from "@/api-calls/users-api-calls";
+import { createUser, updateUser } from "@/api-calls/users-api-calls";
 import { uploadToFirebaseReady } from "@/utils/firebase";
 
 type SellerFormData = z.infer<typeof sellerSchema>;
@@ -23,7 +23,6 @@ export default function SignupSeller() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
 
   const {
     control,
@@ -54,12 +53,11 @@ export default function SignupSeller() {
       password: data.password,
       description: data.description,
       role: "seller",
-      nationalId: "",
+      nationalID: "",
       taxRegistration: "",
-      balance : 0
+      balance: 0,
     };
 
-    
     try {
       toast({
         title: "Creating User",
@@ -70,27 +68,26 @@ export default function SignupSeller() {
 
       // await delay(4500);
 
-      
-
       const response: any = await createUser(reqBody);
       let urls: string[] = new Array();
-      
 
-      if(data.nationalID && data.taxRegistration){
-        const nationalId:string = `documents/${response._id}/nationalID.${data.nationalID.type.split("/")[1]}`;
-        const newFileNationalId = new File([data.nationalID ], nationalId,{ type: data.nationalID.type });
+      if (data.nationalID && data.taxRegistration) {
+        const nationalId: string = `documents/${response._id}/nationalID.${data.nationalID.type.split("/")[1]}`;
+        const newFileNationalId = new File([data.nationalID], nationalId, {
+          type: data.nationalID.type,
+        });
 
         const taxReg: string = `documents/${response._id}/taxRegistration.${data.taxRegistration.type.split("/")[1]}`;
-        const newFileTaxReg = new File([data.taxRegistration ], taxReg,{ type: data.taxRegistration.type });
+        const newFileTaxReg = new File([data.taxRegistration], taxReg, {
+          type: data.taxRegistration.type,
+        });
 
-       
         const filesFileList: File[] = [newFileNationalId, newFileTaxReg];
         urls = await uploadToFirebaseReady(filesFileList);
 
-
         const documents = {
-          "nationalID" : urls[0],
-          "taxRegistration" : urls[1]
+          nationalID: urls[0],
+          taxRegistration: urls[1],
         };
 
         const responseUpdate: any = updateUser(response, documents);
@@ -101,7 +98,6 @@ export default function SignupSeller() {
       console.log("Server response:", response);
       console.log("Firebase URLs:", urls);
 
-      
       console.log("Server response:", response);
       toast({
         title: "User Created",
