@@ -104,7 +104,7 @@ export default function HotelDetails({ hotel }: HotelDetailsProps) {
                             <div className="flex justify-end w-full pr-4">
                                 <SharePopover link={""} />
                             </div>
-                            <div className="h-8"></div>
+                
                             <div className="flex justify-start w-64 p-2">
                                 <span className="text-left font-semibold">{hotel.averagePrice} </span> <span className="pl-1 ">night</span>
                             </div>
@@ -114,31 +114,31 @@ export default function HotelDetails({ hotel }: HotelDetailsProps) {
                             <button className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12">
                                 Reserve
                             </button>
-                            <div className="flex flex-col justify-end items-center w-4/12 gap-3 h-32">
+                            <div className="flex flex-col justify-end items-center w-4/12 gap-3 h-44">
                                 {
                                     date.to && (
                                         <>
                                             <div className="flex justify-between w-64 px-4">
-                                                {date.to && (<><span>{hotel.averagePrice + " x " + differenceInDays(date.to, date.from!) + " nights"}</span>
-                                                    <span>{differenceInDays(date.to, date.from!) * parseInt(hotel.averagePrice.slice(1))}</span></>)}
+                                                {date.to && (<><span className="underline">{hotel.averagePrice + " x " + differenceInDays(date.to, date.from!) + " nights"}</span>
+                                                    <span >{differenceInDays(date.to, date.from!) * parseInt(hotel.averagePrice.slice(1))}</span></>)}
                                             </div>
                                             <div>
                                                 <div className="flex justify-between w-64 px-4">
-                                                    <span> Cleaning fee </span>
+                                                    <span className="underline"> Cleaning fee </span>
                                                     <span> 500 </span>
                                                 </div>
                                             </div>
 
                                             <div>
                                                 <div className="flex justify-between w-64 px-4">
-                                                    <span> Rahhal service fee </span>
+                                                    <span className="underline"> Rahhal service fee </span>
                                                     <span> 400 </span>
                                                 </div>
                                             </div>
-
+                                            <hr className="border-1 border-gray-300 w-60" />
                                             <div>
                                                 <div className="flex justify-between w-64 px-4">
-                                                    <span> Total </span>
+                                                    <span className="font-medium"> Total </span>
                                                     <span> 1400 </span>
                                                 </div>
                                             </div>
