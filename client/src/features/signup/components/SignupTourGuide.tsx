@@ -79,12 +79,12 @@ export default function SignupTourGuide() {
       const response: any = await createUser(reqBody);
 
       if(data.nationalID && data.certificates){
-        const nationalId : string = `documents/${response._id}/nationalID`;
+        const nationalId : string = `documents/${response._id}/nationalID.${data.nationalID.type.split("/")[1]}`;
         const newFileNationalId = new File([data.nationalID] , nationalId , {type : data.nationalID.type});
 
         const certificates: File[] = Array.isArray(data.certificates) 
         ? data.certificates.map((file, index) => {
-            const certeficate: string = `documents/${response._id}/certeficate${index + 1}`;
+            const certeficate: string = `documents/${response._id}/certeficate_${index + 1}.${(file as File).type.split("/")[1]}`;
             return new File([file], certeficate, { type: file.type });
         }):[new File([data.certificates],`documents/${response._id}/certeficate`,
           { type: (data.certificates as any) instanceof File ? (data.certificates as File).type : 'application/octet-stream' })];
