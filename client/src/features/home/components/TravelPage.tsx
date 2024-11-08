@@ -22,9 +22,11 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   const [transferType, setTransferType] = useState("taxis");
   const [transferRequest, setTransferRequest] = useState<TransferRequest | null>(null);
   const [flightRequest, setFlightRequest] = useState<FlightRequest | null>(null);
-  const [skeleton, setSkeleton] = useState<boolean>(false);
+  const [taxiSkeleton, setTaxiSkeleton] = useState<boolean>(false);
+  const [flightSkeleton, setFlightSkeleton] = useState<boolean>(false);
 
-  const { userId } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
+  const userId = id ? id : "";
   const { data: userData } = useQuery({
     queryKey: ["fetchUser"],
     queryFn: () => getUserById(userId ? userId : ""),
@@ -98,7 +100,7 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   };
 
   const onIconClickTaxis = async () => {
-    setSkeleton(true);
+    setTaxiSkeleton(true);
     const transferRequest = await prepareTransferRequest();
     if (transferRequest) {
       setTransferRequest(transferRequest);
@@ -108,7 +110,7 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   };
 
   const onIconClickFlights = async () => {
-    setSkeleton(true);
+    setFlightSkeleton(true);
     const flightRequest = await prepareFlightRequest();
     if (flightRequest) {
       setFlightRequest(flightRequest);
@@ -126,12 +128,19 @@ function TravelPage({ loggedIn }: TravelPageProps) {
 
   useEffect(() => {
     if (
-      (transferType === "taxis" && (isTaxisSuccess || isTaxisError)) ||
-      (transferType === "flights" && (isFlightsSuccess || isFLightError))
+      (transferType === "taxis" && (isTaxisSuccess || isTaxisError))
     ) {
-      setSkeleton(false);
+      setTaxiSkeleton(false);
     }
   }, [isLoadingTaxis, isFlightsLoading]);
+
+  useEffect(() => {
+    if(
+      (transferType === "flights" && (isFlightsSuccess || isFLightError))
+    ) {
+      setFlightSkeleton(false);
+    }
+  }, [isFlightsLoading, isFlightsSuccess, isFLightError]);
 
   const prepareTransferRequest = async () => {
     let airportCode = "";
@@ -264,13 +273,19 @@ function TravelPage({ loggedIn }: TravelPageProps) {
         onIconClickTaxis={onIconClickTaxis}
         onIconClickFlights={onIconClickFlights}
       />
-      {skeleton && (
+      {taxiSkeleton && transferType === "taxis" && (
         <div className="space-y-2 ml-10">
           <Skeleton className="h-4 w-[400px]" />
           <Skeleton className="h-4 w-[350px]" />
         </div>
       )}
-      {!skeleton && transferType === "taxis" && taxiData?.data && (
+      {flightSkeleton && transferType === "flights" && (
+        <div className="space-y-2 ml-10">
+          <Skeleton className="h-4 w-[400px]" />
+          <Skeleton className="h-4 w-[350px]" />
+        </div>
+      )}
+      {!taxiSkeleton && transferType === "taxis" && taxiData?.data && (
         <TransportationPage
           data={taxiData.data}
           loggedIn={loggedIn}
@@ -278,8 +293,8 @@ function TravelPage({ loggedIn }: TravelPageProps) {
           isAdult={isAdult}
         />
       )}
-      {!skeleton && transferType === "flights" && flightData && (
-        <FlightPage data={flightData.data} loggedIn={loggedIn} id={userId} isAdult={isAdult} />
+      {!flightSkeleton && transferType === "flights" && flightData && (
+        <FlightPage rawData={flightData} loggedIn={loggedIn} userId={userId} isAdult={isAdult} />
       )}
     </>
   );
