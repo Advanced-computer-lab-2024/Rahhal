@@ -77,10 +77,10 @@ export default function SignupSeller() {
       
 
       if(data.nationalID && data.taxRegistration){
-        const nationalId:string = `documents/${response._id}/nationalID`;
+        const nationalId:string = `documents/${response._id}/nationalID.${data.nationalID.type.split("/")[1]}`;
         const newFileNationalId = new File([data.nationalID ], nationalId,{ type: data.nationalID.type });
 
-        const taxReg: string = `documents/${response._id}/taxRegistration`;
+        const taxReg: string = `documents/${response._id}/taxRegistration.${data.taxRegistration.type.split("/")[1]}`;
         const newFileTaxReg = new File([data.taxRegistration ], taxReg,{ type: data.taxRegistration.type });
 
        
