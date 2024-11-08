@@ -14,8 +14,8 @@ function HotelsPage({ loggedIn }: HotelPageProps) {
   const { destinationLocation, destinationSuggestions, destinationSuggestionsPlaceId } =
     useHotelSearchBarStore();
   
-  const { loading , setLoading } = useState<boolean>(false);
-  const { hotels , setHotels } = useState<HotelDetails[]>([]);
+  const [ loading , setLoading ] = useState<boolean>(false);
+  const [ hotels , setHotels ] = useState<HotelDetails[]>([] as HotelDetails[]);
 
   const onIconClick = async () => {
     const destinationSelectedIndex = destinationSuggestions.indexOf(destinationLocation[0]);
@@ -40,7 +40,7 @@ function HotelsPage({ loggedIn }: HotelPageProps) {
       <HotelSearchBar onIconClick={onIconClick} />
     </div>
     <hr className="border-1 border-black w-full my-5" />
-    <HotelGridView />
+    <HotelGridView loading={loading} hotels={hotels} />
   </>
     
   );
