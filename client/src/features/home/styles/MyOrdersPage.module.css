@@ -1,0 +1,65 @@
+.container {
+  display: flex;
+  gap: 2rem; /* Space between the orders and items sections */
+  margin: 2% 15% 0 15%;
+}
+
+.order-page-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 2% 15% 0 15%;
+}
+
+.order-page-header p:first-child {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000;
+  margin: 0;
+}
+
+.orders-card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e0e0e0;
+  width: 35vw;
+  align-items: center;
+  flex-shrink: 0;
+}
+.show-more button {
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.show-more button:hover {
+  text-decoration: underline;
+}
+
+.itemSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.itemSection .card {
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.itemSection .card:last-child {
+  border-bottom: none;
+}
+
+.modalOverlay {
+  z-index: 1000;
+}

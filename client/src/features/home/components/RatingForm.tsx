@@ -118,7 +118,7 @@ export default function RatingForm({
       onSubmit={(values) => onSubmit(values)}
       fieldConfig={getFieldsConfig(ratingEntities)}
     >
-      <AutoFormSubmit className="bg-primary text-white w-full mt-4">Sign Up</AutoFormSubmit>
+      <AutoFormSubmit className="bg-primary text-white w-full mt-4">Submit</AutoFormSubmit>
     </AutoForm>
   );
 }

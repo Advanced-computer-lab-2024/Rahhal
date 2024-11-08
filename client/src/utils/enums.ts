@@ -20,3 +20,18 @@ export enum bookingStatus {
   Completed = "completed",
   Cancelled = "cancelled",
 }
+
+export enum RateableEntityType {
+  ACTIVITY = "activity",
+  ITINERARY = "itinerary",
+  PRODUCT = "product",
+  USER = "user",
+}
+
+export enum OrderStatus {
+  received = "received",
+  processing = "processing",
+  shipped = "shipped",
+  delivered = "delivered",
+  cancelled = "cancelled",
+}

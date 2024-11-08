@@ -1,6 +1,47 @@
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
 
+
+export interface IOrder {
+  _id: Types.ObjectId;
+  userId: string;
+  orderDate: Date;
+  orderStatus: OrderStatus;
+  paymentMethod: PaymentMethod;
+  items: IItem[];
+  totalPrice: number;
+  totalQuantity: number;
+  promoCode?: string;
+  discountAmount?: number;
+  billingAddress?: string;
+  shippingAddress: string;
+}
+export interface IItem {
+  name: string,
+  price: number,
+  quantity: number,
+  seller: string,
+  picture: string,
+  productId: string,
+  rating?:Partial<TRating>
+}
+
+export type TOrder = {
+  _id: string;
+  userId: string;
+  createdAt: Date;
+  orderStatus: OrderStatus;
+  paymentMethod: PaymentMethod;
+  items: IItem[];
+  totalPrice: number;
+  totalQuantity: number;
+  promoCode?: string;
+  discountAmount?: number;
+  billingAddress?: string;
+  shippingAddress: string;
+}
+
+
 export interface IBooking {
   user: string;
   entity: string;
@@ -81,6 +122,14 @@ interface IAutocompletePrediction {
 
 export interface IRating {
   userId: string;
+  userName: string;
+  rating: number;
+  review?: string;
+}
+
+export type TRating={
+  userId: string;
+  userName: string;
   rating: number;
   review?: string;
 }

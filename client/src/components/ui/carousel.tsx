@@ -3,7 +3,8 @@ import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react"
 import { ArrowLeft, ArrowRight } from "lucide-react"
-
+import { MdArrowForwardIos } from "react-icons/md";
+import { MdArrowBackIosNew } from "react-icons/md";
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
@@ -200,23 +201,24 @@ const CarouselPrevious = React.forwardRef<
 
   return (
     <Button
-      ref={ref}
-      variant={variant}
-      size={size}
-      className={cn(
-        "absolute  h-8 w-8 rounded-full",
-        orientation === "horizontal"
-          ? "-left-12 top-1/2 -translate-y-1/2"
-          : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
-        className
-      )}
-      disabled={!canScrollPrev}
-      onClick={scrollPrev}
-      {...props}
-    >
-      <ArrowLeft className="h-4 w-4" />
-      <span className="sr-only">Previous slide</span>
-    </Button>
+    ref={ref}
+    variant={variant}
+    size={size}
+    className={cn(
+      "absolute h-8 w-8 bg-transparent border-none focus:outline-none p-0",
+      "hover:bg-transparent hover:border-none hover:shadow-none",
+      orientation === "horizontal"
+        ? "-left-12 top-1/2 -translate-y-1/2"
+        : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
+      className
+    )}
+    disabled={!canScrollPrev}
+    onClick={scrollPrev}
+    {...props}
+  >
+    <MdArrowBackIosNew className="h-3 w-3 text-black" />
+    <span className="sr-only">Previous slide</span>
+  </Button>
   )
 })
 CarouselPrevious.displayName = "CarouselPrevious"
@@ -229,23 +231,25 @@ const CarouselNext = React.forwardRef<
 
   return (
     <Button
-      ref={ref}
-      variant={variant}
-      size={size}
-      className={cn(
-        "absolute h-8 w-8 rounded-full",
-        orientation === "horizontal"
-          ? "-right-12 top-1/2 -translate-y-1/2"
-          : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
-        className
-      )}
-      disabled={!canScrollNext}
-      onClick={scrollNext}
-      {...props}
-    >
-      <ArrowRight className="h-4 w-4" />
-      <span className="sr-only">Next slide</span>
-    </Button>
+  ref={ref}
+  variant={variant}
+  size={size}
+  className={cn(
+    "absolute h-8 w-8 bg-transparent border-none focus:outline-none p-0",
+    "hover:bg-transparent hover:border-none hover:shadow-none",
+    orientation === "horizontal"
+      ? "-right-12 top-1/2 -translate-y-1/2"
+      : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
+    className
+  )}
+  disabled={!canScrollNext}
+  onClick={scrollNext}
+  {...props}
+>
+
+  <MdArrowForwardIos className="h-3 w-3 text-black" />
+  <span className="sr-only">Next slide</span>
+</Button>
   )
 })
 CarouselNext.displayName = "CarouselNext"
