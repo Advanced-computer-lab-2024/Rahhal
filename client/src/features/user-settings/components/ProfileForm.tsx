@@ -149,8 +149,16 @@ export default function ProfileForm() {
     }
   }
   async function onSubmit(data: ProfileFormValues) {
+
+    toast({
+      title: "Updating ... ",
+    });
+    setTimeout(() => {
+    }, 1500);
+
+
     if(data.profilePicture){
-      const profileImage: string = `images/profile_pictures/${id}/profile.${data.profilePicture?.type.split("/")[1]}`;
+      const profileImage: string = `images/profile_pictures/${id}/profile.jpg`;
       const newProfilePic = new File([data.profilePicture], profileImage, {
         type: data.profilePicture?.type,
       });
