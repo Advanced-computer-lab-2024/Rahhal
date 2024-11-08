@@ -12,39 +12,9 @@ import { DateRange } from "react-day-picker";
 import ReservationDetails from "./ReservationDetails";
 import { addDays, format, isSameMonth, isSameDay, startOfToday, differenceInDays } from "date-fns";
 import { ChevronDown, ChevronUp } from "lucide-react";
-interface HotelDetails {
-  name: string;
-  address: {
-    "@type": string;
-    streetAddress: string;
-    addressLocality: string;
-    postalCode: string;
-    addressCountry: {
-      "@type": string;
-      name: string;
-    };
-  };
-  rating: {
-    "@type": string;
-    ratingValue: string;
-    reviewCount: number;
-  };
-  mainImage: string;
-  description: string;
-  features: {
-    propertyAmenities: { text: string; svg: string }[];
-    roomFeatures: { text: string; svg: string }[];
-    roomTypes: { text: string; svg: string }[];
-  };
-  averagePrice: string;
-  images: string[];
-  bubbleRating: string;
-  ratings: { name: string; rate: number }[];
-}
+import { HotelDetailsProps } from "@/features/home/types/home-page-types";
 
-export interface HotelDetailsProps {
-  hotel: HotelDetails;
-}
+
 
 export default function HotelDetails({ hotel }: HotelDetailsProps) {
   const [date, setDate] = useState<DateRange>({

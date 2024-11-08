@@ -368,3 +368,37 @@ interface FlightOfferDisplay {
     duration: string;
   }>;
 }
+
+export interface HotelDetails {
+  name: string;
+  address: {
+    "@type": string;
+    streetAddress: string;
+    addressLocality: string;
+    postalCode: string;
+    addressCountry: {
+      "@type": string;
+      name: string;
+    };
+  };
+  rating: {
+    "@type": string;
+    ratingValue: string;
+    reviewCount: number;
+  };
+  mainImage: string;
+  description: string;
+  features: {
+    propertyAmenities: { text: string; svg: string }[];
+    roomFeatures: { text: string; svg: string }[];
+    roomTypes: { text: string; svg: string }[];
+  };
+  averagePrice: string;
+  images: string[];
+  bubbleRating: string;
+  ratings: { name: string; rate: number }[];
+}
+
+export interface HotelDetailsProps {
+  hotel: HotelDetails;
+}

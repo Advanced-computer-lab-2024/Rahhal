@@ -2,7 +2,9 @@ import { useHotelSearchBarStore } from "@/stores/hotel-search-bar-slice";
 import HotelSearchBar from "./HotelSearchBar";
 import { fetchPlaceDetails } from "@/api-calls/google-maps-api-calls";
 import HotelGridView from "./HotelGridView";
-
+import { fetchHotels } from "@/api-calls/hotel-api-calls";
+import { useState } from "react";
+import { HotelDetails } from "../types/home-page-types";
 
 interface HotelPageProps {
   loggedIn: boolean;
@@ -11,17 +13,26 @@ interface HotelPageProps {
 function HotelsPage({ loggedIn }: HotelPageProps) {
   const { destinationLocation, destinationSuggestions, destinationSuggestionsPlaceId } =
     useHotelSearchBarStore();
+  
+  const { loading , setLoading } = useState<boolean>(false);
+  const { hotels , setHotels } = useState<HotelDetails[]>([]);
+
   const onIconClick = async () => {
     const destinationSelectedIndex = destinationSuggestions.indexOf(destinationLocation[0]);
     const destinationPlaceId = destinationSuggestionsPlaceId[destinationSelectedIndex];
     const placeDetails = await fetchPlaceDetails(destinationPlaceId);
     if (placeDetails) {
       const { name } = placeDetails;
-      //call your hotel api with the with "name" attribute as its parameter
+      setLoading(true);
+      const newHotels = await fetchHotels(name);
+      setHotels(newHotels);
+      setLoading(false);
     } else {
       console.error("Failed to fetch place details");
     }
   };
+
+
 
   return (
     <>

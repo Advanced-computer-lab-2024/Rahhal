@@ -5,20 +5,10 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel"
-interface Hotel {
-    name: string;
-    bubbleRating: string;
-    rating: {
-        "@type": string;
-        ratingValue: string;
-        reviewCount: number;
-    };
-    price: string;
-    image: string[];
-}
+import { HotelDetailsProps } from "@/features/home/types/home-page-types";
 
 
-export default function HotelCard(hotel: Hotel) {
+export default function HotelCard({hotel}: HotelDetailsProps) {
 
 
     return (
@@ -27,7 +17,7 @@ export default function HotelCard(hotel: Hotel) {
                 <Carousel className="w-full h-full">
                     <CarouselContent className="w-full h-full ml-0">
                         {
-                            hotel.image.map((image, index) => (
+                            hotel.images.map((image, index) => (
                                 <CarouselItem key={index} className=" h-full w-full p-2">
                                     <img src={image} alt={hotel.name} className="rounded-md w-full h-60 object-cover" />
                                 </CarouselItem>
@@ -60,7 +50,7 @@ export default function HotelCard(hotel: Hotel) {
 
                 <div className="flex flex-col">
                     <span className="text-gray-600"> from </span>
-                    <div><span className="text-lg font-semibold"> {hotel.price} </span> <span className="text-gray-600">/night</span></div>
+                    <div><span className="text-lg font-semibold"> {hotel.averagePrice} </span> <span className="text-gray-600">/night</span></div>
                 </div>
 
                 <div>

@@ -8,15 +8,18 @@ interface HotelSearchBarProps {
 }
 
 function HotelSearchBar({ onIconClick }: HotelSearchBarProps) {
-  const [adults, setAdults] = useState([0]);
-  const [children, setChildren] = useState([0]);
-  const [infants, setInfants] = useState([0]);
 
   const {
+    adults,
     destinationLocation,
+    children,
+    infants,
     destinationSuggestions,
     checkIn,
     checkOut,
+    setChildren,
+    setAdults,
+    setInfants,
     setDestinationLocation,
     setDestinationSuggestions,
     setDestinationSuggestionsPlaceId,
