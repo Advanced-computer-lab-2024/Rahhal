@@ -9,6 +9,12 @@ function AdminHomepage() {
       </a>
       <a
         className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded my-5"
+        href="/admin/activities"
+      >
+        View Activities
+      </a>
+      <a
+        className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded my-5"
         href="/admin/products"
       >
         View/Add Products
