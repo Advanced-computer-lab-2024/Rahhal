@@ -51,25 +51,25 @@ export default function AccountForm() {
     points: z.number().optional(),
   });
 
-  // Handling Displaying of Badge 
+  // Handling Displaying of Badge
   // May need to handle maxPoints reached pending Noha
   // ================================================
   let badgeImage = BronzeRBadge;
   let badgeLevelColor = "Bronze";
   let badgeLevel = "1";
 
-    if (user.level && user.level == 2) {
-      badgeLevelColor = "Silver";
-      badgeLevel = "2";
-      badgeImage = SilverRBadge;
-    }
-    if (user.level && user.level == 3) {
-      badgeLevelColor = "Gold";
-      badgeLevel = "3";
-      badgeImage = GoldRBadge;
-    }
+  if (user.level && user.level == 2) {
+    badgeLevelColor = "Silver";
+    badgeLevel = "2";
+    badgeImage = SilverRBadge;
+  }
+  if (user.level && user.level == 3) {
+    badgeLevelColor = "Gold";
+    badgeLevel = "3";
+    badgeImage = GoldRBadge;
+  }
   // ================================================
-  
+
   const [editingCard, setEditingCard] = useState<boolean>(false);
   const [editedIndex, setEditedCardIndex] = useState<number>(-1);
 
@@ -164,21 +164,19 @@ export default function AccountForm() {
     if (id) {
       try {
         const response = await redeemLoyalityPoints(id);
-        if (response.status === 200) {
-          const updatedUser = response.data;
-          const userData = updatedUser as { balance: number; points: number };
-          form.setValue("balance", userData.balance);
-          form.setValue("points", userData.points);
-          user.balance = userData.balance;
-          user.points = userData.points;
-          console.log(user.level);
-          
-          toast({
-            title: "Success",
-            description: "Points redeemed successfully",
-            variant: "default",
-          });
-        }
+        const updatedUser = response;
+        const userData = updatedUser as { balance: number; points: number };
+        form.setValue("balance", userData.balance);
+        form.setValue("points", userData.points);
+        user.balance = userData.balance;
+        user.points = userData.points;
+        console.log(user.level);
+
+        toast({
+          title: "Success",
+          description: "Points redeemed successfully",
+          variant: "default",
+        });
       } catch (error) {
         toast({
           title: "Error: " + (error as any).response.data.error,
