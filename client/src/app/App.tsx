@@ -36,9 +36,12 @@ import { useRatesStore } from "@/stores/currency-exchange-store";
 import { MyOrdersPage } from "@/features/home/components/MyOrdersPage";
 import ProductReport from "@/features/seller/components/ProductReport";
 import HotelsPage from "@/features/home/components/HotelsPage";
+import HotelDetails from "@/features/home/components/HotelDetails";
+import { useHotelStore } from "@/stores/hotel-store";
 
 export default function App() {
   const { setRates } = useRatesStore();
+  const { hotels } = useHotelStore();
   useEffect(() => {
     const storedRates = localStorage.getItem("rates");
     const isNewDay = storedRates
@@ -67,6 +70,7 @@ export default function App() {
               <Route path="/shop" element={<ProductGridView />} />
               <Route path="/travel" element={<TravelPage loggedIn={false} />} />
               <Route path="/stays" element={<HotelsPage loggedIn={false} />} />
+              <Route path="/stays/hotel/:index" element={<HotelDetails hotels={hotels}/>} />
             </Route>
             <Route element={<TouristHomePage loggedIn={true} />}>
               <Route path="/entertainment/:id" element={<GeneralGridView />} />
@@ -75,6 +79,8 @@ export default function App() {
               <Route path="/my-trips-details" element={<TripDetails />} />
               <Route path="/travel/:id" element={<TravelPage loggedIn={true} />} />
               <Route path="/my-orders/:id" element={<MyOrdersPage />} />
+              <Route path="/stays/:id" element={<HotelsPage loggedIn={true} />} />
+              <Route path="/stays/:id/hotel/:index" element={<HotelDetails hotels={hotels}/>} />
             </Route>
             <Route path="/signup" element={<SignupSelector />} />
             <Route path="/signin" element={<Login />} />

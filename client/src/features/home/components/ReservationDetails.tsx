@@ -10,6 +10,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import { useHotelSearchBarStore } from "@/stores/hotel-search-bar-slice"
 
 interface ReservationProps{
     date: DateRange
@@ -19,9 +20,7 @@ interface ReservationProps{
 export default function ReservationDetails({date , setDate} : ReservationProps) {
     const [isOpen, setIsOpen] = useState(false)
     const [activeButton, setActiveButton] = React.useState<"checkIn" | "checkOut">("checkIn")
-    const [adults, setAdults] = useState<number>(0);
-    const [children,setChildren] = useState<number>(0);
-    const [infants, setInfants] = useState<number>(0);
+    const { adults, setAdults, children, setChildren,infants,setInfants} = useHotelSearchBarStore();
     const handleDateSelect = (selectedDate: Date | undefined) => {
         if (activeButton === "checkIn" && selectedDate) {
             let { to } = date || {};

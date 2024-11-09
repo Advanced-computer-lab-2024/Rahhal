@@ -4,7 +4,7 @@ import { fetchPlaceDetails } from "@/api-calls/google-maps-api-calls";
 import HotelGridView from "./HotelGridView";
 import { fetchHotels } from "@/api-calls/hotel-api-calls";
 import { useState } from "react";
-import { HotelDetails } from "../types/home-page-types";
+import { useHotelStore } from "@/stores/hotel-store";
 
 interface HotelPageProps {
   loggedIn: boolean;
@@ -15,7 +15,7 @@ function HotelsPage({ loggedIn }: HotelPageProps) {
     useHotelSearchBarStore();
   
   const [ loading , setLoading ] = useState<boolean>(false);
-  const [ hotels , setHotels ] = useState<HotelDetails[]>([] as HotelDetails[]);
+  const {hotels , setHotels} = useHotelStore();
 
   const onIconClick = async () => {
     const destinationSelectedIndex = destinationSuggestions.indexOf(destinationLocation[0]);

@@ -369,7 +369,7 @@ interface FlightOfferDisplay {
   }>;
 }
 
-export interface HotelDetails {
+export interface IHotelDetails {
   name: string;
   address: {
     "@type": string;
@@ -400,5 +400,5 @@ export interface HotelDetails {
 }
 
 export interface HotelDetailsProps {
-  hotel: HotelDetails;
+  hotels: IHotelDetails[];
 }

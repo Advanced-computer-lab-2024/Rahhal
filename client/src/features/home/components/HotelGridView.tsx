@@ -1,10 +1,10 @@
 import { Skeleton } from "@/components/ui/skeleton"
-import { HotelDetails } from "@/features/home/types/home-page-types";
+import { IHotelDetails } from "@/features/home/types/home-page-types";
 import HotelCard from "./HotelCard";
 
 interface HotelGridViewProps {
     loading: boolean;
-    hotels: HotelDetails[];
+    hotels: IHotelDetails[];
 }
 
 export default function HotelGridView(props : HotelGridViewProps) {
@@ -26,7 +26,7 @@ return(
 
         {
             !props.loading && props.hotels.map((hotel, index) => (
-                <HotelCard key={index} hotel={hotel} />
+                <HotelCard index={index} key={index} hotel={hotel} />
             ))
         }
 

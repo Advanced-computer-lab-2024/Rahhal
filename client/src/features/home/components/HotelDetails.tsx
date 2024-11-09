@@ -13,10 +13,14 @@ import ReservationDetails from "./ReservationDetails";
 import { addDays, format, isSameMonth, isSameDay, startOfToday, differenceInDays } from "date-fns";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { HotelDetailsProps } from "@/features/home/types/home-page-types";
+import { useParams } from "react-router-dom";
 
 
 
-export default function HotelDetails({ hotel }: HotelDetailsProps) {
+export default function HotelDetails( {hotels} : HotelDetailsProps) {
+  const {index} = useParams();
+  const parsedIndex = parseInt(index!);
+  const hotel = hotels[parsedIndex];
   const [date, setDate] = useState<DateRange>({
     from: startOfToday(),
     to: addDays(startOfToday(), 7),
