@@ -1,23 +1,3 @@
-export type TRating = {
-  userId: string;
-  userName: string;
-  rating: number;
-  review?: string;
-};
-export enum bookingType {
-  Activity = "activity",
-  Itinerary = "itinerary",
-  Flight = "flight",
-  Hotel = "hotel",
-  Transportation = "transportation",
-}
-
-export enum bookingStatus {
-  Upcoming = "upcoming",
-  Completed = "completed",
-  Cancelled = "cancelled",
-}
-
 export interface PopulatedBooking {
   _id: string;
   user: IUser;
@@ -66,20 +46,5 @@ export interface IActivity {
   preferenceTags?: PreferenceTag[];
   ratings?: TRating[];
   owner: string;
-  deleted: boolean;
-}
-
-export interface IProduct {
-  _id: string;
-  name: string;
-  picture: string;
-  price: number;
-  description: string;
-  seller: string;
-  sellerName: string;
-  ratings: IRating[];
-  quantity: number;
-  archived: boolean;
-  reviews: { user: string; rating: number; comment: string }[];
   deleted: boolean;
 }

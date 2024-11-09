@@ -15,3 +15,17 @@ export const CONSTANTS = {
   MIN_LATITUDE: -90,
   MAX_LATITUDE: 90,
 };
+
+export enum bookingType {
+  Activity = "activity",
+  Itinerary = "itinerary",
+  Flight = "flight",
+  Hotel = "hotel",
+  Transportation = "transportation",
+}
+
+export enum bookingStatus {
+  Upcoming = "upcoming",
+  Completed = "completed",
+  Cancelled = "cancelled",
+}
