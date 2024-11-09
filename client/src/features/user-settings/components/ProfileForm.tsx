@@ -19,6 +19,8 @@ import { useToast } from "@/hooks/use-toast";
 import { CONNECTION_STRING } from "@/utils/constants";
 import { Role } from "./SettingsView";
 import { Button } from "@/components/ui/button";
+import defaultProfile from "@/assets/defaultProfile.png";
+import { uploadToFirebaseReady } from "@/utils/firebase";
 import UserDocuments from "@/components/UserDocuments";
 export default function ProfileForm() {
   const { toast } = useToast();
@@ -73,6 +75,7 @@ export default function ProfileForm() {
     website: z.string().url().optional(),
     companyProfile: z.string().url().optional(),
     addresses: z.string().array().optional().optional(),
+    profilePicture: z.instanceof(File).optional(),
     nationalID: z.string().url().optional(),
     taxRegistration: z.string().url().optional(),
     certificates: z.string().array().optional(),
@@ -103,11 +106,29 @@ export default function ProfileForm() {
     },
   });
 
+  interface APIPayload {
+    firstName?: string;
+    lastName?: string;
+    companyName?: string;
+    role?: Role;
+    description?: string;
+    previousWork?: string;
+    job?: string;
+    yearsOfExperience?: number;
+    phoneNumber?: string;
+    hotline?: string;
+    website?: string;
+    companyProfile?: string;
+    addresses?: string[];
+    profilePicture?: string;
+  }
+
   useEffect(() => {
-    form.reset(user);
+    const { profilePicture, ...userWithoutProfilePicture } = user;
+    form.reset(userWithoutProfilePicture);
   }, [user, form]);
 
-  async function updateUser(data: ProfileFormValues) {
+  async function updateUser(data: APIPayload) {
     const USER_SERVICE_URL = CONNECTION_STRING + `${id}`;
     try {
       const response = await axios.patch(USER_SERVICE_URL, data);
@@ -124,8 +145,35 @@ export default function ProfileForm() {
       });
     }
   }
-  function onSubmit(data: ProfileFormValues) {
-    updateUser(data);
+  async function onSubmit(data: ProfileFormValues) {
+
+    toast({
+      title: "Updating ... ",
+    });
+    setTimeout(() => {
+    }, 1500);
+
+
+    if(data.profilePicture){
+      const profileImage: string = `images/profile_pictures/${id}/profile.jpg`;
+      const newProfilePic = new File([data.profilePicture], profileImage, {
+        type: data.profilePicture?.type,
+      });
+  
+      const filesFileList: File[] = [newProfilePic];
+      let url = await uploadToFirebaseReady(filesFileList);
+      user.profilePicture = url[0];
+  
+      //update the user with the data, however instead of the field profilePicture, we will use the url we got from firebase
+      const { profilePicture, ...userWithoutProfilePicture } = data;
+      const updatedData = { ...userWithoutProfilePicture, profilePicture: url[0] };
+      updateUser(updatedData);
+    }
+    else{
+      const { profilePicture, ...userWithoutProfilePicture } = data;
+      updateUser(userWithoutProfilePicture);
+    }
+
   }
   return (
     <Form {...form}>
@@ -150,6 +198,45 @@ export default function ProfileForm() {
             role="none"
             className="shrink-0 bg-border h-[1px] w-full"
           ></div>
+          {/* Profile Picture */}
+          <div className="space-y-2">
+            <FormField
+              control={form.control}
+              name="profilePicture"
+              render={({ field: { onChange, value, ...field } }) => (
+                <FormItem>
+                  <FormLabel>Profile Picture</FormLabel>
+                  <FormDescription>Upload a picture of yourself</FormDescription>
+                  <FormControl>
+                    <div className="flex items-center space-x-2">
+                      <img
+                        src={user.profilePicture || defaultProfile || ""}
+                        alt="Profile Picture"
+                        className="w-16 h-16 rounded-full"
+                      />
+                      <Input
+                        type="file"
+                        className={`mt-2 ${editForm ? "text-blue-500" : "text-blue-300"}`}
+                        style={{ width: "225px" }}
+                        disabled={!editForm}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            // Handle file upload
+                            // uploadProfilePicture(file);
+                            onChange(file);
+                          }
+                        }}
+                        {...field}
+                        accept=".png,.jpg,.jpeg"
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           {/* First/Last Name */}
           {user.role != "advertiser" && (
             <>

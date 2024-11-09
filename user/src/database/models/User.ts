@@ -55,6 +55,7 @@ export interface IUser {
   level?: number;
   ratings?: TRating[];
   preferences?: string[];
+  profilePicture?: string;
   wallet?: IWallet;
   nationalID?: string;
   taxRegistration?: string;
@@ -265,6 +266,14 @@ const userSchema: Schema = new Schema<IUser>(
       validate: {
         validator: userValidators.validateDescription,
         message: "Invalid description entry",
+      },
+    },
+    profilePicture: {
+      type: String,
+      default: "",
+      validate: {
+        validator: userValidators.validateProfilePicture,
+        message: "Invalid profile picture entry",
       },
     },
     points: {
