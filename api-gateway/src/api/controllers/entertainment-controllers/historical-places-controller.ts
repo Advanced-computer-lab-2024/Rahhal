@@ -5,8 +5,14 @@ import { STATUS_CODES } from "@/utils/constants";
 // HistoricalPlaces controllers
 export async function getAllHistoricalPlaces(req: Request, res: Response) {
   try {
-    const historicalPlaces = await historicalPlacesService.getAllHistoricalPlaces();
-    res.status(historicalPlaces.status).json(historicalPlaces.data);
+    if(req.query.ownerId) {
+      const ownerId = req.query.ownerId as string;
+      const historicalPlaces = await historicalPlacesService.getHistoricalPlacesByOwner(ownerId);
+      res.status(historicalPlaces.status).json(historicalPlaces.data);
+    } else {
+      const historicalPlaces = await historicalPlacesService.getAllHistoricalPlaces();
+      res.status(historicalPlaces.status).json(historicalPlaces.data);
+    }
   } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
