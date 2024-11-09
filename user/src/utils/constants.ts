@@ -23,3 +23,13 @@ export const LEVELS = {
   LEVEL2: 2,
   LEVEL3: 3,
 }
+
+export enum bookingType {
+  Activity = "activity",
+  Itinerary = "itinerary",
+  Flight = "flight",
+  Hotel = "hotel",
+  Transportation = "transportation",
+}
+
+export const MIN_LENGTH = 0;

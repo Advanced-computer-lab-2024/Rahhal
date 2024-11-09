@@ -2,8 +2,10 @@ import type { Request, Response } from "express";
 import * as userService from "@/services/user-service";
 import { STATUS_CODES } from "@/utils/constants";
 import { z } from "zod";
-import type { TRating } from "@/types";
-import { POINTS , LEVELS } from "@/utils/constants";
+import type { TRating , PopulatedBooking , IItinerary ,IActivity , IProduct } from "@/types";
+import { POINTS , LEVELS , bookingType , MIN_LENGTH } from "@/utils/constants";
+import { entertainmentAxiosInstance , gatewayAxiosInstance , productAxiosInstance } from "@/utils/axios-instances";
+
 
 export async function getUserByUsername(req: Request, res: Response) {
   try {
@@ -91,7 +93,7 @@ export async function updateUserById(req: Request, res: Response) {
     const updatedUser = req.body;
     if (updatedUser.email) {
       const email = await userService.getUserByEmail(updatedUser.email);
-      if (email && !email._id.equals(userId)) {
+      if (email && !email.deleted && email.email !== "" && !email._id.equals(userId)) {
         res
           .status(STATUS_CODES.CONFLICT)
           .json({ error: "This email is registered to another user" });
@@ -165,15 +167,15 @@ export async function createUser(req: Request, res: Response) {
       const userUsername = await userService.getUserByUsername(userData.username);
       const userEmail = userData.email? await userService.getUserByEmail(userData.email) : undefined;
 
-      if (userUsername && userEmail && shouldCheckEmail) {
+      if (userUsername && userEmail && shouldCheckEmail && !userUsername.deleted && !userEmail.deleted) {
         res
           .status(STATUS_CODES.CONFLICT)
           .json({ error: "Username already exists and this email is registered to another user" });
         return;
-      } else if (userUsername) {
+      } else if (userUsername && !userUsername.deleted) {
         res.status(STATUS_CODES.CONFLICT).json({ error: "Username already exists" });
         return;
-      } else if (userEmail && shouldCheckEmail) {
+      } else if (userEmail && shouldCheckEmail && !userEmail.deleted) {
         res
           .status(STATUS_CODES.CONFLICT)
           .json({ error: "This email is registered to another user" });
@@ -199,6 +201,60 @@ export async function deleteUser(req: Request, res: Response) {
     if (!user) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
     } else {
+      if(user.role === "tourGuide"){
+        const filter = {
+          owner: userId,
+          type: bookingType.Itinerary
+        }
+        const itinrariesBookings = await gatewayAxiosInstance.get(`/booking/bookings/`, { params: filter });
+        const result = itinrariesBookings.data.filter((booking: PopulatedBooking) => booking.selectedDate as Date > new Date());
+
+        if(result.length > MIN_LENGTH){
+          res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Tour Guide has itineraries that are not completed yet and there are bookings to those" });
+          return;
+        }
+        else{
+          const filter = {
+            ownerId: userId
+          }
+          const itineraries = await entertainmentAxiosInstance.get(`/itineraries/`, { params: filter });
+          itineraries.data.forEach(async (itinerary: IItinerary) => {
+            await entertainmentAxiosInstance.delete(`/itineraries/${itinerary._id}`);
+          });
+        }
+
+      }
+      else if(user.role === "advertiser"){
+        const filter = {
+          owner: userId,
+          type: bookingType.Activity
+        }
+        const activitiesBookings = await gatewayAxiosInstance.get(`/booking/bookings/`, { params: filter });
+        const result = activitiesBookings.data.filter((booking: PopulatedBooking) => (booking.entity as IActivity).date as Date > new Date());
+
+        if(result.length > MIN_LENGTH){
+          res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Advertiser has activites that are not completed yet and there are bookings to those" });
+          return;
+        }
+        else{
+          const filter = {
+            ownerId: userId
+          }
+          const activities = await entertainmentAxiosInstance.get(`/activities/`, { params: filter });
+          activities.data.forEach(async (activity: IActivity) => {
+            await entertainmentAxiosInstance.delete(`/activities/${activity._id}`);
+          });
+        }
+      }
+      else if(user.role === "seller"){
+        const filter = {
+          sellerId: userId
+        }
+        const products = await productAxiosInstance.get(`/products/`, { params: filter });
+        products.data.forEach(async (product: IProduct) => {
+          await productAxiosInstance.delete(`/products/${product._id}`);
+        });
+      }
       const deletedUser = await userService.deleteUser(userId);
       res.status(STATUS_CODES.STATUS_OK).json(deletedUser);
     }
