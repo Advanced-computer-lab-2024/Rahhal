@@ -10,7 +10,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { TNewProduct, TProduct } from "@/features/seller/utils/seller-columns";
 import { createProduct, updateProduct } from "@/api-calls/products-api-calls";
 
-
 interface ProductModalProps {
   productData?: TProduct;
   dialogTrigger?: React.ReactNode;
@@ -30,8 +29,8 @@ export function ProductModal({ productData, dialogTrigger, userId, username }: P
     if (isNewProduct) {
       const newProduct: TNewProduct = rest;
 
-      // I am sure that userName is not null when the modal open from table add button
-      // otherwise it opens from an edit action and in that situation userName is not null
+      // I am sure that userId is not null when the modal open from table add button
+      // otherwise it opens from an edit action and in that situation userId is not null
       // and already stored in the database and it's not needed in updates
       await createProduct(newProduct, userId!, username!, productImages);
     } else await updateProduct(modalProductData!, productImages);
@@ -133,7 +132,14 @@ export function ProductModal({ productData, dialogTrigger, userId, username }: P
         }}
       />
       {!isNewProduct && <ReviewDisplay reviews={modalProductData?.ratings ?? sampleReviews} />}
-      {!isNewProduct && <a className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" href={"/seller/product/" + productData?._id}>View Product Stats</a>}
+      {!isNewProduct && (
+        <a
+          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+          href={"/seller/product/" + productData?._id}
+        >
+          View Product Stats
+        </a>
+      )}
     </GenericModal>
   );
 }
