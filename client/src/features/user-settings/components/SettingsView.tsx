@@ -53,9 +53,6 @@ export default function SettingsView() {
           title: "Error: " + error,
           variant: "destructive",
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
         console.error(error);
       });
   }, []);

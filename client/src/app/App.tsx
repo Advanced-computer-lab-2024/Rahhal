@@ -8,6 +8,7 @@ import SettingsView from "@/features/user-settings/components/SettingsView";
 import ProfileForm from "@/features/user-settings/components/ProfileForm";
 import AccountForm from "@/features/user-settings/components/AccountForm";
 import WalletForm from "@/features/user-settings/components/WalletForm";
+import PreferenceTagsForm from "@/features/user-settings/components/PreferenceTagsForm";
 import AdminHomepage from "@/features/admin/components/AdminHomepage";
 import UserView from "@/features/admin/components/UserTable";
 import CategoryView from "@/features/admin/components/CategoriesTable";
@@ -82,6 +83,7 @@ export default function App() {
               <Route path="/user-settings/:id" element={<ProfileForm />} />
               <Route path="/user-settings/account/:id" element={<AccountForm />} />
               <Route path="/user-settings/wallet/:id" element={<WalletForm />} />
+              <Route path="/user-settings/preferences/:id" element={<PreferenceTagsForm />} />
             </Route>
             <Route path="/help-center/:id" element={<ComplaintsTable />} />
             <Route path="/user-settings/:id" element={<SettingsView />}>

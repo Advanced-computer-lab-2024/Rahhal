@@ -1,7 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { EditContext } from "./SettingsView";
-
 export default function SideBar() {
   const location = useLocation();
   const [currentPath, setCurrentPath] = useState("");
@@ -18,11 +17,12 @@ export default function SideBar() {
 
   if (user.role === "tourist") {
     sideBarElements.push({ title: "Payment", to: `/user-settings/wallet/${id}` });
+    sideBarElements.push({ title: "Preferences", to: `/user-settings/preferences/${id}` });
   }
 
   return (
     <aside className="-mx-4 lg:w-1/5" style={{ minWidth: "100%" }}>
-      <nav className="flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1">
+      <nav className="flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1 overflow-auto">
         {sideBarElements.map((element, index) => {
           // Check if the current path is exactly the element's to
           const isActive = currentPath === element.to;

@@ -107,9 +107,6 @@ export default function AccountForm() {
         title: "Error: " + (error as any).response.data.error,
         variant: "destructive",
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
     }
   }
   async function onSubmit(data: AccountFormValues) {
