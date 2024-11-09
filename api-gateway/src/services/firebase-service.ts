@@ -42,6 +42,7 @@ export async function uploadFile(file: UploadableFile): Promise<string> {
 export async function uploadMultipleFiles(files: { [key: string]: UploadableFile }): Promise<string[]> {
   const urls: string[] = [];
 
+  
   // loop over all keys in files object
   for (const key in files) {
     const file = files[key];

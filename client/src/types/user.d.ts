@@ -31,6 +31,7 @@ export type TUser = {
   website?: string;
   hotline?: string;
   companyProfile?: string;
+  profilePicture?: string;
   companyName?: string;
   description?: string;
   balance?: number;
