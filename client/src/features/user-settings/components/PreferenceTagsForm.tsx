@@ -55,7 +55,6 @@ export default function CheckboxReactHookFormMultiple() {
         title: "Error: " + (error as any).response.data.error,
         variant: "destructive",
       });
-      throw error;
     }
   }
   //   Submitting
