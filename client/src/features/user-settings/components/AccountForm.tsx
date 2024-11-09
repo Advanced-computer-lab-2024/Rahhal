@@ -19,10 +19,13 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { CONNECTION_STRING } from "@/utils/constants";
+import DeleteAccountButton from "./DeleteAccountButton";
 export default function AccountForm() {
   const { toast } = useToast();
   const [editForm, setEditForm] = useState(false);
   const { user } = useContext(EditContext);
+  const { id } = useParams();
+
   const passwordValidator = z.object({
     oldPassword: z
       .string()
@@ -91,7 +94,6 @@ export default function AccountForm() {
   useEffect(() => {
     form.reset(user);
   }, [user, form]);
-  const { id } = useParams();
   async function updateUser(data: AccountFormValues) {
     const USER_SERVICE_URL = CONNECTION_STRING + `${id}`;
     try {
@@ -227,19 +229,22 @@ export default function AccountForm() {
               </Form>
             )}
 
-            <Button
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
-              type="button"
-              disabled={!editForm}
-              onClick={() => {
-                setChangePassword((prev) => !prev);
-                if (changePassword) {
-                  oldPasswordForm.reset();
-                }
-              }}
-            >
-              {changePassword ? "Cancel" : "Change password"}
-            </Button>
+            <div className="flex gap-4 item">
+              <Button
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
+                type="button"
+                disabled={!editForm}
+                onClick={() => {
+                  setChangePassword((prev) => !prev);
+                  if (changePassword) {
+                    oldPasswordForm.reset();
+                  }
+                }}
+              >
+                {changePassword ? "Cancel" : "Change password"}
+              </Button>
+              <DeleteAccountButton user={{ ...user, _id: id }} />
+            </div>
             <div className="space-y-2">
               {editForm && (
                 <>
