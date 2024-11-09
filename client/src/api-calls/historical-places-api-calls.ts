@@ -21,6 +21,13 @@ export const fetchUserHistoricalPlaces = async (userId: string) => {
   return response.data;
 };
 
+export async function fetchHistoricalPlaceById(historicalPlaceId: string) {
+  const response = await axios.get(
+    `${SERVICES_URLS.ENTERTAINMENT}/historical-places/${historicalPlaceId}`,
+  );
+  return response.data;
+}
+
 export async function deleteHistoricalPlace(historicalPlace: THistoricalPlace) {
   console.log(historicalPlace);
   await axios.delete(`${SERVICES_URLS.ENTERTAINMENT}/historical-places/${historicalPlace._id}`);
