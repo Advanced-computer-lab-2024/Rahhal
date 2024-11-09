@@ -6,10 +6,10 @@ export const bookingAxiosInstance = axios.create({
   baseURL: "http://booking:3000",
 });
 
-export async function hasBookings(id: string) {
+export async function hasBookings(id: string, type: string) {
   try {
     const response = await bookingAxiosInstance.get(`/bookings`, {
-      params: { entity: id, type: "itinerary", status: "upcoming" },
+      params: { entity: id, type: type, status: "upcoming" },
     });
 
     const filteredResponse = response.data.filter(
