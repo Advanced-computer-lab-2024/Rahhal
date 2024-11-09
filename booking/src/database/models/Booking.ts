@@ -26,7 +26,11 @@ const bookingSchema = new mongoose.Schema({
   },
   selectedDate: {
     type: Date,
-  }
+  },
+  isRated: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export default mongoose.model("Booking", bookingSchema);
