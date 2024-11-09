@@ -14,6 +14,17 @@ export const SERVICES_URLS = {
   FLIGHTS: "http://localhost:3000/api/flights-search",
 };
 
+export const STATUS_CODES = {
+  NOT_FOUND: 404,
+  CREATED: 201,
+  STATUS_OK: 200,
+  BAD_REQUEST: 400,
+  SERVER_ERROR: 500,
+  GATEWAY_TIMEOUT: 504,
+  BAD_GATEWAY: 502,
+  UNPROCESSABLE_ENTITY: 422,
+};
+
 export const TEMP_USER_ID = "67032b20ffa86f21339f6cad";
 export const SUPER_ADMIN_ID = "67032b20ffa86f21339f6cad";
 

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/data-table/DataTable";
 import { itinerariesColumns, TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
-import { fetchItineraries, fetchUserItineraries } from "@/api-calls/itineraries-api-calls";
+import { fetchItinerariesByOwner } from "@/api-calls/itineraries-api-calls";
+
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { ItinerariesModal } from "./ItineraryModal";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -14,7 +15,7 @@ function TourGuideView() {
 
   useEffect(() => {
     if (id) {
-      fetchUserItineraries(id).then((data) => {
+      fetchItinerariesByOwner(id).then((data) => {
         setItineraries(data);
       });
     }

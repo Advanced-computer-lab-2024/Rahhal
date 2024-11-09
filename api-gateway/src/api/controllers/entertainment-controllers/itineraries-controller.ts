@@ -5,12 +5,19 @@ import { STATUS_CODES } from "@/utils/constants";
 // Itineraries controllers
 export async function getAllItineraries(req: Request, res: Response) {
   try {
-    const itinerary = await itinerariesService.getAllItineraries();
-    res.status(itinerary.status).json(itinerary.data);
+    if (req.query.ownerId) {
+      const ownerId = req.query.ownerId as string;
+      const itinerary = await itinerariesService.getItineraryByOwnerId(ownerId);
+      res.status(itinerary.status).json(itinerary.data);
+    } else {
+      const itinerary = await itinerariesService.getAllItineraries();
+      res.status(itinerary.status).json(itinerary.data);
+    }
   } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
 }
+
 export async function getActiveAppropriateItineraries(req: Request, res: Response) {
   try {
     const itinerary = await itinerariesService.getActiveAppropriateItineraries();
@@ -39,6 +46,7 @@ export async function createItinerary(req: Request, res: Response) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
 }
+
 export async function updateItinerary(req: Request, res: Response) {
   const itineraryId = req.params.id;
   const itineraryData = req.body;
@@ -49,6 +57,7 @@ export async function updateItinerary(req: Request, res: Response) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
 }
+
 export async function deleteItinerary(req: Request, res: Response) {
   const itineraryId = req.params.id;
   try {
