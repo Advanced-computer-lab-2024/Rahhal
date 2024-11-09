@@ -8,6 +8,7 @@ import TouristHomePageNavigation from "@/features/home/components/TouristHomePag
 import GoogleMap from "@/components/google-maps/GoogleMap";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import currencyExchange from "@/utils/currency-exchange";
+import SharePopover from "@/components/SharePopover";
 
 
 const DetailsPage = () => {
@@ -38,8 +39,10 @@ const DetailsPage = () => {
       <div className={DetailsPageStyles["details-page-content-container"]}>
         <div className={DetailsPageStyles["item-details"]}>
           {/* details goes here */}
+          <div className="flex justify-between">
           <h1>{item.name} </h1>
-
+          <SharePopover link={window.location.href} />
+          </div>
           <h3>{item.description}</h3>
 
           <p>
