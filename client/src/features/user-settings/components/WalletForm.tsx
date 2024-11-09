@@ -58,12 +58,12 @@ export default function AccountForm() {
   let badgeLevelColor = "Bronze";
   let badgeLevel = "1";
 
-    if (user.points && user.points > 100000) {
+    if (user.level && user.level == 2) {
       badgeLevelColor = "Silver";
       badgeLevel = "2";
       badgeImage = SilverRBadge;
     }
-    if (user.points && user.points > 500000) {
+    if (user.level && user.level == 3) {
       badgeLevelColor = "Gold";
       badgeLevel = "3";
       badgeImage = GoldRBadge;
@@ -171,6 +171,8 @@ export default function AccountForm() {
           form.setValue("points", userData.points);
           user.balance = userData.balance;
           user.points = userData.points;
+          console.log(user.level);
+          
           toast({
             title: "Success",
             description: "Points redeemed successfully",
