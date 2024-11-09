@@ -40,19 +40,6 @@ import HotelsPage from "@/features/home/components/HotelsPage";
 export default function App() {
   const { setRates } = useRatesStore();
   useEffect(() => {
-    const storedRates = localStorage.getItem("rates");
-    const isNewDay = storedRates
-      ? new Date(JSON.parse(storedRates).date).getDate() != new Date().getDate()
-      : true;
-
-    if (!storedRates || isNewDay) {
-      getCurrencyExchangeRates().then((data) => {
-        setRates(data);
-        localStorage.setItem("rates", JSON.stringify(data));
-      });
-    } else {
-      setRates(JSON.parse(storedRates));
-    }
     ApiCurrencyCall();
   }, []);
   const queryClient = new QueryClient();
