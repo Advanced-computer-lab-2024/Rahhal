@@ -7,6 +7,7 @@ import { format } from "@/features/admin/utils/columns-definitions/activity-deta
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@radix-ui/react-label";
 import { updateActivity } from "@/api-calls/activities-api-calls";
+import PictureViewer from "@/components/PictureViewer";
 
 interface ActivityViewProps {
   activityData?: TActivity;
@@ -25,6 +26,9 @@ const KeyValuePairView = ({ activity }: KeyValuePairViewProps) => {
       "createdAt",
       "updatedAt",
       "__v",
+      "tags",
+      "owner",
+      "images",
     ];
     if (!value) return false;
     if (Array.isArray(value) && value.length === 0) return false;
@@ -75,7 +79,7 @@ export function ActivityView({
 
   const handleSubmit = async () => {
     if (modalActivityData) {
-      await updateActivity(modalActivityData);
+      await updateActivity(modalActivityData, null); 
     }
   }
 
@@ -88,6 +92,11 @@ export function ActivityView({
     >
       <KeyValuePairView activity={modalActivityData} />
       <div className="flex items-center space-x-2 pt-4">
+        <PictureViewer
+          title="Activity Images"
+          description="Activity Images"
+          imageSources={modalActivityData.images}
+        />
         <Checkbox
           id="inappropriate"
           checked={!modalActivityData.isAppropriate}

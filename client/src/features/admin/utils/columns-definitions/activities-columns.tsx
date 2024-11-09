@@ -14,6 +14,7 @@ export type TActivity = {
   _id?: string;
   name: string;
   description: string;
+  images: string[];
   time: Date;
   date: Date;
   location: { longitude: number; latitude: number };
