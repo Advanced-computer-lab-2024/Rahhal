@@ -2,10 +2,13 @@ import type { Request, Response } from "express";
 import * as userService from "@/services/user-service";
 import { STATUS_CODES } from "@/utils/constants";
 import { z } from "zod";
-import type { TRating , PopulatedBooking , IItinerary ,IActivity , IProduct } from "@/types";
-import { POINTS , LEVELS , bookingType , MIN_LENGTH } from "@/utils/constants";
-import { entertainmentAxiosInstance , gatewayAxiosInstance , productAxiosInstance } from "@/utils/axios-instances";
-
+import type { TRating, PopulatedBooking, IItinerary, IActivity, IProduct } from "@/types";
+import { POINTS, LEVELS, MIN_LENGTH, bookingStatus, bookingType } from "@/utils/constants";
+import {
+  entertainmentAxiosInstance,
+  gatewayAxiosInstance,
+  productAxiosInstance,
+} from "@/utils/axios-instances";
 
 export async function getUserByUsername(req: Request, res: Response) {
   try {
@@ -84,7 +87,7 @@ export async function getUserByEmail(req: Request, res: Response) {
       res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
     }
   }
-} 
+}
 
 //update user by userId
 export async function updateUserById(req: Request, res: Response) {
@@ -111,26 +114,24 @@ export async function updateUserById(req: Request, res: Response) {
         } else if (user.role !== "tourist") {
           res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Only tourists can have points" });
           return;
-        } else { 
-
+        } else {
           let userLevelPointRate = POINTS.LEVEL3POINTRATE;
-          if(user.level === LEVELS.LEVEL1){
-          userLevelPointRate  = POINTS.LEVEL1POINTRATE;
+          if (user.level === LEVELS.LEVEL1) {
+            userLevelPointRate = POINTS.LEVEL1POINTRATE;
+          } else if (user.level === LEVELS.LEVEL2) {
+            userLevelPointRate = POINTS.LEVEL2POINTRATE;
           }
-          else if(user.level === LEVELS.LEVEL2){
-          userLevelPointRate  = POINTS.LEVEL2POINTRATE;
-          }
-          updatedUser.points = Math.ceil(user.points as number + amountPaid * userLevelPointRate );
-          updatedUser.accumulativePoints = Math.ceil(user.accumulativePoints as number + amountPaid * userLevelPointRate );
-          
+          updatedUser.points = Math.ceil((user.points as number) + amountPaid * userLevelPointRate);
+          updatedUser.accumulativePoints = Math.ceil(
+            (user.accumulativePoints as number) + amountPaid * userLevelPointRate,
+          );
 
-          if(updatedUser.accumulativePoints >= POINTS.LEVEL1MAXPOINTS) {
+          if (updatedUser.accumulativePoints >= POINTS.LEVEL1MAXPOINTS) {
             updatedUser.level = LEVELS.LEVEL2;
           }
-          if(updatedUser.accumulativePoints >= POINTS.LEVEL2MAXPOINTS) {
+          if (updatedUser.accumulativePoints >= POINTS.LEVEL2MAXPOINTS) {
             updatedUser.level = LEVELS.LEVEL3;
-          } 
-
+          }
         }
       }
     }
@@ -141,8 +142,8 @@ export async function updateUserById(req: Request, res: Response) {
         if (!user) {
           res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
           return;
-        } else{
-          updatedUser.balance = user.balance as number + amountRetrieved;
+        } else {
+          updatedUser.balance = (user.balance as number) + amountRetrieved;
         }
       }
     }
@@ -165,9 +166,17 @@ export async function createUser(req: Request, res: Response) {
     if (userData.username && userData.password) {
       const shouldCheckEmail = userData.role !== "admin" && userData.role !== "tourismGovernor";
       const userUsername = await userService.getUserByUsername(userData.username);
-      const userEmail = userData.email? await userService.getUserByEmail(userData.email) : undefined;
+      const userEmail = userData.email
+        ? await userService.getUserByEmail(userData.email)
+        : undefined;
 
-      if (userUsername && userEmail && shouldCheckEmail && !userUsername.deleted && !userEmail.deleted) {
+      if (
+        userUsername &&
+        userEmail &&
+        shouldCheckEmail &&
+        !userUsername.deleted &&
+        !userEmail.deleted
+      ) {
         res
           .status(STATUS_CODES.CONFLICT)
           .json({ error: "Username already exists and this email is registered to another user" });
@@ -201,55 +210,72 @@ export async function deleteUser(req: Request, res: Response) {
     if (!user) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
     } else {
-      if(user.role === "tourGuide"){
+      if (user.role === "tourGuide") {
         const filter = {
           owner: userId,
-          type: bookingType.Itinerary
-        }
-        const itinrariesBookings = await gatewayAxiosInstance.get(`/booking/bookings/`, { params: filter });
-        const result = itinrariesBookings.data.filter((booking: PopulatedBooking) => booking.selectedDate as Date > new Date());
+          type: bookingType.Itinerary,
+          status: bookingStatus.Upcoming,
+        };
+        const itinrariesBookings = await gatewayAxiosInstance.get(`/booking/bookings`, {
+          params: filter,
+        });
+        const result = itinrariesBookings.data.filter(
+          (booking: PopulatedBooking) => new Date(booking.selectedDate as Date) > new Date(),
+        );
 
-        if(result.length > MIN_LENGTH){
-          res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Tour Guide has itineraries that are not completed yet and there are bookings to those" });
+        if (result.length > MIN_LENGTH) {
+          res.status(STATUS_CODES.BAD_REQUEST).json({
+            error:
+              "Tour Guide has itineraries that are not completed yet and there are bookings to those",
+          });
           return;
-        }
-        else{
+        } else {
           const filter = {
-            ownerId: userId
-          }
-          const itineraries = await entertainmentAxiosInstance.get(`/itineraries/`, { params: filter });
+            ownerId: userId,
+          };
+          const itineraries = await entertainmentAxiosInstance.get(`/itineraries/`, {
+            params: filter,
+          });
+          console.log(itineraries.data);
           itineraries.data.forEach(async (itinerary: IItinerary) => {
             await entertainmentAxiosInstance.delete(`/itineraries/${itinerary._id}`);
           });
         }
-
-      }
-      else if(user.role === "advertiser"){
+      } else if (user.role === "advertiser") {
         const filter = {
           owner: userId,
-          type: bookingType.Activity
-        }
-        const activitiesBookings = await gatewayAxiosInstance.get(`/booking/bookings/`, { params: filter });
-        const result = activitiesBookings.data.filter((booking: PopulatedBooking) => (booking.entity as IActivity).date as Date > new Date());
+          type: bookingType.Activity,
+          status: bookingStatus.Upcoming,
+        };
+        const activitiesBookings = await gatewayAxiosInstance.get(`/booking/bookings/`, {
+          params: filter,
+        });
+        const result = activitiesBookings.data.filter(
+          (booking: PopulatedBooking) =>
+            new Date((booking.entity as IActivity).date as Date) > new Date(),
+        );
 
-        if(result.length > MIN_LENGTH){
-          res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Advertiser has activites that are not completed yet and there are bookings to those" });
+        if (result.length > MIN_LENGTH) {
+          res.status(STATUS_CODES.BAD_REQUEST).json({
+            error:
+              "Advertiser has activites that are not completed yet and there are bookings to those",
+          });
           return;
-        }
-        else{
+        } else {
           const filter = {
-            ownerId: userId
-          }
-          const activities = await entertainmentAxiosInstance.get(`/activities/`, { params: filter });
+            owner: userId,
+          };
+          const activities = await entertainmentAxiosInstance.get(`/activities/`, {
+            params: filter,
+          });
           activities.data.forEach(async (activity: IActivity) => {
             await entertainmentAxiosInstance.delete(`/activities/${activity._id}`);
           });
         }
-      }
-      else if(user.role === "seller"){
+      } else if (user.role === "seller") {
         const filter = {
-          sellerId: userId
-        }
+          sellerId: userId,
+        };
         const products = await productAxiosInstance.get(`/products/`, { params: filter });
         products.data.forEach(async (product: IProduct) => {
           await productAxiosInstance.delete(`/products/${product._id}`);
@@ -314,17 +340,18 @@ export async function redeemPoints(req: Request, res: Response) {
     } else if (user.role !== "tourist") {
       res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Only tourists can redeem points" });
       return;
-    } else if(user.points) {
+    } else if (user.points) {
       if (user.points < POINTS.MINPOINTS) {
         res
           .status(STATUS_CODES.BAD_REQUEST)
           .json({ error: "You Have to have at least 10000 points to be able to redeem them!" });
         return;
-      } else{
+      } else {
         const updatedUser = user;
         const avgBalance = user.points / POINTS.MINPOINTS;
         updatedUser.points = user.points % POINTS.MINPOINTS;
-        updatedUser.balance = user.balance as number + Math.floor(avgBalance) * POINTS.AMOUNTFORMINPOINTS;
+        updatedUser.balance =
+          (user.balance as number) + Math.floor(avgBalance) * POINTS.AMOUNTFORMINPOINTS;
         console.log(updatedUser);
         const newUser = await userService.updateUserById(userId, updatedUser);
         res.status(STATUS_CODES.STATUS_OK).json(newUser);

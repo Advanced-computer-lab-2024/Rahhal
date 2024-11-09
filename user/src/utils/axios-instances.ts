@@ -17,7 +17,7 @@ const entertainmentAxiosInstance = axios.create({
   });
 
   const gatewayAxiosInstance = axios.create({
-    baseURL: "http://backend:3000",
+    baseURL: "http://backend:3000/api",
     validateStatus: (status) => {
       return status < STATUS_CODES.SERVER_ERROR;
     },
