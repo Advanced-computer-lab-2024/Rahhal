@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@radix-ui/react-label";
 import { updateItinerary } from "@/api-calls/itineraries-api-calls";
+import PictureViewer from "@/components/PictureViewer";
 
 interface ItineraryViewProps {
   itineraryData?: TItinerary;
@@ -23,7 +24,9 @@ const KeyValuePairView = ({ itinerary }: KeyValuePairViewProps) => {
         "_id",
          "createdAt",
           "updatedAt",
-           "__v"
+           "__v",
+           "owner",
+           "images",
     ];
     if (!value) return false;
     if (Array.isArray(value) && value.length === 0) return false;
@@ -74,7 +77,7 @@ export function ItineraryView({
 
  const handleSubmit = async () => {
     if (modalItineraryData) {
-        await updateItinerary(modalItineraryData);
+        await updateItinerary(modalItineraryData, null);
         }
     }
 
@@ -87,6 +90,11 @@ export function ItineraryView({
     >
       <KeyValuePairView itinerary={modalItineraryData} />
       <div className="flex items-center space-x-2 pt-4">
+      <PictureViewer
+          title="Itinerary Images"
+          description="Itinerary Images"
+          imageSources={modalItineraryData.images}
+        />
         <Checkbox
           id="inappropriate"
           checked={!modalItineraryData.appropriate} 
