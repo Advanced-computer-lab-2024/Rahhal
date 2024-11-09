@@ -4,7 +4,8 @@ import { ChevronRight } from "lucide-react";
 import { ActivityView } from "@/features/admin/components/ActivityView";
 
 export type TRating = {
-  user: string;
+  userId: string;
+  userName: string;
   rating: number;
   review?: string;
 };
@@ -13,6 +14,7 @@ export type TActivity = {
   _id?: string;
   name: string;
   description: string;
+  images: string[];
   time: Date;
   date: Date;
   location: { longitude: number; latitude: number };
