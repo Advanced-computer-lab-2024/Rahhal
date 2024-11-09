@@ -120,7 +120,7 @@ function GeneralGridView() {
     const type =
       "languages" in item ? "itinerary" : "isBookingOpen" in item ? "activity" : "historicalPlace";
     if (type === "historicalPlace") {
-      navigate(`/details/${item._id}`, { state: { item } });
+      navigate(`/details/${item._id}/${id?id:""}`, { state: { item } });
       return;
     }
     navigate(`/my-trips-details?userId=${id}&eventId=${item._id}&bookingId=null&type=${type}`, {
