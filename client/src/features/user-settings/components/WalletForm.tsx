@@ -37,32 +37,57 @@ import { useToast } from "@/hooks/use-toast";
 import { useParams } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { GetCardType } from "../utils/CheckCardType";
-
+import { redeemLoyalityPoints } from "@/api-calls/users-api-calls";
+import BronzeRBadge from "@/assets/BronzeRBadge2.png";
+import SilverRBadge from "@/assets/SilverRBadge.png";
+import GoldRBadge from "@/assets/GoldRBadge.png";
 export const editCardContext = createContext({ editingCard: false, editedIndex: 0 });
 
 export default function AccountForm() {
   const { user } = useContext(EditContext);
   const { toast } = useToast();
-  const balanceValidator = z.object({
+  const redeemValidator = z.object({
     balance: z.number().optional(),
+    points: z.number().optional(),
   });
+
+  // Handling Displaying of Badge
+  // May need to handle maxPoints reached pending Noha
+  // ================================================
+  let badgeImage = BronzeRBadge;
+  let badgeLevelColor = "Bronze";
+  let badgeLevel = "1";
+
+  if (user.level && user.level == 2) {
+    badgeLevelColor = "Silver";
+    badgeLevel = "2";
+    badgeImage = SilverRBadge;
+  }
+  if (user.level && user.level == 3) {
+    badgeLevelColor = "Gold";
+    badgeLevel = "3";
+    badgeImage = GoldRBadge;
+  }
+  // ================================================
 
   const [editingCard, setEditingCard] = useState<boolean>(false);
   const [editedIndex, setEditedCardIndex] = useState<number>(-1);
 
-  type balanceValues = z.infer<typeof balanceValidator>;
+  type balanceValues = z.infer<typeof redeemValidator>;
   const { id } = useParams();
   const form = useForm<balanceValues>({
-    resolver: zodResolver(balanceValidator),
+    resolver: zodResolver(redeemValidator),
     mode: "onChange",
     defaultValues: {
       balance: user.balance || 0,
+      points: user.points || 0,
     },
   });
 
   useEffect(() => {
     form.reset({
       balance: user.balance || 0,
+      points: user.points || 0,
     });
   }, [user, form]);
 
@@ -135,27 +160,105 @@ export default function AccountForm() {
     setEditedCardIndex(index);
   }
 
+  async function redeemPoints() {
+    if (id) {
+      try {
+        const response = await redeemLoyalityPoints(id);
+        const updatedUser = response;
+        const userData = updatedUser as { balance: number; points: number };
+        form.setValue("balance", userData.balance);
+        form.setValue("points", userData.points);
+        user.balance = userData.balance;
+        user.points = userData.points;
+        console.log(user.level);
+
+        toast({
+          title: "Success",
+          description: "Points redeemed successfully",
+          variant: "default",
+        });
+      } catch (error) {
+        toast({
+          title: "Error: " + (error as any).response.data.error,
+          variant: "destructive",
+        });
+      }
+    } else {
+      toast({
+        title: "Error: User ID is missing",
+        variant: "destructive",
+      });
+    }
+  }
+
   return (
     <>
-      <h3 className="text-lg font-medium">Payment Information</h3>
-      <Separator className="mt-5 mb-5"></Separator>
+      <div className="flex items-center gap-4">
+        <h3 className="text-lg font-medium">Payment Information</h3>
+        {/* <div className="flex items-center"> */}
+        <div className="ml-auto flex items-center" style={{ width: "52%" }}>
+          <p style={{ fontSize: "0.875rem" }}>
+            <i>
+              Experience Level {badgeLevel}: <b>{badgeLevelColor}</b>
+            </i>
+          </p>
+          <img src={badgeImage} alt="" className="ml-2 h-10" />
+        </div>
+        {/* </div> */}
+      </div>
+      <Separator id={styles["cardWidth"]} className="mt-5 mb-5"></Separator>
       <Form {...form}>
         {/* Wallet */}
         {user.role === "tourist" && (
-          <FormField
-            control={form.control}
-            name="balance"
-            render={({ field }) => (
-              <FormItem>
-                <h4 className="text-lg font-medium">Wallet</h4>
-                <FormControl>
-                  <Input type="number" disabled {...field} />
-                </FormControl>
-                <FormDescription>This is your wallet balance.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-12 gap-6" style={{ maxWidth: "70%" }}>
+            <div className="col-span-6">
+              <FormField
+                control={form.control}
+                name="balance"
+                render={({ field }) => (
+                  <FormItem>
+                    <h4 className="text-lg font-medium">Balance</h4>
+                    <FormControl>
+                      <Input type="number" disabled {...field} />
+                    </FormControl>
+                    <FormDescription>This is your wallet balance.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="col-span-4">
+              <FormField
+                control={form.control}
+                name="points"
+                render={({ field }) => (
+                  <FormItem>
+                    <h4 className="text-lg font-medium">Points</h4>
+                    <FormControl>
+                      <div className="grid grid-cols-12 gap-1">
+                        <div className="col-span-10">
+                          <Input type="number" disabled {...field} />
+                        </div>
+                        <div className="col-span-2">
+                          <Button
+                            disabled={user.points && user.points >= 10000 ? false : true}
+                            onClick={redeemPoints}
+                          >
+                            Redeem
+                          </Button>
+                        </div>
+                      </div>
+                    </FormControl>
+                    <FormDescription>
+                      You have {user.points ? user.points - (user.points % 10000) : 0} points to
+                      redeem.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
         )}
       </Form>
 

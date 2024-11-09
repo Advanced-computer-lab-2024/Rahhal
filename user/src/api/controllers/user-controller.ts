@@ -124,7 +124,8 @@ export async function updateUserById(req: Request, res: Response) {
 
           if(updatedUser.accumulativePoints >= POINTS.LEVEL1MAXPOINTS) {
             updatedUser.level = LEVELS.LEVEL2;
-          } else if(updatedUser.accumulativePoints >= POINTS.LEVEL2MAXPOINTS) {
+          }
+          if(updatedUser.accumulativePoints >= POINTS.LEVEL2MAXPOINTS) {
             updatedUser.level = LEVELS.LEVEL3;
           } 
 
