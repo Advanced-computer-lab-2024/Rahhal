@@ -53,7 +53,7 @@ export default function ReservationDetails({date , setDate} : ReservationProps) 
     };
 
     return (
-        <div className={cn("grid gap-2")}>
+        <div className={cn("grid gap-2 h-fit")}>
             <div className="border rounded-lg w-64 h-fit overflow-hidden border-gray-500">
             <Popover open={isOpen} onOpenChange={setIsOpen}>
                 <PopoverTrigger asChild>

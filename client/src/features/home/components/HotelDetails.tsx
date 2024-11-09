@@ -7,17 +7,17 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import SharePopover from "@/components/SharePopover";
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import { DateRange } from "react-day-picker";
 import ReservationDetails from "./ReservationDetails";
 import { startOfToday, differenceInDays } from "date-fns";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { currencyExchangeSpec,currencyExchangeDefaultSpec } from "@/utils/currency-exchange";
+import { currencyExchangeSpec, currencyExchangeDefaultSpec } from "@/utils/currency-exchange";
 import { useRatesStore, useCurrencyStore } from "@/stores/currency-exchange-store";
 import { HotelDetailsProps } from "@/features/home/types/home-page-types";
 import { useParams } from "react-router-dom";
 import { useHotelSearchBarStore } from "@/stores/hotel-search-bar-slice";
-import { getUserById , addLoyalityPoints } from "@/api-calls/users-api-calls";
+import { getUserById, addLoyalityPoints } from "@/api-calls/users-api-calls";
 import { calculateAge } from "@/utils/age-calculator";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -26,6 +26,7 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
   const { index, id } = useParams();
   const [isAboveEighteen, setIsAboveEighteen] = useState(false);
   const [login, setLogin] = useState(false);
+  useEffect(() => {
   if (id) {
     const user = getUserById(id);
     user.then((res) => {
@@ -35,7 +36,8 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
     });
   } else {
     setLogin(false);
-  }
+  } }, [id]);
+  
   const { rates } = useRatesStore();
   const { currency } = useCurrencyStore();
   const parsedIndex = parseInt(index!);
@@ -43,7 +45,7 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
   const newPrice = currencyExchangeSpec("USD", parseInt(hotel.averagePrice), rates, currency)
     ?.toFixed(0)!
     .toLocaleString();
-  const { checkIn, checkOut, setCheckIn,adults,guests} = useHotelSearchBarStore();
+  const { checkIn, checkOut, setCheckIn, adults, guests } = useHotelSearchBarStore();
   if (checkIn.length === 0) setCheckIn(startOfToday());
   const [date, setDate] = useState<DateRange>({
     from: checkIn[0],
@@ -85,7 +87,8 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
           <MapPin className="w-4 h-4" />
           <span className="pb-0.5">
             {hotel.address.streetAddress}, {hotel.address.addressLocality}{" "}
-            {hotel.address.postalCode} {hotel.address.addressCountry.name}{" "}
+            {hotel.address.postalCode}{" "}
+            {hotel.address.addressCountry && hotel.address.addressCountry.name}{" "}
           </span>
         </div>
         <div className="flex flex-col gap-12">
@@ -109,104 +112,124 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
                 <CarouselNext className="group bg-transparent border-0 rounded-full bg-gray-300 bg-opacity-50 translate-x-[-250%] h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:opacity-0 disabled:group-hover:opacity-0" />
               </Carousel>
             </div>
-            <div className="flex flex-col justify-end pb-5 items-center w-4/12 gap-3">
-              <div className="flex justify-end w-full pr-4">
-                <SharePopover link={""} />
+            <div className="flex flex-col gap-2 pb-5 w-4/12 justify-end">
+              <div className="flex justify-end w-full pr-4 h-16 items-start">
+                <SharePopover link={window.location.href} />
               </div>
-              <div className="h-8" />
+                  <div className="h-2">
 
-              <div className="flex justify-start w-64 p-2">
-                <span className="text-left font-semibold">{newPrice + " " + currency} </span>{" "}
-                <span className="pl-1 ">/night</span>
+                  </div>
+              <div className="flex justify-center w-full ">
+                <div className="flex justify-start w-64 p-1">
+                  <span className="text-left font-semibold">{newPrice + " " + currency} </span>{" "}
+                  <span className="pl-1 ">/night</span>
+                </div>
               </div>
-              <div>
+
+              <div className="w-[100%] flex justify-center h-fit">
                 <ReservationDetails date={date} setDate={setDate} />
               </div>
-              {!login && (
-                <Link to="/signup">
-                  <button className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12">
+
+              <div className="flex justify-center">
+                {!login && (
+                  <Link to="/signup">
+                    <button className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12">
+                      Reserve Room
+                    </button>
+                  </Link>
+                )}
+
+                {login && (
+                  <button
+                    className={cn(
+                      "bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12",
+                      !isAboveEighteen || !date.to || adults <= 0
+                        ? "hover:bg-[var(--primary-color-fade)] bg-[var(--primary-color-fade)]"
+                        : "",
+                    )}
+                    disabled={!isAboveEighteen || !date.to || adults <= 0}
+                    onClick={() => {
+                      toast({
+                        title: "Booking successful",
+                        description: "Loyality points added to your account!",
+                        style: {
+                          backgroundColor: "#34D399",
+                          color: "#FFFFFF",
+                        },
+                        duration: 3000,
+                      });
+                      console.log("HELLO");
+                      addLoyalityPoints(
+                        id!,
+                        currencyExchangeDefaultSpec(
+                          currency,
+                          differenceInDays(date.to!, date.from!) * parseInt(newPrice!) +
+                            parseInt(newPrice!) * 0.1,
+                          rates,
+                        )!,
+                      );
+                    }}
+                  >
                     Reserve Room
                   </button>
-                </Link>
-              )}
-              {login && (
-                <button
-                  className={cn(
-                    "bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12",
-                    !isAboveEighteen || !date.to || adults<=0
-                      ? "hover:bg-[var(--primary-color-fade)] bg-[var(--primary-color-fade)]"
-                      : "",
-                  )}
-                  disabled={!isAboveEighteen || !date.to || adults<=0}
-                  onClick={() => {
-                    toast({
-                      title: "Booking successful",
-                      description: "Loyality points added to your account!",
-                      style: {
-                        backgroundColor: "#34D399",
-                        color: "#FFFFFF",
-                      },
-                      duration: 3000,
-                    });
-                    console.log("HELLO");
-                    addLoyalityPoints(id!, currencyExchangeDefaultSpec(currency,(
-                      differenceInDays(date.to!, date.from!) * parseInt(newPrice!) +
-                      parseInt(newPrice!) * 0.1
-                    ),rates)!);
-                  }}
-                >
-                  Reserve Room
-                </button>
-              )}
-              <div className="h-4">
-              {login && !isAboveEighteen && (
-                <span className="text-red-500 text-xs">
-                  You must be 18 years or older to book this hotel
-                </span>
-              )}
-              
-  </div>
-              <div className="flex flex-col justify-end items-center w-4/12 gap-3 h-32">
-                {date.to && (
-                  <>
-                    <div className="flex justify-between w-64 px-4">
-                      {date.to && (
-                        <>
-                          <span className="underline">
-                            {newPrice + " x " + differenceInDays(date.to, date.from!) + " nights"}
-                          </span>
-                          <span>
-                            {differenceInDays(date.to, date.from!) * parseInt(newPrice!) +
-                              " " +
-                              currency}
-                          </span>
-                        </>
-                      )}
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between w-64 px-4">
-                        <span className="underline"> Rahhal service fee </span>
-                        <span> {(parseInt(newPrice!) * 0.1).toFixed(0) + " " + currency} </span>
-                      </div>
-                    </div>
-                    <hr className="border-1 border-gray-300 w-60" />
-                    <div>
-                      <div className="flex justify-between w-64 px-4">
-                        <span className="font-medium"> Total </span>
-                        <span>
-                          {" "}
-                          {(
-                            differenceInDays(date.to, date.from!) * parseInt(newPrice!) +
-                            parseInt(newPrice!) * 0.1
-                          ).toFixed(0) +
-                            " " +
-                            currency}{" "}
-                        </span>
-                      </div>
-                    </div>
-                  </>
                 )}
+              </div>
+              <div className="h-4 flex justify-center">
+                {login && !isAboveEighteen && (
+                  <span className="text-red-500 text-xs">
+                    You must be 18 years or older to book this hotel
+                  </span>
+                )}
+              </div>
+
+              <div className="flex justify-center h-28">
+                <div className="flex flex-col justify-end items-center w-fit gap-3 h-fit">
+                  {date.to && (
+                    <>
+                      <div className="w-full">
+                        <div className="flex justify-between w-full gap-10">
+                          {date.to && (
+                            <>
+                              <span className="underline">
+                                {newPrice +
+                                  " x " +
+                                  differenceInDays(date.to, date.from!) +
+                                  " nights"}
+                              </span>
+                              <span>
+                                {differenceInDays(date.to, date.from!) * parseInt(newPrice!) +
+                                  " " +
+                                  currency}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="w-full">
+                        <div className="flex justify-between w-full gap-10">
+                          <span className="underline"> Rahhal service fee </span>
+                          <span> {(parseInt(newPrice!) * 0.1).toFixed(0) + " " + currency} </span>
+                        </div>
+                      </div>
+                      <hr className="border-1 border-gray-300 w-full" />
+                      <div className="w-full">
+                        <div className="flex justify-between w-full gap-10">
+                          <span className="font-medium"> Total </span>
+                          <span>
+                            {" "}
+                            {(
+                              differenceInDays(date.to, date.from!) * parseInt(newPrice!) +
+                              parseInt(newPrice!) * 0.1
+                            ).toFixed(0) +
+                              " " +
+                              currency}{" "}
+                          </span>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -237,7 +260,7 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
                         viewBox="0 0 132 24"
                         fill="var(--primary-color)"
                       />
-                      <span> {hotel.rating.reviewCount + " "}reviews</span>
+                      <span> {hotel.rating.reviewCount.toLocaleString() + " "}reviews</span>
                     </div>
                   </div>
                 </div>
