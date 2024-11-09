@@ -7,7 +7,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import SharePopover from "@/components/SharePopover";
-import { useState , useEffect} from "react";
+import { useState, useEffect } from "react";
 import { DateRange } from "react-day-picker";
 import ReservationDetails from "./ReservationDetails";
 import { startOfToday, differenceInDays } from "date-fns";
@@ -27,17 +27,18 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
   const [isAboveEighteen, setIsAboveEighteen] = useState(false);
   const [login, setLogin] = useState(false);
   useEffect(() => {
-  if (id) {
-    const user = getUserById(id);
-    user.then((res) => {
-      const age = calculateAge(res.dob!);
-      age >= 18 ? setIsAboveEighteen(true) : setIsAboveEighteen(false);
-      setLogin(true);
-    });
-  } else {
-    setLogin(false);
-  } }, [id]);
-  
+    if (id) {
+      const user = getUserById(id);
+      user.then((res) => {
+        const age = calculateAge(res.dob!);
+        age >= 18 ? setIsAboveEighteen(true) : setIsAboveEighteen(false);
+        setLogin(true);
+      });
+    } else {
+      setLogin(false);
+    }
+  }, [id]);
+
   const { rates } = useRatesStore();
   const { currency } = useCurrencyStore();
   const parsedIndex = parseInt(index!);
@@ -45,7 +46,7 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
   const newPrice = currencyExchangeSpec("USD", parseInt(hotel.averagePrice), rates, currency)
     ?.toFixed(0)!
     .toLocaleString();
-  const { checkIn, checkOut, setCheckIn, adults, guests } = useHotelSearchBarStore();
+  const { checkIn, checkOut, setCheckIn, adults } = useHotelSearchBarStore();
   if (checkIn.length === 0) setCheckIn(startOfToday());
   const [date, setDate] = useState<DateRange>({
     from: checkIn[0],
@@ -107,18 +108,16 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
                   ))}
                 </CarouselContent>
 
-                <CarouselPrevious className="group bg-transparent border-0 rounded-full bg-gray-300 bg-opacity-50 translate-x-[250%] h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:opacity-0 disabled:group-hover:opacity-0" />
+                <CarouselPrevious className="text-xs group bg-transparent border-0 rounded-full bg-gray-300 bg-opacity-50 translate-x-[250%] h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:opacity-0 disabled:group-hover:opacity-0" />
 
-                <CarouselNext className="group bg-transparent border-0 rounded-full bg-gray-300 bg-opacity-50 translate-x-[-250%] h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:opacity-0 disabled:group-hover:opacity-0" />
+                <CarouselNext className="text-xs group bg-transparent border-0 rounded-full bg-gray-300 bg-opacity-50 translate-x-[-250%] h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:opacity-0 disabled:group-hover:opacity-0" />
               </Carousel>
             </div>
             <div className="flex flex-col gap-2 pb-5 w-4/12 justify-end">
               <div className="flex justify-end w-full pr-4 h-16 items-start">
                 <SharePopover link={window.location.href} />
               </div>
-                  <div className="h-2">
-
-                  </div>
+              <div className="h-2"></div>
               <div className="flex justify-center w-full ">
                 <div className="flex justify-start w-64 p-1">
                   <span className="text-left font-semibold">{newPrice + " " + currency} </span>{" "}

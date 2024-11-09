@@ -247,7 +247,7 @@ const CarouselNext = React.forwardRef<
   {...props}
 >
 
-  <MdArrowForwardIos className="h-3 w-3 text-black" />
+  <MdArrowForwardIos className="h-fit w-fit text-black" />
   <span className="sr-only">Next slide</span>
 </Button>
   )
