@@ -12,7 +12,9 @@ export async function fetchHistoricalPlaces() {
 
 //TODO - later it should be by owner and some other type of handling
 export const fetchUserHistoricalPlaces = async (userId: string) => {
-  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/historical-places/${userId}`);
+  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/historical-places`, {
+    params: { ownerId: userId },
+  });
   return response.data;
 };
 
