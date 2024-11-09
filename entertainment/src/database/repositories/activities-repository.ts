@@ -3,13 +3,16 @@ import type { IActivity } from "../models/Activity";
 import type { IRating } from "@/database/shared";
 
 // Get all activities
-export async function getAllActivities() {
-  return await Activity.find().populate("category").populate("preferenceTags").exec();
+export async function getAllActivities(filter: Partial<IActivity> = {}) {
+  return await Activity.find({ deleted: false, ...filter })
+    .populate("category")
+    .populate("preferenceTags")
+    .exec();
 }
 
 // Get all appropriate activities
 export async function getAppropriateActivities() {
-  return await Activity.find({ isAppropriate: true })
+  return await Activity.find({ isAppropriate: true, deleted: false })
     .populate("category")
     .populate("preferenceTags")
     .exec();
@@ -18,13 +21,6 @@ export async function getAppropriateActivities() {
 // Get activity by id
 export async function getActivityById(id: string) {
   return await Activity.findById(id).populate("category").populate("preferenceTags").exec();
-}
-
-export async function getActivitiesByOwner(ownerId: string) {
-  return await Activity.find({ owner: ownerId })
-    .populate("category")
-    .populate("preferenceTags")
-    .exec();
 }
 
 // Create a new activity
@@ -51,5 +47,5 @@ export async function updateActivity(id: string, activitiesData: IActivity) {
 
 // Delete an activity
 export async function deleteActivity(id: string) {
-  return await Activity.findByIdAndDelete(id);
+  return await Activity.findByIdAndUpdate(id, { deleted: true }, { new: true });
 }
