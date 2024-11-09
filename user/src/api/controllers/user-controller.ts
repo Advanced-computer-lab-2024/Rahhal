@@ -111,18 +111,15 @@ export async function updateUserById(req: Request, res: Response) {
           return;
         } else { 
 
-          if(user.level === LEVELS.LEVEL1) {
-            updatedUser.points = Math.ceil(user.points as number + amountPaid * POINTS.LEVEL1POINTRATE);  
-            updatedUser.accumulativePoints = Math.ceil(user.accumulativePoints as number + amountPaid * POINTS.LEVEL1POINTRATE);
+          let userLevelPointRate = POINTS.LEVEL3POINTRATE;
+          if(user.level === LEVELS.LEVEL1){
+          userLevelPointRate  = POINTS.LEVEL1POINTRATE;
           }
-          else if(user.level === LEVELS.LEVEL2) {
-            updatedUser.points = Math.ceil(user.points as number + amountPaid * POINTS.LEVEL2POINTRATE); 
-            updatedUser.accumulativePoints = Math.ceil(user.accumulativePoints as number + amountPaid * POINTS.LEVEL2POINTRATE);;
+          else if(user.level === LEVELS.LEVEL2){
+          userLevelPointRate  = POINTS.LEVEL2POINTRATE;
           }
-          else {
-            updatedUser.points = Math.ceil(user.points as number + amountPaid * POINTS.LEVEL3POINTRATE);
-            updatedUser.accumulativePoints = Math.ceil(user.accumulativePoints as number + amountPaid * POINTS.LEVEL3POINTRATE);
-          }
+          updatedUser.points = Math.ceil(user.points as number + amountPaid * userLevelPointRate );
+          updatedUser.accumulativePoints = Math.ceil(user.accumulativePoints as number + amountPaid * userLevelPointRate );
           
 
           if(updatedUser.accumulativePoints >= POINTS.LEVEL1MAXPOINTS) {
@@ -130,6 +127,7 @@ export async function updateUserById(req: Request, res: Response) {
           } else if(updatedUser.accumulativePoints >= POINTS.LEVEL2MAXPOINTS) {
             updatedUser.level = LEVELS.LEVEL3;
           } 
+
         }
       }
     }
