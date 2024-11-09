@@ -3,8 +3,8 @@ import type { IRating } from "@/database/shared";
 import * as activitiesRepository from "../database/repositories/activities-repository";
 
 // Get all activities
-export async function getAllActivities() {
-  return activitiesRepository.getAllActivities();
+export async function getAllActivities(filter: Partial<IActivity>) {
+  return activitiesRepository.getAllActivities(filter);
 }
 
 // Get all appropriate activities
