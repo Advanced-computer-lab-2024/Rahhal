@@ -1,4 +1,4 @@
-import { HotelIcon, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -10,21 +10,46 @@ import SharePopover from "@/components/SharePopover";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import ReservationDetails from "./ReservationDetails";
-import { addDays, format, isSameMonth, isSameDay, startOfToday, differenceInDays } from "date-fns";
+import { startOfToday, differenceInDays } from "date-fns";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { currencyExchangeSpec,currencyExchangeDefaultSpec } from "@/utils/currency-exchange";
+import { useRatesStore, useCurrencyStore } from "@/stores/currency-exchange-store";
 import { HotelDetailsProps } from "@/features/home/types/home-page-types";
 import { useParams } from "react-router-dom";
-
-
-
-export default function HotelDetails( {hotels} : HotelDetailsProps) {
-  const {index} = useParams();
+import { useHotelSearchBarStore } from "@/stores/hotel-search-bar-slice";
+import { getUserById , addLoyalityPoints } from "@/api-calls/users-api-calls";
+import { calculateAge } from "@/utils/age-calculator";
+import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
+export default function HotelDetails({ hotels }: HotelDetailsProps) {
+  const { index, id } = useParams();
+  const [isAboveEighteen, setIsAboveEighteen] = useState(false);
+  const [login, setLogin] = useState(false);
+  if (id) {
+    const user = getUserById(id);
+    user.then((res) => {
+      const age = calculateAge(res.dob!);
+      age >= 18 ? setIsAboveEighteen(true) : setIsAboveEighteen(false);
+      setLogin(true);
+    });
+  } else {
+    setLogin(false);
+  }
+  const { rates } = useRatesStore();
+  const { currency } = useCurrencyStore();
   const parsedIndex = parseInt(index!);
   const hotel = hotels[parsedIndex];
+  const newPrice = currencyExchangeSpec("USD", parseInt(hotel.averagePrice), rates, currency)
+    ?.toFixed(0)!
+    .toLocaleString();
+  const { checkIn, checkOut, setCheckIn,adults,guests} = useHotelSearchBarStore();
+  if (checkIn.length === 0) setCheckIn(startOfToday());
   const [date, setDate] = useState<DateRange>({
-    from: startOfToday(),
-    to: addDays(startOfToday(), 7),
+    from: checkIn[0],
+    to: checkOut[0],
   });
+  const { toast } = useToast();
   const ratingParsed = parseFloat(hotel.rating.ratingValue);
   const chunkArray = (arr: { text: string; svg: string }[], size: number) => {
     const result = [];
@@ -41,7 +66,6 @@ export default function HotelDetails( {hotels} : HotelDetailsProps) {
   const propertyAmenities = chunkArray(hotel.features.propertyAmenities, 2);
   const roomFeatures = chunkArray(hotel.features.roomFeatures, 2);
   const roomTypes = chunkArray(hotel.features.roomTypes, 2);
-
   return (
     <div className="py-8 px-[20%]">
       <div className="flex flex-col gap-2">
@@ -89,54 +113,96 @@ export default function HotelDetails( {hotels} : HotelDetailsProps) {
               <div className="flex justify-end w-full pr-4">
                 <SharePopover link={""} />
               </div>
+              <div className="h-8" />
 
               <div className="flex justify-start w-64 p-2">
-                <span className="text-left font-semibold">{hotel.averagePrice} </span>{" "}
-                <span className="pl-1 ">night</span>
+                <span className="text-left font-semibold">{newPrice + " " + currency} </span>{" "}
+                <span className="pl-1 ">/night</span>
               </div>
               <div>
                 <ReservationDetails date={date} setDate={setDate} />
               </div>
-              <button className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12">
-                Reserve
-              </button>
-              <div className="flex flex-col justify-end items-center w-4/12 gap-3 h-44">
+              {!login && (
+                <Link to="/signup">
+                  <button className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12">
+                    Reserve Room
+                  </button>
+                </Link>
+              )}
+              {login && (
+                <button
+                  className={cn(
+                    "bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12",
+                    !isAboveEighteen || !date.to || adults<=0
+                      ? "hover:bg-[var(--primary-color-fade)] bg-[var(--primary-color-fade)]"
+                      : "",
+                  )}
+                  disabled={!isAboveEighteen || !date.to || adults<=0}
+                  onClick={() => {
+                    toast({
+                      title: "Booking successful",
+                      description: "Loyality points added to your account!",
+                      style: {
+                        backgroundColor: "#34D399",
+                        color: "#FFFFFF",
+                      },
+                      duration: 3000,
+                    });
+                    console.log("HELLO");
+                    addLoyalityPoints(id!, currencyExchangeDefaultSpec(currency,(
+                      differenceInDays(date.to!, date.from!) * parseInt(newPrice!) +
+                      parseInt(newPrice!) * 0.1
+                    ),rates)!);
+                  }}
+                >
+                  Reserve Room
+                </button>
+              )}
+              <div className="h-4">
+              {login && !isAboveEighteen && (
+                <span className="text-red-500 text-xs">
+                  You must be 18 years or older to book this hotel
+                </span>
+              )}
+              
+  </div>
+              <div className="flex flex-col justify-end items-center w-4/12 gap-3 h-32">
                 {date.to && (
                   <>
                     <div className="flex justify-between w-64 px-4">
                       {date.to && (
                         <>
                           <span className="underline">
-                            {hotel.averagePrice +
-                              " x " +
-                              differenceInDays(date.to, date.from!) +
-                              " nights"}
+                            {newPrice + " x " + differenceInDays(date.to, date.from!) + " nights"}
                           </span>
                           <span>
-                            {differenceInDays(date.to, date.from!) *
-                              parseInt(hotel.averagePrice.slice(1))}
+                            {differenceInDays(date.to, date.from!) * parseInt(newPrice!) +
+                              " " +
+                              currency}
                           </span>
                         </>
                       )}
-                    </div>
-                    <div>
-                      <div className="flex justify-between w-64 px-4">
-                        <span className="underline"> Cleaning fee </span>
-                        <span> 500 </span>
-                      </div>
                     </div>
 
                     <div>
                       <div className="flex justify-between w-64 px-4">
                         <span className="underline"> Rahhal service fee </span>
-                        <span> 400 </span>
+                        <span> {(parseInt(newPrice!) * 0.1).toFixed(0) + " " + currency} </span>
                       </div>
                     </div>
                     <hr className="border-1 border-gray-300 w-60" />
                     <div>
                       <div className="flex justify-between w-64 px-4">
                         <span className="font-medium"> Total </span>
-                        <span> 1400 </span>
+                        <span>
+                          {" "}
+                          {(
+                            differenceInDays(date.to, date.from!) * parseInt(newPrice!) +
+                            parseInt(newPrice!) * 0.1
+                          ).toFixed(0) +
+                            " " +
+                            currency}{" "}
+                        </span>
                       </div>
                     </div>
                   </>
@@ -191,11 +257,12 @@ export default function HotelDetails( {hotels} : HotelDetailsProps) {
                 </div>
                 <hr className="border-1 border-gray-300 my-4" />
                 <span>{hotel.description}</span>
-                <hr className="border-1 border-gray-300 my-4" />
               </div>
 
               <div className="flex flex-col py-3 gap-4">
-                <span className="font-medium text-md">Property amenities</span>
+                {propertyAmenities && propertyAmenities.length > 0 && (
+                  <span className="font-medium text-md">Property amenities</span>
+                )}
                 {!showMoreProperty && propertyAmenities.length > 4 && (
                   <>
                     {propertyAmenities.slice(0, 4).map((arr) => (
@@ -278,7 +345,9 @@ export default function HotelDetails( {hotels} : HotelDetailsProps) {
                   </>
                 )}
 
-                <span className="font-medium text-md">Room features</span>
+                {roomFeatures && roomFeatures.length > 0 && (
+                  <span className="font-medium text-md">Room features</span>
+                )}
                 {!showMoreFeat && roomFeatures.length > 4 && (
                   <>
                     {roomFeatures.slice(0, 4).map((arr) => (
@@ -361,7 +430,9 @@ export default function HotelDetails( {hotels} : HotelDetailsProps) {
                   </>
                 )}
 
-                <span className="font-medium text-md">Room types</span>
+                {roomTypes && roomTypes.length > 0 && (
+                  <span className="font-medium text-md">Room types</span>
+                )}
                 {!showMoreType && roomTypes.length > 4 && (
                   <>
                     {roomTypes.slice(0, 4).map((arr) => (

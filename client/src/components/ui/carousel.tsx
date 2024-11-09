@@ -216,7 +216,7 @@ const CarouselPrevious = React.forwardRef<
     onClick={scrollPrev}
     {...props}
   >
-    <MdArrowBackIosNew className="h-3 w-3 text-black" />
+    <MdArrowBackIosNew className="h-fit w-fit text-black" />
     <span className="sr-only">Previous slide</span>
   </Button>
   )

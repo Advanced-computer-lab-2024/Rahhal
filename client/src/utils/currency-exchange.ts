@@ -30,3 +30,12 @@ export function currencyExchangeSpec(oldCurrency: string, oldPrice: number,rates
     return newPrice;
   }
 }
+
+export function currencyExchangeDefaultSpec(oldCurrency: string, oldPrice: number,rates:CurrencyExchangeRate) {
+  if (rates.rates) {
+    const rateOfEURToOld = rates.rates[oldCurrency];
+    const rateOfEURToNew = rates.rates["EGP"];
+    const newPrice = (oldPrice * rateOfEURToNew) / rateOfEURToOld;
+    return newPrice;
+  }
+}

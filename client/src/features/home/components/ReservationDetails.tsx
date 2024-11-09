@@ -18,6 +18,7 @@ interface ReservationProps{
 }
 
 export default function ReservationDetails({date , setDate} : ReservationProps) {
+    const { checkIn , checkOut , setCheckIn , setCheckOut} = useHotelSearchBarStore();
     const [isOpen, setIsOpen] = useState(false)
     const [activeButton, setActiveButton] = React.useState<"checkIn" | "checkOut">("checkIn")
     const { adults, setAdults, children, setChildren,infants,setInfants} = useHotelSearchBarStore();
@@ -28,12 +29,14 @@ export default function ReservationDetails({date , setDate} : ReservationProps) 
                 to = undefined
             const newDate = { from: selectedDate, to } as DateRange;
             setDate(newDate);
+            setCheckIn(selectedDate)
             setActiveButton("checkOut")
         }
         else if (activeButton === "checkOut" && selectedDate) {
             const { from } = date || {};
             const newDate = { from, to: selectedDate } as DateRange;
             setDate(newDate);
+            setCheckOut(selectedDate)
             setActiveButton("checkIn")
             setIsOpen(false)
 
@@ -44,7 +47,8 @@ export default function ReservationDetails({date , setDate} : ReservationProps) 
     const handleDateChange = (date: DateRange | undefined) => {
         if (date) {
             setDate(date);
-
+            setCheckIn(date.from)
+            setCheckOut(date.to)
         }
     };
 
