@@ -5,7 +5,9 @@ import { ItinerariesModal } from "@/features/tour-guide/components/ItineraryModa
 import { Badge } from "@/components/ui/badge";
 import { FaTrash } from "react-icons/fa6";
 import { deleteItinerary } from "@/api-calls/itineraries-api-calls";
+import { STATUS_CODES } from "@/lib/constants";
 import type { TRating } from "@/types/shared";
+import { toast } from "@/hooks/use-toast";
 
 export type TCategory = {
   _id: string;
@@ -40,8 +42,27 @@ export type TNewItinerary = Omit<TItinerary, "preferenceTags" | "category" | "_i
   category: string;
 };
 
-function deleteRow(row: any) {
-  deleteItinerary(row.original);
+async function deleteRow(row: any) {
+  try {
+    const response = await deleteItinerary(row.original);
+    if (response.status === STATUS_CODES.STATUS_OK) {
+      toast({
+        title: "Success",
+        description: "Itinerary deleted successfully",
+        variant: "default",
+      });
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    }
+  } catch (error) {
+    toast({
+      title: "Error",
+      description: (error as any).response?.data?.message || "Error deleting itinerary",
+      variant: "destructive",
+    });
+  }
 }
 
 function calculateAverageRating(ratings: TRating[]) {
@@ -56,17 +77,16 @@ export const itinerariesColumns: ColumnDef<TItinerary>[] = [
     cell: ({ row }) => <div className="capitalize">{row.original.name}</div>,
   },
   {
-    accessorKey:"status",
+    accessorKey: "status",
     header: "status",
     cell: ({ row }) => (
-    <div>
-       {row.original.active ? 
-      (
-        <span className="text-muted-foreground">Active</span>
-      ) : (
-        <span className="text-muted-foreground">Inactive</span>
-      )}
-       </div>
+      <div>
+        {row.original.active ? (
+          <span className="text-muted-foreground">Active</span>
+        ) : (
+          <span className="text-muted-foreground">Inactive</span>
+        )}
+      </div>
     ),
   },
   {
