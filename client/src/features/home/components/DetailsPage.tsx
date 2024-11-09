@@ -1,6 +1,6 @@
 import DetailsPageStyles from "../styles/DetailsPage.module.css";
 import aswan from "@/assets/Aswan.webp";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { FaTags } from "react-icons/fa6";
 import { IoMdStar } from "react-icons/io";
 import { CiGlobe } from "react-icons/ci";
@@ -12,6 +12,7 @@ import currencyExchange from "@/utils/currency-exchange";
 
 const DetailsPage = () => {
   const location = useLocation();
+  const {id, placeid} = useParams();
   const { item }: { item: any } = location.state || {}; // Access the passed item through state
 
   const getAverageRating = (ratings?: number[]) => {
@@ -34,7 +35,7 @@ const DetailsPage = () => {
 
   return (
     <div className={DetailsPageStyles["full-page-container"]}>
-      <TouristHomePageNavigation loggedIn={true} />
+      <TouristHomePageNavigation loggedIn={id?true:false} />
       <div className={DetailsPageStyles["details-page-content-container"]}>
         <div className={DetailsPageStyles["item-details"]}>
           {/* details goes here */}
