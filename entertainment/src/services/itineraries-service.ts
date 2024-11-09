@@ -4,8 +4,8 @@ import * as itinerariesRepository from "../database/repositories/itineraries-rep
 import { hasBookings } from "@/utils/booking-axios-instance";
 
 // Get all itineraries
-export async function getAllItineraries() {
-  return itinerariesRepository.getAllItineraries();
+export async function getAllItineraries(filter: Partial<IItinerary> = {}) {
+  return itinerariesRepository.getAllItineraries(filter);
 }
 
 //Get all active & appropriate itineraries
@@ -16,11 +16,6 @@ export async function getActiveAppropriateItineraries() {
 // Get an itinerary by id
 export async function getItineraryById(id: string) {
   return itinerariesRepository.getItineraryById(id);
-}
-
-// Get itineraries by owner
-export async function getItinerariesByOwner(ownerId: string) {
-  return itinerariesRepository.getItinerariesByOwner(ownerId);
 }
 
 // Create a new itinerary
