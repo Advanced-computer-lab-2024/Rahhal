@@ -72,9 +72,6 @@ export const ProfileAvatar = () => {
           <Link to={`/user-settings/wallet/${id}`}>
             <div className={AvatarStyles["menuItem"]}>Wallet</div>
           </Link>
-          <div className={AvatarStyles["menuItem"]} onClick={toggleDropdown}>
-            Loyalty
-          </div>
           <Link to={`/help-center/${id}`} onClick={toggleDropdown}>
             <div className={AvatarStyles["menuItem"]}>Help Center</div>
           </Link>
