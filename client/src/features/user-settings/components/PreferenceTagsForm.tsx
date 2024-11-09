@@ -24,9 +24,7 @@ import { CONNECTION_STRING } from "@/utils/constants";
 import axios from "axios";
 
 const FormSchema = z.object({
-  preferences: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "You have to select at least one item.",
-  }),
+  preferences: z.array(z.string()),
 });
 
 export default function CheckboxReactHookFormMultiple() {
@@ -67,13 +65,20 @@ export default function CheckboxReactHookFormMultiple() {
       toast({
         title: "You submitted the following values:",
         description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">{data.preferences.join(", ")}</code>
+          <pre className="mt-2 max-w-[340px] rounded-md bg-slate-950 p-4">
+            <code className={"text-white whitespace-pre-wrap"}>
+              {data.preferences.length === 0
+                ? "You selected no preferences"
+                : data.preferences.join(", ")}
+            </code>
           </pre>
         ),
       });
     } catch (error) {
-      console.error(error);
+      toast({
+        title: "Error: " + (error as any).response.data.error,
+        variant: "destructive",
+      });
     }
   }
 
@@ -103,9 +108,7 @@ export default function CheckboxReactHookFormMultiple() {
             <FormItem>
               <div className="mb-4">
                 <FormLabel className="text-base">Preferences</FormLabel>
-                <FormDescription>
-                  Select your favorite categories.
-                </FormDescription>
+                <FormDescription>Select your favorite categories.</FormDescription>
               </div>
               {preferenceTags.map((item) => (
                 <FormField
