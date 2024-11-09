@@ -5,13 +5,8 @@ import type { IRating } from "@/database/shared";
 
 export async function getAllActivities(req: Request, res: Response) {
   try {
-    const ownerId = req.query.ownerId as string;
-    let activities;
-    if (ownerId) {
-      activities = await activitiesService.getActivitiesByOwner(ownerId);
-    } else {
-      activities = await activitiesService.getAllActivities();
-    }
+    const filter = req.query;
+    const activities = await activitiesService.getAllActivities(filter);
     res.status(STATUS_CODES.STATUS_OK).json(activities);
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({
@@ -32,9 +27,10 @@ export async function getAppropriateActivities(req: Request, res: Response) {
 }
 
 export async function getActivityById(req: Request, res: Response) {
+  const entityAvailability = req.query.avail as string;
   try {
     const activity = await activitiesService.getActivityById(req.params.id);
-    if (!activity) {
+    if (!activity || (entityAvailability && activity.deleted)) {
       res.status(STATUS_CODES.NOT_FOUND).json({ message: "Activity not found" });
     } else {
       res.status(STATUS_CODES.STATUS_OK).json(activity);
