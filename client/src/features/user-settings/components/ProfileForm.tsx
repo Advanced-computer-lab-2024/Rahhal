@@ -166,7 +166,6 @@ export default function ProfileForm() {
       const filesFileList: File[] = [newProfilePic];
       let url = await uploadToFirebaseReady(filesFileList);
       user.profilePicture = url[0];
-      console.log(url[0]);
   
       //update the user with the data, however instead of the field profilePicture, we will use the url we got from firebase
       const { profilePicture, ...userWithoutProfilePicture } = data;
@@ -178,11 +177,6 @@ export default function ProfileForm() {
       updateUser(userWithoutProfilePicture);
     }
 
-
-    // const formData = new FormData();
-    // formData.append("file",data.profilePicture);
-    // const response = await axios.post("http://localhost:3000/api/firebase/upload-file", formData);
-    // console.log(response);
   }
   return (
     <Form {...form}>

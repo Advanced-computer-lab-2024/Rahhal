@@ -31,8 +31,6 @@ export async function uploadToFirebaseReady(
   for (let i = 0; i < files!.length; i++) {
    
     formData.append("image" + i, files![i]);
-    console.log("formData", formData );
-    console.log("files", files);
 
   }
 

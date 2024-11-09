@@ -24,7 +24,7 @@ export const EditContext = createContext<{
     username: "",
     email: "",
     password: "",
-    role: Role.tourist,
+    role: undefined,
     approved: false,
   },
 });
@@ -38,7 +38,7 @@ export default function SettingsView() {
     username: "",
     email: "",
     password: "",
-    role: Role.tourist,
+    role: undefined,
     approved: false,
   });
   useEffect(() => {
@@ -72,7 +72,9 @@ export default function SettingsView() {
       <Separator className="my-6" />
       <div className="grid grid-cols-1 lg:md:grid-cols-12 gap-6">
         <div className="lg:md:col-span-2">
-          <SideBar></SideBar>
+          <EditContext.Provider value={{ user }}>
+            <SideBar></SideBar>
+          </EditContext.Provider>
         </div>
         <div className="lg:md:col-span-10" style={{ maxWidth: "100%" }}>
           <Toaster />

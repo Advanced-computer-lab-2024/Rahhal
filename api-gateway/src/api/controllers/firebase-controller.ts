@@ -6,7 +6,6 @@ import * as firebaseService from '@/services/firebase-service';
 export async function uploadFile(Request: Request, Response: Response) {
 
   const file = Request.files.file;
-  console.log("BROLOSSSSSS");
   try {
     const url = await firebaseService.uploadFile(file);
     Response.status(STATUS_CODES.STATUS_OK).json(url);
