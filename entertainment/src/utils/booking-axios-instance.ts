@@ -1,5 +1,6 @@
 import axios from "axios";
 import { CONSTANTS } from "./constants";
+import type { PopulatedBooking } from "@/utils/types";
 
 export const bookingAxiosInstance = axios.create({
   baseURL: "http://booking:3000",
@@ -10,7 +11,11 @@ export async function hasBookings(id: string) {
     const response = await bookingAxiosInstance.get(`/bookings`, {
       params: { entity: id, type: "itinerary", status: "upcoming" },
     });
-    if (response.data.length > CONSTANTS.ZERO) {
+
+    const filteredResponse = response.data.filter(
+      (booking: PopulatedBooking) => new Date(booking.selectedDate as Date) > new Date(),
+    );
+    if (filteredResponse.data.length > CONSTANTS.ZERO) {
       return true;
     }
     return false;

@@ -49,6 +49,17 @@ export interface IBooking {
   itineraryTourGuideRating?: number;
 }
 
+export interface IQueryParamsFilter {
+  _id: string;
+  user: string;
+  entity: string;
+  type: bookingType;
+  status?: bookingStatus;
+  selectedPrice?: number;
+  selectedDate?: Date;
+  owner: string;
+}
+
 export interface PopulatedBooking {
   _id: string;
   user: IUser;
