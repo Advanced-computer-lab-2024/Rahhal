@@ -111,16 +111,18 @@ export function UserModal({ userData, dialogTrigger }: UserModalProps) {
             description={"Check if user is approved"}
             icon={<FaCircleCheck />}
           />
-          <div>
-            <h1 className="text-2xl font-semibold mt-6 mb-4">Uploaded Documents</h1>
-            <UserDocuments
-              certificatesUrls={modalUserData.certificates}
-              governmentalDocumentsUrls={[
-                ...(modalUserData.nationalID ? [modalUserData.nationalID] : []),
-                ...(modalUserData.taxRegistration ? [modalUserData.taxRegistration] : []),
-              ]}
-            />
-          </div>
+          {modalUserData.role !== UserRoleEnum.tourist && (
+            <div>
+              <h1 className="text-2xl font-semibold mt-6 mb-4">Uploaded Documents</h1>
+              <UserDocuments
+                certificatesUrls={modalUserData.certificates}
+                governmentalDocumentsUrls={[
+                  ...(modalUserData.nationalID ? [modalUserData.nationalID] : []),
+                  ...(modalUserData.taxRegistration ? [modalUserData.taxRegistration] : []),
+                ]}
+              />
+            </div>
+          )}
         </>
       )}
     </GenericModal>
