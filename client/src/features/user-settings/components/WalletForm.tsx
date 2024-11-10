@@ -7,6 +7,7 @@ import styles from "../styles/WalletForm.module.css";
 import visaLogo from "@/assets/visalogo.png";
 import mastercardLogo from "@/assets/Mastercard-logo.png";
 import genericCardLogo from "@/assets/genericCC.png";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import {
   Form,
   FormControl,
@@ -41,6 +42,8 @@ import { redeemLoyalityPoints } from "@/api-calls/users-api-calls";
 import BronzeRBadge from "@/assets/BronzeRBadge2.png";
 import SilverRBadge from "@/assets/SilverRBadge.png";
 import GoldRBadge from "@/assets/GoldRBadge.png";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
+import currencyExchange from "@/utils/currency-exchange";
 export const editCardContext = createContext({ editingCard: false, editedIndex: 0 });
 
 export default function AccountForm() {
@@ -52,7 +55,6 @@ export default function AccountForm() {
   });
 
   // Handling Displaying of Badge
-  // May need to handle maxPoints reached pending Noha
   // ================================================
   let badgeImage = BronzeRBadge;
   let badgeLevelColor = "Bronze";
@@ -72,6 +74,13 @@ export default function AccountForm() {
 
   const [editingCard, setEditingCard] = useState<boolean>(false);
   const [editedIndex, setEditedCardIndex] = useState<number>(-1);
+  const price = 100;
+
+  const { currency } = useCurrencyStore();
+  const convertedPrice = currencyExchange("EGP", price);
+  const displayPrice = convertedPrice ? convertedPrice.toFixed(2) : "N/A";
+
+
 
   type balanceValues = z.infer<typeof redeemValidator>;
   const { id } = useParams();
@@ -83,6 +92,11 @@ export default function AccountForm() {
       points: user.points || 0,
     },
   });
+
+  const displayBalance = currencyExchange(
+    "EGP",
+    form.watch("balance") || 0
+  )?.toFixed(2);
 
   useEffect(() => {
     form.reset({
@@ -166,6 +180,7 @@ export default function AccountForm() {
         const response = await redeemLoyalityPoints(id);
         const updatedUser = response;
         const userData = updatedUser as { balance: number; points: number };
+
         form.setValue("balance", userData.balance);
         form.setValue("points", userData.points);
         user.balance = userData.balance;
@@ -219,7 +234,7 @@ export default function AccountForm() {
                   <FormItem>
                     <h4 className="text-lg font-medium">Balance</h4>
                     <FormControl>
-                      <Input type="number" disabled {...field} />
+                      <Input type="number" disabled {...field} value={displayBalance} />
                     </FormControl>
                     <FormDescription>This is your wallet balance.</FormDescription>
                     <FormMessage />
@@ -233,19 +248,39 @@ export default function AccountForm() {
                 name="points"
                 render={({ field }) => (
                   <FormItem>
-                    <h4 className="text-lg font-medium">Points</h4>
+                    <div className="flex items-center">
+                      <h4 className="text-lg font-medium">Points</h4>
+                      <p
+                        id={styles["responsive-points-text"]}
+                        className="text-xs text-muted-foreground ml-2"
+                      >
+                        10000 Points = {displayPrice} {currency}
+                      </p>
+                    </div>
                     <FormControl>
                       <div className="grid grid-cols-12 gap-1">
                         <div className="col-span-10">
                           <Input type="number" disabled {...field} />
                         </div>
+
                         <div className="col-span-2">
-                          <Button
-                            disabled={user.points && user.points >= 10000 ? false : true}
-                            onClick={redeemPoints}
-                          >
-                            Redeem
-                          </Button>
+                          <HoverCard>
+                            <HoverCardTrigger>
+                              <Button
+                                disabled={user.points && user.points >= 10000 ? false : true}
+                                onClick={redeemPoints}
+                              >
+                                Redeem
+                              </Button>
+                            </HoverCardTrigger>
+                            {!(user.points == undefined) && user.points < 10000 && (
+                              <>
+                                <HoverCardContent>
+                                  You need to have 10000 points or more to redeem.
+                                </HoverCardContent>
+                              </>
+                            )}
+                          </HoverCard>
                         </div>
                       </div>
                     </FormControl>
