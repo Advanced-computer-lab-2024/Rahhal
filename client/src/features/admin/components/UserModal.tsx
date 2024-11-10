@@ -12,6 +12,7 @@ import { GenericSelect } from "@/components/GenericSelect";
 import { UserRoleEnum } from "@/utils/enums";
 import UserDocuments from "@/components/UserDocuments";
 import KeyValuePairGrid from "@/components/KeyValuePairGrid";
+import { format } from "../utils/key-value-formatters/user-details-formatter";
 
 interface UserModalProps {
   userData?: TUser;
@@ -67,6 +68,7 @@ export function UserModal({ userData, dialogTrigger }: UserModalProps) {
         <>
           <KeyValuePairGrid
             data={modalUserData}
+            formatter={format}
             excludedFields={[
               "previousWork",
               "companyProfile",

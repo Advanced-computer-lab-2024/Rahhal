@@ -1,12 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { format } from "@/features/admin/utils/user-details-formatter";
+
+function noFormatFormatter(key: string, value: any): string[] {
+  return [key, value];
+}
 
 export default function KeyValuePairGrid({
   data,
   excludedFields = [],
+  formatter = noFormatFormatter,
 }: {
   data: Record<string, any>;
   excludedFields?: string[];
+  formatter?: (key: string, value: any) => string[];
 }) {
   // Exclude specific fields and optional fields that are undefined
   const filteredEntries = Object.entries(data).filter(([key, value]) => {
@@ -24,7 +29,7 @@ export default function KeyValuePairGrid({
       <CardContent className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {filteredEntries.map(([key, value]) => {
-            const [formattedKey, formattedValue] = format(key, value);
+            const [formattedKey, formattedValue] = formatter(key, value);
             return (
               <div
                 key={key}

@@ -2,10 +2,11 @@ import { GenericModal } from "@/components/GenericModal";
 import { useEffect, useState } from "react";
 import ShortText from "@/components/ShortText";
 import { DEFAULTS } from "@/lib/constants";
-import { TComplaint } from "@/features/admin/utils/complaints-columns";
+import { TComplaint } from "@/features/admin/utils/columns-definitions/complaints-columns";
 import { Label } from "@radix-ui/react-label";
 import { GenericSelect } from "@/components/GenericSelect";
 import { updateComplaint, addReply } from "@/api-calls/complaints-api-calls";
+import { format } from "../utils/key-value-formatters/complaint-details-formatter";
 import KeyValuePairGrid from "@/components/KeyValuePairGrid";
 
 interface ComplaintsModalProps {
@@ -42,6 +43,7 @@ export function ComplaintsModal({ complaintData, dialogTrigger }: ComplaintsModa
     >
       <KeyValuePairGrid
         data={modalComplaintData}
+        formatter={format}
         excludedFields={["_id", "status", "replies", "createdAt", "updatedAt", "__v"]}
       />
       <div className="pt-4 space-y-4">
