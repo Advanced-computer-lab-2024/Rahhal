@@ -62,7 +62,7 @@ export const OverViewContent: React.FC<ContentProps> = ({
   !(dateOptions || tickets.length > 0) 
   ? false 
   : (selectedTicket === null && !selectedDate);
-  console.log(button2Text , onButton2Click , button2Color , disabled2);
+  
   return (
     <div className={styles["content"]}>
     {tickets.length > 0 || dropdownOptions && <h3>Ticket Selection</h3>}
