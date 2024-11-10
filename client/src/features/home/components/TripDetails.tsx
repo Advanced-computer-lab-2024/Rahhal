@@ -7,7 +7,7 @@ import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
 import { fetchItineraryById } from "@/api-calls/itineraries-api-calls";
 import ActivityDetailsPage from "./ActivityDetails";
 import ItineraryDetailsPage from "./ItineraryDetails";
-import { fetchBookingById } from "@/api-calls/booking-api-calls";
+import { fetchBookingById, updateBookingRequest } from "@/api-calls/booking-api-calls";
 import { DEFAULT_ACTIVITY_BOOKING, DEFAULT_ITINERARY_BOOKING } from "../utils/constants";
 import { TRatingEntity } from "./RatingForm";
 import { RateableEntityType } from "@/utils/enums";
@@ -15,12 +15,14 @@ import { createRating } from "@/api-calls/rating-api-calls";
 import { getUserById } from "@/api-calls/users-api-calls";
 import { TRating } from "@/types/shared";
 import { toast } from "@/hooks/use-toast";
+import { entries } from "lodash";
 
 export const handleTripRatingSubmit = async (
   values: Record<string, any>,
   eventId: string,
   eventType: RateableEntityType,
   userId: string,
+  bookingId: string,
   ratingFormRef: React.RefObject<HTMLButtonElement>,
 ) => {
   const user = userId ? await getUserById(userId) : null;
@@ -39,6 +41,14 @@ export const handleTripRatingSubmit = async (
     description: "Rating submitted successfully",
     duration: 5000,
   });
+
+  // update 'rating' field in booking
+  if (eventType == RateableEntityType.ACTIVITY || eventType == RateableEntityType.ITINERARY)
+    await updateBookingRequest(bookingId, { rating: values.rating });
+  else if (eventType == RateableEntityType.USER) {
+    // update 'rated' field in user
+    await updateBookingRequest(bookingId, { itineraryTourGuideRating: values.rating });
+  }
 
   // close the dialog
   ratingFormRef.current?.click();
