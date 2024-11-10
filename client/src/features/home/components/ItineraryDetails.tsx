@@ -263,7 +263,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
 
             <div className="flex justify-end">
               <div className="p-0">
-                <SharePopover link={window.location.href} />
+                <SharePopover link={window.location.href + "?avail=1001"} />
               </div>
             </div>
           </div>
