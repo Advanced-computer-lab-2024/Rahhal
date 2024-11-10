@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/data-table/DataTable";
-import { complaintsColumns, TComplaint } from "@/features/admin/utils/complaints-columns";
+import {
+  complaintsColumns,
+  TComplaint,
+} from "@/features/admin/utils/columns-definitions/complaints-columns";
 import { fetchComplaints } from "@/api-calls/complaints-api-calls";
 import { ComplaintsModal } from "./ComplaintsModal";
 

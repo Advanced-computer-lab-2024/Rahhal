@@ -2,6 +2,7 @@ import { GenericModal } from "@/components/GenericModal";
 import { useEffect, useState } from "react";
 import { TActivity } from "@/features/admin/utils/columns-definitions/activities-columns";
 import { DEFAULTS } from "@/lib/constants";
+import { format } from "@/features/admin/utils/key-value-formatters/activity-details-formatter";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@radix-ui/react-label";
 import { updateActivity } from "@/api-calls/activities-api-calls";
@@ -39,6 +40,7 @@ export function ActivityView({ activityData, dialogTrigger }: ActivityViewProps)
     >
       <KeyValuePairGrid
         data={modalActivityData}
+        formatter={format}
         excludedFields={[
           "_id",
           "isAppropriate",
