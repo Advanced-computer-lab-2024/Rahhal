@@ -6,15 +6,36 @@ import { IoMdStar } from "react-icons/io";
 import { CiGlobe } from "react-icons/ci";
 import TouristHomePageNavigation from "@/features/home/components/TouristHomePageNavigation";
 import GoogleMap from "@/components/google-maps/GoogleMap";
-import { useCurrencyStore } from "@/stores/currency-exchange-store";
-import currencyExchange from "@/utils/currency-exchange";
 import SharePopover from "@/components/SharePopover";
 
+import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
+import { currencyExchangeSpec } from "@/utils/currency-exchange";
+import { fetchHistoricalPlaceById } from "@/api-calls/historical-places-api-calls";
+import { useQuery } from "@tanstack/react-query";
+import {
+  HistoricalPlace,
+} from "../types/home-page-types";
+import { fetchProductById } from "@/api-calls/products-api-calls";
+import { useEffect } from "react";
 
 const DetailsPage = () => {
-  const location = useLocation();
-  const {id, placeid} = useParams();
-  const { item }: { item: any } = location.state || {}; // Access the passed item through state
+  const {id, placeid,type} = useParams();
+  const {
+    data: item,
+    isPending: isItemPending,
+  } = useQuery({
+    queryKey: [`${type=="hplace"?"historical-places":"product"}`, placeid],
+    queryFn:  () => {
+      if (type === "hplace") {
+        return fetchHistoricalPlaceById(placeid!);
+      } else if (type === "product") {
+        return fetchProductById(placeid!);
+      } else {
+        return Promise.reject(new Error("Invalid type"));
+      }
+    },
+    select: (data) => data as any
+  });
 
   const getAverageRating = (ratings?: number[]) => {
     if (!ratings || ratings.length === 0) return 0;
@@ -33,10 +54,15 @@ const DetailsPage = () => {
   };
 
   const { currency } = useCurrencyStore();
-
+  const { rates } = useRatesStore();
+  useEffect(() => {
+    console.log(item);
+  }, [item]);
   return (
+    
     <div className={DetailsPageStyles["full-page-container"]}>
       <TouristHomePageNavigation loggedIn={id?true:false} />
+      {(!isItemPending) && (
       <div className={DetailsPageStyles["details-page-content-container"]}>
         <div className={DetailsPageStyles["item-details"]}>
           {/* details goes here */}
@@ -48,7 +74,7 @@ const DetailsPage = () => {
 
           <p>
             <FaTags style={{ marginRight: "10px" }} />
-            {item.preferenceTags?.map((tag: { name: string }) => tag.name).join(", ")}
+            {item!.preferenceTags?.map((tag: { name: string }) => tag.name).join(", ")}
           </p>
 
           {item.specialDiscount ? <p>Special Discounts: {item.specialDiscount}</p> : null}
@@ -184,27 +210,32 @@ const DetailsPage = () => {
         </div>
 
         <div className={DetailsPageStyles["image-grid"]}>
-          {/* grid with images goes here */}
-          <div className={DetailsPageStyles["item-1"]}>
-            <img src={aswan} />
-          </div>
-          <div className={DetailsPageStyles["item-2"]}>
-            <img src={aswan} />
-          </div>
-          <div className={DetailsPageStyles["item-3"]}>
-            <img src={aswan} />
-          </div>
+          {type == "hplace" &&
+            (
+              item.images.map((image: string, index: number) => (
+            <div className={DetailsPageStyles[`item-${index+1}`]}>
+              <img src={image} />
+            </div>
+            )))
+          }
+          {type == "product" &&
+            (
+            <div className={DetailsPageStyles[`item-1`]}>
+              <img src={item.picture} />
+            </div>
+            )
+          }
           <div className={DetailsPageStyles["price-section"]}>
             <div>
               {typeof item.price === "number" ? (
                 <h1>
-                  Price: {item.price ? currencyExchange("EGP", item.price)?.toFixed(0) : "N/A"}{" "}
+                  Price: {item.price ? currencyExchangeSpec("EGP", item.price,rates,currency)?.toFixed(0) : "N/A"}{" "}
                   {currency}
                 </h1>
               ) : (
                 item.price &&
                 Object.entries(item.price).map(([key, value], index) => {
-                  const convertedValue = value ? currencyExchange("EGP", Number(value)) : undefined;
+                  const convertedValue = value ? currencyExchangeSpec("EGP", Number(value),rates,currency) : undefined;
                   const displayConvertedValue = convertedValue ? convertedValue.toFixed(0) : "N/A";
 
                   return (
@@ -218,7 +249,10 @@ const DetailsPage = () => {
           </div>
         </div>
       </div>
+      )}
     </div>
+
+
   );
 };
 

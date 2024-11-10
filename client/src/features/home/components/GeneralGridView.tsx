@@ -80,6 +80,7 @@ function GeneralGridView() {
     queryFn: fetchHistoricalPlaces,
     select: (data) => data as HistoricalPlace[],
   });
+  console.log("historicalPlaces", combined);
   const {
     data: preferenceTags,
     isLoading: isPreferenceTags,
@@ -120,7 +121,7 @@ function GeneralGridView() {
     const type =
       "languages" in item ? "itinerary" : "isBookingOpen" in item ? "activity" : "historicalPlace";
     if (type === "historicalPlace") {
-      navigate(`/details/${item._id}/${id?id:""}`, { state: { item } });
+      navigate(`/hplace/details/${item._id}/${id?id:""}`, { state: { item } });
       return;
     }
     navigate(`/my-trips-details?userId=${id}&eventId=${item._id}&bookingId=null&type=${type}`, {
