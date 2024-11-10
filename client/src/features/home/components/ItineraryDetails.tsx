@@ -9,7 +9,7 @@ import SharePopover from "@/components/SharePopover";
 import { OverviewCard } from "./overview-card/OverViewCard";
 
 import { calculateAverageRating } from "@/features/admin/utils/columns-definitions/activities-columns";
-import { TBookingType, TPopulatedBooking } from "../types/home-page-types";
+import { TPopulatedBooking } from "../types/home-page-types";
 import { addLoyalityPoints, getUserById, refundMoney } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
 import {
@@ -115,12 +115,6 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
   // check if user has already booked this itinerary if booking is null
   React.useEffect(() => {
     if (booking?._id !== "" || userId === "undefined") return;
-
-    const bookingType: TBookingType = {
-      user: userId,
-      entity: itinerary._id ?? "",
-      type: "itinerary",
-    };
 
     fetchUserBookings(userId).then((bookings) => {
       const userBookings = bookings as unknown as TPopulatedBooking[];

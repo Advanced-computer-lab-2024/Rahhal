@@ -13,7 +13,7 @@ import {
   calculateAverageRating,
   TRating,
 } from "@/features/admin/utils/columns-definitions/activities-columns";
-import { TBookingType, TPopulatedBooking } from "../types/home-page-types";
+import { TPopulatedBooking } from "../types/home-page-types";
 import { addLoyalityPoints, getUserById, refundMoney } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
 import {
@@ -147,12 +147,6 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
     }
 
     if (booking?._id !== "" || userId === "undefined") return;
-
-    const bookingType: TBookingType = {
-      user: userId,
-      entity: activity._id ?? "",
-      type: "activity",
-    };
 
     fetchUserBookings(userId).then((bookings) => {
       const userBookings = bookings as unknown as TPopulatedBooking[];
