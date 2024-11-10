@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import FlightCardRoute from "./FlightCardRoute"
-import currencyExchange from "@/utils/currency-exchange";
+import currencyExchange, { currencyExchangeDefault } from "@/utils/currency-exchange";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import { Info } from "lucide-react";
 
@@ -28,22 +28,20 @@ export default function FlightAccordion({offer, userID, isAdult, loggedIn}: Flig
   const convertedPrice = currencyExchange(offer.price.currency, offer.price.amount);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
 
-  const bookingPrice = currencyExchange("EGP", offer.price.amount);
+  const bookingPrice = currencyExchangeDefault(offer.price.currency, offer.price.amount);
   const dbPrice = bookingPrice ? bookingPrice.toFixed(0) : "N/A";
 
   const onConfirmFlight = async () => {
     const bookingRequest: TBookingType = {
-      user: userID ? userID : "",
-      entity: offer !== null ? offer.id : "",
+      user: userID,
+      entity: offer.id,
       type: bookingType.Flight,
+      selectedDate: new Date(offer.departure.date),
+      selectedPrice: isNaN(parseFloat(dbPrice)) ? 0 : parseFloat(dbPrice),
     };
     const booking = await createBooking(bookingRequest);
     if (userID && offer !== null) {
       await addLoyalityPoints(userID, parseFloat(dbPrice));
-      // const convertedPrice = currencyExchange("EGP", prices[selectedFlight]);
-      // if (convertedPrice !== undefined) {
-      //   await addLoyalityPoints(userId, convertedPrice);
-      // }
     }
     if (booking) {
       alert("Trip confirmed successfully!");
@@ -54,7 +52,7 @@ export default function FlightAccordion({offer, userID, isAdult, loggedIn}: Flig
     <div className="w-full max-w-5xl mx-auto space-y-4">
         <Accordion type="single" collapsible key={offer.id}>
           <AccordionItem value={offer.id} className="border rounded-lg overflow-hidden">
-            <AccordionTrigger aria-hidden className="no-arrow hover:no-underline [&[data-state=open]>div]:bg-muted">
+            <AccordionTrigger className="no-arrow hover:no-underline [&[data-state=open]>div]:bg-muted">
               <div className="flex items-center justify-between w-full px-6 py-4 transition-colors">
                 <div className="flex items-center gap-10">
                   <div className="min-w-28">

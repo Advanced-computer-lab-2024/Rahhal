@@ -2,7 +2,6 @@ import axios from "axios";
 import { SERVICES_URLS } from "@/lib/constants";
 import type {
   TBookingType,
-  IBooking,
   TPopulatedBooking,
 } from "@/features/home/types/home-page-types";
 
@@ -25,8 +24,7 @@ export async function fetchBookingById(bookingId: string): Promise<TPopulatedBoo
   return response.data as TPopulatedBooking;
 }
 
-export async function createBooking(bookingData: TBookingType | IBooking) {
-  
+export async function createBooking(bookingData: TBookingType) {
   try {
     const response = await axios.post(SERVICES_URLS.BOOKING + `/bookings`, bookingData);
     return response.data;
@@ -35,9 +33,7 @@ export async function createBooking(bookingData: TBookingType | IBooking) {
   }
 }
 
-
-
-export async function updateBookingRequest(id: string, bookingData: Partial<IBooking>) {
+export async function updateBookingRequest(id: string, bookingData: Partial<TBookingType>) {
   const response = await axios.patch(`${SERVICES_URLS.BOOKING}/bookings/${id}`, bookingData);
   return response.data;
 }
