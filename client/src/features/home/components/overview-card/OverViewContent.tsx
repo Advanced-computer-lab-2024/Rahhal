@@ -17,7 +17,10 @@ interface ContentProps {
   dateOptions?: boolean; 
   buttonText: string;
   onButtonClick?: () => void;
-  buttonColor: "gold" | "red"; 
+  buttonColor: "gold" | "red";
+  button2Text?: string;
+  onButton2Click?: () => void;
+  button2Color?: "gold" | "red";
   disabled?: boolean;
   dropdownOptions?: { value: string; label: string }[]
   onDateChange?: (selectedDate: string) => void; // Handler for dropdown selection
@@ -32,6 +35,9 @@ export const OverViewContent: React.FC<ContentProps> = ({
   buttonText,
   onButtonClick,
   buttonColor,
+  button2Text,
+  onButton2Click,
+  button2Color,
   disabled,
   dropdownOptions,
   onDateChange,
@@ -100,6 +106,15 @@ export const OverViewContent: React.FC<ContentProps> = ({
         color={buttonColor}
         disabled={isButtonDisabled || disabled}
       />
+
+      {button2Text && onButton2Click && button2Color && (
+        <OverViewButton
+          label={button2Text}
+          onClick={onButton2Click}
+          color={button2Color}
+          disabled={isButtonDisabled || disabled}
+        />
+      )}
     </div>
   );
 };
