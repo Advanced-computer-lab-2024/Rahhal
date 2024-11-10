@@ -62,7 +62,7 @@ const DetailsPage = () => {
             {/* details goes here */}
             <div className="flex justify-between">
               <h1>{item!.name} </h1>
-              <SharePopover link={`${type}/details/${placeid}?avail=0110`} />
+              <SharePopover link={`localhost:5173/${type}/details/${placeid}?avail=0110`} />
             </div>
 
             <h3>{item!.description}</h3>
