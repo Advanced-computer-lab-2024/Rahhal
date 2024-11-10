@@ -16,8 +16,7 @@ export async function hasBookings(filter : {owner:string , type:bookingType , st
           });
         const resultSet = bookings.data.filter(
                 (booking: PopulatedBooking) => 
-                    filter.type === bookingType.Itinerary ? new Date(booking.selectedDate as Date) > new Date() 
-                        : new Date((booking.entity as IActivity).date as Date) > new Date()
+                  new Date(booking.selectedDate as Date) > new Date() 
         );
         return resultSet.length > MIN_LENGTH;
     }
