@@ -4,13 +4,21 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 type UploadableFile = {
   name: string;
   data: Blob | Uint8Array | ArrayBuffer;
+  mimetype?: string;
 };
 
 export async function uploadFile(file: UploadableFile): Promise<string> {
+  
   const fileRef = ref(storage, file.name);
 
+  const metadata = {
+    contentType: file.mimetype || "application/octet-stream",
+  };
+
+  
+
   try {
-    const uploadDocument = uploadBytesResumable(fileRef, file.data);
+    const uploadDocument = uploadBytesResumable(fileRef, file.data, metadata);
     return new Promise((resolve, reject) => {
       uploadDocument.on(
         "state_changed",
