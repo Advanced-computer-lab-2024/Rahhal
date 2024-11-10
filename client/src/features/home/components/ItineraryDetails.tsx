@@ -209,7 +209,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
 
   const convertedPrice = currencyExchange("EGP", booking?.selectedPrice ?? 0);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
-  console.log(booking);
+  
   return (
     <div>
       <RatingFormDialog
