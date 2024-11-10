@@ -1,4 +1,4 @@
-import { TRating } from "@/utils/types";
+import type { TRating } from "@/utils/types";
 import { entertainmentAxiosInstance } from "@/utils/axios-instances";
 
 export async function getAllActivities() {

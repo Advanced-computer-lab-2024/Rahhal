@@ -2,6 +2,7 @@ import { userAxiosInstance, entertainmentAxiosInstance } from "@/utils/axios-ins
 import { bookingStatus, bookingType } from "@/utils/types";
 import type { IBooking, IActivity, IUser, IItinerary, PopulatedBooking } from "@/utils/types";
 import type { AxiosResponse } from "axios";
+import { CONSTANTS } from "@/utils/constants";
 
 function SupportedType(type: string): boolean {
   return is3rdPartyBooking(type) || type === bookingType.Itinerary || type === bookingType.Activity;
@@ -55,14 +56,12 @@ export async function populateBookings(
 }
 
 export async function populateBookingHelper(booking: IBooking, user: IUser | undefined, entity: IActivity | IItinerary | string | undefined): Promise<PopulatedBooking | null> {
-  let populatedUser: IUser | undefined;
-  let populatedEntity: IActivity | IItinerary | string | undefined;
 
   if (!SupportedType(booking.type)) return null;
 
-  populatedUser = (!user) ? (await userAxiosInstance.get<IUser>(`/users/${booking.user}`)).data : user;
+  const populatedUser = (!user) ? (await userAxiosInstance.get<IUser>(`/users/${booking.user}`)).data : user;
 
-  populatedEntity = (!entity) ? await populateEntity(booking.entity, booking.type) : entity;
+  const populatedEntity = (!entity) ? await populateEntity(booking.entity, booking.type) : entity;
 
   return {
     _id: booking._id,
@@ -79,7 +78,7 @@ export async function populateBookingHelper(booking: IBooking, user: IUser | und
     entity: populatedEntity,
     type: booking.type,
     status: booking.status ?? bookingStatus.Upcoming,
-    selectedPrice: booking.selectedPrice ?? 0,
+    selectedPrice: booking.selectedPrice ?? CONSTANTS.ZERO,
     selectedDate: booking.selectedDate,
   };
 }
