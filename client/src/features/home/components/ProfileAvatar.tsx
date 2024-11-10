@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUserById } from "@/api-calls/users-api-calls";
 import AvatarStyles from "../styles/ProfileAvatar.module.css";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
@@ -49,6 +49,7 @@ export const ProfileAvatar = () => {
         <RxHamburgerMenu style={{ fontSize: "0.9rem" }} />
 
         <Avatar className="w-8 h-8">
+          <AvatarImage src={user?.profilePicture}></AvatarImage>
           <AvatarFallback>{avatarLetters}</AvatarFallback>
         </Avatar>
       </button>
@@ -71,9 +72,6 @@ export const ProfileAvatar = () => {
           <Link to={`/user-settings/wallet/${id}`}>
             <div className={AvatarStyles["menuItem"]}>Wallet</div>
           </Link>
-          <div className={AvatarStyles["menuItem"]} onClick={toggleDropdown}>
-            Loyalty
-          </div>
           <Link to={`/help-center/${id}`} onClick={toggleDropdown}>
             <div className={AvatarStyles["menuItem"]}>Help Center</div>
           </Link>
