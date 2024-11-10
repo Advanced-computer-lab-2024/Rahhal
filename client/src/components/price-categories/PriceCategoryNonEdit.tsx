@@ -15,7 +15,7 @@ function PriceCategoryNonEdit({
   return (
     <>
       <span>
-        {ticket.type}: ${ticket.price.toFixed(2)}
+        {ticket.type}: EGP {ticket.price.toFixed(2)}
       </span>
       <div>
         <Button variant="ghost" size="icon" onClick={() => startEditing(ticket.type, ticket.price)}>

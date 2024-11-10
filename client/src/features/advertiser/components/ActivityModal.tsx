@@ -8,10 +8,8 @@ import ShortText from "@/components/ShortText";
 import PriceCategories from "@/components/price-categories";
 import TagsSelector from "@//components/TagsSelector";
 import { GenericSelect } from "@//components/GenericSelect";
-import ReviewDisplay from "@//components/Ratings";
 import EditableTimePicker from "@//components/EditableTimePicker";
 import EditableDatePicker from "@//components/EditableDatePicker";
-import { sampleReviews } from "@/lib/utils";
 import { createActivity, updateActivity } from "@/api-calls/activities-api-calls";
 import { fetchCategories } from "@/api-calls/categories-api-calls";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
@@ -46,19 +44,18 @@ export function ActivitiesModal({ activityData, dialogTrigger, userId }: Activit
 
   const handleSubmit = async () => {
     const { _id, ...rest } = modalActivityData!;
-    
 
     if (isNewActivity) {
       // For fields that are referenced in the database by ids, we need to extract them first
       // since the database will only accept for these field an id or list of ids
       const categoryId = extractIds([modalActivityData!.category]) as string;
       const preferenceTagsIds = extractIds(modalActivityData!.preferenceTags) as string[];
-      
+
       const newActivity: TNewActivity = {
         ...rest,
         category: categoryId,
         preferenceTags: preferenceTagsIds,
-        
+
         // TODO - should be removed later when we settle down on its removal
         tags: preferenceTagsIds,
       };
@@ -246,10 +243,12 @@ export function ActivitiesModal({ activityData, dialogTrigger, userId }: Activit
         }))}
       />
 
-      <PictureCard title={"Photo Tour"} description={"Uploaded Photos"} initialImageSources={activityData?.images ?? []} handleFileUploadCallback={(files) => setActivityPictures(files)} />
-      <div className="m-5 mx-6">
-        <ReviewDisplay reviews={sampleReviews} />
-      </div>
+      <PictureCard
+        title={"Photo Tour"}
+        description={"Uploaded Photos"}
+        initialImageSources={activityData?.images ?? []}
+        handleFileUploadCallback={(files) => setActivityPictures(files)}
+      />
     </GenericModal>
   );
 }
