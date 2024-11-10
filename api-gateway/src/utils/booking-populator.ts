@@ -54,7 +54,7 @@ export async function populateBookings(
 
   // Filter out any null values from the final array
   return populatedBookings.filter(
-    (booking) => booking !== null && (ownerId == "" || booking.entity.owner == ownerId),
+    (booking) => booking !== null &&  (ownerId == "" || ((!is3rdPartyBooking(booking.type) && (booking.entity as (IActivity| IItinerary)).owner == ownerId))),
   ) as PopulatedBooking[];
 }
 
