@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import defaultProfile from "@/assets/defaultProfile.png";
 import { uploadToFirebaseReady } from "@/utils/firebase";
 import UserDocuments from "@/components/UserDocuments";
+import { UserRoleEnum } from "@/utils/enums";
 export default function ProfileForm() {
   const { toast } = useToast();
   const { id } = useParams();
@@ -146,34 +147,29 @@ export default function ProfileForm() {
     }
   }
   async function onSubmit(data: ProfileFormValues) {
-
     toast({
       title: "Updating ... ",
     });
-    setTimeout(() => {
-    }, 1500);
+    setTimeout(() => {}, 1500);
 
-
-    if(data.profilePicture){
+    if (data.profilePicture) {
       const profileImage: string = `images/profile_pictures/${id}/profile.jpg`;
       const newProfilePic = new File([data.profilePicture], profileImage, {
         type: data.profilePicture?.type,
       });
-  
+
       const filesFileList: File[] = [newProfilePic];
       let url = await uploadToFirebaseReady(filesFileList);
       user.profilePicture = url[0];
-  
+
       //update the user with the data, however instead of the field profilePicture, we will use the url we got from firebase
       const { profilePicture, ...userWithoutProfilePicture } = data;
       const updatedData = { ...userWithoutProfilePicture, profilePicture: url[0] };
       updateUser(updatedData);
-    }
-    else{
+    } else {
       const { profilePicture, ...userWithoutProfilePicture } = data;
       updateUser(userWithoutProfilePicture);
     }
-
   }
   return (
     <Form {...form}>
@@ -535,7 +531,7 @@ export default function ProfileForm() {
               </div>
             </>
           )}
-          {user.role !== "tourist" && (
+          {user.role !== UserRoleEnum.tourist && (
             <div>
               <h1 className="font-medium mt-6 mb-4">Uploaded Documents</h1>
               <UserDocuments
