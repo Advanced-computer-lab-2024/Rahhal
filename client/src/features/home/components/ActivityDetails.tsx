@@ -118,7 +118,8 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
           booking?.selectedDate &&
           selectedDate &&
           new Date(selectedDate) < new Date()) ||
-        (!booking && selectedDate && new Date(selectedDate) < new Date())
+        (!booking && selectedDate && new Date(selectedDate) < new Date()) ||
+        (booking && booking?.rating !== 0)
       ) {
         setIsButtonDisabled(true);
       }
@@ -287,6 +288,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
                 activity._id,
                 RateableEntityType.ACTIVITY,
                 userId,
+                booking?._id ?? "",
                 ratingFormRef,
               )
             : null
@@ -317,7 +319,6 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
               <div className="p-0">
                 <SharePopover link={window.location.href + "?avail=1001"} />
               </div>
-              
             </div>
           </div>
 
