@@ -1,10 +1,12 @@
 import type { Request, Response } from "express";
 import { STATUS_CODES } from "@/utils/constants";
 import * as productService from "@/services/product-service";
+import { IProductQueryParamsFilter } from "@/utils/types";
 
 export async function getAllProducts(req: Request, res: Response) {
   try {
-    const products = await productService.getAllProducts();
+    const filter = req.query as IProductQueryParamsFilter;
+    const products = await productService.getAllProducts(filter);
     res.status(products.status).json(products.data);
   } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);

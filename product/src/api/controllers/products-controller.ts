@@ -5,13 +5,8 @@ import type { IRating } from "@/database/rating";
 
 export async function getAllProducts(req: express.Request, res: express.Response) {
   try {
-    const sellerId = req.query.sellerId as string;
-    let products;
-    if (sellerId) {
-      products = await productsService.getProductsBySeller(sellerId);
-    } else {
-      products = await productsService.getAllProducts();
-    }
+    const filter = req.query;
+    const products = await productsService.getAllProducts(filter);
     res.status(STATUS_CODES.STATUS_OK).json(products);
   } catch (error) {
     res

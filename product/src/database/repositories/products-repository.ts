@@ -3,8 +3,8 @@ import Product from "../models/Product";
 import type { IProduct } from "../models/Product";
 
 // Get all products
-export async function getAllProducts() {
-  return Product.find({ deleted: false });
+export async function getAllProducts(filter: Partial<IProduct>) {
+  return Product.find({ deleted: false, ...filter });
 }
 
 // Get all available products
@@ -15,10 +15,6 @@ export async function getAvailableProducts() {
 // Get product by id
 export async function getProductById(id: string) {
   return Product.findById(id, { deleted: false });
-}
-
-export async function getActivitiesBySeller(sellerId: string) {
-  return await Product.find({ seller: sellerId, deleted: false }).exec();
 }
 
 // Create a new product

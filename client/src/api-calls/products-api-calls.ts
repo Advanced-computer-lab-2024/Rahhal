@@ -4,9 +4,12 @@ import axios from "axios";
 import { renameProductImage } from "@/features/seller/utils/seller-firebase";
 import { uploadToFirebase } from "@/utils/firebase";
 
-//TODO - later it should be by owner and some other type of handling
 export async function fetchUserProducts(userId: string) {
-  const response = await axios.get(SERVICES_URLS.USER + `/users/${userId}/products`);
+  const response = await axios.get(SERVICES_URLS.PRODUCT + "/products", {
+    params: {
+      seller: userId,
+    },
+  });
   return response.data;
 }
 
