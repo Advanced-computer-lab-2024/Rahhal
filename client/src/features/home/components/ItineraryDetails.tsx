@@ -70,7 +70,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
 
   const { currency } = useCurrencyStore();
 
-  React.useEffect(() => {
+  React.useEffect(() => {historicalPlaceId
     setRating(calculateAverageRating(itinerary.ratings));
   }, [itinerary.ratings]);
 
@@ -112,7 +112,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
     }
   }, [userId]);
 
-  // check if user has already booked this activity if booking is null
+  // check if user has already booked this itinerary if booking is null
   React.useEffect(() => {
     if (booking?._id !== "" || userId === "undefined") return;
 
@@ -176,7 +176,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
       // redirect to review page
       itineraryRatingFormRef.current?.click();
     } else {
-      // cancel activity if there is still 48 hours left
+      // cancel itinerary if there is still 48 hours left
       if (booking && booking?._id && booking.selectedDate) {
         const currentDate = new Date();
         const selectedDate = new Date(booking.selectedDate);
@@ -189,7 +189,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
         } else {
           toast({
             title: "Error",
-            description: "You can't cancel this activity anymore as it is less than 48 hours away",
+            description: "You can't cancel this itinerary anymore as it is less than 48 hours away",
             duration: 5000,
           });
         }
@@ -199,10 +199,10 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
 
   const cardButtonText =
     (booking && booking?.status === "cancelled") || !booking
-      ? "Book Activity"
+      ? "Book Itinerary"
       : booking && booking?.status === "completed"
-        ? "Review Activity"
-        : "Cancel Activity";
+        ? "Review Itinerary"
+        : "Cancel Itinerary";
 
   const cardDropdownOptions =
     booking && booking?.status === "cancelled" && availableDatesTime
