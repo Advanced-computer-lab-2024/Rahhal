@@ -27,10 +27,9 @@ export async function getAppropriateActivities(req: Request, res: Response) {
 }
 
 export async function getActivityById(req: Request, res: Response) {
-  const entityAvailability = req.query.avail as string;
   try {
     const activity = await activitiesService.getActivityById(req.params.id);
-    if (!activity || (entityAvailability && activity.deleted)) {
+    if (!activity) {
       res.status(STATUS_CODES.NOT_FOUND).json({ message: "Activity not found" });
     } else {
       res.status(STATUS_CODES.STATUS_OK).json(activity);

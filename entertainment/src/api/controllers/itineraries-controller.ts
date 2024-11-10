@@ -29,10 +29,9 @@ export async function getActiveAppropriateItineraries(req: express.Request, res:
 }
 
 export async function getItineraryById(req: express.Request, res: express.Response) {
-  const entityAvailability = req.query.avail as string;
   try {
     const itinerary = await itinerariesService.getItineraryById(req.params.id);
-    if (!itinerary || (entityAvailability && itinerary.deleted)) {
+    if (!itinerary) {
       res.status(STATUS_CODES.NOT_FOUND).json({ message: "Itinerary not found" });
     } else {
       res.status(STATUS_CODES.STATUS_OK).json(itinerary);
