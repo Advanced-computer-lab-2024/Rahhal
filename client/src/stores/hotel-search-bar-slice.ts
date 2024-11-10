@@ -1,12 +1,18 @@
 import { create } from "zustand";
 
 interface SearchBarState {
+  infants: number;
+  adults: number;
+  children: number;
   destinationLocation: string[];
   destinationSuggestions: string[];
   destinationSuggestionsPlaceId: string[];
   checkIn: Date[];
   checkOut: Date[];
   guests: number;
+  setInfants: (value: number) => void;
+  setAdults: (value: number) => void;
+  setChildren: (value: number) => void;
   setDestinationLocation: (location: string) => void;
   setDestinationSuggestions: (suggestions: string[]) => void;
   setDestinationSuggestionsPlaceId: (placeId: string[]) => void;
@@ -23,12 +29,18 @@ export const useHotelSearchBarStore = create<SearchBarState>()((set) => ({
   checkIn: [],
   checkOut: [],
   guests: 0,
+  infants: 0,
+  adults: 0,
+  children: 0,
   setDestinationLocation: (location) => set({ destinationLocation: [location] }),
   setDestinationSuggestions: (suggestions) => set({ destinationSuggestions: suggestions }),
   setDestinationSuggestionsPlaceId: (placeId) => set({ destinationSuggestionsPlaceId: placeId }),
   setCheckIn: (time) => set({ checkIn: time ? [time] : [] }),
   setCheckOut: (time) => set({ checkOut: time ? [time] : [] }),
   setGuests: (count) => set({ guests: count }),
+  setInfants: (value) => set({ infants: value }),
+  setAdults: (value) => set({ adults: value }),
+  setChildren: (value) => set({ children: value }),
   resetSearchBar: () =>
     set({
       destinationLocation: [],
@@ -37,5 +49,8 @@ export const useHotelSearchBarStore = create<SearchBarState>()((set) => ({
       checkIn: [],
       checkOut: [],
       guests: 0,
+      infants: 0,
+      adults: 0,
+      children: 0,
     }),
 }));

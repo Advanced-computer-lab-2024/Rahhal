@@ -8,15 +8,18 @@ interface HotelSearchBarProps {
 }
 
 function HotelSearchBar({ onIconClick }: HotelSearchBarProps) {
-  const [adults, setAdults] = useState([0]);
-  const [children, setChildren] = useState([0]);
-  const [infants, setInfants] = useState([0]);
 
   const {
+    adults,
     destinationLocation,
+    children,
+    infants,
     destinationSuggestions,
     checkIn,
     checkOut,
+    setChildren,
+    setAdults,
+    setInfants,
     setDestinationLocation,
     setDestinationSuggestions,
     setDestinationSuggestionsPlaceId,
@@ -50,22 +53,22 @@ function HotelSearchBar({ onIconClick }: HotelSearchBarProps) {
   };
 
   const handleAdultsChange = (value: number) => {
-    setAdults([value]);
-    setGuests(adults[0] + children[0] + infants[0]);
+    setAdults(value);
+    setGuests(adults + children + infants);
   };
 
   const handleChildrenChange = (value: number) => {
-    setChildren([value]);
-    setGuests(adults[0] + children[0] + infants[0]);
+    setChildren(value);
+    setGuests(adults + children + infants);
   };
 
   const handleInfantsChange = (value: number) => {
-    setInfants([value]);
-    setGuests(adults[0] + children[0] + infants[0]);
+    setInfants(value);
+    setGuests(adults + children + infants);
   };
 
-  const searchParts = ["Where", "Check-in", "Check-out", "Guests"];
-  const searchPartsPlaceholders = ["Destination", "Check-in", "Check-out", "Guests"];
+  const searchParts = ["Where", "Check-in", "Check-out", "guests"];
+  const searchPartsPlaceholders = ["Destination", "Check-in", "Check-out", "guests"];
   const searchPartsValues = [destinationSuggestions, [], [], []];
   return (
     <SearchBar
@@ -76,9 +79,9 @@ function HotelSearchBar({ onIconClick }: HotelSearchBarProps) {
         { state: destinationLocation, setState: setDestinationLocation },
         { state: checkIn, setState: setCheckIn },
         { state: checkOut, setState: setCheckOut },
-        { state: adults, setState: handleAdultsChange },
-        { state: children, setState: handleChildrenChange },
-        { state: infants, setState: handleInfantsChange },
+        { state: [adults], setState: handleAdultsChange },
+        { state: [children], setState: handleChildrenChange },
+        { state: [infants], setState: handleInfantsChange },
       ]}
       searchPartsTypes={["dropdown", "date", "date", "stepper"]}
       searchPartsPlaceholders={searchPartsPlaceholders}
