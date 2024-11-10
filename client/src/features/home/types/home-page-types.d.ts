@@ -41,16 +41,6 @@ export type TOrder = {
   shippingAddress: string;
 }
 
-
-export interface IBooking {
-  user: string;
-  entity: string;
-  type: bookingType;
-  status?: TBookingStatus;
-  selectedPrice?: number;
-  selectedDate?: Date;
-}
-
 export type TPopulatedBooking = {
   _id?: string;
   user: IUser;
@@ -66,6 +56,8 @@ export type TBookingType = {
   entity: string;
   type: bookingType;
   status?: TBookingStatus;
+  selectedPrice?: number;
+  selectedDate?: Date;
 };
 
 interface CancellationRule {

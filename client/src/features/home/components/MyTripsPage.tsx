@@ -4,7 +4,7 @@ import { MyTripsCard } from "./MyTripsCard";
 import { fetchLocationDetails } from "@/api-calls/google-maps-api-calls";
 import { fetchUserBookings } from "@/api-calls/booking-api-calls";
 import { useQuery } from "@tanstack/react-query";
-import { TBookingType, TPopulatedBooking } from "@/features/home/types/home-page-types";
+import { TPopulatedBooking } from "@/features/home/types/home-page-types";
 import { useEffect } from "react";
 export const MyTripsPage = () => {
   function formatDate(dateString: string | Date): string {
