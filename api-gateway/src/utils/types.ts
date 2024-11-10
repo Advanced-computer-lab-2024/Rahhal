@@ -52,7 +52,7 @@ export interface IBooking {
 export interface PopulatedBooking {
   _id: string;
   user: IUser;
-  entity: IActivity | IItinerary;
+  entity: IActivity | IItinerary | string;
   type: bookingType;
   status: bookingStatus;
   selectedPrice: number;
