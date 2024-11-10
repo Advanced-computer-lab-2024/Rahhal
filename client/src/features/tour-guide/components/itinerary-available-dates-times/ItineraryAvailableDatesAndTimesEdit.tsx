@@ -16,11 +16,20 @@ const ItineraryAvailableDatesAndTimesEdit: React.FC<ItineraryAvailableDatesAndTi
   availableDatesTime,
   onSave,
 }) => {
-  const [editedDatesTime, setEditedDatesTime] = useState(availableDatesTime);
+  const [editedDatesTime, setEditedDatesTime] = useState<DateTimeEntry[]>(() =>
+    availableDatesTime.map((entry) => ({
+      Date: new Date(entry.Date),
+      Time: new Date(entry.Time),
+    }))
+  );
 
   const handleDateChange = (index: number, newDate: string) => {
     const updatedDatesTime = [...editedDatesTime];
-    updatedDatesTime[index] = { ...updatedDatesTime[index], Date: new Date(newDate) };
+    updatedDatesTime[index] = {
+      ...updatedDatesTime[index],
+      Date: new Date(newDate),
+      Time: new Date(updatedDatesTime[index].Time),
+    };
     setEditedDatesTime(updatedDatesTime);
   };
 
@@ -48,9 +57,9 @@ const ItineraryAvailableDatesAndTimesEdit: React.FC<ItineraryAvailableDatesAndTi
   };
 
   return (
-    <div className="space-y-4">
+    <div>
       {editedDatesTime.map((entry, index) => (
-        <div key={index} className="flex space-x-2">
+        <div key={index} className="flex space-x-2 mb-2">
           <Input
             type="date"
             value={entry.Date.toISOString().split("T")[0]}
@@ -58,13 +67,13 @@ const ItineraryAvailableDatesAndTimesEdit: React.FC<ItineraryAvailableDatesAndTi
           />
           <Input
             type="time"
-            value={`${entry.Time.getHours().toString().padStart(2, "0")}:${entry.Time.getMinutes().toString().padStart(2, "0")}`}
+            value={entry.Time.toISOString().split("T")[1].substring(0, 5)}
             onChange={(e) => handleTimeChange(index, e.target.value)}
           />
           <Button onClick={() => handleRemoveEntry(index)}>Remove</Button>
         </div>
       ))}
-      <Button onClick={handleAddEntry}>Add Date/Time</Button>
+      <Button onClick={handleAddEntry}>Add Entry</Button>
       <Button onClick={handleSave}>Save</Button>
     </div>
   );

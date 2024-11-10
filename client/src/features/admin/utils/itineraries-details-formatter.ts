@@ -12,7 +12,21 @@ function formatCamelCaseString(str: string) {
           ? value.reduce((sum, rating) => sum + rating.rating, 0) / value.length 
           : 0;
         formattedValue = `Average: ${average.toFixed(1)}`; 
-      } else {
+      }
+      else if (key === "preferenceTags") {
+        formattedKey = "Preference Tags";
+        formattedValue = value?.map((tag: any) => tag.name).join(", "); 
+      }
+      else if (key === "locations") {
+        formattedKey = "Available Locations";
+        formattedValue = value.map((location: any) => `Lat: ${location.latitude}, Long: ${location.longitude}`).join(", ");
+      }  
+      else if (key === "availableDatesTime") {
+        formattedKey = "Available Dates";
+        formattedValue = value.map((date: any) => `${new Date(date.Date).toLocaleDateString("en-GB")} ${new Date(date.Time).toLocaleTimeString("en-GB")}`).join(", ");
+      }
+    
+       else {
         formattedValue = value.join(", "); 
       }
     } else if (key === "date") {
@@ -21,24 +35,24 @@ function formatCamelCaseString(str: string) {
     } else if (key === "time") {
       formattedKey = "Time";
       formattedValue = new Date(value).toLocaleTimeString("en-GB"); 
-    } else if (key === "location") {
-      formattedKey = "Location";
-      formattedValue = `Lat: ${value.latitude}, Long: ${value.longitude}`; 
-    } else if (key === "price") {
-      formattedKey = "Price Categories";
-      formattedValue = Object.entries(value)
-        .map(([category, price]) => `${category}: $${price}`) 
-        .join(", "); 
     } else if (key === "category") {
       formattedKey = "Category";
       formattedValue = value?.name; 
-    } else if (key === "preferenceTags") {
-      formattedKey = "Preference Tags";
-      formattedValue = value?.map((tag: any) => tag.name).join(", "); 
     } else if (key === "isBookingOpen") {
       formattedKey = "Booking Status";
       formattedValue = value ? "Open" : "Closed";
     }
-  
+    else if (key === "pickUpLocation") {
+      formattedKey = "Pick Up Location";
+      formattedValue = `Lat: ${value.latitude}, Long: ${value.longitude}`;
+    }
+    else if (key === "dropOffLocation") {
+      formattedKey = "Drop Off Location";
+      formattedValue = `Lat: ${value.latitude}, Long: ${value.longitude}`;
+    }
+    else if (key === "price"){
+      formattedKey = "Price";
+      formattedValue = `£${value}`;
+    }
     return [formattedKey, formattedValue];
   }

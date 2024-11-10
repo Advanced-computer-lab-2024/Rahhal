@@ -4,7 +4,8 @@ import { ChevronRight } from 'lucide-react';
 import { ItineraryView } from '@/features/admin/components/ItineraryView';
 
 export type TRating = {
-  user: string;
+  userId: string;
+  userName: string;
   rating: number;
   review?: string;
 };
