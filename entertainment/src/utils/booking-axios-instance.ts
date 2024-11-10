@@ -1,6 +1,6 @@
 import axios from "axios";
-import { CONSTANTS, bookingType } from "./constants";
-import  { type PopulatedBooking , IActivity } from "@/utils/types";
+import { CONSTANTS } from "./constants";
+import  { type PopulatedBooking  } from "@/utils/types";
 
 export const bookingAxiosInstance = axios.create({
   baseURL: "http://booking:3000",
