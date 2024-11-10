@@ -39,3 +39,12 @@ export enum bookingStatus {
   Completed = "completed",
   Cancelled = "cancelled",
 }
+
+export enum Role {
+  admin = "admin",
+  tourist = "tourist",
+  tourGuide = "tourGuide",
+  advertiser = "advertiser",
+  seller = "seller",
+  tourismGovernor = "tourismGovernor",
+}

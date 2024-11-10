@@ -2,16 +2,7 @@ import type { Types } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 import userValidators from "@/validators/user-validators";
 import type { TRating } from "@/types";
-
-
-export enum Role {
-  admin = "admin",
-  tourist = "tourist",
-  tourGuide = "tourGuide",
-  advertiser = "advertiser",
-  seller = "seller",
-  tourismGovernor = "tourismGovernor",
-}
+import { Role } from "@/utils/constants";
 
 
 

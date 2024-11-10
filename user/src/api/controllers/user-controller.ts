@@ -1,14 +1,11 @@
 import type { Request, Response } from "express";
 import * as userService from "@/services/user-service";
-import { STATUS_CODES } from "@/utils/constants";
+import { Role, STATUS_CODES } from "@/utils/constants";
 import { z } from "zod";
-import type { TRating, PopulatedBooking, IItinerary, IActivity, IProduct } from "@/types";
-import { POINTS, LEVELS, MIN_LENGTH, bookingStatus, bookingType } from "@/utils/constants";
-import {
-  entertainmentAxiosInstance,
-  gatewayAxiosInstance,
-  productAxiosInstance,
-} from "@/utils/axios-instances";
+import type { TRating } from "@/types";
+import { POINTS} from "@/utils/constants";
+
+
 
 export async function getUserByUsername(req: Request, res: Response) {
   try {
@@ -93,7 +90,7 @@ export async function getUserByEmail(req: Request, res: Response) {
 export async function updateUserById(req: Request, res: Response) {
   try {
     const userId = req.params.id;
-    const updatedUser = req.body;
+    let updatedUser = req.body;
     if (updatedUser.email) {
       const email = await userService.getUserByEmail(updatedUser.email);
       if (email && !email.deleted && email.email !== "" && !email._id.equals(userId)) {
@@ -103,56 +100,29 @@ export async function updateUserById(req: Request, res: Response) {
         return;
       }
     }
+    const user = await userService.getUserById(userId);
+    if (!user) {
+      res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
+      return;
+    }
     if (req.query.amountPaid) {
       const amountPaid = parseFloat(req.query.amountPaid as string);
       if (!isNaN(amountPaid)) {
-        const user = await userService.getUserById(userId);
-
-        if (!user) {
-          res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
-          return;
-        } else if (user.role !== "tourist") {
+        if (user.role !== "tourist") {
           res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Only tourists can have points" });
           return;
         } else {
-          let userLevelPointRate = POINTS.LEVEL3POINTRATE;
-          if (user.level === LEVELS.LEVEL1) {
-            userLevelPointRate = POINTS.LEVEL1POINTRATE;
-          } else if (user.level === LEVELS.LEVEL2) {
-            userLevelPointRate = POINTS.LEVEL2POINTRATE;
-          }
-          updatedUser.points = Math.ceil((user.points as number) + amountPaid * userLevelPointRate);
-          updatedUser.accumulativePoints = Math.ceil(
-            (user.accumulativePoints as number) + amountPaid * userLevelPointRate,
-          );
-
-          if (updatedUser.accumulativePoints >= POINTS.LEVEL1MAXPOINTS) {
-            updatedUser.level = LEVELS.LEVEL2;
-          }
-          if (updatedUser.accumulativePoints >= POINTS.LEVEL2MAXPOINTS) {
-            updatedUser.level = LEVELS.LEVEL3;
-          }
+          updatedUser = userService.updatePointsAndLevel(user, amountPaid);
         }
       }
     }
     if (req.query.amountRetrieved) {
       const amountRetrieved = parseFloat(req.query.amountRetrieved as string);
       if (!isNaN(amountRetrieved)) {
-        const user = await userService.getUserById(userId);
-        if (!user) {
-          res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
-          return;
-        } else {
-          updatedUser.balance = (user.balance as number) + amountRetrieved;
-        }
+        updatedUser.balance = (user.balance as number) + amountRetrieved;
       }
     }
-    const user = await userService.updateUserById(userId, updatedUser);
-    if (!user) {
-      res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
-    } else {
-      res.status(STATUS_CODES.STATUS_OK).json(user);
-    }
+    res.status(STATUS_CODES.STATUS_OK).json(user);
   } catch (error) {
     if (error instanceof Error) {
       res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
@@ -206,84 +176,9 @@ export async function createUser(req: Request, res: Response) {
 export async function deleteUser(req: Request, res: Response) {
   try {
     const userId = req.params.id;
-    const user = await userService.getUserById(userId);
-    if (!user) {
-      res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
-    } else {
-      if (user.role === "tourGuide") {
-        const filter = {
-          owner: userId,
-          type: bookingType.Itinerary,
-          status: bookingStatus.Upcoming,
-        };
-        const itinrariesBookings = await gatewayAxiosInstance.get(`/booking/bookings`, {
-          params: filter,
-        });
-        const result = itinrariesBookings.data.filter(
-          (booking: PopulatedBooking) => new Date(booking.selectedDate as Date) > new Date(),
-        );
+    const deletedUser = await userService.deleteUser(userId);
+    res.status(STATUS_CODES.STATUS_OK).json(deletedUser);
 
-        if (result.length > MIN_LENGTH) {
-          res.status(STATUS_CODES.BAD_REQUEST).json({
-            error:
-              "Tour Guide has itineraries that are not completed yet and there are bookings to those",
-          });
-          return;
-        } else {
-          const filter = {
-            ownerId: userId,
-          };
-          const itineraries = await entertainmentAxiosInstance.get(`/itineraries/`, {
-            params: filter,
-          });
-          console.log(itineraries.data);
-          itineraries.data.forEach(async (itinerary: IItinerary) => {
-            await entertainmentAxiosInstance.delete(`/itineraries/${itinerary._id}`);
-          });
-        }
-      } else if (user.role === "advertiser") {
-        const filter = {
-          owner: userId,
-          type: bookingType.Activity,
-          status: bookingStatus.Upcoming,
-        };
-        const activitiesBookings = await gatewayAxiosInstance.get(`/booking/bookings/`, {
-          params: filter,
-        });
-        const result = activitiesBookings.data.filter(
-          (booking: PopulatedBooking) =>
-            new Date((booking.entity as IActivity).date as Date) > new Date(),
-        );
-
-        if (result.length > MIN_LENGTH) {
-          res.status(STATUS_CODES.BAD_REQUEST).json({
-            error:
-              "Advertiser has activites that are not completed yet and there are bookings to those",
-          });
-          return;
-        } else {
-          const filter = {
-            owner: userId,
-          };
-          const activities = await entertainmentAxiosInstance.get(`/activities/`, {
-            params: filter,
-          });
-          activities.data.forEach(async (activity: IActivity) => {
-            await entertainmentAxiosInstance.delete(`/activities/${activity._id}`);
-          });
-        }
-      } else if (user.role === "seller") {
-        const filter = {
-          sellerId: userId,
-        };
-        const products = await productAxiosInstance.get(`/products/`, { params: filter });
-        products.data.forEach(async (product: IProduct) => {
-          await productAxiosInstance.delete(`/products/${product._id}`);
-        });
-      }
-      const deletedUser = await userService.deleteUser(userId);
-      res.status(STATUS_CODES.STATUS_OK).json(deletedUser);
-    }
   } catch (error) {
     if (error instanceof Error) {
       res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
@@ -337,23 +232,17 @@ export async function redeemPoints(req: Request, res: Response) {
     if (!user) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
       return;
-    } else if (user.role !== "tourist") {
+    } else if (user.role !== Role.tourist) {
       res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Only tourists can redeem points" });
       return;
-    } else if (user.points) {
-      if (user.points < POINTS.MINPOINTS) {
+    } else {
+      if (user.points! < POINTS.MINPOINTS) {
         res
           .status(STATUS_CODES.BAD_REQUEST)
           .json({ error: "You Have to have at least 10000 points to be able to redeem them!" });
         return;
       } else {
-        const updatedUser = user;
-        const avgBalance = user.points / POINTS.MINPOINTS;
-        updatedUser.points = user.points % POINTS.MINPOINTS;
-        updatedUser.balance =
-          (user.balance as number) + Math.floor(avgBalance) * POINTS.AMOUNTFORMINPOINTS;
-        console.log(updatedUser);
-        const newUser = await userService.updateUserById(userId, updatedUser);
+        const newUser = userService.redeemPoints(user);
         res.status(STATUS_CODES.STATUS_OK).json(newUser);
       }
     }
@@ -363,3 +252,5 @@ export async function redeemPoints(req: Request, res: Response) {
     }
   }
 }
+
+
