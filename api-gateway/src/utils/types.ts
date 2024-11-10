@@ -45,7 +45,7 @@ export interface IBooking {
   status?: bookingStatus;
   selectedPrice?: number;
   selectedDate?: Date;
-  isRated?: boolean;
+  isRated?: number;
 }
 
 export interface PopulatedBooking {
@@ -56,7 +56,7 @@ export interface PopulatedBooking {
   status: bookingStatus;
   selectedPrice: number;
   selectedDate?: Date;
-  isRated?: boolean;
+  isRated?: number;
 }
 
 export interface IItinerary {

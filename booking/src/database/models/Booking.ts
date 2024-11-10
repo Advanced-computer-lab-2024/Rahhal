@@ -27,9 +27,9 @@ const bookingSchema = new mongoose.Schema({
   selectedDate: {
     type: Date,
   },
-  isRated: {
-    type: Boolean,
-    default: false,
+  rating: {
+    type: Number,
+    default: 0,
   },
 });
 

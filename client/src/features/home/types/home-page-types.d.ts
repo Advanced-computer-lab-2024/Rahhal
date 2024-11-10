@@ -49,7 +49,7 @@ export interface IBooking {
   status?: TBookingStatus;
   selectedPrice?: number;
   selectedDate?: Date;
-  isRated?: boolean;
+  isRated?: number;
 }
 
 export type TPopulatedBooking = {
@@ -60,7 +60,7 @@ export type TPopulatedBooking = {
   status: TBookingStatus;
   selectedPrice: number;
   selectedDate: Date;
-  isRated?: boolean;
+  isRated?: number;
 };
 
 export type TBookingType = {
