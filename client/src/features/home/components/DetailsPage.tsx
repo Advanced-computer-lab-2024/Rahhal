@@ -17,6 +17,7 @@ import {
 } from "../types/home-page-types";
 import { fetchProductById } from "@/api-calls/products-api-calls";
 import { useEffect } from "react";
+import SharePopover from "@/components/SharePopover";
 
 const DetailsPage = () => {
   const {id, placeid,type} = useParams();
@@ -67,10 +68,11 @@ const DetailsPage = () => {
         <div className={DetailsPageStyles["item-details"]}>
           {/* details goes here */}
           <div className="flex justify-between">
-          <h1>{item.name} </h1>
-          <SharePopover link={window.location.href} />
+          <h1>{item!.name} </h1>
+          <SharePopover link={`${type}/details/${placeid}?avail=0110`}/>
           </div>
-          <h3>{item.description}</h3>
+
+          <h3>{item!.description}</h3>
 
           <p>
             <FaTags style={{ marginRight: "10px" }} />
