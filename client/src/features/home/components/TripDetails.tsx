@@ -23,7 +23,6 @@ export const handleTripRatingSubmit = async (
   userId: string,
   ratingFormRef: React.RefObject<HTMLButtonElement>,
 ) => {
-  
   const user = userId ? await getUserById(userId) : null;
 
   const ratingData: TRating = {
@@ -44,6 +43,8 @@ export const handleTripRatingSubmit = async (
   // close the dialog
   ratingFormRef.current?.click();
 };
+
+
 
 export const tripRatingEntity: Record<string, TRatingEntity> = {
   rating: {

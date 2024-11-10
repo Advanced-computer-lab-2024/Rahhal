@@ -41,7 +41,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
   itinerary,
   initialBooking,
   userId,
-  ratingFormRef,
+  ratingFormRef: itineraryRatingFormRef,
 }) => {
   const {
     name,
@@ -66,6 +66,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState<string | null>(null);
   const [booking, setBooking] = React.useState<TPopulatedBooking | null>(initialBooking);
+  const tourGuideRatingFormRef = React.useRef<HTMLButtonElement>(null);
 
   const { currency } = useCurrencyStore();
 
@@ -173,7 +174,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
       }
     } else if (booking && booking?.status === "completed") {
       // redirect to review page
-      ratingFormRef.current?.click();
+      itineraryRatingFormRef.current?.click();
     } else {
       // cancel activity if there is still 48 hours left
       if (booking && booking?._id && booking.selectedDate) {
@@ -217,7 +218,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
   return (
     <div>
       <RatingFormDialog
-        buttonRef={ratingFormRef}
+        buttonRef={itineraryRatingFormRef}
         ratingEntities={tripRatingEntity}
         onSubmit={(values) => {
           itinerary._id &&
@@ -226,7 +227,22 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
               itinerary._id,
               RateableEntityType.ITINERARY,
               userId,
-              ratingFormRef,
+              itineraryRatingFormRef,
+            );
+        }}
+      />
+
+      <RatingFormDialog
+        buttonRef={tourGuideRatingFormRef}
+        ratingEntities={tripRatingEntity}
+        onSubmit={(values) => {
+          itinerary.owner &&
+            handleTripRatingSubmit(
+              values,
+              itinerary.owner,
+              RateableEntityType.USER,
+              userId,
+              tourGuideRatingFormRef,
             );
         }}
       />
@@ -359,6 +375,9 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
             originalPrice={displayPrice}
             buttonText={cardButtonText}
             buttonColor={booking?.status === "upcoming" ? "red" : "gold"}
+            button2Text={(booking && booking?.status === "completed") ? "Review Tour Guide" : undefined}
+            onButton2Click={() => tourGuideRatingFormRef.current?.click()}
+            button2Color="gold"
             date={
               (booking && booking?.status === "upcoming") ||
               (booking && booking?.status === "completed")

@@ -22,6 +22,9 @@ interface OverviewCardProps {
   buttonText: string;
   onButtonClick?: () => void;
   buttonColor: "gold" | "red"; // Color options for the button
+  button2Text?: string; // Optional for cases with two buttons
+  onButton2Click?: () => void; // Optional for cases with two buttons
+  button2Color?: "gold" | "red"; // Optional for cases with two buttons
   disabled?: boolean;
   dropdownOptions?: { value: string; label: string }[]; // Options for the dropdown
   onTicketSelect?: (index: number) => void; // Handler for ticket selection
@@ -41,6 +44,9 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({
   buttonText,
   buttonColor,
   onButtonClick,
+  button2Text,
+  onButton2Click,
+  button2Color,
   disabled,
   onTicketSelect,
 }) => {
@@ -61,6 +67,9 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({
         buttonText={buttonText}
         buttonColor={buttonColor}
         onButtonClick={onButtonClick}
+        button2Text={button2Text}
+        onButton2Click={onButton2Click}
+        button2Color={button2Color}
         disabled={disabled}
         onTicketSelect={onTicketSelect}
       />
