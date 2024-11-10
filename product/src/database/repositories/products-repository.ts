@@ -45,5 +45,5 @@ export async function updateProduct(id: string, productData: IProduct) {
 
 // Delete a product
 export async function deleteProduct(id: string) {
-  return await Product.findByIdAndUpdate(id, { deleted: true });
+  return await Product.findByIdAndUpdate(id, { deleted: true }, { new: true });
 }
