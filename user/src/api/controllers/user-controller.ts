@@ -108,7 +108,7 @@ export async function updateUserById(req: Request, res: Response) {
     if (req.query.amountPaid) {
       const amountPaid = parseFloat(req.query.amountPaid as string);
       if (!isNaN(amountPaid)) {
-        if (user.role !== "tourist") {
+        if (user.role !== Role.tourist) {
           res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Only tourists can have points" });
           return;
         } else {
@@ -134,7 +134,7 @@ export async function createUser(req: Request, res: Response) {
   try {
     const userData = req.body;
     if (userData.username && userData.password) {
-      const shouldCheckEmail = userData.role !== "admin" && userData.role !== "tourismGovernor";
+      const shouldCheckEmail = userData.role !== Role.admin && userData.role !== Role.tourismGovernor;
       const userUsername = await userService.getUserByUsername(userData.username);
       const userEmail = userData.email
         ? await userService.getUserByEmail(userData.email)
