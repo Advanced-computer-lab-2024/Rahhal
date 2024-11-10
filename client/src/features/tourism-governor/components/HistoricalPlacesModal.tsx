@@ -6,8 +6,7 @@ import {
 import { useEffect, useState } from "react";
 import PictureCard from "@/components/PictureCard";
 import ShortText from "@/components/ShortText";
-import ReviewDisplay from "@/components/Ratings";
-import { IMAGES, sampleReviews } from "@/lib/utils";
+import { IMAGES } from "@/lib/utils";
 import { fetchCategories } from "@/api-calls/categories-api-calls";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import {
@@ -237,7 +236,6 @@ export function HistoricalPlacesModal({
         initialImageSources={historicalPlaceData?.images ?? []}
         handleFileUploadCallback={(files) => setHistoricalPlacesPictures(files)}
       />
-      <ReviewDisplay reviews={sampleReviews} />
 
       <LocationMap
         isEditingInitially={isNewHistoricalPlace}

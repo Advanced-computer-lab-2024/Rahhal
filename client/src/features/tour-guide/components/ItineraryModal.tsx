@@ -7,8 +7,6 @@ import LongText from "@/components/LongText";
 import LocationMap from "@/components/google-maps/LocationMap";
 import TagsSelector from "@/components/TagsSelector";
 import { GenericSelect } from "@/components/GenericSelect";
-import ReviewDisplay from "@/components/Ratings";
-import { sampleReviews } from "@/lib/utils";
 import { createItinerary } from "@/api-calls/itineraries-api-calls";
 import { updateItinerary } from "@/api-calls/itineraries-api-calls";
 import { fetchCategories } from "@/api-calls/categories-api-calls";
@@ -229,7 +227,7 @@ export function ItinerariesModal({ itineraryData, dialogTrigger, userId }: Itine
         }
       />
       <ShortText
-        title="Price"
+        title="Price (EGP)"
         initialValue={modalItineraryData?.price.toString() ?? ""}
         onSave={(value) =>
           setModalItinerariesData(
@@ -356,9 +354,7 @@ export function ItinerariesModal({ itineraryData, dialogTrigger, userId }: Itine
         }
       />
 
-      <div className="m-5 mx-6">
-        <ReviewDisplay reviews={sampleReviews} />
-      </div>
+     
       <div className="flex items-center space-x-2 pt-4">
   <Checkbox
     id="inactive"

@@ -66,7 +66,7 @@ export function ProductModal({ productData, dialogTrigger, userId, username }: P
       />
 
       <ShortText
-        title="Price"
+        title="Price (EGP)"
         type={"number"}
         initialValue={modalProductData?.price.toString() ?? "0"}
         onSave={(value) =>
