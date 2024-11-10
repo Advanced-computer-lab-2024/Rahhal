@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import PageStyles from "../styles/MyTripsPage.module.css";
 import { MyTripsCard } from "./MyTripsCard";
-import { fetchLocationDetails } from "@/api-calls/google-maps-api-calls";
 import { fetchUserBookings } from "@/api-calls/booking-api-calls";
 import { useQuery } from "@tanstack/react-query";
 import { TPopulatedBooking } from "@/features/home/types/home-page-types";
-import { useEffect } from "react";
+import { bookingType } from "@/utils/enums";
+import { toast } from "@/hooks/use-toast";
 export const MyTripsPage = () => {
   function formatDate(dateString: string | Date): string {
     if (!dateString) return "N/A";
@@ -34,25 +34,36 @@ export const MyTripsPage = () => {
     return dateTimestamp < currentTimestamp && status === "upcoming";
   }
 
-  const { id } = useParams<{ id: string }>();
+  const { id: userId } = useParams<{ id: string }>(); // Get the userId from URL params
 
   const {
     data: booking,
     isLoading,
     isError,
   } = useQuery<TPopulatedBooking[]>({
-    queryKey: ["userBooking", id],
-    queryFn: () => fetchUserBookings(id as string),
-    enabled: !!id,
+    queryKey: ["userBooking", userId],
+    queryFn: () => fetchUserBookings(userId as string),
+    enabled: !!userId,
   });
 
   const navigate = useNavigate();
-  const { id: userId } = useParams<{ id: string }>(); // Get the userId from URL params
 
   const handleClick = (booking: TPopulatedBooking) => {
     if (
+      booking.type === bookingType.Hotel ||
+      booking.type === bookingType.Flight ||
+      booking.type === bookingType.Transportation
+    ) {
+      toast({
+        title: "This feature is not available yet",
+        description:
+          "For now, you can't view details of flights, hotels nor transportation bookings. Stay tuned!",
+      });
+      return;
+    }
+    if (
       !isDateInPast(
-        booking.entity.date ? booking.entity.date : booking.selectedDate,
+        booking.selectedDate ? booking.selectedDate : booking.selectedDate,
         booking.status,
       )
     ) {
@@ -66,10 +77,8 @@ export const MyTripsPage = () => {
     }
   };
 
-  console.log(booking);
-
   return (
-    <>
+    <div className="mb-5">
       <div className={PageStyles["trip-page-header"]}>
         <p>Trips & Booking</p>
       </div>
@@ -78,23 +87,25 @@ export const MyTripsPage = () => {
           ? booking.map((booking: TPopulatedBooking) => (
               <MyTripsCard
                 key={booking.entity._id}
-                title={booking.entity.name}
+                title={booking.entity.name || `${booking.type}`}
                 price={booking.selectedPrice}
                 status={
                   isDateInPast(
-                    booking.entity.date ? booking.entity.date : booking.selectedDate,
+                    booking.selectedDate ? booking.selectedDate : booking.selectedDate,
                     booking.status,
                   )
                     ? "completed"
                     : booking.status
                 }
-                date={formatDate(booking.entity.date ? booking.entity.date : booking.selectedDate)}
-                image={booking.entity.images[0]}
+                date={formatDate(
+                  booking.selectedDate ? booking.selectedDate : booking.selectedDate,
+                )}
+                image={booking.entity.images ? booking.entity.images[0] : undefined}
                 onClick={() => handleClick(booking)}
               />
             ))
           : !isLoading && !isError && <p>No bookings found.</p>}
       </div>
-    </>
+    </div>
   );
 };
