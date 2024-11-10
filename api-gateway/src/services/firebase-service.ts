@@ -15,7 +15,7 @@ export async function uploadFile(file: UploadableFile): Promise<string> {
     contentType: file.mimetype || "application/octet-stream",
   };
 
-  console.log(file);
+  
 
   try {
     const uploadDocument = uploadBytesResumable(fileRef, file.data, metadata);
