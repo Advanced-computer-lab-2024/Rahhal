@@ -22,6 +22,9 @@ import { calculateAge } from "@/utils/age-calculator";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { bookingType } from "@/utils/enums";
+import type { TBookingType } from "../types/home-page-types";
+import { createBooking } from "@/api-calls/booking-api-calls";
 export default function HotelDetails({ hotels }: HotelDetailsProps) {
   const { index, id } = useParams();
   const [isAboveEighteen, setIsAboveEighteen] = useState(false);
@@ -69,6 +72,19 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
   const propertyAmenities = chunkArray(hotel.features.propertyAmenities, 2);
   const roomFeatures = chunkArray(hotel.features.roomFeatures, 2);
   const roomTypes = chunkArray(hotel.features.roomTypes, 2);
+
+  const handleHotelBooking = async (price : number) => {
+    const bookingRequest: TBookingType = {
+      user: id!,
+      entity: index!,
+      type: bookingType.Hotel,
+      selectedDate: new Date(date.from!),
+      selectedPrice: price,
+    };
+    const booking = await createBooking(bookingRequest);
+    if (booking) await addLoyalityPoints(id!, price);
+  };
+
   return (
     <div className="py-8 px-[20%]">
       <div className="flex flex-col gap-2">
@@ -157,9 +173,7 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
                         },
                         duration: 3000,
                       });
-                      console.log("HELLO");
-                      addLoyalityPoints(
-                        id!,
+                      handleHotelBooking(
                         currencyExchangeDefaultSpec(
                           currency,
                           differenceInDays(date.to!, date.from!) * parseInt(newPrice!) +
