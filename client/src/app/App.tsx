@@ -71,8 +71,8 @@ export default function App() {
             </Route>
             <Route path="/signup" element={<SignupSelector />} />
             <Route path="/signin" element={<Login />} />
-            <Route path="/details/:placeid/:id" element={<DetailsPage />} />
-            <Route path="/details/:placeid/" element={<DetailsPage />} />
+            <Route path="/:type/details/:placeid/:id" element={<DetailsPage />} />
+            <Route path="/:type/details/:placeid/" element={<DetailsPage />} />
             <Route element={<SettingsView />}>
               <Route path="/user-settings/:id" element={<ProfileForm />} />
               <Route path="/user-settings/account/:id" element={<AccountForm />} />
