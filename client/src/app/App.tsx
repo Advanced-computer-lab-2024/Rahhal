@@ -98,17 +98,19 @@ export default function App() {
               element={<HistoricalPlacesView />}
             />
             <Route path="/tourism-governor/historical-tags/:id" element={<HistoricalTagsView />} />
+
+            <Route path="/seller/:id" element={<SellerView />} />
+            <Route path="/seller/product/:id" element={<ProductReport />} />
+
+            <Route path="/tour-guide/:id" element={<TourGuideView />} />
+
             <Route path="/admin" element={<AdminHomepage />} />
             <Route path="/admin/categories" element={<CategoryView />} />
             <Route path="/admin/users" element={<UserView />} />
             <Route path="/admin/users/requests" element={<UsersPendingRequests />} />
             <Route path="/admin/products" element={<AdminProductsView />} />
-            <Route path="/seller/:id" element={<SellerView />} />
-            <Route path="/seller/product/:id" element={<ProductReport />} />
             <Route path="/admin" element={<AdminHomepage />} />
             <Route path="/admin/categories" element={<CategoryView />} />
-            <Route path="/admin/users" element={<UserView />} />
-            <Route path="/tour-guide/:id" element={<TourGuideView />} />
             <Route path="/admin/preference-tags" element={<PreferenceTagsAdminView />} />
             <Route path="/admin/complaints" element={<AdminComplaintsView />} />
             <Route path="/admin/itineraries" element={<AdminItinerariesView />} />
