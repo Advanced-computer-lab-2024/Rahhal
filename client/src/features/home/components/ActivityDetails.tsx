@@ -315,7 +315,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
 
             <div className="flex justify-end">
               <div className="p-0">
-                <SharePopover link={window.location.href} />
+                <SharePopover link={window.location.href + "?avail=1001"} />
               </div>
               
             </div>
