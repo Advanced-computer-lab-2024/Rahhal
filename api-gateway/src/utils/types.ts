@@ -45,6 +45,8 @@ export interface IBooking {
   status?: bookingStatus;
   selectedPrice?: number;
   selectedDate?: Date;
+  rating?: number;
+  itineraryTourGuideRating?: number;
 }
 
 export interface PopulatedBooking {
@@ -55,6 +57,8 @@ export interface PopulatedBooking {
   status: bookingStatus;
   selectedPrice: number;
   selectedDate?: Date;
+  rating?: number;
+  itineraryTourGuideRating?: number;
 }
 
 export interface IItinerary {
@@ -76,6 +80,7 @@ export interface IItinerary {
   preferenceTags?: PreferenceTag[];
   category?: Category;
   owner: string;
+  
 }
 
 export interface IActivity {
