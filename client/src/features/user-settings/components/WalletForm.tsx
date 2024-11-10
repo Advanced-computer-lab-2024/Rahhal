@@ -75,10 +75,12 @@ export default function AccountForm() {
   const [editingCard, setEditingCard] = useState<boolean>(false);
   const [editedIndex, setEditedCardIndex] = useState<number>(-1);
   const price = 100;
-  
+
   const { currency } = useCurrencyStore();
   const convertedPrice = currencyExchange("EGP", price);
-  const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
+  const displayPrice = convertedPrice ? convertedPrice.toFixed(2) : "N/A";
+
+
 
   type balanceValues = z.infer<typeof redeemValidator>;
   const { id } = useParams();
@@ -90,6 +92,11 @@ export default function AccountForm() {
       points: user.points || 0,
     },
   });
+
+  const displayBalance = currencyExchange(
+    "EGP",
+    form.watch("balance") || 0
+  )?.toFixed(2);
 
   useEffect(() => {
     form.reset({
@@ -173,6 +180,7 @@ export default function AccountForm() {
         const response = await redeemLoyalityPoints(id);
         const updatedUser = response;
         const userData = updatedUser as { balance: number; points: number };
+
         form.setValue("balance", userData.balance);
         form.setValue("points", userData.points);
         user.balance = userData.balance;
@@ -226,7 +234,7 @@ export default function AccountForm() {
                   <FormItem>
                     <h4 className="text-lg font-medium">Balance</h4>
                     <FormControl>
-                      <Input type="number" disabled {...field} />
+                      <Input type="number" disabled {...field} value={displayBalance} />
                     </FormControl>
                     <FormDescription>This is your wallet balance.</FormDescription>
                     <FormMessage />
