@@ -4,6 +4,9 @@ import {
   THistoricalPlace,
   TNewHistoricalPlace,
 } from "@/features/tourism-governor/utils/tourism-governor-columns";
+import { uploadToFirebase } from "@/utils/firebase";
+import { rename } from "fs";
+import { renameHistoricalPlaceImage } from "@/features/tourism-governor/utils/tourism-governer-firebase";
 
 export async function fetchHistoricalPlaces() {
   const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + "/historical-places");
@@ -25,7 +28,19 @@ export async function deleteHistoricalPlace(historicalPlace: THistoricalPlace) {
   window.location.reload();
 }
 
-export async function updateHistoricalPlace(historicalPlaceData: THistoricalPlace) {
+export async function updateHistoricalPlace(historicalPlaceData: THistoricalPlace, historicalPlaceImages: FileList | null) {
+
+  const urls: string[] = await uploadToFirebase(
+    historicalPlaceImages,
+    historicalPlaceData.owner,
+    historicalPlaceData._id,
+    renameHistoricalPlaceImage,
+  );
+
+  historicalPlaceData.images = [...historicalPlaceData.images, ...urls];
+
+  
+
   await axios.patch(
     `${SERVICES_URLS.ENTERTAINMENT}/historical-places/${historicalPlaceData!._id}`,
     historicalPlaceData,
@@ -37,9 +52,29 @@ export async function updateHistoricalPlace(historicalPlaceData: THistoricalPlac
 export async function createHistoricalPlace(
   newHistoricalPlaceData: TNewHistoricalPlace,
   userId: string,
+  historicalPlaceImages: FileList | null,
 ) {
+
   newHistoricalPlaceData.owner = userId;
-  await axios.post(SERVICES_URLS.ENTERTAINMENT + "/historical-places", newHistoricalPlaceData);
+
+  
+
+  
+  const response = await axios.post<THistoricalPlace>(SERVICES_URLS.ENTERTAINMENT + "/historical-places", newHistoricalPlaceData);
+
+  if (historicalPlaceImages) {
+    const urls: string[] = await uploadToFirebase(
+      historicalPlaceImages,
+      userId,
+      response.data._id,
+      renameHistoricalPlaceImage,
+    );
+
+    await axios.patch(`${SERVICES_URLS.ENTERTAINMENT}/historical-places/${response.data._id}`, {
+      images: urls,
+    });
+  }
+
   alert("Historical Place created successfully");
   window.location.reload();
 }
