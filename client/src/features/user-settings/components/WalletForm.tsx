@@ -42,6 +42,8 @@ import { redeemLoyalityPoints } from "@/api-calls/users-api-calls";
 import BronzeRBadge from "@/assets/BronzeRBadge2.png";
 import SilverRBadge from "@/assets/SilverRBadge.png";
 import GoldRBadge from "@/assets/GoldRBadge.png";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
+import currencyExchange from "@/utils/currency-exchange";
 export const editCardContext = createContext({ editingCard: false, editedIndex: 0 });
 
 export default function AccountForm() {
@@ -73,6 +75,11 @@ export default function AccountForm() {
 
   const [editingCard, setEditingCard] = useState<boolean>(false);
   const [editedIndex, setEditedCardIndex] = useState<number>(-1);
+  const price = 100;
+  
+  const { currency } = useCurrencyStore();
+  const convertedPrice = currencyExchange("EGP", price);
+  const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
 
   type balanceValues = z.infer<typeof redeemValidator>;
   const { id } = useParams();
@@ -240,7 +247,7 @@ export default function AccountForm() {
                         id={styles["responsive-points-text"]}
                         className="text-xs text-muted-foreground ml-2"
                       >
-                        10000 Points = 100 EGP
+                        10000 Points = {displayPrice} {currency}
                       </p>
                     </div>
                     <FormControl>
@@ -259,7 +266,7 @@ export default function AccountForm() {
                                 Redeem
                               </Button>
                             </HoverCardTrigger>
-                            {!(user.points == undefined) && (user.points < 10000) && (
+                            {!(user.points == undefined) && user.points < 10000 && (
                               <>
                                 <HoverCardContent>
                                   You need to have 10000 points or more to redeem.
