@@ -16,7 +16,6 @@ export async function hasBookings(id: string, type: string) {
       (booking: PopulatedBooking) => 
         new Date(booking.selectedDate as Date) > new Date() 
     );
-    console.log(filteredResponse);
     if (filteredResponse.length > CONSTANTS.ZERO) {
       return true;
     }
