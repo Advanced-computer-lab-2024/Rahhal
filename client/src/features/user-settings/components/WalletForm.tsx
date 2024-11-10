@@ -55,7 +55,6 @@ export default function AccountForm() {
   });
 
   // Handling Displaying of Badge
-  // May need to handle maxPoints reached pending Noha
   // ================================================
   let badgeImage = BronzeRBadge;
   let badgeLevelColor = "Bronze";
