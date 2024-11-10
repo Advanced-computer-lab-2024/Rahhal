@@ -41,6 +41,18 @@ export type TOrder = {
   shippingAddress: string;
 }
 
+
+export interface IBooking {
+  user: string;
+  entity: string;
+  type: bookingType;
+  status?: TBookingStatus;
+  selectedPrice?: number;
+  selectedDate?: Date;
+  rating?: number;
+  itineraryTourGuideRating?: number;
+}
+
 export type TPopulatedBooking = {
   _id?: string;
   user: IUser;
@@ -49,6 +61,8 @@ export type TPopulatedBooking = {
   status: TBookingStatus;
   selectedPrice: number;
   selectedDate: Date;
+  rating?: number;
+  itineraryTourGuideRating?: number;
 };
 
 export type TBookingType = {
@@ -58,6 +72,8 @@ export type TBookingType = {
   status?: TBookingStatus;
   selectedPrice?: number;
   selectedDate?: Date;
+  rating?: number;
+  itineraryTourGuideRating?: number;
 };
 
 interface CancellationRule {
