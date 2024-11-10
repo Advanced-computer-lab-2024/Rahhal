@@ -80,5 +80,7 @@ export async function populateBookingHelper(booking: IBooking, user: IUser | und
     status: booking.status ?? bookingStatus.Upcoming,
     selectedPrice: booking.selectedPrice ?? CONSTANTS.ZERO,
     selectedDate: booking.selectedDate,
+    rating: booking.rating,
+    itineraryTourGuideRating: booking.itineraryTourGuideRating,
   };
 }

@@ -98,7 +98,8 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
           booking?.status === "cancelled" &&
           booking?.selectedDate &&
           selectedDate &&
-          new Date(selectedDate) < new Date())
+          new Date(selectedDate) < new Date()) ||
+        (booking && booking?.rating !== 0)
       ) {
         setIsButtonDisabled(true);
       }
@@ -208,7 +209,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
 
   const convertedPrice = currencyExchange("EGP", booking?.selectedPrice ?? 0);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
-
+  console.log(booking);
   return (
     <div>
       <RatingFormDialog
@@ -221,6 +222,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
               itinerary._id,
               RateableEntityType.ITINERARY,
               userId,
+              booking?._id ?? "",
               itineraryRatingFormRef,
             );
         }}
@@ -236,6 +238,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
               itinerary.owner,
               RateableEntityType.USER,
               userId,
+              booking?._id ?? "",
               tourGuideRatingFormRef,
             );
         }}
@@ -388,6 +391,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
             dropdownOptions={cardDropdownOptions}
             dateOptions={booking ? booking.status === "cancelled" : undefined}
             disabled={isButtonDisabled}
+            disabled2={booking ? booking.itineraryTourGuideRating !== 0 : false}
             onButtonClick={handleButtonClick}
             onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
           />

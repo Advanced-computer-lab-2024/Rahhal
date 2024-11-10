@@ -12,3 +12,4 @@ export async function createRating(rating: TRating, entityType: RateableEntityTy
     const response = await axios.post(SERVICES_URLS.RATING, data);
     return response.data;
 }
+
