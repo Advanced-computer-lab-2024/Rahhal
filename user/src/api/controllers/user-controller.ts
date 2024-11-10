@@ -3,9 +3,7 @@ import * as userService from "@/services/user-service";
 import { Role, STATUS_CODES } from "@/utils/constants";
 import { z } from "zod";
 import type { TRating } from "@/types";
-import { POINTS} from "@/utils/constants";
-
-
+import { POINTS } from "@/utils/constants";
 
 export async function getUserByUsername(req: Request, res: Response) {
   try {
@@ -122,7 +120,8 @@ export async function updateUserById(req: Request, res: Response) {
         updatedUser.balance = (user.balance as number) + amountRetrieved;
       }
     }
-    res.status(STATUS_CODES.STATUS_OK).json(user);
+    const userUpdated = await userService.updateUserById(userId, updatedUser);
+    res.status(STATUS_CODES.STATUS_OK).json(userUpdated);
   } catch (error) {
     if (error instanceof Error) {
       res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
@@ -134,7 +133,8 @@ export async function createUser(req: Request, res: Response) {
   try {
     const userData = req.body;
     if (userData.username && userData.password) {
-      const shouldCheckEmail = userData.role !== Role.admin && userData.role !== Role.tourismGovernor;
+      const shouldCheckEmail =
+        userData.role !== Role.admin && userData.role !== Role.tourismGovernor;
       const userUsername = await userService.getUserByUsername(userData.username);
       const userEmail = userData.email
         ? await userService.getUserByEmail(userData.email)
@@ -178,7 +178,6 @@ export async function deleteUser(req: Request, res: Response) {
     const userId = req.params.id;
     const deletedUser = await userService.deleteUser(userId);
     res.status(STATUS_CODES.STATUS_OK).json(deletedUser);
-
   } catch (error) {
     if (error instanceof Error) {
       res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
@@ -252,5 +251,3 @@ export async function redeemPoints(req: Request, res: Response) {
     }
   }
 }
-
-
