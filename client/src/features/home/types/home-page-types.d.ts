@@ -83,14 +83,19 @@ interface Quotation {
   currencyCode: string;
 }
 export interface TransportationData {
-  data: {
-    id: string;
-    vehicle: Vehicle;
-    serviceProvider: ServiceProvider;
-    quotation: Quotation;
-    cancellationRules: CancellationRule[];
-  }[];
+  data: TTaxiData[];
 }
+
+export type TTaxiData = {
+  id: string;
+  vehicle: Vehicle;
+  start :{
+    dateTime: string;
+  };
+  serviceProvider: ServiceProvider;
+  quotation: Quotation;
+  cancellationRules: CancellationRule[];
+};
 
 export interface TransferRequest {
   startLocationCode?: string;

@@ -4,8 +4,13 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import PaymentOptions from "@/components/PaymentOptions";
-import { useCurrencyStore } from "@/stores/currency-exchange-store";
+import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
 import currencyExchange from "@/utils/currency-exchange";
+import { createBooking } from "@/api-calls/booking-api-calls";
+import type { TBookingType, TTaxiData } from "../types/home-page-types";
+import { bookingType } from "@/utils/enums";
+import { addLoyalityPoints } from "@/api-calls/users-api-calls";
+import { currencyExchangeDefaultSpec} from "@/utils/currency-exchange";
 
 interface RouteCardProps {
   departure: string;
@@ -15,9 +20,10 @@ interface RouteCardProps {
   serviceProvider: string;
   cancellationRule?: string;
   carType: string;
-  onConfirmTrip: () => void;
   loggedIn: boolean;
   isAdult?: boolean;
+  selectedTaxi: TTaxiData;
+  userID: string;
 }
 
 function TaxiRoute({
@@ -28,13 +34,42 @@ function TaxiRoute({
   serviceProvider,
   cancellationRule,
   carType,
-  onConfirmTrip,
   loggedIn,
   isAdult,
+  selectedTaxi,
+  userID,
 }: RouteCardProps) {
   const { currency } = useCurrencyStore();
+  const { rates } = useRatesStore();
   const convertedPrice = currencyExchange(originalCurrency, amount);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
+
+  const onConfirmTrip = async () => {
+
+    const convertedPrice = (userID && selectedTaxi !== null) ? currencyExchangeDefaultSpec(
+      selectedTaxi.quotation.currencyCode,
+      parseFloat(selectedTaxi.quotation.monetaryAmount),
+      rates
+    ): undefined;
+
+    const bookingRequest: TBookingType = {
+      user: userID || "",
+      entity: selectedTaxi !== null ? selectedTaxi.id : "",
+      type: bookingType.Transportation,
+      selectedPrice: convertedPrice !== undefined ? convertedPrice : 0,
+      selectedDate: new Date(selectedTaxi.start.dateTime), //no provided date by the API
+    };
+
+    const booking = await createBooking(bookingRequest);
+
+    if (userID && convertedPrice !== undefined) {
+      await addLoyalityPoints(userID, convertedPrice);
+    }
+
+    if (booking) {
+      alert("Trip confirmed successfully!");
+    }
+  };
 
   return (
     <Card
