@@ -11,6 +11,8 @@ import { TUser } from "@/types/user";
 import { Button } from "@/components/ui/button";
 import { deleteUserNoReload } from "@/api-calls/users-api-calls";
 import { useNavigate } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
+import { AxiosError } from "axios";
 
 export default function DeleteAccountButton({ user }: { user: TUser }) {
   const [open, setOpen] = useState(false);
@@ -35,8 +37,19 @@ export default function DeleteAccountButton({ user }: { user: TUser }) {
           <Button
             variant="destructive"
             onClick={async () => {
-              await deleteUserNoReload(user);
-              navigate("/entertainment");
+              try {
+                await deleteUserNoReload(user);
+                navigate("/");
+              } catch (error) {
+                if (error instanceof AxiosError) {
+                  setOpen(false);
+                  toast({
+                    title: "Ops, something went wrong!",
+                    description: error.response?.data.error,
+                    variant: "destructive",
+                  });
+                }
+              }
             }}
           >
             Delete
