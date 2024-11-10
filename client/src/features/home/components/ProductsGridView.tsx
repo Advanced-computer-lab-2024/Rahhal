@@ -10,10 +10,10 @@ import { FilterX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { fetchAvailableProducts } from "@/api-calls/products-api-calls";
 import { Product, IRating, SortOption } from "../types/home-page-types";
-import Hoodie from "@/assets/farmhouse-main.jpeg";
 import MinMaxRangeSlider from "@/features/home/components/filter-sidebar/MinMaxRangeSlider";
 import FilterStarRating from "@/features/home/components/filter-sidebar/FilterStarRating";
 import { getPriceValue } from "../utils/price-calculator";
+
 
 // Fetching logic from the database
 const ProductGridView = () => {
@@ -149,15 +149,15 @@ const ProductGridView = () => {
             )}
 
             {!skeleton &&
-              sortedProducts.map((product: Product) => (
+              sortedProducts?.map((products: Product) => (
                 <ProductCard
-                  key={product._id}
-                  picture={Hoodie}
-                  rating={getAverageRating(product.ratings)}
-                  title={product.name}
-                  price={product.price}
-                  seller={product.seller}
-                  onClick={() => handleCardClick(product)}
+                  key={products._id}
+                  picture={products.picture}
+                  rating={getAverageRating(products.ratings)}
+                  title={products.name}
+                  price={products.price}
+                  seller={products.seller}
+                  onClick={() => handleCardClick(products)}
                 />
               ))}
           </div>
