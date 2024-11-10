@@ -209,7 +209,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
 
   const convertedPrice = currencyExchange("EGP", booking?.selectedPrice ?? 0);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
-  
+
   return (
     <div>
       <RatingFormDialog
@@ -266,7 +266,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
 
             <div className="flex justify-end">
               <div className="p-0">
-                <SharePopover link={window.location.href + "?avail=1001"} />
+                <SharePopover link={window.location.href} />
               </div>
             </div>
           </div>
