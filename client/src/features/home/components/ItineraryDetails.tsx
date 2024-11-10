@@ -70,7 +70,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
 
   const { currency } = useCurrencyStore();
 
-  React.useEffect(() => {historicalPlaceId
+  React.useEffect(() => {
     setRating(calculateAverageRating(itinerary.ratings));
   }, [itinerary.ratings]);
 
@@ -374,7 +374,9 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
             originalPrice={displayPrice}
             buttonText={cardButtonText}
             buttonColor={booking?.status === "upcoming" ? "red" : "gold"}
-            button2Text={(booking && booking?.status === "completed") ? "Review Tour Guide" : undefined}
+            button2Text={
+              booking && booking?.status === "completed" ? "Review Tour Guide" : undefined
+            }
             onButton2Click={() => tourGuideRatingFormRef.current?.click()}
             button2Color="gold"
             date={

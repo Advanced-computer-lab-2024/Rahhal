@@ -1,7 +1,10 @@
-import { useEffect, useState } from 'react';
-import { DataTable } from '@/components/data-table/DataTable';
-import { itinerariesColumns, TItinerary } from '@/features/admin/utils/itineraries-columns';
-import { fetchItineraries} from '@/api-calls/itineraries-api-calls';
+import { useEffect, useState } from "react";
+import { DataTable } from "@/components/data-table/DataTable";
+import {
+  itinerariesColumns,
+  TItinerary,
+} from "@/features/admin/utils/columns-definitions/itineraries-columns";
+import { fetchItineraries } from "@/api-calls/itineraries-api-calls";
 
 function AdminItinerariesView() {
   const [itineraries, setItineraries] = useState<TItinerary[]>([]);
@@ -13,8 +16,6 @@ function AdminItinerariesView() {
     };
     init();
   }, []);
-
-
 
   return (
     <div className="p-4">
