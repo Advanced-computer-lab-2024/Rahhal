@@ -1,9 +1,9 @@
 import { bookingAxiosInstance } from "@/utils/axios-instances";
 import { populateBooking, populateBookings } from "@/utils/booking-populator";
 
-import type { IQueryParamsFilter } from "@/utils/types";
+import type { IBookingQueryParamsFilter } from "@/utils/types";
 
-export async function getBookings(filter: Partial<IQueryParamsFilter>) {
+export async function getBookings(filter: Partial<IBookingQueryParamsFilter>) {
   try {
     let owner = "";
     if (filter.owner) {

@@ -49,7 +49,7 @@ export interface IBooking {
   itineraryTourGuideRating?: number;
 }
 
-export interface IQueryParamsFilter {
+export interface IBookingQueryParamsFilter {
   _id: string;
   user: string;
   entity: string;
