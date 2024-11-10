@@ -45,6 +45,8 @@ export function HistoricalPlacesModal({
     historicalTags: [],
   }); // holds the data fetched from the server like categories and preference tags, etc.
 
+  const [historicalPlacesPictures, setHistoricalPlacesPictures] = useState<FileList | null>(null); // holds the pictures uploaded by the user
+
   const extractIds = (data: ({ _id: string } & Record<string, any>)[]) => {
     const ids = data.map(({ _id }) => _id);
     const FIRST_ELEMENT = 0;
@@ -53,8 +55,6 @@ export function HistoricalPlacesModal({
   };
 
   const handleSubmit = async () => {
-    console.log(modalHistoricalPlaceData);
-    console.log(isNewHistoricalPlace);
     if (isNewHistoricalPlace) {
       // For fields that are referenced in the database by ids, we need to extract them first
       // since the database will only accept for these field an id or list of ids
@@ -71,8 +71,8 @@ export function HistoricalPlacesModal({
       // I am sure that userId is not null when the modal open from table add button
       // otherwise it opens from an edit action and in that situation userId is not null
       // and already stored in the database and it's not needed in updates
-      await createHistoricalPlace(newHistoricalPlace, userId!);
-    } else await updateHistoricalPlace(modalHistoricalPlaceData!);
+      await createHistoricalPlace(newHistoricalPlace, userId!, historicalPlacesPictures);
+    } else await updateHistoricalPlace(modalHistoricalPlaceData!, historicalPlacesPictures);
   };
 
   useEffect(() => {
@@ -234,7 +234,8 @@ export function HistoricalPlacesModal({
       <PictureCard
         title={"Photo Tour"}
         description={"Uploaded Photos"}
-        initialImageSources={isNewHistoricalPlace ? [] : (modalHistoricalPlaceData?.images ?? IMAGES)}
+        initialImageSources={historicalPlaceData?.images ?? []}
+        handleFileUploadCallback={(files) => setHistoricalPlacesPictures(files)}
       />
       <ReviewDisplay reviews={sampleReviews} />
 
