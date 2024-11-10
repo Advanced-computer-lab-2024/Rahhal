@@ -10,6 +10,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import { useHotelSearchBarStore } from "@/stores/hotel-search-bar-slice"
 
 interface ReservationProps{
     date: DateRange
@@ -17,11 +18,10 @@ interface ReservationProps{
 }
 
 export default function ReservationDetails({date , setDate} : ReservationProps) {
+    const { checkIn , checkOut , setCheckIn , setCheckOut} = useHotelSearchBarStore();
     const [isOpen, setIsOpen] = useState(false)
     const [activeButton, setActiveButton] = React.useState<"checkIn" | "checkOut">("checkIn")
-    const [adults, setAdults] = useState<number>(0);
-    const [children,setChildren] = useState<number>(0);
-    const [infants, setInfants] = useState<number>(0);
+    const { adults, setAdults, children, setChildren,infants,setInfants} = useHotelSearchBarStore();
     const handleDateSelect = (selectedDate: Date | undefined) => {
         if (activeButton === "checkIn" && selectedDate) {
             let { to } = date || {};
@@ -29,12 +29,14 @@ export default function ReservationDetails({date , setDate} : ReservationProps) 
                 to = undefined
             const newDate = { from: selectedDate, to } as DateRange;
             setDate(newDate);
+            setCheckIn(selectedDate)
             setActiveButton("checkOut")
         }
         else if (activeButton === "checkOut" && selectedDate) {
             const { from } = date || {};
             const newDate = { from, to: selectedDate } as DateRange;
             setDate(newDate);
+            setCheckOut(selectedDate)
             setActiveButton("checkIn")
             setIsOpen(false)
 
@@ -45,12 +47,13 @@ export default function ReservationDetails({date , setDate} : ReservationProps) 
     const handleDateChange = (date: DateRange | undefined) => {
         if (date) {
             setDate(date);
-
+            setCheckIn(date.from)
+            setCheckOut(date.to)
         }
     };
 
     return (
-        <div className={cn("grid gap-2")}>
+        <div className={cn("grid gap-2 h-fit")}>
             <div className="border rounded-lg w-64 h-fit overflow-hidden border-gray-500">
             <Popover open={isOpen} onOpenChange={setIsOpen}>
                 <PopoverTrigger asChild>

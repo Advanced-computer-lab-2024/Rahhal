@@ -363,6 +363,7 @@ export default async function entryPoint(query: string) {
     }
     fullData.push(...await Promise.all(results));
 
+    const filteredData = fullData.filter((hotel) => hotel !== undefined && hotel !== null && hotel.images !== undefined && hotel.images.length > 0);
 
-    return fullData;
+    return filteredData;
 }
