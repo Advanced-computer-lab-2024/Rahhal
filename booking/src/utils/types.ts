@@ -19,5 +19,6 @@ export interface IBooking {
   status?: bookingStatus;
   selectedPrice?: number;
   selectedDate?: Date;
-  isRated?: number;
+  rating?: number;
+  itineraryTourGuideRating?: number;
 }

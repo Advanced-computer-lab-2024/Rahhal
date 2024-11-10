@@ -31,6 +31,10 @@ const bookingSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  itineraryTourGuideRating: {
+    type: Number,
+    default: 0,
+  },
 });
 
 export default mongoose.model("Booking", bookingSchema);

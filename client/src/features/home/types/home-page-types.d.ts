@@ -49,7 +49,8 @@ export interface IBooking {
   status?: TBookingStatus;
   selectedPrice?: number;
   selectedDate?: Date;
-  isRated?: number;
+  rating?: number;
+  itineraryTourGuideRating?: number;
 }
 
 export type TPopulatedBooking = {
@@ -60,7 +61,8 @@ export type TPopulatedBooking = {
   status: TBookingStatus;
   selectedPrice: number;
   selectedDate: Date;
-  isRated?: number;
+  rating?: number;
+  itineraryTourGuideRating?: number;
 };
 
 export type TBookingType = {
@@ -70,6 +72,8 @@ export type TBookingType = {
   status?: TBookingStatus;
   selectedPrice?: number;
   selectedDate?: Date;
+  rating?: number;
+  itineraryTourGuideRating?: number;
 };
 
 interface CancellationRule {
