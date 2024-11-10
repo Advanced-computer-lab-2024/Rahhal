@@ -174,7 +174,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
         type: "activity",
         status: "upcoming",
         selectedPrice: booking.selectedPrice,
-        selectedDate: selectedDate ? new Date(selectedDate) : new Date(),
+        selectedDate: selectedDate ? new Date(selectedDate) : activity.date,
       }).then((response) => {
         const booking = response as TPopulatedBooking;
         setBooking(booking);
