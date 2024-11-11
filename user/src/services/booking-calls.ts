@@ -42,7 +42,7 @@ export async function deleteEntities(filter : {owner:string , role:Role}){
                 break;
             case Role.seller:
                 url = "/products/";
-                params = {sellerId : filter.owner}
+                params = {seller : filter.owner}
                 axiosInstance = productAxiosInstance;
                 break;
         }
