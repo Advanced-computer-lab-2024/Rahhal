@@ -128,7 +128,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
         // change bookingId in URL
         setTimeout(() => {
           window.location.href = `/my-trips-details?userId=${userId}&eventId=${itinerary._id}&bookingId=${userBooking._id}&type=itinerary`;
-        }, 500);
+        }, 2000);
       }
     });
   }, []);
@@ -145,10 +145,13 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
       }).then((booking) => {
         const response = booking as TPopulatedBooking;
         setBooking(response);
-        // update bookingId in the URL
-        setTimeout(() => {
-          window.location.href = `/my-trips-details?userId=${userId}&eventId=${itinerary._id}&bookingId=${response._id}&type=itinerary`;
-        }, 2000);
+        
+        addLoyalityPoints(userId, response.selectedPrice);
+        toast({
+          title: "Success",
+          description: "Itinerary has been booked successfully",
+          duration: 5000,
+        });
       });
 
       return;
