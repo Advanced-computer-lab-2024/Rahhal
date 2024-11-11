@@ -531,18 +531,6 @@ export default function ProfileForm() {
               </div>
             </>
           )}
-          {user.role !== UserRoleEnum.tourist && (
-            <div>
-              <h1 className="font-medium mt-6 mb-4">Uploaded Documents</h1>
-              <UserDocuments
-                certificatesUrls={user.certificates}
-                governmentalDocumentsUrls={[
-                  ...(user.nationalID ? [user.nationalID] : []),
-                  ...(user.taxRegistration ? [user.taxRegistration] : []),
-                ]}
-              />
-            </div>
-          )}
           {/* URLs */}
           {/* Website */}
           {user.role == "advertiser" && (
@@ -603,6 +591,18 @@ export default function ProfileForm() {
                 />
               </div>
             </>
+          )}
+          {user.role !== UserRoleEnum.tourist && (
+            <div>
+              <h1 className="font-medium mt-6 mb-4">Uploaded Documents</h1>
+              <UserDocuments
+                certificatesUrls={user.certificates}
+                governmentalDocumentsUrls={[
+                  ...(user.nationalID ? [user.nationalID] : []),
+                  ...(user.taxRegistration ? [user.taxRegistration] : []),
+                ]}
+              />
+            </div>
           )}
           {editForm && (
             <>
