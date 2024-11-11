@@ -37,7 +37,8 @@ export async function deleteUser(userId: string) {
       throw new Error(errorMessage);
     }
   }
-  deleteEntities({owner: userId , role: user.role});
+  if(user.role !== Role.tourist && user.role !== Role.tourismGovernor && user.role !== Role.admin)
+    deleteEntities({owner: userId , role: user.role});
   return await userRepository.deleteUser(userId);
 }
 
