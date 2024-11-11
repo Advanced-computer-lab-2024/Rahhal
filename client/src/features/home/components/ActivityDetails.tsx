@@ -276,6 +276,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
   const convertedPrice = currencyExchange("EGP", booking?.selectedPrice ?? 0);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
 
+  
   return (
     <div>
       <RatingFormDialog
@@ -380,7 +381,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
             date={booking ? formattedDate : undefined}
             time={booking ? formattedTime : undefined}
             dropdownOptions={cardDropdownOptions}
-            disabled={isButtonDisabled}
+            disabled={isButtonDisabled && !selectedTicket}
             onButtonClick={handleButtonClick}
             discountedPrice={
               specialDiscount != 0 && booking && convertedPrice

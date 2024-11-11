@@ -390,7 +390,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
             }
             dropdownOptions={cardDropdownOptions}
             dateOptions={booking ? booking.status === "cancelled" : undefined}
-            disabled={isButtonDisabled}
+            disabled={isButtonDisabled && !selectedDate}
             disabled2={booking ? booking.itineraryTourGuideRating !== 0 : false}
             onButtonClick={handleButtonClick}
             onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
