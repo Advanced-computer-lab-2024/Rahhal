@@ -9,6 +9,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link, useParams } from "react-router-dom";
 import { TUser } from "@/types/user";
 import { getUserById } from "@/api-calls/users-api-calls";
+import TourGuideReviews from "./TourGuideReviews";
+import ReviewDisplay from "@/components/Ratings";
+import { sampleReviews } from "@/lib/utils";
 
 function TourGuideView() {
   const { id } = useParams<{ id: string }>();
@@ -40,13 +43,18 @@ function TourGuideView() {
           </Avatar>
         </Link>
       </div>
-      <DataTable
-        data={itineraries}
-        columns={itinerariesColumns}
-        newRowModal={
-          <ItinerariesModal itineraryData={undefined} dialogTrigger={<DataTableAddButton />} />
-        }
-      />
+      <div className="flex flex-col container m-auto gap-10">
+        <DataTable
+          data={itineraries}
+          columns={itinerariesColumns}
+          newRowModal={
+            <ItinerariesModal itineraryData={undefined} dialogTrigger={<DataTableAddButton />} />
+          }
+        />
+        <div className="con">
+          <ReviewDisplay reviews={user?.ratings ?? sampleReviews} />
+        </div>
+      </div>
     </>
   );
 }
