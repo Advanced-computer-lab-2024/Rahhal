@@ -23,6 +23,7 @@ export interface IItinerary {
   active: boolean;
   appropriate: boolean;
   owner: string;
+  deleted: boolean;
 }
 
 const itinerarySchema = new mongoose.Schema<IItinerary>({
@@ -89,10 +90,11 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
     },
   },
   preferenceTags: { type: [mongoose.Schema.Types.ObjectId], ref: "PreferenceTag" },
-  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
+  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
   active: { type: Boolean, required: true, default: true },
   appropriate: { type: Boolean, required: true, default: true },
   owner: { type: String, required: true },
+  deleted: { type: Boolean, default: false },
 });
 
 const Itinerary = mongoose.model<IItinerary>("Itinerary", itinerarySchema);

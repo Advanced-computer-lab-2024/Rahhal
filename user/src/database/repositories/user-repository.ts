@@ -4,20 +4,20 @@ import User from "../models/User";
 
 //get specific user
 export async function getUserByUsername(username: string): Promise<IUser | null> {
-  return await User.findOne({ username: username });
+  return await User.findOne({ username: username , deleted:false });
 }
 
 export async function getUserByEmail(email: string): Promise<IUser | null> {
-  return await User.findOne({ email: email });
+  return await User.findOne({ email: email , deleted:false });
 }
 
 export async function getUserById(userId: string): Promise<IUser | null> {
-  return await User.findById(userId);
+  return await User.findById(userId,{deleted:false});
 }
 
 //get all users or filter them based on given parameters
 export async function getAllUsers(approved?: boolean): Promise<IUser[] | null> {
-  return await User.find(approved !== undefined ? { approved: approved } : {});
+  return await User.find(approved !== undefined ? { approved: approved , deleted:false} : {});
 }
 
 //update user
@@ -42,7 +42,7 @@ export async function createUser(userData: IUser) {
 }
 
 export async function deleteUser(userId: string) {
-  return await User.findByIdAndDelete(userId);
+  return await User.findByIdAndUpdate(userId , {deleted: true}, {new: true});
 }
 
 export async function addRating(userRating: TRating, ratedUserId: string) {

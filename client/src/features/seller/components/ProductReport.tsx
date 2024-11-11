@@ -49,7 +49,7 @@ function ProductReport() {
     if (!productId) return;
     fetchProductOrders(productId).then((data) => {
       const orders = data as TOrder[];
-      
+
       setProductOrders(orders);
 
       // search for the product name
@@ -57,9 +57,7 @@ function ProductReport() {
         const productName = orders[0].items.find((item) => item.productId === productId)?.name;
         setProductName(productName || "Product Name");
       }
-      
-    }
-    );
+    });
   }, []);
 
   useEffect(() => {
@@ -145,9 +143,9 @@ function ProductReport() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <StatCard title="Total Revenue" value={"$" + stats.totalRevenue.toFixed(2)} />
+          <StatCard title="Total Revenue" value={"EGP " + stats.totalRevenue.toFixed(2)} />
           <StatCard title="Total Quantity Sold" value={stats.totalQuantitySold.toString()} />
-          <StatCard title="Average Price" value={"$" + stats.averagePrice.toFixed(2)} />
+          <StatCard title="Average Price" value={"EGP " + stats.averagePrice.toFixed(2)} />
           <StatCard title="Pending Orders" value={stats.pendingOrders.toString()} />
         </div>
 

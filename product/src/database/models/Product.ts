@@ -12,6 +12,7 @@ export interface IProduct {
   ratings: IRating[];
   quantity: number;
   archived: boolean;
+  deleted: boolean;
   reviews: { user: string; rating: number; comment: string }[];
 }
 
@@ -45,6 +46,7 @@ const productSchema = new mongoose.Schema<IProduct>({
       message: "Invalid rating format, must be a number between 0 and 5",
     },
   },
+  deleted: { type: Boolean, default: false },
 });
 
 const Product = mongoose.model<IProduct>("Product", productSchema);

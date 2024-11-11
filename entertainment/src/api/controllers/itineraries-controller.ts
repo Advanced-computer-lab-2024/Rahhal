@@ -6,12 +6,9 @@ import type { IRating } from "@/database/shared";
 export async function getAllItineraries(req: express.Request, res: express.Response) {
   try {
     const ownerId = req.query.ownerId as string;
-    let itineraries;
-    if (ownerId) {
-      itineraries = await itinerariesService.getItinerariesByOwner(ownerId);
-    } else {
-      itineraries = await itinerariesService.getAllItineraries();
-    }
+    const filter = ownerId ? { owner: ownerId } : {};
+    const itineraries = await itinerariesService.getAllItineraries(filter);
+
     res.status(STATUS_CODES.STATUS_OK).json(itineraries);
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({

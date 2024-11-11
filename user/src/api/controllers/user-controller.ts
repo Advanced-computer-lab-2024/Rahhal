@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
 import * as userService from "@/services/user-service";
-import { STATUS_CODES } from "@/utils/constants";
+import { Role, STATUS_CODES } from "@/utils/constants";
 import { z } from "zod";
 import type { TRating } from "@/types";
-import { POINTS , LEVELS } from "@/utils/constants";
+import { POINTS } from "@/utils/constants";
 
 export async function getUserByUsername(req: Request, res: Response) {
   try {
@@ -82,74 +82,46 @@ export async function getUserByEmail(req: Request, res: Response) {
       res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
     }
   }
-} 
+}
 
 //update user by userId
 export async function updateUserById(req: Request, res: Response) {
   try {
     const userId = req.params.id;
-    const updatedUser = req.body;
+    let updatedUser = req.body;
     if (updatedUser.email) {
       const email = await userService.getUserByEmail(updatedUser.email);
-      if (email && !email._id.equals(userId)) {
+      if (email && !email.deleted && email.email !== "" && !email._id.equals(userId)) {
         res
           .status(STATUS_CODES.CONFLICT)
           .json({ error: "This email is registered to another user" });
         return;
       }
     }
+    const user = await userService.getUserById(userId);
+    if (!user) {
+      res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
+      return;
+    }
     if (req.query.amountPaid) {
       const amountPaid = parseFloat(req.query.amountPaid as string);
       if (!isNaN(amountPaid)) {
-        const user = await userService.getUserById(userId);
-
-        if (!user) {
-          res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
-          return;
-        } else if (user.role !== "tourist") {
+        if (user.role !== Role.tourist) {
           res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Only tourists can have points" });
           return;
-        } else { 
-
-          let userLevelPointRate = POINTS.LEVEL3POINTRATE;
-          if(user.level === LEVELS.LEVEL1){
-          userLevelPointRate  = POINTS.LEVEL1POINTRATE;
-          }
-          else if(user.level === LEVELS.LEVEL2){
-          userLevelPointRate  = POINTS.LEVEL2POINTRATE;
-          }
-          updatedUser.points = Math.ceil(user.points as number + amountPaid * userLevelPointRate );
-          updatedUser.accumulativePoints = Math.ceil(user.accumulativePoints as number + amountPaid * userLevelPointRate );
-          
-
-          if(updatedUser.accumulativePoints >= POINTS.LEVEL1MAXPOINTS) {
-            updatedUser.level = LEVELS.LEVEL2;
-          }
-          if(updatedUser.accumulativePoints >= POINTS.LEVEL2MAXPOINTS) {
-            updatedUser.level = LEVELS.LEVEL3;
-          } 
-
+        } else {
+          updatedUser = userService.updatePointsAndLevel(user, amountPaid);
         }
       }
     }
     if (req.query.amountRetrieved) {
       const amountRetrieved = parseFloat(req.query.amountRetrieved as string);
       if (!isNaN(amountRetrieved)) {
-        const user = await userService.getUserById(userId);
-        if (!user) {
-          res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
-          return;
-        } else{
-          updatedUser.balance = user.balance as number + amountRetrieved;
-        }
+        updatedUser.balance = (user.balance as number) + amountRetrieved;
       }
     }
-    const user = await userService.updateUserById(userId, updatedUser);
-    if (!user) {
-      res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
-    } else {
-      res.status(STATUS_CODES.STATUS_OK).json(user);
-    }
+    const userUpdated = await userService.updateUserById(userId, updatedUser);
+    res.status(STATUS_CODES.STATUS_OK).json(userUpdated);
   } catch (error) {
     if (error instanceof Error) {
       res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
@@ -161,19 +133,28 @@ export async function createUser(req: Request, res: Response) {
   try {
     const userData = req.body;
     if (userData.username && userData.password) {
-      const shouldCheckEmail = userData.role !== "admin" && userData.role !== "tourismGovernor";
+      const shouldCheckEmail =
+        userData.role !== Role.admin && userData.role !== Role.tourismGovernor;
       const userUsername = await userService.getUserByUsername(userData.username);
-      const userEmail = userData.email? await userService.getUserByEmail(userData.email) : undefined;
+      const userEmail = userData.email
+        ? await userService.getUserByEmail(userData.email)
+        : undefined;
 
-      if (userUsername && userEmail && shouldCheckEmail) {
+      if (
+        userUsername &&
+        userEmail &&
+        shouldCheckEmail &&
+        !userUsername.deleted &&
+        !userEmail.deleted
+      ) {
         res
           .status(STATUS_CODES.CONFLICT)
           .json({ error: "Username already exists and this email is registered to another user" });
         return;
-      } else if (userUsername) {
+      } else if (userUsername && !userUsername.deleted) {
         res.status(STATUS_CODES.CONFLICT).json({ error: "Username already exists" });
         return;
-      } else if (userEmail && shouldCheckEmail) {
+      } else if (userEmail && shouldCheckEmail && !userEmail.deleted) {
         res
           .status(STATUS_CODES.CONFLICT)
           .json({ error: "This email is registered to another user" });
@@ -195,13 +176,8 @@ export async function createUser(req: Request, res: Response) {
 export async function deleteUser(req: Request, res: Response) {
   try {
     const userId = req.params.id;
-    const user = await userService.getUserById(userId);
-    if (!user) {
-      res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
-    } else {
-      const deletedUser = await userService.deleteUser(userId);
-      res.status(STATUS_CODES.STATUS_OK).json(deletedUser);
-    }
+    const deletedUser = await userService.deleteUser(userId);
+    res.status(STATUS_CODES.STATUS_OK).json(deletedUser);
   } catch (error) {
     if (error instanceof Error) {
       res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
@@ -255,22 +231,17 @@ export async function redeemPoints(req: Request, res: Response) {
     if (!user) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
       return;
-    } else if (user.role !== "tourist") {
+    } else if (user.role !== Role.tourist) {
       res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Only tourists can redeem points" });
       return;
-    } else if(user.points) {
-      if (user.points < POINTS.MINPOINTS) {
+    } else {
+      if (user.points! < POINTS.MINPOINTS) {
         res
           .status(STATUS_CODES.BAD_REQUEST)
           .json({ error: "You Have to have at least 10000 points to be able to redeem them!" });
         return;
-      } else{
-        const updatedUser = user;
-        const avgBalance = user.points / POINTS.MINPOINTS;
-        updatedUser.points = user.points % POINTS.MINPOINTS;
-        updatedUser.balance = user.balance as number + Math.floor(avgBalance) * POINTS.AMOUNTFORMINPOINTS;
-        console.log(updatedUser);
-        const newUser = await userService.updateUserById(userId, updatedUser);
+      } else {
+        const newUser = userService.redeemPoints(user);
         res.status(STATUS_CODES.STATUS_OK).json(newUser);
       }
     }

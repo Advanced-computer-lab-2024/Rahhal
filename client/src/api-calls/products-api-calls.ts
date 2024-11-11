@@ -4,9 +4,12 @@ import axios from "axios";
 import { renameProductImage } from "@/features/seller/utils/seller-firebase";
 import { uploadToFirebase } from "@/utils/firebase";
 
-//TODO - later it should be by owner and some other type of handling
 export async function fetchUserProducts(userId: string) {
-  const response = await axios.get(SERVICES_URLS.USER + `/users/${userId}/products`);
+  const response = await axios.get(SERVICES_URLS.PRODUCT + "/products", {
+    params: {
+      seller: userId,
+    },
+  });
   return response.data;
 }
 
@@ -32,8 +35,8 @@ export async function createProduct(
   productImages: FileList | null,
 ) {
   newProductData.picture = "placeholder"; // TODO: Change this to Rahhal logo
-  newProductData.seller = userId;
   newProductData.sellerName = userName;
+  newProductData.seller = userId;
   const response = await axios.post(SERVICES_URLS.PRODUCT + "/products", newProductData);
   const productId = (response.data as TProduct)._id;
 

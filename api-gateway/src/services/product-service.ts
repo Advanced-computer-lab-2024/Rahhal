@@ -1,9 +1,9 @@
 import { productAxiosInstance } from "@/utils/axios-instances";
-import type { TRating } from "@/utils/types";
+import type { IProduct, TRating } from "@/utils/types";
 
 // Products service calls
-export async function getAllProducts() {
-  return await productAxiosInstance.get("/products");
+export async function getAllProducts(filter: Partial<IProduct>) {
+  return await productAxiosInstance.get("/products", { params: filter });
 }
 
 export async function getAvailableProducts() {

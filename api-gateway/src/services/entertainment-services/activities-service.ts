@@ -1,8 +1,8 @@
-import type { TRating } from "@/utils/types";
+import type { IActivity, TRating } from "@/utils/types";
 import { entertainmentAxiosInstance } from "@/utils/axios-instances";
 
-export async function getAllActivities() {
-  return await entertainmentAxiosInstance.get("/activities");
+export async function getAllActivities(owner: Partial<IActivity>) {
+  return await entertainmentAxiosInstance.get("/activities", { params: owner });
 }
 
 export async function getAppropriateActivities() {

@@ -3,20 +3,16 @@ import type { IItinerary } from "../models/Itinerary";
 import type { IRating } from "@/database/shared";
 
 // Get all itineraries
-export async function getAllItineraries() {
-  return await Itinerary.find().populate("category").populate("preferenceTags").exec();
-}
-
-// Get all active & appropriate itineraries
-export async function getActiveAppropriateItineraries() {
-  return await Itinerary.find({ active: true, appropriate: true })
+export async function getAllItineraries(filter: Partial<IItinerary>) {
+  return await Itinerary.find({ deleted: false, ...filter })
     .populate("category")
     .populate("preferenceTags")
     .exec();
 }
 
-export async function getItinerariesByOwner(ownerId: string) {
-  return await Itinerary.find({ owner: ownerId })
+// Get all active & appropriate itineraries
+export async function getActiveAppropriateItineraries() {
+  return await Itinerary.find({ active: true, appropriate: true, deleted: false })
     .populate("category")
     .populate("preferenceTags")
     .exec();
@@ -43,7 +39,7 @@ export async function updateItinerary(id: string, itineraryData: IItinerary) {
 
 // Delete an itinerary
 export async function deleteItinerary(id: string) {
-  return await Itinerary.findByIdAndDelete(id);
+  return await Itinerary.findByIdAndUpdate(id, { deleted: true }, { new: true });
 }
 
 export async function addRating(userRating: IRating, itineraryId: string) {

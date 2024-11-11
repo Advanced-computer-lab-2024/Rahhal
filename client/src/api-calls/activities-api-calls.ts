@@ -14,11 +14,15 @@ export const fetchActivities = async () => {
 export const fetchActivityById = async (activityId: string) => {
   const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/activities/${activityId}`);
   return response.data;
-}
+};
 
 // TODO - later it should be by owner and some other type of handling
 export const fetchUserActivities = async (userId: string) => {
-  const response = await axios.get(SERVICES_URLS.USER + `/users/${userId}/activities`);
+  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/activities/`, {
+    params: {
+      owner: userId,
+    },
+  });
   return response.data;
 };
 

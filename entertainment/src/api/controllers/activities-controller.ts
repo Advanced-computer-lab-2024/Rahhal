@@ -5,13 +5,8 @@ import type { IRating } from "@/database/shared";
 
 export async function getAllActivities(req: Request, res: Response) {
   try {
-    const ownerId = req.query.ownerId as string;
-    let activities;
-    if (ownerId) {
-      activities = await activitiesService.getActivitiesByOwner(ownerId);
-    } else {
-      activities = await activitiesService.getAllActivities();
-    }
+    const filter = req.query;
+    const activities = await activitiesService.getAllActivities(filter);
     res.status(STATUS_CODES.STATUS_OK).json(activities);
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({

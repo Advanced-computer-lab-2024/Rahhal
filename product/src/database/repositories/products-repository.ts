@@ -3,22 +3,18 @@ import Product from "../models/Product";
 import type { IProduct } from "../models/Product";
 
 // Get all products
-export async function getAllProducts() {
-  return Product.find();
+export async function getAllProducts(filter: Partial<IProduct>) {
+  return Product.find({ deleted: false, ...filter });
 }
 
 // Get all available products
 export async function getAvailableProducts() {
-  return Product.find({ archived: false });
+  return Product.find({ archived: false, deleted: false });
 }
 
 // Get product by id
 export async function getProductById(id: string) {
-  return Product.findById(id);
-}
-
-export async function getActivitiesBySeller(sellerId: string) {
-  return await Product.find({ seller: sellerId }).exec();
+  return Product.findById(id, { deleted: false });
 }
 
 // Create a new product
@@ -45,5 +41,5 @@ export async function updateProduct(id: string, productData: IProduct) {
 
 // Delete a product
 export async function deleteProduct(id: string) {
-  return await Product.findByIdAndDelete(id);
+  return await Product.findByIdAndUpdate(id, { deleted: true }, { new: true });
 }
