@@ -119,7 +119,8 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
           selectedDate &&
           new Date(selectedDate) < new Date()) ||
         (!booking && selectedDate && new Date(selectedDate) < new Date()) ||
-        (booking && booking?.rating !== 0)
+        (booking && booking?.rating !== 0) ||
+        !activity.isBookingOpen
       ) {
         setIsButtonDisabled(true);
       }
@@ -380,7 +381,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
             date={booking ? formattedDate : undefined}
             time={booking ? formattedTime : undefined}
             dropdownOptions={cardDropdownOptions}
-            disabled={isButtonDisabled}
+            disabled={isButtonDisabled && !selectedTicket}
             onButtonClick={handleButtonClick}
             discountedPrice={
               specialDiscount != 0 && booking && convertedPrice
