@@ -119,7 +119,8 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
           selectedDate &&
           new Date(selectedDate) < new Date()) ||
         (!booking && selectedDate && new Date(selectedDate) < new Date()) ||
-        (booking && booking?.rating !== 0)
+        (booking && booking?.rating !== 0) ||
+        !activity.isBookingOpen
       ) {
         setIsButtonDisabled(true);
       }
@@ -276,7 +277,6 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
   const convertedPrice = currencyExchange("EGP", booking?.selectedPrice ?? 0);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
 
-  
   return (
     <div>
       <RatingFormDialog
