@@ -31,7 +31,7 @@ export function Login() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
       setDisabled(false);
       if (response.role === "admin") {
-        navigate(`/admin`);
+        navigate(`/admin/${response._id}`);
       } else if (response.role === "tourGuide") {
         navigate(`/tour-guide/${response._id}`);
       } else if (response.role === "tourist") {
