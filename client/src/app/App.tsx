@@ -14,7 +14,7 @@ import UserView from "@/features/admin/components/UserTable";
 import CategoryView from "@/features/admin/components/CategoriesTable";
 import GeneralGridView from "@/features/home/components/GeneralGridView";
 import ProductGridView from "@/features/home/components/ProductsGridView";
-import TourGuideView from "@/features/tour-guide/components/ItinerariesTable";
+import TourGuideView from "@/features/tour-guide/components/TourGuideView";
 import { Login } from "@/components/Login";
 import PreferenceTagsAdminView from "@/features/admin/components/PreferenceTagsTable";
 import AdminComplaintsView from "@/features/admin/components/ComplaintsTable";
@@ -57,7 +57,7 @@ export default function App() {
               <Route path="/shop" element={<ProductGridView />} />
               <Route path="/travel" element={<TravelPage loggedIn={false} />} />
               <Route path="/stays" element={<HotelsPage loggedIn={false} />} />
-              <Route path="/stays/hotel/:index" element={<HotelDetails hotels={hotels}/>} />
+              <Route path="/stays/hotel/:index" element={<HotelDetails hotels={hotels} />} />
             </Route>
             <Route element={<TouristHomePage loggedIn={true} />}>
               <Route path="/entertainment/:id" element={<GeneralGridView />} />
@@ -67,7 +67,7 @@ export default function App() {
               <Route path="/travel/:id" element={<TravelPage loggedIn={true} />} />
               <Route path="/my-orders/:id" element={<MyOrdersPage />} />
               <Route path="/stays/:id" element={<HotelsPage loggedIn={true} />} />
-              <Route path="/stays/:id/hotel/:index" element={<HotelDetails hotels={hotels}/>} />
+              <Route path="/stays/:id/hotel/:index" element={<HotelDetails hotels={hotels} />} />
             </Route>
             <Route path="/signup" element={<SignupSelector />} />
             <Route path="/signin" element={<Login />} />
