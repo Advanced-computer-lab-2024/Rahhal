@@ -161,7 +161,7 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
         // change bookingId in URL
         setTimeout(() => {
           window.location.href = `/my-trips-details?userId=${userId}&eventId=${activity._id}&bookingId=${userBooking._id}&type=activity`;
-        }, 500);
+        }, 2000);
       }
     });
   }, []);
@@ -177,11 +177,12 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
         selectedDate: selectedDate ? new Date(selectedDate) : new Date(),
       }).then((response) => {
         const booking = response as TPopulatedBooking;
-
+        setBooking(booking);
+        addLoyalityPoints(userId, booking.selectedPrice);
         // update bookingId in URL
         setTimeout(() => {
           window.location.href = `/my-trips-details?userId=${userId}&eventId=${activity._id}&bookingId=${booking._id}&type=activity`;
-        }, 500);
+        }, 2000);
       });
 
       return;
