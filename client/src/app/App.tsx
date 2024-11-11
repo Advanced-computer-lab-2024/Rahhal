@@ -14,7 +14,7 @@ import UserView from "@/features/admin/components/UserTable";
 import CategoryView from "@/features/admin/components/CategoriesTable";
 import GeneralGridView from "@/features/home/components/GeneralGridView";
 import ProductGridView from "@/features/home/components/ProductsGridView";
-import TourGuideView from "@/features/tour-guide/components/ItinerariesTable";
+import TourGuideView from "@/features/tour-guide/components/TourGuideView";
 import { Login } from "@/components/Login";
 import PreferenceTagsAdminView from "@/features/admin/components/PreferenceTagsTable";
 import AdminComplaintsView from "@/features/admin/components/ComplaintsTable";
