@@ -148,7 +148,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
         // update bookingId in the URL
         setTimeout(() => {
           window.location.href = `/my-trips-details?userId=${userId}&eventId=${itinerary._id}&bookingId=${response._id}&type=itinerary`;
-        }, 500);
+        }, 2000);
       });
 
       return;
@@ -206,8 +206,8 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
           label: formatDate(new Date(date.Date)) + " " + formatTime(new Date(date.Time)),
         }))
       : undefined;
-
-  const convertedPrice = currencyExchange("EGP", booking?.selectedPrice ?? 0);
+  
+  const convertedPrice = currencyExchange("EGP", booking?.selectedPrice ? booking.selectedPrice : price);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
 
   return (
