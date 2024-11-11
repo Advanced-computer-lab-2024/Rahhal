@@ -202,7 +202,8 @@ const ActivityDetailsPage: React.FC<ActivityDetailsProps> = ({
           selectedDate: selectedDate ? new Date(selectedDate) : new Date(),
         });
       }
-    } else if (booking && booking?.status === "completed") {
+      // } else if (booking && booking?.status === "completed") {
+    } else if (booking && booking?.selectedDate && new Date(booking.selectedDate) < new Date()) {
       // redirect to review page
       ratingFormRef.current?.click();
     } else {

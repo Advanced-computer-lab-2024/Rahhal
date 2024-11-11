@@ -145,7 +145,7 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
       }).then((booking) => {
         const response = booking as TPopulatedBooking;
         setBooking(response);
-        
+
         addLoyalityPoints(userId, response.selectedPrice);
         toast({
           title: "Success",
@@ -170,7 +170,8 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
           selectedDate: selectedDate ? new Date(selectedDate) : new Date(),
         });
       }
-    } else if (booking && booking?.status === "completed") {
+      // } else if (booking && booking?.status === "completed") {
+    } else if (booking && booking?.selectedDate && new Date(booking.selectedDate) < new Date()) {
       // redirect to review page
       itineraryRatingFormRef.current?.click();
     } else {
@@ -209,8 +210,11 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
           label: formatDate(new Date(date.Date)) + " " + formatTime(new Date(date.Time)),
         }))
       : undefined;
-  
-  const convertedPrice = currencyExchange("EGP", booking?.selectedPrice ? booking.selectedPrice : price);
+
+  const convertedPrice = currencyExchange(
+    "EGP",
+    booking?.selectedPrice ? booking.selectedPrice : price,
+  );
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
 
   return (
