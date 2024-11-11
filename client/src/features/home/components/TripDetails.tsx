@@ -49,12 +49,14 @@ export const handleTripRatingSubmit = async (
     // update 'rated' field in user
     await updateBookingRequest(bookingId, { itineraryTourGuideRating: values.rating });
   }
+  // refresh the page
+  setTimeout(() => {
+    window.location.reload();
+  }, 2000);
 
   // close the dialog
   ratingFormRef.current?.click();
 };
-
-
 
 export const tripRatingEntity: Record<string, TRatingEntity> = {
   rating: {
