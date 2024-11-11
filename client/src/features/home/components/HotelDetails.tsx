@@ -52,7 +52,7 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
   const { checkIn, checkOut, setCheckIn, adults } = useHotelSearchBarStore();
   if (checkIn.length === 0) setCheckIn(startOfToday());
   const [date, setDate] = useState<DateRange>({
-    from: checkIn[0],
+    from: checkIn[0]? checkIn[0] : startOfToday(),
     to: checkOut[0],
   });
   const { toast } = useToast();
