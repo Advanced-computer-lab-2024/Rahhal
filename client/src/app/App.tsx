@@ -57,7 +57,7 @@ export default function App() {
               <Route path="/shop" element={<ProductGridView />} />
               <Route path="/travel" element={<TravelPage loggedIn={false} />} />
               <Route path="/stays" element={<HotelsPage loggedIn={false} />} />
-              <Route path="/stays/hotel/:index" element={<HotelDetails hotels={hotels}/>} />
+              <Route path="/stays/hotel/:index" element={<HotelDetails hotels={hotels} />} />
             </Route>
             <Route element={<TouristHomePage loggedIn={true} />}>
               <Route path="/entertainment/:id" element={<GeneralGridView />} />
@@ -67,7 +67,7 @@ export default function App() {
               <Route path="/travel/:id" element={<TravelPage loggedIn={true} />} />
               <Route path="/my-orders/:id" element={<MyOrdersPage />} />
               <Route path="/stays/:id" element={<HotelsPage loggedIn={true} />} />
-              <Route path="/stays/:id/hotel/:index" element={<HotelDetails hotels={hotels}/>} />
+              <Route path="/stays/:id/hotel/:index" element={<HotelDetails hotels={hotels} />} />
             </Route>
             <Route path="/signup" element={<SignupSelector />} />
             <Route path="/signin" element={<Login />} />
@@ -98,6 +98,7 @@ export default function App() {
             <Route path="/tour-guide/:id" element={<TourGuideView />} />
 
             <Route path="/admin" element={<AdminHomepage />} />
+            <Route path="/admin/:id" element={<AdminHomepage />} />
             <Route path="/admin/categories" element={<CategoryView />} />
             <Route path="/admin/users" element={<UserView />} />
             <Route path="/admin/users/requests" element={<UsersPendingRequests />} />
