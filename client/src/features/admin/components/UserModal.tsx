@@ -13,6 +13,8 @@ import { UserRoleEnum } from "@/utils/enums";
 import UserDocuments from "@/components/UserDocuments";
 import KeyValuePairGrid from "@/components/KeyValuePairGrid";
 import { format } from "../utils/key-value-formatters/user-details-formatter";
+import PictureViewer from "@/components/PictureViewer";
+
 
 interface UserModalProps {
   userData?: TUser;
@@ -81,6 +83,7 @@ export function UserModal({ userData, dialogTrigger }: UserModalProps) {
               "taxRegistration",
               "certificates",
               "_id",
+              "profilePicture",
             ]}
           />
 
@@ -101,7 +104,11 @@ export function UserModal({ userData, dialogTrigger }: UserModalProps) {
                 </Card>
               );
           })}
-
+<PictureViewer 
+          title="Profile Picture"
+          description="User's profile picture"
+          imageSources={modalUserData.profilePicture ? [modalUserData.profilePicture] : []}
+          />
           <ToggleableSwitchCard
             title="Approved"
             switchState={modalUserData.approved}
