@@ -15,7 +15,7 @@ import { createRating } from "@/api-calls/rating-api-calls";
 import { getUserById } from "@/api-calls/users-api-calls";
 import { TRating } from "@/types/shared";
 import { toast } from "@/hooks/use-toast";
-import { entries } from "lodash";
+import TouristHomePageNavigation from "./TouristHomePageNavigation";
 
 export const handleTripRatingSubmit = async (
   values: Record<string, any>,
@@ -125,6 +125,7 @@ export function TripDetails() {
 
   return (
     <>
+      <TouristHomePageNavigation loggedIn={userId !== "undefined"} />
       {eventDetails && booking?.type === "activity" && (
         <ActivityDetailsPage
           activity={eventDetails as TActivity}

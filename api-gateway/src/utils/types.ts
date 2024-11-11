@@ -49,6 +49,30 @@ export interface IBooking {
   itineraryTourGuideRating?: number;
 }
 
+export interface IBookingQueryParamsFilter {
+  _id: string;
+  user: string;
+  entity: string;
+  type: bookingType;
+  status?: bookingStatus;
+  selectedPrice?: number;
+  selectedDate?: Date;
+  owner: string;
+}
+
+export interface IProduct {
+  name: string;
+  picture: string;
+  price: number;
+  description: string;
+  seller: string;
+  sellerName: string;
+  ratings: IRating[];
+  quantity: number;
+  archived: boolean;
+  deleted: boolean;
+  reviews: { user: string; rating: number; comment: string }[];
+}
 export interface PopulatedBooking {
   _id: string;
   user: IUser;
@@ -139,4 +163,11 @@ export enum OrderStatus {
   shipped = "shipped",
   delivered = "delivered",
   cancelled = "cancelled",
+}
+
+export interface IRating {
+  userId: string;
+  userName: string;
+  rating: number;
+  review?: string;
 }

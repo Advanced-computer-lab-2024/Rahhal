@@ -63,12 +63,13 @@ export default function App() {
               <Route path="/entertainment/:id" element={<GeneralGridView />} />
               <Route path="/shop/:id" element={<ProductGridView />} />
               <Route path="/my-trips/:id" element={<MyTripsPage />} />
-              <Route path="/my-trips-details" element={<TripDetails />} />
               <Route path="/travel/:id" element={<TravelPage loggedIn={true} />} />
               <Route path="/my-orders/:id" element={<MyOrdersPage />} />
               <Route path="/stays/:id" element={<HotelsPage loggedIn={true} />} />
               <Route path="/stays/:id/hotel/:index" element={<HotelDetails hotels={hotels} />} />
             </Route>
+            <Route path="/my-trips-details" element={<TripDetails />} />
+
             <Route path="/signup" element={<SignupSelector />} />
             <Route path="/signin" element={<Login />} />
             <Route path="/:type/details/:placeid/:id" element={<DetailsPage />} />

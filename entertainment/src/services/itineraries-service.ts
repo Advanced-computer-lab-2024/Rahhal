@@ -2,10 +2,11 @@ import type { IItinerary } from "../database/models/Itinerary";
 import type { IRating } from "@/database/shared";
 import * as itinerariesRepository from "../database/repositories/itineraries-repository";
 import { hasBookings } from "@/utils/booking-axios-instance";
+import { bookingType } from "@/utils/constants";
 
 // Get all itineraries
-export async function getAllItineraries() {
-  return itinerariesRepository.getAllItineraries();
+export async function getAllItineraries(filter: Partial<IItinerary> = {}) {
+  return itinerariesRepository.getAllItineraries(filter);
 }
 
 //Get all active & appropriate itineraries
@@ -16,11 +17,6 @@ export async function getActiveAppropriateItineraries() {
 // Get an itinerary by id
 export async function getItineraryById(id: string) {
   return itinerariesRepository.getItineraryById(id);
-}
-
-// Get itineraries by owner
-export async function getItinerariesByOwner(ownerId: string) {
-  return itinerariesRepository.getItinerariesByOwner(ownerId);
 }
 
 // Create a new itinerary
@@ -35,7 +31,7 @@ export async function updateItinerary(id: string, itineraryData: IItinerary) {
 
 // Delete an itinerary
 export async function deleteItinerary(id: string) {
-  const isBooked = await hasBookings(id);
+  const isBooked = await hasBookings(id, bookingType.Itinerary);
   if (isBooked) {
     throw new Error("Cannot delete itinerary with bookings");
   } else {

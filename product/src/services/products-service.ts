@@ -3,8 +3,8 @@ import type { IProduct } from "../database/models/Product";
 import * as productsRepository from "../database/repositories/products-repository";
 
 // Get all products
-export async function getAllProducts(): Promise<IProduct[]> {
-  return await productsRepository.getAllProducts();
+export async function getAllProducts(filter: Partial<IProduct>): Promise<IProduct[]> {
+  return await productsRepository.getAllProducts(filter);
 }
 
 // Get all available products
@@ -17,9 +17,6 @@ export async function getProductById(id: string) {
   return await productsRepository.getProductById(id);
 }
 
-export async function getProductsBySeller(sellerId: string) {
-  return await productsRepository.getActivitiesBySeller(sellerId);
-}
 // Create a new product
 export async function createProduct(product: IProduct) {
   return await productsRepository.createProduct(product);

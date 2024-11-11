@@ -19,6 +19,7 @@ export interface IActivity {
   ratings?: IRating[];
   isAppropriate: boolean;
   owner: string;
+  deleted: boolean;
 }
 
 const activitySchema = new mongoose.Schema<IActivity>({
@@ -54,6 +55,7 @@ const activitySchema = new mongoose.Schema<IActivity>({
   },
   isAppropriate: { type: Boolean, required: true, default: true },
   owner: { type: String, required: true },
+  deleted: { type: Boolean, default: false },
 });
 
 const Activity = mongoose.model<IActivity>("Activity", activitySchema);

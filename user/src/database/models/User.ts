@@ -2,16 +2,7 @@ import type { Types } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 import userValidators from "@/validators/user-validators";
 import type { TRating } from "@/types";
-import { LEVELS } from "@/utils/constants";
-
-export enum Role {
-  admin = "admin",
-  tourist = "tourist",
-  tourGuide = "tourGuide",
-  advertiser = "advertiser",
-  seller = "seller",
-  tourismGovernor = "tourismGovernor",
-}
+import { Role } from "@/utils/constants";
 
 
 
@@ -60,6 +51,7 @@ export interface IUser {
   nationalID?: string;
   taxRegistration?: string;
   certificates?: string[];
+  deleted: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -107,7 +99,7 @@ const userSchema: Schema = new Schema<IUser>(
     },
     username: {
       type: String,
-      unique: true,
+      // unique: true,
       required: true,
       validate: {
         validator: userValidators.validateUsername,
@@ -379,6 +371,10 @@ const userSchema: Schema = new Schema<IUser>(
     },
     certificates: {
       type: [String],
+    },
+    deleted: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true },

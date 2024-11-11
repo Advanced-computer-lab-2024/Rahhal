@@ -77,6 +77,7 @@ export const DEFAULTS = {
     price: 0,
     picture: "src/assets/farmhouse-main.jpeg",
     seller: "",
+    sellerName: "",
     quantity: 1,
     archived: false,
     ratings: [],

@@ -31,6 +31,7 @@ export async function populateBooking(booking: IBooking): Promise<PopulatedBooki
 export async function populateBookings(
   bookings: IBooking[],
   filter: Partial<IBooking>,
+  ownerId: string,
 ): Promise<PopulatedBooking[]> {
   let populatedUser: IUser | undefined;
   let populatedEntity: IActivity | IItinerary | string | undefined;
@@ -52,7 +53,9 @@ export async function populateBookings(
   );
 
   // Filter out any null values from the final array
-  return populatedBookings.filter((booking) => booking !== null) as PopulatedBooking[];
+  return populatedBookings.filter(
+    (booking) => booking !== null &&  (ownerId == "" || ((!is3rdPartyBooking(booking.type) && (booking.entity as (IActivity| IItinerary)).owner == ownerId))),
+  ) as PopulatedBooking[];
 }
 
 export async function populateBookingHelper(booking: IBooking, user: IUser | undefined, entity: IActivity | IItinerary | string | undefined): Promise<PopulatedBooking | null> {

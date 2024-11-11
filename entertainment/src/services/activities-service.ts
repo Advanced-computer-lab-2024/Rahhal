@@ -1,10 +1,12 @@
 import type { IActivity } from "../database/models/Activity";
 import type { IRating } from "@/database/shared";
 import * as activitiesRepository from "../database/repositories/activities-repository";
+import { hasBookings } from "@/utils/booking-axios-instance";
+import { bookingType } from "@/utils/constants";
 
 // Get all activities
-export async function getAllActivities() {
-  return activitiesRepository.getAllActivities();
+export async function getAllActivities(filter: Partial<IActivity>) {
+  return activitiesRepository.getAllActivities(filter);
 }
 
 // Get all appropriate activities
@@ -33,9 +35,10 @@ export async function updateActivity(id: string, activitiesData: IActivity) {
 
 // Delete an activity
 export async function deleteActivity(id: string) {
-  return activitiesRepository.deleteActivity(id);
-}
-
-export async function getActivitiesByOwner(ownerId: string) {
-  return activitiesRepository.getActivitiesByOwner(ownerId);
+  const isBooked = await hasBookings(id, bookingType.Activity);
+  if (isBooked) {
+    throw new Error("Cannot delete activity with bookings");
+  } else {
+    return activitiesRepository.deleteActivity(id);
+  }
 }
