@@ -201,7 +201,7 @@ const DetailsPage = () => {
             ) : (
               <p>No reviews available.</p>
             )}
-            {item.seller ? <p>Seller: {item.seller}</p> : null}
+            {item.seller ? <p>Seller: {item.sellerName}</p> : null}
           </div>
 
           <div className={DetailsPageStyles["image-grid"]}>
