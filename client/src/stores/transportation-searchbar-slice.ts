@@ -35,10 +35,11 @@ export const useSearchBarStore = create<SearchBarState>()((set) => ({
   passengers: 0,
   selectedPickupLocation: "",
   selectedDropOffLocation: "",
-  setPickupLocation: (location) => set({ pickupLocation: [location] }),
+  setPickupLocation: (location) => set({ pickupLocation: location.length === 0 ? [] : [location] }),
   setPickupSuggestions: (suggestions) => set({ pickupSuggestions: suggestions }),
   setPickupSuggestionsPlaceId: (placeId) => set({ pickupSuggestionsPlaceId: placeId }),
-  setDropOffLocation: (location) => set({ dropOffLocation: [location] }),
+  setDropOffLocation: (location) =>
+    set({ dropOffLocation: location.length === 0 ? [] : [location] }),
   setDropOffSuggestions: (suggestions) => set({ dropOffSuggestions: suggestions }),
   setDropOffSuggestionsPlaceId: (placeId) => set({ dropOffSuggestionsPlaceId: placeId }),
   setDepartureTime: (time) => set({ departureTime: time ? [time] : [] }),
