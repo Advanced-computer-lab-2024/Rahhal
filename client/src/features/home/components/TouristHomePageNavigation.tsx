@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { ProfileAvatar } from "./ProfileAvatar";
 import CurrencyDropdown from "./CurrencyDropdown";
-import SecondaryLogo from "./logo/SecondaryLogo";
+import SecondaryLogo from "../../logos/SecondaryLogo";
 
 interface ButtonProps {
   navigation: number;
