@@ -32,7 +32,7 @@ function FilterSortSearchHeader({
   return (
     <>
       <div className={GeneralGridStyle["general-grid-view__filter-container"]}>
-        <div style={{ }}>
+        <div>
           <SearchBar
             onSearch={setSearch}
             searchPlaceHolder={searchPlaceHolder}
