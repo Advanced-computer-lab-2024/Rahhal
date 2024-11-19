@@ -7,7 +7,7 @@ import { TPopulatedBooking } from "@/features/home/types/home-page-types";
 import { bookingType } from "@/utils/enums";
 import { toast } from "@/hooks/use-toast";
 import luggage from "@/assets/luggage.svg";
-import { FaArrowRightLong } from "react-icons/fa6";
+import EmptyStatePlaceholder from "../EmptyStatePlaceholder";
 
 export const MyTripsPage = () => {
   function formatDate(dateString: string | Date): string {
@@ -109,20 +109,14 @@ export const MyTripsPage = () => {
             ))
           : !isLoading &&
             !isError && (
-              <div className={PageStyles["no-trips"]}>
-                <img src={luggage} alt="No trips" />
-                <br />
-                <h1>No bookings yet—let's change that</h1>
-                <br />
-                <p>Book things before you go, and get right to the good stuff when you're there.</p>
-                <br />
-                <button onClick={() => navigate(`/entertainment/${userId}`)}>
-                  <div>Start Planning</div>
-                  <div>
-                    <FaArrowRightLong size={19} />
-                  </div>
-                </button>
-              </div>
+              <EmptyStatePlaceholder
+                img={luggage}
+                img_alt="No trips"
+                textOne="No bookings yet—let's change that"
+                textTwo="Book things before you go, and get right to the good stuff when you're there."
+                buttonText="Start Planning"
+                navigateTo={`/entertainment/${userId}`}
+              />
             )}
       </div>
     </div>
