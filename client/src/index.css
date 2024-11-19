@@ -30,9 +30,18 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
 
+    
     --primary-color: #e1bc6d;
+    --primary-color-hover: #C8A259;
+
+    --secondary-color:#F3DBA2;
+    --secondary-color-hover: #F0E3C0;
+
     --primary-color-dark: #c1a25f;
     --primary-color-fade: #e0d1a5;
+   
+
+    --grey-scale:#e6e6e6;
 
   }
   .dark {
@@ -69,6 +78,8 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Poppins'
+    font-family: 'Poppins';
+    
+    padding: 0 16px; 
   }
 }

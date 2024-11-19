@@ -432,7 +432,7 @@ function GeneralGridView() {
           handleActiveFilterClick={handleActiveFilterClick}
         />
       </FilterSortSearchHeader>
-      <hr className="border-t border-gray-600 " />
+      <hr className="border-t bg-[var(--gray-scale)] " />
       <div className="flex w-[100vw]">
         <FilterSideBar sideBarItems={combinedSideBarFilters} />
         <div className={GeneralGridStyle["scrollable"]}>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { ProfileAvatar } from "./ProfileAvatar";
 import CurrencyDropdown from "./CurrencyDropdown";
+import SecondaryLogo from "../../logos/SecondaryLogo";
 
 interface ButtonProps {
   navigation: number;
@@ -36,7 +37,9 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
   return (
     <div className="w-full h-16 flex items-center justify-between z-10 relative">
       {/* Left placeholder to balance layout */}
-      <div className="flex-1"></div>
+      <div className="flex-1">
+        <SecondaryLogo/>
+      </div>
 
       {/* Centered Navigation Buttons */}
       <div className="absolute left-1/2 transform -translate-x-1/2 flex space-x-12 items-center">
@@ -53,14 +56,18 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
       </div>
 
       {/* Right-Side Authentication Buttons or Avatar */}
-      <div className="flex items-center pr-3">
+      <div className="flex items-center">
         {!NavigationProps.loggedIn ? (
           <div className="flex space-x-4 items-center">
             <Link to="/signin">
-              <Button className="text-white bg-red-400 rounded-xl hover:bg-red-500">Sign In</Button>
+              <Button className="text-[var(--primary-color)] border border-[var(--primary-color)] bg-white rounded-xl hover:bg-[var(--secondary-color-hover)]  transition-all px-3 py-0">
+                Login
+              </Button>
             </Link>
             <Link to="/signup">
-              <Button className="text-white bg-red-400 rounded-xl hover:bg-red-500">Sign Up</Button>
+              <Button className="text-white bg-[var(--primary-color)] rounded-xl hover:bg-[var(--primary-color-hover)] transition-all px-3 py-0 ">
+                Register
+              </Button>
             </Link>
           </div>
         ) : (

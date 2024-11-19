@@ -39,7 +39,7 @@ function HotelsPage({ loggedIn }: HotelPageProps) {
     <div className=" w-[100%] flex justify-center">
       <HotelSearchBar onIconClick={onIconClick} />
     </div>
-    <hr className="border-1 border-black w-full my-5" />
+    <hr className="border bg-[var(--gray-scale)] w-full my-5" />
     <HotelGridView loading={loading} hotels={hotels} />
   </>
     

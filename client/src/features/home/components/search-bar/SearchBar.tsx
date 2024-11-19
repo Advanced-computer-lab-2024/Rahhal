@@ -169,7 +169,7 @@ export default function SearchBar({
           variant="default"
           size="default"
           //bg-[#ff585f] hover:bg-[#ff585f] hover:bg-gradient-to-r hover:from-[#ff111c] to hover:to-[#ff1151]
-          className="absolute right-1 w-10 h-10 rounded-full px-2 py-0 transition duration-300"
+          className=" bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] absolute right-1 w-10 h-10 rounded-full px-2 py-0 transition duration-300"
           onClick={onIconClick}
         >
           <SearchIcon className="w-7 h-7" />
