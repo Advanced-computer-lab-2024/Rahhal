@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 import FlightPage from "./FlightPage";
 import { getFlights } from "@/api-calls/flights-search-api-calls";
 import { useFlightSearchBarStore } from "@/stores/flight-searchbar-slice";
+import FlightsEmptyPlaceHolder from "./flights-placeholder/FlightsEmptyPlaceHolder";
 
 interface TravelPageProps {
   loggedIn: boolean;
@@ -293,9 +294,15 @@ function TravelPage({ loggedIn }: TravelPageProps) {
           isAdult={isAdult}
         />
       )}
-      {!flightSkeleton && transferType === "flights" && flightData && (
+      {!flightSkeleton && transferType === "flights" && ( flightData ? (
+    
         <FlightPage rawData={flightData} loggedIn={loggedIn} userId={userId} isAdult={isAdult} />
+        
+      ) : <FlightsEmptyPlaceHolder />
+      
       )}
+
+      
     </>
   );
 }
