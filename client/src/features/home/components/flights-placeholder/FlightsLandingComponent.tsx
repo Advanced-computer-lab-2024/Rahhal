@@ -21,7 +21,7 @@ interface Destination {
   image: string;
 }
 
-export default function FlightsEmptyPlaceHolder() {
+export default function FlightsLandingComponent() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [slidesPerView, setSlidesPerView] = useState(1);
 
