@@ -205,7 +205,7 @@ function GeneralGridView() {
 
   const handleTagClick = (value: string) => {
     if (value === "") setSelectedTag([]);
-    if (selectedTag.includes(value)) {
+    else if (selectedTag.includes(value)) {
       setSelectedTag(selectedTag.filter((tagValue) => tagValue !== value));
     } else {
       setSelectedTag(selectedTag.concat([value]));
