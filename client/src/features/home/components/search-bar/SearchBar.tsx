@@ -11,6 +11,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { IoCloseOutline } from "react-icons/io5";
 import { DateTimePickerSearchBar } from "./date-time-picker-search";
 import GuestSelector from "./counter";
 
@@ -22,17 +23,13 @@ interface SearchPartHandler<T> {
   setState: (value: T) => void;
 }
 
-interface SearchPartValueChangeHandler {
-  state: string;
-  setState: (value: string) => void;
-}
-
 export type genericHandler =
   | SearchPartHandler<string>
   | SearchPartHandler<Date>
   | SearchPartHandler<number>;
 
 interface SearchPartProps {
+  corner: number;
   setFocusIndex: (focusIndex: number) => void;
   focusIndex: number;
   setHoverIndex: (hoverIndex: number) => void;
@@ -73,12 +70,12 @@ export default function SearchBar({
   const [focusIndex, setFocusIndex] = useState(0);
   const [hoverIndex, setHoverIndex] = useState(0);
   const index = 1;
-
+  console.log(focusIndex, hoverIndex);
   return (
     <div
       className={cn(
         "relative overflow-hidden flex items-center w-auto rounded-full border-2 bg-background transition-all h-[66px]",
-        focusIndex !== 0 ? "bg-gray-200/65" : "",
+        focusIndex !== 0 ? "bg-gray-300/65" : "",
       )}
       onBlur={() => setFocusIndex(0)}
     >
@@ -86,17 +83,21 @@ export default function SearchBar({
         className={cn(
           "bg-transparent flex items-center px-0 group relative overflow-hidden h-[66px]",
           focusIndex === 1 && hoverIndex === 2
-            ? "bg-gray-200/65"
+            ? "bg-gray-300/65"
             : focusIndex === 2 && hoverIndex === 1
-              ? "bg-gray-200/65"
+              ? "bg-gray-300/65"
               : "",
         )}
+        onMouseEnter={() => setHoverIndex(1)}
+        onMouseLeave={() => setHoverIndex(0)}
       >
         <div
           className={cn(
             "rounded-full focus-within:bg-background focus-within:shadow-sm h-11 flex items-center h-[66px]",
             focusIndex != index ? "hover:bg-gray-200/65" : "",
           )}
+          onMouseEnter={() => setHoverIndex(1)}
+          onMouseLeave={() => setHoverIndex(0)}
         >
           {inputBox && onSearch && (
             <Input
@@ -110,8 +111,6 @@ export default function SearchBar({
               }}
               placeholder={searchPlaceHolder}
               onBlur={() => setFocusIndex(0)}
-              onMouseEnter={() => setHoverIndex(1)}
-              onMouseLeave={() => setHoverIndex(0)}
               onChange={(e) => onSearch(e.target.value)}
             />
           )}
@@ -125,9 +124,10 @@ export default function SearchBar({
             searchPartsTypes &&
             (searchPartsTypes[index] === "dropdown" ? (
               <SearchPart
+                corner={searchParts.length}
                 setFocusIndex={setFocusIndex}
                 focusIndex={focusIndex}
-                index={index + 2}
+                index={index + 1 + (inputBox ? 1 : 0)}
                 placeholder_1={value}
                 placeholder_2={searchPartsPlaceholders ? searchPartsPlaceholders[index] : ""}
                 hoverIndex={hoverIndex}
@@ -142,6 +142,12 @@ export default function SearchBar({
               />
             ) : searchPartsTypes[index] === "date" ? (
               <DateTimePickerSearchBar
+                index={index + 1 + (inputBox ? 1 : 0)}
+                setFocusIndex={setFocusIndex}
+                focusIndex={focusIndex}
+                hoverIndex={hoverIndex}
+                setHoverIndex={setHoverIndex}
+                corner={searchParts.length}
                 date={searchPartsHandlers[index].state[0] as Date}
                 placeholder={searchPartsPlaceholders ? searchPartsPlaceholders[index] : ""}
                 onDateChange={
@@ -150,6 +156,12 @@ export default function SearchBar({
               />
             ) : searchPartsTypes[index] === "stepper" ? (
               <GuestSelector
+                index={index + 1 + (inputBox ? 1 : 0)}
+                setFocusIndex={setFocusIndex}
+                focusIndex={focusIndex}
+                hoverIndex={hoverIndex}
+                setHoverIndex={setHoverIndex}
+                corner={searchParts.length}
                 adults={searchPartsHandlers[index].state[0] as number}
                 setAdults={searchPartsHandlers[index].setState as (value: number) => void}
                 children={searchPartsHandlers[index + 1].state[0] as number}
@@ -180,33 +192,40 @@ export default function SearchBar({
 }
 
 function SearchPart(SearchPartProps: SearchPartProps) {
+  const { focusIndex, hoverIndex, corner, index } = SearchPartProps;
   return (
     <div
       className={cn(
         " flex items-center px-0 relative overflow-hidden",
-        SearchPartProps.focusIndex === 1 && SearchPartProps.hoverIndex === 2
-          ? SearchPartProps.index === 1
-            ? "bg-gray-200/65"
-            : SearchPartProps.index === 2
-              ? "bg-gray-200/65 rounded-r-full"
+        focusIndex === 1 && hoverIndex === 2
+          ? index === 1
+            ? "bg-gray-300/65"
+            : index === 2
+              ? "bg-gray-300/65 rounded-r-full"
               : ""
-          : SearchPartProps.focusIndex === 3 && SearchPartProps.hoverIndex === 2
-            ? SearchPartProps.index === 3
-              ? "bg-gray-200/65"
-              : SearchPartProps.index === 2
-                ? "bg-gray-200/65 rounded-l-full"
+          : focusIndex === corner && hoverIndex === (corner ? corner - 1 : 0 - 1)
+            ? index === corner
+              ? "bg-gray-300/65"
+              : index === (corner ? corner - 1 : 0 - 1)
+                ? "bg-gray-300/65 rounded-l-full"
                 : ""
-            : SearchPartProps.focusIndex === 2 && SearchPartProps.hoverIndex === 1
-              ? SearchPartProps.index === 1
-                ? "bg-gray-200/65"
-                : SearchPartProps.index === 2
-                  ? "bg-gray-200/65 rounded-r-full"
+            : focusIndex != 0 &&
+                focusIndex != 1 &&
+                focusIndex != corner &&
+                (hoverIndex ? hoverIndex : 0) - 1 === focusIndex
+              ? index === hoverIndex
+                ? "bg-gray-300/65 rounded-r-full"
+                : index === focusIndex
+                  ? "bg-gray-300/65 rounded-l-full"
                   : ""
-              : SearchPartProps.focusIndex === 2 && SearchPartProps.hoverIndex === 3
-                ? SearchPartProps.index === 3
-                  ? "bg-gray-200/65"
-                  : SearchPartProps.index === 2
-                    ? "bg-gray-200/65 rounded-l-full"
+              : focusIndex != 0 &&
+                  focusIndex != 1 &&
+                  focusIndex != corner &&
+                  (hoverIndex ? hoverIndex : 0) + 1 === focusIndex
+                ? index === hoverIndex
+                  ? "bg-gray-300/65 rounded-l-full"
+                  : index === focusIndex
+                    ? "bg-gray-300/65 rounded-r-full"
                     : ""
                 : "",
       )}
@@ -214,10 +233,13 @@ function SearchPart(SearchPartProps: SearchPartProps) {
       <div
         className={cn(
           "rounded-full focus-within:bg-background focus-within:shadow-sm h-[66px] flex items-center",
-          SearchPartProps.focusIndex != SearchPartProps.index
-            ? "hover:bg-gray-200/65"
-            : SearchPartProps.focusIndex === SearchPartProps.index
-              ? "bg-background shadow-sm"
+          focusIndex != index
+            ? hoverIndex == index &&
+              (index == focusIndex! - 1 || (index == focusIndex! + 1 && index != 1))
+              ? ""
+              : "hover:bg-gray-300/65"
+            : focusIndex === index
+              ? "bg-background shadow-lg"
               : "",
         )}
       >
@@ -225,18 +247,6 @@ function SearchPart(SearchPartProps: SearchPartProps) {
       </div>
     </div>
   );
-}
-{
-  /* <Input
-                type="search" 
-                placeholder={SearchPartProps.placeholder}
-                className={cn("border-0 focus-visible:outline-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent bg-transparent")}
-                onFocus={() => {SearchPartProps.setFocusIndex(SearchPartProps.index) } }
-                onBlur={() => SearchPartProps.setFocusIndex(0)}
-                onMouseEnter={() => SearchPartProps.setHoverIndex(SearchPartProps.index)}
-                onMouseLeave={() => SearchPartProps.setHoverIndex(0)}
-              />   
-// Magnifying glass icon */
 }
 function SearchIcon(props: SearchIconProps) {
   return (
@@ -266,6 +276,12 @@ function ComboboxPopover(SearchPartProps: SearchPartProps) {
   } else if (open && SearchPartProps.focusIndex !== SearchPartProps.index) {
     SearchPartProps.setFocusIndex(SearchPartProps.index); // Set focus when the popover opens
   }
+  const handleClear = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    SearchPartProps.handler.setState("");
+  };
+
   return (
     <>
       <div className="flex items-start bg-transparent relative">
@@ -282,6 +298,7 @@ function ComboboxPopover(SearchPartProps: SearchPartProps) {
               )}
               onMouseEnter={() => SearchPartProps.setHoverIndex(SearchPartProps.index)}
               onMouseLeave={() => SearchPartProps.setHoverIndex(0)}
+              onMouseDown={(e) => e.preventDefault()}
             >
               <div className="flex flex-col w-[100%] text-left pl-2">
                 <span className="text-black text-sm">{SearchPartProps.placeholder_1}</span>
@@ -299,6 +316,17 @@ function ComboboxPopover(SearchPartProps: SearchPartProps) {
                       : SearchPartProps.handler.state.join(", ").substring(0, 17).concat("...")}
                 </span>
               </div>
+              {SearchPartProps.handler.state.length > 0 &&
+                SearchPartProps.index == SearchPartProps.focusIndex && (
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-black rounded-md hover:rounded-full text-lg transition-all duration-300 hover:bg-gray-300 w-6 h-6 flex items-center justify-center"
+                    onClick={handleClear}
+                  >
+                    <IoCloseOutline />
+                  </Button>
+                )}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="p-0" side="bottom" align="start">

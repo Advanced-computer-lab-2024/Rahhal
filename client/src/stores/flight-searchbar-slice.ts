@@ -40,10 +40,12 @@ export const useFlightSearchBarStore = create<SearchBarState>()((set) => ({
   infants: [0],
   departureAirportCode: "",
   arrivalAirportCode: "",
-  setDepartureLocation: (location) => set({ departureLocation: [location] }),
+  setDepartureLocation: (location) =>
+    set({ departureLocation: location.length === 0 ? [] : [location] }),
   setDepartureSuggestions: (suggestions) => set({ departureSuggestions: suggestions }),
   setDepartureSuggestionsPlaceId: (placeId) => set({ departureSuggestionsPlaceId: placeId }),
-  setArrivalLocation: (location) => set({ arrivalLocation: [location] }),
+  setArrivalLocation: (location) =>
+    set({ arrivalLocation: location.length === 0 ? [] : [location] }),
   setArrivalSuggestions: (suggestions) => set({ arrivalSuggestions: suggestions }),
   setArrivalSuggestionsPlaceId: (placeId) => set({ arrivalSuggestionsPlaceId: placeId }),
   setDepartureTime: (time) => set({ departureTime: time ? [time] : [] }),

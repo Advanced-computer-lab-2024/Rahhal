@@ -121,7 +121,7 @@ function GeneralGridView() {
     const type =
       "languages" in item ? "itinerary" : "isBookingOpen" in item ? "activity" : "historicalPlace";
     if (type === "historicalPlace") {
-      navigate(`/hplace/details/${item._id}/${id?id:""}`, { state: { item } });
+      navigate(`/hplace/details/${item._id}/${id ? id : ""}`, { state: { item } });
       return;
     }
     navigate(`/my-trips-details?userId=${id}&eventId=${item._id}&bookingId=null&type=${type}`, {
@@ -195,7 +195,8 @@ function GeneralGridView() {
     });
   };
   const handleCategoryClick = (value: string) => {
-    if (selectedCategory.includes(value)) {
+    if (value === "") setSelectedCategory([]);
+    else if (selectedCategory.includes(value)) {
       setSelectedCategory(selectedCategory.filter((categoryValue) => categoryValue !== value));
     } else {
       setSelectedCategory(selectedCategory.concat([value]));
@@ -203,7 +204,8 @@ function GeneralGridView() {
   };
 
   const handleTagClick = (value: string) => {
-    if (selectedTag.includes(value)) {
+    if (value === "") setSelectedTag([]);
+    else if (selectedTag.includes(value)) {
       setSelectedTag(selectedTag.filter((tagValue) => tagValue !== value));
     } else {
       setSelectedTag(selectedTag.concat([value]));

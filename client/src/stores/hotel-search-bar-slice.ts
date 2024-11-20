@@ -32,7 +32,8 @@ export const useHotelSearchBarStore = create<SearchBarState>()((set) => ({
   infants: 0,
   adults: 0,
   children: 0,
-  setDestinationLocation: (location) => set({ destinationLocation: [location] }),
+  setDestinationLocation: (location) =>
+    set({ destinationLocation: location.length === 0 ? [] : [location] }),
   setDestinationSuggestions: (suggestions) => set({ destinationSuggestions: suggestions }),
   setDestinationSuggestionsPlaceId: (placeId) => set({ destinationSuggestionsPlaceId: placeId }),
   setCheckIn: (time) => set({ checkIn: time ? [time] : [] }),
