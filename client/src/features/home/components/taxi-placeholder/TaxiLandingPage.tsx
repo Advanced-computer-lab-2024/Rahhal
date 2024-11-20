@@ -2,7 +2,6 @@ import React from "react";
 import Taxi1 from "@/assets/TaxiProv1.png";
 import Taxi2 from "@/assets/TaxiProv2.png";
 import Taxi3 from "@/assets/TaxiProv3.png";
-
 import Taxi4 from "@/assets/TaxiProv6.png"
 import AirportTaxi from "@/assets/AirportTaxi.jpg";
 
@@ -36,7 +35,7 @@ const ProvidersCarouselWithImage = () => {
 
       {/* Providers Section */}
       <div className="py-8">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">Our Providors</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">Our Providers</h1>
         <div className="relative w-full flex justify-center gap-6">
           {providers.map((provider, index) => (
             <div
