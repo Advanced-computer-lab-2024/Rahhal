@@ -12,12 +12,17 @@
 }
 
 .order-page-header p:first-child {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: bold;
   color: #000;
   margin: 0;
 }
-
+.no-orders {
+  display: flex;
+    flex-direction: column;
+    margin: 3% 15% 0% 15%;
+    gap: 2rem;
+}
 .orders-card-container {
   display: flex;
   flex-direction: column;
