@@ -15,6 +15,7 @@ import { getFlights } from "@/api-calls/flights-search-api-calls";
 import { useFlightSearchBarStore } from "@/stores/flight-searchbar-slice";
 import FlightsLandingComponent from "./flights-placeholder/FlightsLandingComponent";
 import EmptyFlightResultsPage from "./flights-placeholder/EmptyFlightResultsPage";
+import TaxiLandingPage from "./taxi-placeholder/TaxiLandingPage";
 
 interface TravelPageProps {
   loggedIn: boolean;
@@ -283,14 +284,18 @@ function TravelPage({ loggedIn }: TravelPageProps) {
           <Skeleton className="h-4 w-[350px]" />
         </div>
       )}
-      {!taxiSkeleton && transferType === "taxis" && taxiData?.data && (
-        <TransportationPage
-          data={taxiData.data}
-          loggedIn={loggedIn}
-          id={userId}
-          isAdult={isAdult}
-        />
-      )}
+      {!taxiSkeleton &&
+        transferType === "taxis" &&
+        (taxiData ? (
+          <TransportationPage
+            data={taxiData.data}
+            loggedIn={loggedIn}
+            id={userId}
+            isAdult={isAdult}
+          />
+        ) : (
+          <TaxiLandingPage />
+        ))}
       {!flightSkeleton &&
         transferType === "flights" &&
         (flightData ? (
