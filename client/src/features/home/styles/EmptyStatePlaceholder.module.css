@@ -1,0 +1,45 @@
+.empty-state-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.empty-state-placeholder img {
+    width: 20%;
+    height: auto;
+}
+
+.empty-state-placeholder h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000;
+    margin: 0;
+}
+.empty-state-placeholder button {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem; /* Add spacing between elements */
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease;
+    font-size: 0.8rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+  .empty-state-placeholder button:hover {
+    background-color: var(--secondary-color-dark);
+
+  }
+  
+  .empty-state-placeholder button:active {
+    transform: scale(0.95); 
+    transition: transform 0.2s ease;
+  }

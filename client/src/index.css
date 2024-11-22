@@ -31,17 +31,19 @@
     --radius: 0.5rem;
 
     
-    --primary-color: #e1bc6d;
+    --primary-color: #E1BC6D;
     --primary-color-hover: #C8A259;
+    --primary-color-dark: #C8A259;
+    --primary-color-fade: #E0D1A5;
 
     --secondary-color:#F3DBA2;
     --secondary-color-hover: #F0E3C0;
 
-    --primary-color-dark: #c1a25f;
-    --primary-color-fade: #e0d1a5;
-   
+    --complimentary-color: #6D91E1;
+    --complimentary-color-dark: #5875B7;
+    --complimentary-color-fade: #A4BCE1;
 
-    --grey-scale:#e6e6e6;
+    --grey-scale:#E6E6E6;
 
   }
   .dark {

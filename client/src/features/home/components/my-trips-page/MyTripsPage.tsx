@@ -1,11 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
-import PageStyles from "../styles/MyTripsPage.module.css";
+import PageStyles from "@/features/home/styles/MyTripsPage.module.css";
 import { MyTripsCard } from "./MyTripsCard";
 import { fetchUserBookings } from "@/api-calls/booking-api-calls";
 import { useQuery } from "@tanstack/react-query";
 import { TPopulatedBooking } from "@/features/home/types/home-page-types";
 import { bookingType } from "@/utils/enums";
 import { toast } from "@/hooks/use-toast";
+import luggage from "@/assets/luggage.svg";
+import EmptyStatePlaceholder from "../EmptyStatePlaceholder";
+
 export const MyTripsPage = () => {
   function formatDate(dateString: string | Date): string {
     if (!dateString) return "N/A";
@@ -34,7 +37,7 @@ export const MyTripsPage = () => {
     return dateTimestamp < currentTimestamp && status === "upcoming";
   }
 
-  const { id: userId } = useParams<{ id: string }>(); // Get the userId from URL params
+  const { id: userId } = useParams<{ id: string }>();
 
   const {
     data: booking,
@@ -83,7 +86,7 @@ export const MyTripsPage = () => {
         <p>Trips & Booking</p>
       </div>
       <div className={PageStyles["trip-list"]}>
-        {booking
+        {booking && booking.length > 0
           ? booking.map((booking: TPopulatedBooking) => (
               <MyTripsCard
                 key={booking.entity._id}
@@ -104,7 +107,17 @@ export const MyTripsPage = () => {
                 onClick={() => handleClick(booking)}
               />
             ))
-          : !isLoading && !isError && <p>No bookings found.</p>}
+          : !isLoading &&
+            !isError && (
+              <EmptyStatePlaceholder
+                img={luggage}
+                img_alt="No trips"
+                textOne="No bookings yet—let's change that"
+                textTwo="Book things before you go, and get right to the good stuff when you're there."
+                buttonText="Start Planning"
+                navigateTo={`/entertainment/${userId}`}
+              />
+            )}
       </div>
     </div>
   );
