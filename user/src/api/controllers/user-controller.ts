@@ -2,24 +2,10 @@ import type { Request, Response } from "express";
 import * as userService from "@/services/user-service";
 import { Role, STATUS_CODES } from "@/utils/constants";
 import { z } from "zod";
+import { ObjectId } from "mongodb";
 import type { TRating } from "@/types";
 import { POINTS } from "@/utils/constants";
 
-export async function getUserByUsername(req: Request, res: Response) {
-  try {
-    const username = req.body.username;
-    const user = await userService.getUserByUsername(username);
-    if (!user) {
-      res.status(STATUS_CODES.NOT_FOUND).json({ message: "User not found" });
-    } else {
-      res.status(STATUS_CODES.STATUS_OK).json(user);
-    }
-  } catch (error) {
-    res.status(STATUS_CODES.SERVER_ERROR).send(error);
-  }
-}
-
-//get all users
 export async function getAllUsers(req: Request, res: Response) {
   const queryParametersSchema = z.object({
     approved: z
@@ -39,7 +25,7 @@ export async function getAllUsers(req: Request, res: Response) {
 
   try {
     // If approved is not provided (== undefined), it will get all users
-    const users = await userService.getAllUsers(approved);
+    const users = await userService.getUser({approved : approved});
     if (!users) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "No users found" });
     } else {
@@ -50,11 +36,10 @@ export async function getAllUsers(req: Request, res: Response) {
   }
 }
 
-//getUserById
-export async function getUserById(req: Request, res: Response) {
+export async function getUser(req: Request, res: Response) {
   try {
     const userId = req.params.id;
-    const user = await userService.getUserById(userId);
+    const user = await userService.getUser({_id: new ObjectId(userId)});
     if (!user) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
     } else {
@@ -67,30 +52,12 @@ export async function getUserById(req: Request, res: Response) {
   }
 }
 
-//get User by email
-export async function getUserByEmail(req: Request, res: Response) {
-  try {
-    const email = req.body.email;
-    const user = await userService.getUserByEmail(email);
-    if (!user) {
-      res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
-    } else {
-      res.status(STATUS_CODES.STATUS_OK).json(user);
-    }
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
-    }
-  }
-}
-
-//update user by userId
-export async function updateUserById(req: Request, res: Response) {
+export async function updateUser(req: Request, res: Response) {
   try {
     const userId = req.params.id;
     let updatedUser = req.body;
     if (updatedUser.email) {
-      const email = await userService.getUserByEmail(updatedUser.email);
+      const email = await userService.getUser({email : updatedUser.email});
       if (email && !email.deleted && email.email !== "" && !email._id.equals(userId)) {
         res
           .status(STATUS_CODES.CONFLICT)
@@ -98,7 +65,7 @@ export async function updateUserById(req: Request, res: Response) {
         return;
       }
     }
-    const user = await userService.getUserById(userId);
+    const user = await userService.getUser({_id : new ObjectId(userId)});
     if (!user) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
       return;
@@ -120,7 +87,7 @@ export async function updateUserById(req: Request, res: Response) {
         updatedUser.balance = (user.balance as number) + amountRetrieved;
       }
     }
-    const userUpdated = await userService.updateUserById(userId, updatedUser);
+    const userUpdated = await userService.updateUser(userId, updatedUser);
     res.status(STATUS_CODES.STATUS_OK).json(userUpdated);
   } catch (error) {
     if (error instanceof Error) {
@@ -135,9 +102,9 @@ export async function createUser(req: Request, res: Response) {
     if (userData.username && userData.password) {
       const shouldCheckEmail =
         userData.role !== Role.admin && userData.role !== Role.tourismGovernor;
-      const userUsername = await userService.getUserByUsername(userData.username);
+      const userUsername = await userService.getUser({username :userData.username});
       const userEmail = userData.email
-        ? await userService.getUserByEmail(userData.email)
+        ? await userService.getUser({email : userData.email})
         : undefined;
 
       if (
@@ -187,8 +154,8 @@ export async function deleteUser(req: Request, res: Response) {
 
 export async function loginUser(req: Request, res: Response) {
   try {
-    const { username, password } = req.body;
-    const user = await userService.getUserByUsername(username);
+    const { password } = req.body;
+    const user = await userService.getUser(req.body);
     if (!user) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "Username or Password is incorrect" });
       return;
@@ -227,7 +194,7 @@ export async function addRating(req: Request, res: Response) {
 export async function redeemPoints(req: Request, res: Response) {
   try {
     const userId = req.params.id;
-    const user = await userService.getUserById(userId);
+    const user = await userService.getUser({_id : new ObjectId(userId)});
     if (!user) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
       return;
