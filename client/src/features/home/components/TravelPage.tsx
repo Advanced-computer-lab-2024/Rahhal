@@ -13,7 +13,7 @@ import { useParams } from "react-router-dom";
 import FlightPage from "./FlightPage";
 import { getFlights } from "@/api-calls/flights-search-api-calls";
 import { useFlightSearchBarStore } from "@/stores/flight-searchbar-slice";
-import FlightsEmptyPlaceHolder from "./flights-placeholder/FlightsLandingComponent";
+import FlightsLandingComponent from "./flights-placeholder/FlightsLandingComponent";
 import EmptyFlightResultsPage from "./flights-placeholder/EmptyFlightResultsPage";
 
 interface TravelPageProps {
@@ -305,7 +305,7 @@ function TravelPage({ loggedIn }: TravelPageProps) {
             />
           )
         ) : (
-          <FlightsEmptyPlaceHolder />
+          <FlightsLandingComponent />
         ))}
     </>
   );
