@@ -13,6 +13,8 @@ import { useParams } from "react-router-dom";
 import FlightPage from "./FlightPage";
 import { getFlights } from "@/api-calls/flights-search-api-calls";
 import { useFlightSearchBarStore } from "@/stores/flight-searchbar-slice";
+import FlightsLandingComponent from "./flights-placeholder/FlightsLandingComponent";
+import EmptyFlightResultsPage from "./flights-placeholder/EmptyFlightResultsPage";
 
 interface TravelPageProps {
   loggedIn: boolean;
@@ -127,17 +129,13 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   }, [transportationError, flightError]);
 
   useEffect(() => {
-    if (
-      (transferType === "taxis" && (isTaxisSuccess || isTaxisError))
-    ) {
+    if (transferType === "taxis" && (isTaxisSuccess || isTaxisError)) {
       setTaxiSkeleton(false);
     }
   }, [isLoadingTaxis, isFlightsLoading]);
 
   useEffect(() => {
-    if(
-      (transferType === "flights" && (isFlightsSuccess || isFLightError))
-    ) {
+    if (transferType === "flights" && (isFlightsSuccess || isFLightError)) {
       setFlightSkeleton(false);
     }
   }, [isFlightsLoading, isFlightsSuccess, isFLightError]);
@@ -293,9 +291,22 @@ function TravelPage({ loggedIn }: TravelPageProps) {
           isAdult={isAdult}
         />
       )}
-      {!flightSkeleton && transferType === "flights" && flightData && (
-        <FlightPage rawData={flightData} loggedIn={loggedIn} userId={userId} isAdult={isAdult} />
-      )}
+      {!flightSkeleton &&
+        transferType === "flights" &&
+        (flightData ? (
+          flightData.data.length == 0 ? (
+            <EmptyFlightResultsPage />
+          ) : (
+            <FlightPage
+              rawData={flightData}
+              loggedIn={loggedIn}
+              userId={userId}
+              isAdult={isAdult}
+            />
+          )
+        ) : (
+          <FlightsLandingComponent />
+        ))}
     </>
   );
 }
