@@ -20,7 +20,7 @@ import { useContext, useEffect, useState } from "react";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { EditContext } from "./SettingsView";
 import { useParams } from "react-router-dom";
-import { CONNECTION_STRING } from "@/utils/constants";
+import { SERVICES_URLS } from "@/lib/constants";
 import axios from "axios";
 
 const FormSchema = z.object({
@@ -41,7 +41,7 @@ export default function CheckboxReactHookFormMultiple() {
   const { id } = useParams();
 
   async function updateUser(data: APIPayload) {
-    const USER_SERVICE_URL = CONNECTION_STRING + `${id}`;
+    const USER_SERVICE_URL = SERVICES_URLS.USER_CONTROLLER + `${id}`;
     try {
       const response = await axios.patch(USER_SERVICE_URL, data);
       toast({

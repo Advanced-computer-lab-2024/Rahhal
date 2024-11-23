@@ -18,7 +18,7 @@ import { EditContext } from "./SettingsView";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { CONNECTION_STRING } from "@/utils/constants";
+import { SERVICES_URLS } from "@/lib/constants";
 import DeleteAccountButton from "./DeleteAccountButton";
 export default function AccountForm() {
   const { toast } = useToast();
@@ -95,7 +95,7 @@ export default function AccountForm() {
     form.reset(user);
   }, [user, form]);
   async function updateUser(data: AccountFormValues) {
-    const USER_SERVICE_URL = CONNECTION_STRING + `${id}`;
+    const USER_SERVICE_URL = SERVICES_URLS.USER_CONTROLLER + `${id}`;
     try {
       const response = await axios.patch(USER_SERVICE_URL, data);
       toast({

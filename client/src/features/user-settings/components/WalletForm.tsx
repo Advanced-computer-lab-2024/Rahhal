@@ -26,7 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CardsPaymentMethod } from "./PaymentMethodForm";
-import { CONNECTION_STRING } from "@/utils/constants";
+import { SERVICES_URLS } from "@/lib/constants";
 import axios from "axios";
 import {
   DropdownMenu,
@@ -118,7 +118,7 @@ export default function AccountForm() {
   }
 
   async function updateUser(data: APIPayload) {
-    const USER_SERVICE_URL = CONNECTION_STRING + `${id}`;
+    const USER_SERVICE_URL = SERVICES_URLS.USER_CONTROLLER + `${id}`;
     try {
       const response = await axios.patch(USER_SERVICE_URL, data);
       toast({
@@ -234,7 +234,7 @@ export default function AccountForm() {
                   <FormItem>
                     <h4 className="text-lg font-medium">Balance</h4>
                     <FormControl>
-                      <Input type="number" disabled {...field} value={displayBalance} />
+                      <Input type="number" disabled {...field} value={displayBalance || user.balance} />
                     </FormControl>
                     <FormDescription>This is your wallet balance.</FormDescription>
                     <FormMessage />

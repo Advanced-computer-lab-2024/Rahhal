@@ -3,6 +3,7 @@ import { UserRoleEnum } from "@/utils/enums";
 export const SERVICES_URLS = {
   ENTERTAINMENT: "http://localhost:3000/api/entertainment",
   USER: "http://localhost:3000/api/user",
+  USER_CONTROLLER: "http://localhost:3000/api/user/users/",
   PRODUCT: "http://localhost:3000/api/product",
   FIREBASE: "http://localhost:3000/api/firebase",
   BOOKING: "http://localhost:3000/api/booking",

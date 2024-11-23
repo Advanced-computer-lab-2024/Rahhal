@@ -16,7 +16,7 @@ import { EditContext } from "./SettingsView";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { CONNECTION_STRING } from "@/utils/constants";
+import { SERVICES_URLS } from "@/lib/constants";
 import { Role } from "./SettingsView";
 import { Button } from "@/components/ui/button";
 import defaultProfile from "@/assets/defaultProfile.png";
@@ -130,7 +130,7 @@ export default function ProfileForm() {
   }, [user, form]);
 
   async function updateUser(data: APIPayload) {
-    const USER_SERVICE_URL = CONNECTION_STRING + `${id}`;
+    const USER_SERVICE_URL = SERVICES_URLS.USER_CONTROLLER + `${id}`;
     try {
       const response = await axios.patch(USER_SERVICE_URL, data);
       toast({
