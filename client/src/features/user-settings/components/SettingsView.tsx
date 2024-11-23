@@ -57,7 +57,7 @@ export default function SettingsView() {
       });
   }, []);
   return (
-    <div className="m-8 p-0">
+    <div className="m-8">
       <div className="space-y-0.5">
         <div className="flex items-center space-x-4">
           <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
