@@ -1,5 +1,4 @@
 import { Icons } from "@/components/ui/icons";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -37,14 +36,16 @@ import {
 import { GetCardType } from "../utils/CheckCardType";
 import { editCardContext } from "./WalletForm";
 import { updateUser } from "@/api-calls/users-api-calls";
-
-export function CardsPaymentMethod() {
+import { Button } from "@/components/ui/button";
+interface PaymentMethodFormProps {
+  setOpen: (open: boolean) => void;
+}
+export function CardsPaymentMethod({ setOpen }: PaymentMethodFormProps) {
   const { toast } = useToast();
   const { user } = useContext(EditContext);
   const [cardType, setCardType] = useState<string | null>(null);
   const existingCards = user?.wallet?.creditCard || [];
   const { editingCard, editedIndex } = useContext(editCardContext);
-
   let editedCreditCard = {
     cardHolderName: "",
     cardNumber: "",
@@ -168,16 +169,7 @@ export function CardsPaymentMethod() {
           color: "#FFFFFF",
         },
       });
-      // Update the user context with the new data
-      //test
-      // if (!editingCard && user.wallet && user.wallet.creditCard?.length >= 1) {
-      //   // wait two seconds
-      //   setTimeout(() => {
-      //     window.location.reload();
-      //   }, 2000);
-      // } else {
       user.wallet = data.wallet;
-      // }
     } catch (error) {
       toast({
         title: "Error: " + error,
@@ -223,6 +215,7 @@ export function CardsPaymentMethod() {
     } else {
       update("Card added successfully!", apiData);
     }
+    setOpen(false);
   }
 
   return (
