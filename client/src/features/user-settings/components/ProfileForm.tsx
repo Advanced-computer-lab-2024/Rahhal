@@ -13,16 +13,15 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useEffect, useState } from "react";
 import { EditContext } from "./SettingsView";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { SERVICES_URLS } from "@/lib/constants";
 import { Role } from "./SettingsView";
 import { Button } from "@/components/ui/button";
 import defaultProfile from "@/assets/defaultProfile.png";
 import { uploadToFirebaseReady } from "@/utils/firebase";
 import UserDocuments from "@/components/UserDocuments";
 import { UserRoleEnum } from "@/utils/enums";
+import { updateUser } from "@/api-calls/users-api-calls";
 export default function ProfileForm() {
   const { toast } = useToast();
   const { id } = useParams();
@@ -129,14 +128,9 @@ export default function ProfileForm() {
     form.reset(userWithoutProfilePicture);
   }, [user, form]);
 
-  async function updateUser(data: APIPayload) {
-    const USER_SERVICE_URL = SERVICES_URLS.USER_CONTROLLER + `${id}`;
+  async function update(data: APIPayload) {
     try {
-      const response = await axios.patch(USER_SERVICE_URL, data);
-      toast({
-        title: "Update " + response.statusText,
-      });
-
+      await updateUser(user, data);
       if (data.profilePicture) user.profilePicture = data.profilePicture;
       if (data.firstName) user.firstName = data.firstName;
       if (data.lastName) user.lastName = data.lastName;
@@ -152,9 +146,16 @@ export default function ProfileForm() {
       if (data.companyProfile) user.companyProfile = data.companyProfile;
       if (data.addresses) user.addresses = data.addresses;
       setEditForm(false);
+      toast({
+        title: "Updated Successfully",
+        style: {
+          backgroundColor: "#34D399",
+          color: "#FFFFFF",
+        },
+      });
     } catch (error) {
       toast({
-        title: "Error: " + (error as any).response.data.error,
+        title: "Error: " + error,
         variant: "destructive",
       });
     }
@@ -178,10 +179,10 @@ export default function ProfileForm() {
       //update the user with the data, however instead of the field profilePicture, we will use the url we got from firebase
       const { profilePicture, ...userWithoutProfilePicture } = data;
       const updatedData = { ...userWithoutProfilePicture, profilePicture: url[0] };
-      updateUser(updatedData);
+      update(updatedData);
     } else {
       const { profilePicture, ...userWithoutProfilePicture } = data;
-      updateUser(userWithoutProfilePicture);
+      update(userWithoutProfilePicture);
     }
   }
   return (

@@ -15,10 +15,9 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useContext } from "react";
 import { EditContext } from "./SettingsView";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { SERVICES_URLS } from "@/lib/constants";
+import { updateUser } from "@/api-calls/users-api-calls";
 import DeleteAccountButton from "./DeleteAccountButton";
 export default function AccountForm() {
   const { toast } = useToast();
@@ -94,36 +93,44 @@ export default function AccountForm() {
   useEffect(() => {
     form.reset(user);
   }, [user, form]);
-  async function updateUser(data: AccountFormValues) {
-    const USER_SERVICE_URL = SERVICES_URLS.USER_CONTROLLER + `${id}`;
+  async function update(data: AccountFormValues) {
     try {
-      const response = await axios.patch(USER_SERVICE_URL, data);
-      toast({
-        title: "Update " + response.statusText,
-      });
+      await updateUser(user, data);
       if(data.email) user.email = data.email;
       if(data.password) user.password = data.password;
       setEditForm(false);
+      toast({
+        title: "Updated Successfully",
+        style: {
+          backgroundColor: "#34D399",
+          color: "#FFFFFF",
+        },
+      });
     } catch (error) {
       toast({
-        title: "Error: " + (error as any).response.data.error,
+        title: "Error: " + error,
         variant: "destructive",
       });
     }
   }
   async function onSubmit(data: AccountFormValues) {
+    toast({
+      title: "Updating ... ",
+    });
+    setTimeout(() => {}, 1500);
+    
     if (changePassword) {
       const isOldPasswordValid = await oldPasswordForm.trigger();
 
       if (isOldPasswordValid) {
-        updateUser({ ...data, password: oldPasswordForm.getValues().newPassword });
+        update({ ...data, password: oldPasswordForm.getValues().newPassword });
         setChangePassword(false);
         oldPasswordForm.reset();
       } else {
         console.log("Form errors:", oldPasswordForm.formState.errors);
       }
     } else {
-      updateUser(data);
+      update(data);
     }
   }
 
