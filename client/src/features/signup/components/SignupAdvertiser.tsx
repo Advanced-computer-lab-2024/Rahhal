@@ -15,13 +15,14 @@ import { termsAndConditions } from "../terms-and-conditions/AdvertiserTermsAndCo
 import { advertiserSchema } from "../utils/ZodSchemas/advertiserSchema";
 import { createUser, updateUser } from "@/api-calls/users-api-calls";
 import { uploadToFirebaseReady } from "@/utils/firebase";
+import { SignupProps } from "../utils/constants";
 
 type AdvertiserFormData = z.infer<typeof advertiserSchema>;
 
-export default function SignupAdvertiser() {
+
+export default function SignupAdvertiser({ isSubmitting, setIsSubmitting }: SignupProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     control,
@@ -157,11 +158,11 @@ export default function SignupAdvertiser() {
 
   return (
     <div className="flex">
-      <Card className="w-full max-w-3xl flex flex-col">
+      <Card className="w-full max-w-3xl flex flex-col" style={{borderColor : "#FFFFFF"}}>
         <CardHeader className="flex flex-row items-center space-x-4">
           <CardTitle className="text-3xl font-bold">Advertiser Sign Up</CardTitle>
         </CardHeader>
-        <CardContent className="flex overflow-y-auto h-[calc(100vh-200px)]">
+        <CardContent className="flex overflow-y-auto h-[calc(100vh-200px)] hide-scrollbar">
           <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
             <Controller
               name="companyName"

@@ -16,13 +16,14 @@ import { termsAndConditions } from "../terms-and-conditions/TourGuideTermsAndCon
 import { tourGuideSchema } from "../utils/ZodSchemas/tourGuideSchema";
 import { createUser, updateUser } from "@/api-calls/users-api-calls";
 import { uploadToFirebaseReady } from "@/utils/firebase";
+import { SignupProps } from "../utils/constants";
 
 type TourGuideFormData = z.infer<typeof tourGuideSchema>;
 
-export default function SignupTourGuide() {
+
+export default function SignupTourGuide({ isSubmitting, setIsSubmitting }: SignupProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     control,
@@ -70,10 +71,7 @@ export default function SignupTourGuide() {
         description: "Please wait while we create your account",
         duration: 1500,
       });
-      // const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-      // await delay(4500);
-
+ 
       let urls: string[] = new Array();
 
       const response: any = await createUser(reqBody);
@@ -175,11 +173,11 @@ export default function SignupTourGuide() {
 
   return (
     <div className="flex">
-      <Card className="w-full max-w-3xl flex flex-col">
+      <Card className="w-full max-w-3xl flex flex-col" style={{borderColor : "#FFFFFF"}}>
         <CardHeader className="flex flex-row items-center space-x-4">
           <CardTitle className="text-3xl font-bold">Tour Guide Sign Up</CardTitle>
         </CardHeader>
-        <CardContent className="flex overflow-y-auto h-[77vh]">
+        <CardContent className="flex overflow-y-auto h-[77vh] hide-scrollbar">
           <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
             <Controller
               name="firstName"

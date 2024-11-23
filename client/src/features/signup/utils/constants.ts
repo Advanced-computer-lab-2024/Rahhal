@@ -68,3 +68,9 @@ export const countries = {
     Zambia: "Zambia",
     Zimbabwe: "Zimbabwe",
   };
+  
+  
+  export interface SignupProps {
+    isSubmitting: boolean;
+    setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  }
