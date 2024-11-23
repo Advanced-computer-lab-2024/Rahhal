@@ -101,9 +101,9 @@ export default function AccountForm() {
       toast({
         title: "Update " + response.statusText,
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
+      if(data.email) user.email = data.email;
+      if(data.password) user.password = data.password;
+      setEditForm(false);
     } catch (error) {
       toast({
         title: "Error: " + (error as any).response.data.error,

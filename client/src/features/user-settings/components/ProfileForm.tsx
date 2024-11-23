@@ -136,9 +136,22 @@ export default function ProfileForm() {
       toast({
         title: "Update " + response.statusText,
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
+
+      if (data.profilePicture) user.profilePicture = data.profilePicture;
+      if (data.firstName) user.firstName = data.firstName;
+      if (data.lastName) user.lastName = data.lastName;
+      if (data.companyName) user.companyName = data.companyName;
+      if (data.role) user.role = data.role;
+      if (data.description) user.description = data.description;
+      if (data.previousWork) user.previousWork = data.previousWork;
+      if (data.job) user.job = data.job;
+      if (data.yearsOfExperience) user.yearsOfExperience = data.yearsOfExperience;
+      if (data.phoneNumber) user.phoneNumber = data.phoneNumber;
+      if (data.hotline) user.hotline = data.hotline;
+      if (data.website) user.website = data.website;
+      if (data.companyProfile) user.companyProfile = data.companyProfile;
+      if (data.addresses) user.addresses = data.addresses;
+      setEditForm(false);
     } catch (error) {
       toast({
         title: "Error: " + (error as any).response.data.error,
