@@ -26,8 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CardsPaymentMethod } from "./PaymentMethodForm";
-import { SERVICES_URLS } from "@/lib/constants";
-import axios from "axios";
+import { updateUser } from "@/api-calls/users-api-calls";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -117,18 +116,21 @@ export default function AccountForm() {
     };
   }
 
-  async function updateUser(data: APIPayload) {
-    const USER_SERVICE_URL = SERVICES_URLS.USER_CONTROLLER + `${id}`;
+  async function update(successMessage:string, data: APIPayload) {
     try {
-      const response = await axios.patch(USER_SERVICE_URL, data);
+      await updateUser(user, data);
       toast({
-        title: "Update " + response.statusText,
+        title: successMessage,
+        style: {
+          backgroundColor: "#34D399",
+          color: "#FFFFFF",
+        },
       });
       // Update user data without reloading the page
       user.wallet = data.wallet;
     } catch (error) {
       toast({
-        title: "Error: " + (error as any).response.data.error,
+        title: "Error: " + error,
         variant: "destructive",
       });
     }
@@ -155,7 +157,7 @@ export default function AccountForm() {
           defaultCreditCardIndex: newDefaultCreditCardIndex || 0,
         },
       };
-      updateUser(data);
+      update("Deleted Successfully!", data);
     }
   }
 
@@ -166,7 +168,7 @@ export default function AccountForm() {
         defaultCreditCardIndex: id,
       },
     };
-    updateUser(data);
+    update("New Default Card Set Successfully!", data);
   }
 
   function editCard(edit: boolean, index: number) {
@@ -185,12 +187,14 @@ export default function AccountForm() {
         form.setValue("points", userData.points);
         user.balance = userData.balance;
         user.points = userData.points;
-        console.log(user.level);
 
         toast({
           title: "Success",
           description: "Points redeemed successfully",
-          variant: "default",
+          style: {
+            backgroundColor: "#34D399",
+            color: "#FFFFFF",
+          },
         });
       } catch (error) {
         toast({
