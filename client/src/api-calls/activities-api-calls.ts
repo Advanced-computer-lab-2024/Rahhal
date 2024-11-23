@@ -55,10 +55,11 @@ export async function updateActivity(activityData: TActivity, activityImages: Fi
 export async function createActivity(
   newActivityData: TNewActivity,
   userId: string,
+  username: string,
   activityImages: FileList | null,
 ) {
   newActivityData.owner = userId;
-
+  newActivityData.ownerName = username;
   newActivityData.images = [];
 
   const response = await axios.post(SERVICES_URLS.ENTERTAINMENT + "/activities", newActivityData);

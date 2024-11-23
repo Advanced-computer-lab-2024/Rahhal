@@ -21,9 +21,15 @@ interface ActivitiesModalProps {
   activityData?: TActivity;
   dialogTrigger?: React.ReactNode;
   userId?: string;
+  username?: string;
 }
 
-export function ActivitiesModal({ activityData, dialogTrigger, userId }: ActivitiesModalProps) {
+export function ActivitiesModal({
+  activityData,
+  dialogTrigger,
+  userId,
+  username,
+}: ActivitiesModalProps) {
   const isNewActivity: boolean = activityData === undefined; // check if the activity is new or existing
   const [modalActivityData, setModalActivitiesData] = useState<TActivity | undefined>(activityData); // current activity data present in the modal
 
@@ -62,7 +68,7 @@ export function ActivitiesModal({ activityData, dialogTrigger, userId }: Activit
       // I am sure that userId is not null when the modal open from table add button
       // otherwise it opens from an edit action and in that situation userId is not null
       // and already stored in the database and it's not needed in updates
-      await createActivity(newActivity, userId!, activityPictures);
+      await createActivity(newActivity, userId!, username!, activityPictures);
     } else await updateActivity(modalActivityData!, activityPictures);
   };
 

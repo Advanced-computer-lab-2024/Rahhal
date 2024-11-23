@@ -14,16 +14,16 @@ interface ContentProps {
   tickets?: string[];
   date?: string;
   time?: string;
-  dateOptions?: boolean; 
+  dateOptions?: boolean;
   buttonText: string;
   onButtonClick?: () => void;
-  buttonColor: "gold" | "red";
+  buttonColor: "gold" | "red" | "blue";
   button2Text?: string;
   onButton2Click?: () => void;
   button2Color?: "gold" | "red";
   disabled?: boolean;
   disabled2?: boolean;
-  dropdownOptions?: { value: string; label: string }[]
+  dropdownOptions?: { value: string; label: string }[];
   onDateChange?: (selectedDate: string) => void; // Handler for dropdown selection
   onTicketSelect?: (index: number) => void; // Handler for ticket selection
 }
@@ -55,24 +55,20 @@ export const OverViewContent: React.FC<ContentProps> = ({
 
   const handleDateSelect = (DateChosen: string) => {
     setSelectedDate(DateChosen);
-    onDateChange && onDateChange(DateChosen); 
+    onDateChange && onDateChange(DateChosen);
   };
 
-  const isButtonDisabled = 
-  !(dateOptions || tickets.length > 0) 
-  ? false 
-  : (selectedTicket === null && !selectedDate);
-  
+  const isButtonDisabled = !(dateOptions || tickets.length > 0)
+    ? false
+    : selectedTicket === null && !selectedDate;
+
   return (
     <div className={styles["content"]}>
-    {tickets.length > 0 || dropdownOptions && <h3>Ticket Selection</h3>}
+      {tickets.length > 0 || (dropdownOptions && <h3>Ticket Selection</h3>)}
       {/* Date Selector using Dropdown Component */}
       {dateOptions && (
         <div className={styles.dateSelector}>
-          <ComboboxDemo
-            data={dropdownOptions}
-            onSelect={handleDateSelect} 
-          />
+          <ComboboxDemo data={dropdownOptions} onSelect={handleDateSelect} />
         </div>
       )}
 
@@ -106,7 +102,7 @@ export const OverViewContent: React.FC<ContentProps> = ({
         label={buttonText}
         onClick={onButtonClick}
         color={buttonColor}
-        disabled={isButtonDisabled || disabled}
+        disabled={disabled}
       />
 
       {button2Text && onButton2Click && button2Color && (
