@@ -52,6 +52,7 @@ function GeneralGridView() {
   const [selectedLanguages, setSelectedLanguages] = useState<Option[]>([]);
   const [selectedHistoricalTags, setSelectedHistoricalTags] = useState<Option[]>([]);
   const [sortOption, setSortOption] = useState<SortOption | null>(null);
+  const [loaded, setLoaded] = useState(false);
 
   const { id } = useParams<{ id: string }>();
   // useQueries
@@ -160,6 +161,8 @@ function GeneralGridView() {
       setSkeleton(false);
     }
   }, [finishedLoading]);
+
+ 
 
   const searchParts = ["Category", "Tag"];
   useEffect(() => {
@@ -421,6 +424,27 @@ function GeneralGridView() {
     }
   });
 
+
+  useEffect(() => {
+    if(!skeleton) {
+    const loadImages = async () => {
+      const imagePromises = sortedCombinedItems.map(
+        (item) =>
+          new Promise<void>((resolve, reject) => {
+            const img = new Image();
+            img.src = item.images[0];
+            img.onload = () => resolve();
+            img.onerror = () => reject();
+          }),
+      );
+      await Promise.all(imagePromises);
+      setLoaded(true);
+    };
+    loadImages();
+  }
+
+  }, [sortedCombinedItems]);
+
   return (
     <div className={GeneralGridStyle["general-grid-view"]}>
       <FilterSortSearchHeader
@@ -441,14 +465,15 @@ function GeneralGridView() {
         <FilterSideBar sideBarItems={combinedSideBarFilters} />
         <div className={GeneralGridStyle["scrollable"]}>
           <div className={GeneralGridStyle["general-grid-view__cards"]}>
-            {skeleton && (
+
+            {!loaded && (
               <div className="space-y-2">
                 <Skeleton className="h-4 w-[250px]" />
                 <Skeleton className="h-4 w-[200px]" />
               </div>
             )}
 
-            {!skeleton &&
+            {loaded &&
               sortedCombinedItems.map((item) => (
                 <EntertainmentCard
                   key={item._id}
