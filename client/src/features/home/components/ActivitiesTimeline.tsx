@@ -1,6 +1,6 @@
 
 import { DEFAULT_ACTIVITY_IMAGE } from "../utils/constants";
-import { EventCardProps, Timeline } from "./Timeline";
+import  Timeline, { ITimelineEvent }  from "./Timeline";
 import { useEffect, useState } from "react";
 interface ActivitiesTimelineProps {
   activities: string[];
@@ -8,23 +8,24 @@ interface ActivitiesTimelineProps {
   locations: { longitude: number; latitude: number }[];
 }
 
-function activityToEvent(activity: string, durationOfActivity: string): EventCardProps {
+function activityToEvent(activity: string, durationOfActivity: string, index: number): ITimelineEvent {
   return {
+    id: index,
     title: activity,
-
-    duration: durationOfActivity,
-
-    imageUrl: DEFAULT_ACTIVITY_IMAGE,
+    subtitle: durationOfActivity,
+    icon: DEFAULT_ACTIVITY_IMAGE,
+    done: false,
+    active: true,
   };
 }
 
-function activitiesToEvents(activities: string[], durationOfActivities: string[]): EventCardProps[] {
-  return activities.map((activity, index) => activityToEvent(activity, durationOfActivities[index]));
+function activitiesToEvents(activities: string[], durationOfActivities: string[]): ITimelineEvent[] {
+  return activities.map((activity, index) => activityToEvent(activity, durationOfActivities[index], index));
     
 }
 
 export function ActivitiesTimeline({ activities, durationOfActivities, locations }: ActivitiesTimelineProps) {
-  const [events, setEvents] = useState<EventCardProps[]>([]);
+  const [events, setEvents] = useState<ITimelineEvent[]>([]);
 
   useEffect(() => {
     setEvents(activitiesToEvents(activities, durationOfActivities));

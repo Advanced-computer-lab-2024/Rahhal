@@ -1,71 +1,52 @@
-import React from "react";
 
-
-export interface EventCardProps {
+export interface ITimelineEvent {
+  id: number;
   title: string;
-  duration: string;
-  imageUrl?: string;
+  subtitle: string;
+  icon: any;
+  done: boolean;
+  active: boolean;
 }
 
 interface TimelineProps {
-  events: EventCardProps[];
+  events: ITimelineEvent[];
 }
 
-export const EventCard: React.FC<EventCardProps> = ({ title, duration, imageUrl }) => {
+const Timeline = ({ events }: TimelineProps) => {
   
 
   return (
-    <div className="flex items-center p-4 bg-white rounded-lg shadow-sm border border-gray-100 relative">
-      {/* Thumbnail */}
-      <div className="w-12 h-12 mr-4">
-        <img
-          src={imageUrl || "/api/placeholder/48/48"}
-          alt="Event thumbnail"
-          className="rounded-lg object-cover w-full h-full"
-        />
-      </div>
-
-      {/* Content */}
-      <div className="flex-1">
-        <h3 className="text-lg font-medium text-gray-900">{title}</h3>
-        <div className="flex items-center mt-1">
-          <span className="text-sm text-gray-500">{duration}</span>
-        </div>
+    <div className="w-full max-w-4xl mx-auto px-4">
+      <div className="flex justify-between items-start relative">
+        {/* Progress Line */}
+        <div className="absolute top-5 left-0 right-0 h-0.5 bg-gray-200" />
+        
+        {events.map((event, index) => (
+          <div key={event.id} className="relative flex flex-col items-center flex-1">
+            {/* Icon Circle */}
+            <div
+              className={`w-10 h-10 rounded-full flex items-center justify-center z-10 border-2 
+                ${event.done ? 'bg-black text-white border-black' :
+                  event.active ? 'bg-white text-black border-black' :
+                  'bg-white text-gray-400 border-gray-200'}`}
+            >
+              <img src={event.icon} alt="icon" className="w-6 h-6" />
+            </div>
+            
+            {/* Text Content */}
+            <div className="mt-2 text-center">
+              <h3 className={`font-medium ${event.active || event.done ? 'text-black' : 'text-gray-400'}`}>
+                {event.title}
+              </h3>
+              <p className="text-sm text-gray-500 mt-1">
+                {event.subtitle}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
-export const Timeline: React.FC<TimelineProps> = ({ events }) => {
-  return (
-    <div className="relative">
-      <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gray-300"></div>
-
-     
-      {events.map((event, index) => (
-        (index + 1) % 2 === 0 ? (
-          <div className="flex items-center mb-8 flex-row-reverse" key={index}>
-            <div className="w-1/2 pl-4 text-left">
-              <EventCard {...event} />
-            </div>
-            <div className="w-1/2 pr-4 flex items-center justify-end">
-              <div className="bg-gray-400 w-8 h-8 rounded-full"></div>
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center mb-8" key={index}>
-            <div className="w-1/2 pr-4 text-left">
-              <EventCard {...event} />
-            </div>
-            <div className="w-1/2 pl-4 flex items-center">
-              <div className="bg-gray-400 w-8 h-8 rounded-full"></div>
-            </div>
-          </div>
-        )
-      ))}
-    </div>
-  );
-};
-
-
-
+export default Timeline;
