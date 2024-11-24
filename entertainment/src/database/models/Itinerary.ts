@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 import type { IRating } from "../../database/shared";
-import { ratingSchema, validateRatings } from "../../database/shared";
+import {
+  ratingSchema,
+  validateListNotEmpty,
+  validateRatings,
+  validateStringNotEmpty,
+} from "../../database/shared";
 import * as itineraryValidator from "../validators/itineraries-validator";
 
 export interface IItinerary {
@@ -27,8 +32,22 @@ export interface IItinerary {
 }
 
 const itinerarySchema = new mongoose.Schema<IItinerary>({
-  name: { type: String, required: true },
-  description: { type: String, required: true },
+  name: {
+    type: String,
+    required: true,
+    validate: {
+      validator: validateStringNotEmpty,
+      message: "Itinerary name must not be empty",
+    },
+  },
+  description: {
+    type: String,
+    required: true,
+    validate: {
+      validator: validateStringNotEmpty,
+      message: "Itinerary description must not be empty",
+    },
+  },
   activities: { type: [String], required: true },
   images: { type: [String], required: true },
   locations: {
@@ -45,8 +64,22 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
       "Invalid location coordinates: Longitude must be between -180 and 180, latitude must be between -90 and 90",
     ],
   },
-  timeline: { type: String, required: true },
-  durationOfActivities: { type: [String], required: true },
+  timeline: {
+    type: String,
+    required: true,
+    validate: {
+      validator: validateStringNotEmpty,
+      message: "Itinerary timeline must not be empty",
+    },
+  },
+  durationOfActivities: {
+    type: [String],
+    required: true,
+    validate: {
+      validator: validateListNotEmpty,
+      message: "Itinerary duration of activities must not be empty",
+    },
+  },
   languages: { type: [String], required: true },
   price: {
     type: mongoose.Schema.Types.Mixed,
@@ -65,7 +98,14 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
     ],
     required: true,
   },
-  accessibility: { type: String, required: true },
+  accessibility: {
+    type: String,
+    required: true,
+    validate: {
+      validator: validateStringNotEmpty,
+      message: "Itinerary accessibility must not be empty",
+    },
+  },
   pickUpLocation: {
     type: {
       longitude: { type: Number, required: true },
@@ -90,10 +130,25 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
     },
   },
   preferenceTags: { type: [mongoose.Schema.Types.ObjectId], ref: "PreferenceTag" },
-  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    required: true,
+    validate: {
+      validator: validateStringNotEmpty,
+      message: "Itinerary category must not be empty",
+    },
+  },
   active: { type: Boolean, required: true, default: true },
   appropriate: { type: Boolean, required: true, default: true },
-  owner: { type: String, required: true },
+  owner: {
+    type: String,
+    required: true,
+    validate: {
+      validator: validateStringNotEmpty,
+      message: "Itinerary owner must not be empty",
+    },
+  },
   deleted: { type: Boolean, default: false },
 });
 
