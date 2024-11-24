@@ -45,7 +45,7 @@ export const OverViewContent: React.FC<ContentProps> = ({
   onDateChange,
   onTicketSelect,
 }) => {
-  const [selectedTicket, setSelectedTicket] = useState<number | null>(null);
+  const [selectedTicket, setSelectedTicket] = useState<number>(0);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   const handleTicketClick = (index: number) => {
