@@ -25,7 +25,7 @@ function MinMaxRangeSlider({ values, onValueChange }: SliderProps) {
     }
   };
   return (
-    <div className="w-[90%]">
+    <div className="w-[90%] mt-7">
       <DualRangeSlider
         min={min.current}
         max={max.current}

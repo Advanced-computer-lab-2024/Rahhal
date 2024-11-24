@@ -8,14 +8,12 @@ type LanguageSelectorProps = {
 
 function MultSelector({ placeholder, setSelectedOption, options }: LanguageSelectorProps) {
   return (
-    <div className="w-[280px]  h-[200px]">
+    <div className="w-[90%] h-[100px] mt-2">
       <MultipleSelector
         defaultOptions={options}
         placeholder={placeholder}
         emptyIndicator={
-          <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-            no results found.
-          </p>
+          <p className="text-center text-md text-gray-600 dark:text-gray-400">no results found.</p>
         }
         onChange={setSelectedOption}
       />
