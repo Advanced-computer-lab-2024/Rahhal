@@ -16,3 +16,9 @@ export function validateRating(ratings: number) {
 export function validateQuantity(quantity: number) {
   return quantity >= CONSTANTS.ZERO;
 }
+
+
+// validate that the given string is not empty
+export function validateStringNotEmpty(str: string) {
+  return str.trim().length > CONSTANTS.ZERO;
+}

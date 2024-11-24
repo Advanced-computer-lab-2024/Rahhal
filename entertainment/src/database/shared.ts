@@ -19,3 +19,18 @@ export function validateRatings(ratings: IRating[]) {
     (rating) => rating.rating >= CONSTANTS.MIN_RATING && rating.rating <= CONSTANTS.MAX_RATING,
   );
 }
+
+// Validate that the given string is not empty
+export function validateStringNotEmpty(str: string) {
+  return str.trim().length > CONSTANTS.ZERO;
+}
+
+// validate list is not empty
+export function validateListNotEmpty(list: any[]) {
+  return list.length > CONSTANTS.ZERO;
+}
+
+// Validate Map is not empty
+export function validateMapNotEmpty(map: Map<any, any>) {
+  return map.size > CONSTANTS.ZERO;
+}
