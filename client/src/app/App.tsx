@@ -40,6 +40,7 @@ import HotelDetails from "@/features/home/components/HotelDetails";
 import { useHotelStore } from "@/stores/hotel-store";
 import ActivityDetailsPage from "@/features/home/components/activities/ActivityDetailsPage";
 import ItineraryDetailsPage from "@/features/home/components/itineraries/ItineraryDetailsPage";
+import Checkout from "@/features/checkout/components/Checkout";
 
 export default function App() {
   const { setRates } = useRatesStore();
@@ -69,6 +70,7 @@ export default function App() {
               <Route path="/my-orders/:id" element={<MyOrdersPage />} />
               <Route path="/stays/:id" element={<HotelsPage loggedIn={true} />} />
               <Route path="/stays/:id/hotel/:index" element={<HotelDetails hotels={hotels} />} />
+              <Route path="/checkout/:id" element={<Checkout />} />
             </Route>
             <Route path="/activities/:id" element={<ActivityDetailsPage />} />
             <Route path="/itineraries/:id" element={<ItineraryDetailsPage />} />
@@ -118,6 +120,7 @@ export default function App() {
         </Router>
       </QueryClientProvider>
     </div>
+    
   );
 
   function ApiCurrencyCall() {
