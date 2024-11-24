@@ -34,6 +34,7 @@ export type TItinerary = {
   category: { _id: string; name: string };
   active: boolean;
   owner: string;
+  ownerName: string;
 };
 
 export type TNewItinerary = Omit<TItinerary, "preferenceTags" | "category" | "_id"> & {

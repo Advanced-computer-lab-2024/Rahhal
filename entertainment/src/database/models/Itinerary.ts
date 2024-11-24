@@ -28,6 +28,7 @@ export interface IItinerary {
   active: boolean;
   appropriate: boolean;
   owner: string;
+  ownerName: string;
   deleted: boolean;
 }
 
@@ -149,6 +150,15 @@ const itinerarySchema = new mongoose.Schema<IItinerary>({
       message: "Itinerary owner must not be empty",
     },
   },
+  ownerName: {
+    type: String,
+    required: true,
+    validate: {
+      validator: validateStringNotEmpty,
+      message: "Itinerary owner name must not be empty",
+    },
+  },
+
   deleted: { type: Boolean, default: false },
 });
 

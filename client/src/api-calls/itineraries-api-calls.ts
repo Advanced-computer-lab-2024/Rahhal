@@ -68,9 +68,11 @@ export async function updateItinerary(itineraryData: TItinerary, itineraryImages
 export async function createItinerary(
   newItineraryData: TNewItinerary,
   userId: string,
+  username: string,
   itineraryImages: FileList | null,
 ) {
   newItineraryData.owner = userId;
+  newItineraryData.ownerName = username;
   const response = await axios.post(SERVICES_URLS.ENTERTAINMENT + "/itineraries", newItineraryData);
   const itineraryId = (response.data as TItinerary)._id;
   const urls: string[] = await uploadToFirebase(
