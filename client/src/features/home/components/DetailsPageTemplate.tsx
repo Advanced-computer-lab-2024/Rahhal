@@ -58,10 +58,10 @@ export default function DetailsPageTemplate({
 
       {/* Rating */}
       <div className="flex justify-between mb-4">
-        <div className="flex gap-0.5 text-sm">
-          <Star className={"w-4 h-4 fill-black"} />
+        <div className="flex gap-0.5 text-sm items-center">
+          <Star className={"w-4 h-4 fill-[var(--primary-color)] text-[var(--primary-color)]"} />
           <h6 className="w-4 h-4 ">{rating.toFixed(1)}</h6>
-          <h6 className="ml-1">({ratings.length})</h6>
+          <h6 className="ml-1 mt-1">({ratings.length})</h6>
         </div>
         <div className="flex">
           <SharePopover link={window.location.href} size={18} shareText={true} />
