@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 import type { IRating } from "@/database/shared";
-import { ratingSchema, validateRatings } from "@/database/shared";
+import {
+  ratingSchema,
+  validateMapNotEmpty,
+  validateStringNotEmpty,
+  validateRatings,
+} from "@/database/shared";
 
 // Define the schema for the activities collection
 export interface IActivity {
@@ -23,8 +28,22 @@ export interface IActivity {
 }
 
 const activitySchema = new mongoose.Schema<IActivity>({
-  name: { type: String, required: true },
-  description: { type: String, required: true },
+  name: {
+    type: String,
+    required: true,
+    validate: {
+      validator: validateStringNotEmpty,
+      message: "Name must not be empty",
+    },
+  },
+  description: {
+    type: String,
+    required: true,
+    validate: {
+      validator: validateStringNotEmpty,
+      message: "Description must not be empty",
+    },
+  },
   date: { type: Date, required: true },
   time: { type: Date, required: true },
   images: { type: [String], required: true },
@@ -40,8 +59,19 @@ const activitySchema = new mongoose.Schema<IActivity>({
     type: Map,
     of: Number,
     required: true,
+    validate: {
+      validator: validateMapNotEmpty,
+      message: "Price must not be empty",
+    },
   },
-  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    validate: {
+      validator: validateStringNotEmpty,
+      message: "Category must not be empty",
+    },
+  },
   tags: { type: [String] },
   specialDiscount: { type: Number },
   isBookingOpen: { type: Boolean, required: true },
@@ -54,7 +84,14 @@ const activitySchema = new mongoose.Schema<IActivity>({
     },
   },
   isAppropriate: { type: Boolean, required: true, default: true },
-  owner: { type: String, required: true },
+  owner: {
+    type: String,
+    required: true,
+    validate: {
+      validator: validateStringNotEmpty,
+      message: "Owner must not be empty",
+    },
+  },
   deleted: { type: Boolean, default: false },
 });
 

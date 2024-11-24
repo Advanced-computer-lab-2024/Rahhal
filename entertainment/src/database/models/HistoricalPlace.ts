@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 import type { IRating } from "@/database/shared";
-import { ratingSchema, validateRatings } from "@/database/shared";
+import {
+  ratingSchema,
+  validateMapNotEmpty,
+  validateStringNotEmpty,
+  validateRatings,
+} from "@/database/shared";
 
 export interface IHistoricalPlace {
   name: string;
@@ -17,8 +22,22 @@ export interface IHistoricalPlace {
 }
 
 const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
-  name: { type: String, required: true },
-  description: { type: String, required: true },
+  name: {
+    type: String,
+    required: true,
+    validate: {
+      validator: validateStringNotEmpty,
+      message: "Name must not be empty",
+    },
+  },
+  description: {
+    type: String,
+    required: true,
+    validate: {
+      validator: validateStringNotEmpty,
+      message: "Description must not be empty",
+    },
+  },
   location: {
     type: {
       longitude: { type: Number, required: true },
@@ -44,12 +63,23 @@ const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
     type: Map,
     of: Number,
     required: true,
+    validate: {
+      validator: validateMapNotEmpty,
+      message: "Price must not be empty",
+    },
   },
   images: { type: [String], required: true },
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "HistoricalTag" }],
   preferenceTags: [{ type: mongoose.Schema.Types.ObjectId, ref: "PreferenceTag" }],
   category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
-  owner: { type: String, required: true },
+  owner: {
+    type: String,
+    required: true,
+    validate: {
+      validator: validateStringNotEmpty,
+      message: "Owner must not be empty",
+    },
+  },
   ratings: {
     type: [ratingSchema],
     validate: {
