@@ -29,8 +29,9 @@ const ActivityDetailsPage: React.FC = () => {
   } = activity;
   const [preferenceTagNames, setPreferenceTagNames] = React.useState<string[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(true);
-  const [selectedTicket, setSelectedTicket] = React.useState<boolean>(false);
-  const [selectedPrice, setSelectedPrice] = React.useState<number | undefined>(undefined);
+  const [selectedPrice, setSelectedPrice] = React.useState<number | undefined>(
+    price[Object.keys(price)[0]],
+  );
   const { currency } = useCurrencyStore();
   const { rates } = useRatesStore();
 
@@ -78,7 +79,6 @@ const ActivityDetailsPage: React.FC = () => {
   };
 
   const onTicketSelect = (index: number) => {
-    setSelectedTicket(true);
     setSelectedPrice(price[Object.keys(price)[index]]);
   };
 
@@ -101,7 +101,7 @@ const ActivityDetailsPage: React.FC = () => {
 
     return `${key} - ${currency} ${displayPrice}`;
   });
-
+  console.log(tickets);
   return (
     <div>
       <TouristHomePageNavigation loggedIn={id ? id !== "undefined" : false} />
@@ -121,7 +121,7 @@ const ActivityDetailsPage: React.FC = () => {
           buttonColor={isBookingOpen ? "gold" : "blue"}
           date={formattedDate}
           time={formattedTime}
-          disabled={(isButtonDisabled || !selectedTicket) && isBookingOpen}
+          disabled={isButtonDisabled && isBookingOpen}
           onButtonClick={handleButtonClick}
           discount={specialDiscount}
           onTicketSelect={onTicketSelect}
