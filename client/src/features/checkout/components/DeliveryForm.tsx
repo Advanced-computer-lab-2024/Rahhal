@@ -23,12 +23,14 @@ export function DeliveryForm({ user }: { user: Partial<TUser> }) {
 
 
       const updatedAddresses = [...(user.addresses || []), fullAddress];
+      setSelectedAddress(fullAddress);
 
       console.log("Address saved:", fullAddress);
       console.log("All addresses:", updatedAddresses);
+      
     }
 
-
+    console.log("Selected Address",selectedAddress); 
     console.log("Continuing to payment...");
   };
   return (
@@ -95,17 +97,17 @@ export function DeliveryForm({ user }: { user: Partial<TUser> }) {
           <Input placeholder="Phone" />
         </div>
 
-        <div className="flex items-center space-x-2">
+       {selectedAddress === "" && ( <div className="flex items-center space-x-2">
           <Checkbox
             id="save-info"
             checked={saveInfo}
             onCheckedChange={(checked: boolean) => setSaveInfo(checked)}
           />
           <Label htmlFor="save-info">Save this information for next time</Label>
-        </div>
+        </div>)}
         <div className="pt-6">
           <button
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-md font-medium transition-colors"
+            className="w-full bg-[--complimentary-color-dark] hover:bg-[--complimentary-color-fade] text-white py-3 px-4 rounded-md font-medium transition-colors"
             onClick={handleContinueToPayment}
           >
             Continue to payment
