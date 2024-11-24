@@ -250,6 +250,18 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
             );
         }}
       />
+      {/* Image Gallery */}
+      <div className="grid grid-cols-2 gap-4 w-[80%] mb-9">
+        <img src={images[0]} className="w-full h-full object-cover rounded-lg" />
+
+        <div className="grid grid-cols-2 gap-2">
+          {images.slice(1).map((image, index) => (
+            <div key={index} className="relative">
+              <img src={image} className="w-full h-full object-cover rounded-lg" />
+            </div>
+          ))}
+        </div>
+      </div>
       <div className="grid grid-cols-3 gap-8 px-2">
         {/* Left Column - Images and Details */}
         <div className="space-y-6 col-span-2">
@@ -275,19 +287,6 @@ const ItineraryDetailsPage: React.FC<ItineraryDetailsProps> = ({
               <div className="p-0">
                 <SharePopover link={window.location.href} />
               </div>
-            </div>
-          </div>
-
-          {/* Image Gallery */}
-          <div className="grid grid-cols-2 gap-4">
-            <img src={images[0]} className="w-full h-full object-cover rounded-lg" />
-
-            <div className="grid grid-cols-2 gap-2">
-              {images.slice(1).map((image, index) => (
-                <div key={index} className="relative">
-                  <img src={image} className="w-full h-full object-cover rounded-lg" />
-                </div>
-              ))}
             </div>
           </div>
 
