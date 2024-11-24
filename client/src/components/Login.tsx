@@ -106,7 +106,7 @@ export function Login() {
         <span className="ml-2 text-lg hover:underline">Home</span>
       </Link>
       <div className="flex items-center justify-center py-12">
-        <Card className="w-[500px] h-[500px] p-6 shadow-lg flex flex-col justify-center">
+        <Card className="w-[500px] h-[500px] p-6 shadow-2xl flex flex-col justify-center">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl font-bold">Login</CardTitle>
           </CardHeader>

@@ -75,7 +75,7 @@ const SignupSelector = () => {
           <CardHeader className="flex items-center justify-center">
             <CardTitle>Sign Up As</CardTitle>
           </CardHeader>
-          <CardContent className="flex flex-col space-y-4">
+          <CardContent className="flex flex-col space-y-4 shadow-2xl">
             {roles.map((role) => (
               <Button
                 key={role.name}
