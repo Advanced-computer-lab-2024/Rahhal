@@ -93,7 +93,7 @@ export default function SearchBar({
       >
         <div
           className={cn(
-            "rounded-full focus-within:bg-background focus-within:shadow-sm h-11 flex items-center h-[66px]",
+            "rounded-full focus-within:bg-background focus-within:shadow-sm flex items-center h-[66px]",
             focusIndex != index ? "hover:bg-gray-200/65" : "",
           )}
           onMouseEnter={() => setHoverIndex(1)}
@@ -103,7 +103,7 @@ export default function SearchBar({
             <Input
               type="search"
               className={cn(
-                "border-0 h-max focus-visible:outline-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent bg-transparent h-[66px] ",
+                "border-0  focus-visible:outline-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent bg-transparent h-[66px] ",
                 searchParts ? "" : "w-[330px]",
               )}
               onFocus={() => {
