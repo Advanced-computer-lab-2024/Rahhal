@@ -2,7 +2,6 @@ import React from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
-import ItineraryDetailsPage from "./ItineraryDetails";
 import { updateBookingRequest } from "@/api-calls/booking-api-calls";
 import { TRatingEntity } from "./RatingForm";
 import { bookingType, RateableEntityType } from "@/utils/enums";
@@ -12,6 +11,7 @@ import { TRating } from "@/types/shared";
 import { toast } from "@/hooks/use-toast";
 import TouristHomePageNavigation from "./TouristHomePageNavigation";
 import BookedActivityDetailsPage from "./activities/BookedActivityDetails";
+import BookedItineraryDetailsPage from "./itineraries/BookedItineraryDetails";
 
 export const handleTripRatingSubmit = async (
   values: Record<string, any>,
@@ -92,15 +92,6 @@ export function TripDetails() {
           ratingFormRef={ratingFormRef}
         />
       )}
-
-      {/* {booking.type === bookingType.Itinerary && (
-        <ItineraryDetailsPage
-          itinerary={booking.entity as TItinerary}
-          userId={userId ?? ""}
-          initialBooking={booking}
-          ratingFormRef={ratingFormRef}
-        />
-      )} */}
     </>
   );
 }
