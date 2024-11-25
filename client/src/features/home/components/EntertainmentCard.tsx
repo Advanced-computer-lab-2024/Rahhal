@@ -1,10 +1,42 @@
 import CardStyles from "../styles/EntertainmentCard.module.css";
 import { IoMdStar } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
-import { GrLanguage } from "react-icons/gr";
+
 import { getPriceValue } from "../utils/price-calculator";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import currencyExchange from "@/utils/currency-exchange";
+import { Languages } from "lucide-react";
+
+function formatTimeRange(dateRange: { open: string; close: string }): string {
+  const { open, close } = dateRange; 
+
+  const formatTime = (date: string): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+    return new Date(date).toLocaleTimeString("en-US", options); 
+  };
+
+  const startTime = formatTime(open);
+  const endTime = formatTime(close);
+
+  return `${startTime} - ${endTime}`;
+}
+
+function formatDate(isoDate: Date): string {
+  const date = new Date(isoDate);
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: "long", 
+    year: "numeric", 
+    month: "long", 
+    day: "numeric", 
+  };
+
+  return new Intl.DateTimeFormat("en-US", options).format(date);
+}
+
 interface EntertainmentCardProps {
   image: string;
   title: string;
@@ -19,6 +51,7 @@ interface EntertainmentCardProps {
   openingTime?: { open: string; close: string };
   availability?: boolean;
   seller?: string;
+  date?: Date;
   onClick?: () => void;
 }
 
@@ -28,91 +61,75 @@ const EntertainmentCard: React.FC<EntertainmentCardProps> = ({
   price,
   rating,
   location,
-  languages,
   openingTime,
   availability,
-  seller,
+  date,
+  languages,
   onClick,
 }) => {
   const basePrice = getPriceValue(price);
   const { currency } = useCurrencyStore();
   const convertedPrice = currencyExchange("EGP", basePrice);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
-
   return (
-    <>
-      <div className={CardStyles["entertainment-card-container"]} onClick={onClick}>
-        <div className={CardStyles["entertainment-card-container__image"]}>
-          {/* image and bookmark goes here */}
-          <img src={image} alt="entertainment" />
-        </div>
+    <div className={CardStyles["entertainment-card-container"]} onClick={onClick}>
+      <div className={CardStyles["entertainment-card-container__image"]}>
+        <img src={image} alt="entertainment" />
+      </div>
 
-        <div className={CardStyles["entertainment-card-container__details"]}>
-          <div className={CardStyles["entertainment-card-container__title-location"]}>
-            {/* title and location goes here */}
-            <h3>{title}</h3>
-            {location !== undefined && (
-              <p>
-                {" "}
-                <FaLocationDot style={{ fontSize: "0.8rem" }} /> {location}
-              </p>
-            )}
-          </div>
-          <div className={CardStyles["entertainment-card-container__rating"]}>
-            {/* rating goes here */}
-            <IoMdStar style={{ fontSize: "0.8rem" }} />
-
+      <div className={CardStyles["entertainment-card-container__details"]}>
+        <div className={CardStyles["entertainment-card-container__title-rating"]}>
+          <h3 className={CardStyles["entertainment-card-title"]}>{title}</h3>
+          <div className={CardStyles["entertainment-card-rating"]}>
+            <IoMdStar className={CardStyles["rating-icon"]} />
             <p>{rating?.toPrecision(2)}</p>
           </div>
-          <div className={CardStyles["entertainment-card-container__language-time"]}>
-            {/* language and opening time and availability goes here */}
+        </div>
 
-            {languages !== undefined && (
+        <div className={CardStyles["entertainment-card-container__booking-price"]}>
+          
+          {location && (
+            <div className={CardStyles["entertainment-card-container__location"]}>
               <p>
-                <br />
-                <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                  <GrLanguage style={{ marginRight: "0.4rem" }} /> {languages?.join("/")}
-                </div>
+                <FaLocationDot className={CardStyles["location-icon"]} /> {location}
               </p>
-            )}
+            </div>
+          )}
 
-            {openingTime !== undefined && (
+          {openingTime && (
+            <div className={CardStyles["entertainment-card-container__time"]}>
+              <p>{formatTimeRange(openingTime)}</p>
+            </div>
+          )}
+
+          {languages && (
+            <div className={CardStyles["entertainment-card-container__languages"]}>
               <p>
-                Opening Hours: <br /> {openingTime.open}-{openingTime.close}
+                Languages: {languages.join(", ")}
               </p>
-            )}
+            </div>
+          )}
 
-            {availability !== undefined &&
-              (availability ? (
-                <p>
-                  <br />
-                  Available Book NOW!
-                </p>
-              ) : (
-                <p>
-                  <br />
-                  Booking Closed!
-                </p>
-              ))}
-
-            {seller !== undefined && (
-              <p>
-                <strong>Seller:</strong>
-                {seller}
-              </p>
+          <div className={CardStyles["entertainment-card-availability"]}>
+            {availability !== undefined && (
+              <p>{availability ? "Available Book NOW!" : "Booking Closed!"}</p>
             )}
           </div>
 
-          <div className={CardStyles["entertainment-card-container__price"]}>
-            {seller === undefined && (
-              <p>
-                From {displayPrice} {currency}
-              </p>
-            )}
+          {date && (
+            <div className={CardStyles["entertainment-card-container__date"]}>
+              <p>{formatDate(date)}</p>
+            </div>
+          )}
+
+          <div className={CardStyles["entertainment-card-price"]}>
+            <p>
+              From {displayPrice} {currency}
+            </p>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
