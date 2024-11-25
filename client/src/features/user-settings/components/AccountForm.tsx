@@ -19,7 +19,10 @@ import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { updateUser } from "@/api-calls/users-api-calls";
 import DeleteAccountButton from "./DeleteAccountButton";
+import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
+import { Checkbox } from "@/components/ui/checkbox";
 export default function AccountForm() {
+  const [preferenceTags, setPreferenceTags] = useState<{ _id: string; name: string }[]>([]);
   const { toast } = useToast();
   const [editForm, setEditForm] = useState(false);
   const { user } = useContext(EditContext);
@@ -67,6 +70,7 @@ export default function AccountForm() {
       .optional(),
 
     password: z.string().optional(),
+    preferences: z.array(z.string()),
   });
 
   type AccountFormValues = z.infer<typeof accountFormSchema>;
@@ -80,6 +84,7 @@ export default function AccountForm() {
       username: user.username || "",
       email: user.email || "",
       password: user.password || "",
+      preferences: user.preferences || [],
     },
   });
   const oldPasswordForm = useForm<passwordValidatorValue>({
@@ -93,11 +98,24 @@ export default function AccountForm() {
   useEffect(() => {
     form.reset(user);
   }, [user, form]);
+
+  //for preferences
+  useEffect(() => {
+    fetchPreferenceTags().then((tags) =>
+      setPreferenceTags(tags as { _id: string; name: string }[]),
+    );
+    form.reset({
+      preferences: user.preferences || [],
+    });
+  }, [user.preferences, form]);
+
+  //submiting preferences
   async function update(data: AccountFormValues) {
     try {
       await updateUser(user, data);
-      if(data.email) user.email = data.email;
-      if(data.password) user.password = data.password;
+      if (data.email) user.email = data.email;
+      if (data.password) user.password = data.password;
+      if (data.preferences) user.preferences = data.preferences;
       setEditForm(false);
       toast({
         title: "Updated Successfully",
@@ -118,7 +136,7 @@ export default function AccountForm() {
       title: "Updating ... ",
     });
     setTimeout(() => {}, 1500);
-    
+
     if (changePassword) {
       const isOldPasswordValid = await oldPasswordForm.trigger();
 
@@ -137,7 +155,7 @@ export default function AccountForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex-1" style={{width: "80%"}}>
+        <div className="flex-1" style={{ width: "80%" }}>
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-medium">Account</h3>
@@ -236,7 +254,54 @@ export default function AccountForm() {
                 </div>
               </Form>
             )}
-
+            {/* Preferences */}
+            {user.role === "tourist" && (
+              <div className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="preferences"
+                  render={() => (
+                    <FormItem>
+                      <div className="mb-4">
+                        <FormLabel className="text-base">Preferences</FormLabel>
+                        <FormDescription>Select your favorite categories.</FormDescription>
+                      </div>
+                      {preferenceTags.map((item) => (
+                        <FormField
+                          key={item._id}
+                          control={form.control}
+                          name="preferences"
+                          render={({ field }) => {
+                            return (
+                              <FormItem
+                                key={item._id}
+                                className="flex flex-row items-start space-x-3 space-y-0"
+                              >
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value?.includes(item.name)}
+                                    disabled={!editForm}
+                                    onCheckedChange={(checked) => {
+                                      return checked
+                                        ? field.onChange([...field.value, item.name])
+                                        : field.onChange(
+                                            field.value?.filter((value) => value !== item.name),
+                                          );
+                                    }}
+                                  />
+                                </FormControl>
+                                <FormLabel className="text-sm font-normal">{item.name}</FormLabel>
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      ))}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
             <div className="flex gap-4 item">
               <button
                 className={`mt-2 ${editForm ? "text-blue-500" : "text-blue-300"}`}
