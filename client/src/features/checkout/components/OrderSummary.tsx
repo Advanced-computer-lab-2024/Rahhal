@@ -4,6 +4,8 @@ import { Package, AlertCircle, X } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { PROMO_CODES } from '../utils/CartExample';
 import { useState } from 'react';
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
+import currencyExchange from '@/utils/currency-exchange';
 
 interface Product {
   _id: string;
@@ -30,13 +32,20 @@ interface Promotion {
 }
 
 export function OrderSummary({ products }: CartProps) {
-
+  const {currency} = useCurrencyStore();
+  const baseCurrency = 'EGP';
 
   const [promoCode, setPromoCode] = useState('');
   const [activePromotion, setActivePromotion] = useState<{ code: string; promotion: Promotion } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const defaultShipping = 100;
+  
   const subtotal = products.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
+  const subTotalConverted = currencyExchange(baseCurrency, subtotal);
+  const subTotalDisplayed = subTotalConverted ? subTotalConverted.toFixed(2) : 'N/A';
+
+
+  
 
 
   const calculateDiscount = () => {
@@ -58,10 +67,23 @@ export function OrderSummary({ products }: CartProps) {
   };
 
   const discountAmount = calculateDiscount();
+  const discountAmountConverted = currencyExchange(baseCurrency, discountAmount);
+  const discountAmountDisplayed = discountAmountConverted ? discountAmountConverted.toFixed(2) : 'N/A';
+
   const shippingCost = getShippingCost();
+  const shippingCostConverted = currencyExchange(baseCurrency, shippingCost);
+  const shippingCostDisplayed = shippingCostConverted ? shippingCostConverted.toFixed(2) : 'N/A';
+
   const subtotalAfterDiscount = subtotal - discountAmount;
-  const tax = subtotalAfterDiscount * 0.12; 
+
+  const tax = subtotalAfterDiscount * 0.12;
+  const taxConverted = currencyExchange(baseCurrency, tax);
+  const taxDisplayed = taxConverted ? taxConverted.toFixed(2) : 'N/A';
+
   const total = subtotalAfterDiscount + shippingCost + tax;
+  const totalConverted = currencyExchange(baseCurrency, total);
+  const totalDisplayed = totalConverted ? totalConverted.toFixed(2) : 'N/A';
+  
   const handleApplyPromoCode = () => {
     setError(null);
 
@@ -84,7 +106,9 @@ export function OrderSummary({ products }: CartProps) {
 
 
   const handleRemovePromotion = () => {
+    
     setActivePromotion(null);
+    getShippingCost();
   };
 
 
@@ -105,10 +129,14 @@ export function OrderSummary({ products }: CartProps) {
             </div>
             <div className="flex-1">
               <h3 className="font-medium">{item.product.name}</h3>
-              <p className="text-sm text-gray-600">Size: S</p>
             </div>
             <div className="text-right">
-              <p className="font-medium">£{(item.product.price * item.quantity).toFixed(2)}</p>
+              <p className="font-medium">
+                {currencyExchange(baseCurrency, (item.product.price * item.quantity)) ?
+                  currencyExchange(baseCurrency, (item.product.price * item.quantity))?.toFixed(2)
+                  :
+                  'N/A'}
+                {" "} {currency}</p>
             </div>
           </div>
         ))}
@@ -157,13 +185,18 @@ export function OrderSummary({ products }: CartProps) {
         <div className="space-y-2 pt-4">
           <div className="flex justify-between">
             <span>Subtotal</span>
-            <span>£{subtotal.toFixed(2)}</span>
+            <span>  {subTotalDisplayed}
+              {" "} {currency}
+            </span>
           </div>
 
           {activePromotion && discountAmount > 0 && (
             <div className="flex justify-between text-green-600">
               <span>Discount</span>
-              <span>-£{discountAmount.toFixed(2)}</span>
+              <span>-{discountAmountDisplayed}
+                {" "} {currency}
+                </span>
+              
             </div>
           )}
 
@@ -175,7 +208,9 @@ export function OrderSummary({ products }: CartProps) {
             {shippingCost === 0 ? (
               <span className="text-green-600">FREE</span>
             ) : (
-              <span>£{shippingCost.toFixed(2)}</span>
+              <span>{shippingCostDisplayed}
+                {" "} {currency}
+                </span>
             )}
           </div>
         </div>
@@ -183,11 +218,17 @@ export function OrderSummary({ products }: CartProps) {
           <div className="flex justify-between items-center">
             <div>
               <p className="font-medium text-lg">Total</p>
-              <p className="text-sm text-gray-600">Including £{tax.toFixed(2)} in taxes</p>
+              <p className="text-sm text-gray-600">Including 
+                {" "} {taxDisplayed}
+                  {" "} {currency} {" "}
+                 in taxes</p>
             </div>
             <div className="text-right">
-              <p className="text-sm text-gray-600">EGP</p>
-              <p className="font-medium text-lg">£{total.toFixed(2)}</p>
+              <p className="text-sm text-gray-600">{currency}</p>
+              <p className="font-medium text-lg">
+                {totalDisplayed}
+                  {" "} 
+              </p>
             </div>
           </div>
         </div>
