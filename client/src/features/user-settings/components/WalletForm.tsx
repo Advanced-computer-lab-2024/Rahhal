@@ -26,8 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CardsPaymentMethod } from "./PaymentMethodForm";
-import { CONNECTION_STRING } from "@/utils/constants";
-import axios from "axios";
+import { updateUser } from "@/api-calls/users-api-calls";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,6 +46,15 @@ import currencyExchange from "@/utils/currency-exchange";
 export const editCardContext = createContext({ editingCard: false, editedIndex: 0 });
 
 export default function AccountForm() {
+  const [openDialogs, setOpenDialogs] = useState<{ [key: number]: boolean }>({});
+
+  const handleDialogOpen = (index: number, isOpen: boolean) => {
+    setOpenDialogs((prev) => ({
+      ...prev,
+      [index]: isOpen,
+    }));
+  };
+
   const { user } = useContext(EditContext);
   const { toast } = useToast();
   const redeemValidator = z.object({
@@ -80,8 +88,6 @@ export default function AccountForm() {
   const convertedPrice = currencyExchange("EGP", price);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(2) : "N/A";
 
-
-
   type balanceValues = z.infer<typeof redeemValidator>;
   const { id } = useParams();
   const form = useForm<balanceValues>({
@@ -93,10 +99,7 @@ export default function AccountForm() {
     },
   });
 
-  const displayBalance = currencyExchange(
-    "EGP",
-    form.watch("balance") || 0
-  )?.toFixed(2);
+  const displayBalance = currencyExchange("EGP", form.watch("balance") || 0)?.toFixed(2);
 
   useEffect(() => {
     form.reset({
@@ -117,18 +120,21 @@ export default function AccountForm() {
     };
   }
 
-  async function updateUser(data: APIPayload) {
-    const USER_SERVICE_URL = CONNECTION_STRING + `${id}`;
+  async function update(successMessage: string, data: APIPayload) {
     try {
-      const response = await axios.patch(USER_SERVICE_URL, data);
+      await updateUser(user, data);
       toast({
-        title: "Update " + response.statusText,
+        title: successMessage,
+        style: {
+          backgroundColor: "#34D399",
+          color: "#FFFFFF",
+        },
       });
       // Update user data without reloading the page
       user.wallet = data.wallet;
     } catch (error) {
       toast({
-        title: "Error: " + (error as any).response.data.error,
+        title: "Error: " + error,
         variant: "destructive",
       });
     }
@@ -155,7 +161,7 @@ export default function AccountForm() {
           defaultCreditCardIndex: newDefaultCreditCardIndex || 0,
         },
       };
-      updateUser(data);
+      update("Deleted Successfully!", data);
     }
   }
 
@@ -166,7 +172,7 @@ export default function AccountForm() {
         defaultCreditCardIndex: id,
       },
     };
-    updateUser(data);
+    update("New Default Card Set Successfully!", data);
   }
 
   function editCard(edit: boolean, index: number) {
@@ -185,12 +191,14 @@ export default function AccountForm() {
         form.setValue("points", userData.points);
         user.balance = userData.balance;
         user.points = userData.points;
-        console.log(user.level);
 
         toast({
           title: "Success",
           description: "Points redeemed successfully",
-          variant: "default",
+          style: {
+            backgroundColor: "#34D399",
+            color: "#FFFFFF",
+          },
         });
       } catch (error) {
         toast({
@@ -234,7 +242,12 @@ export default function AccountForm() {
                   <FormItem>
                     <h4 className="text-lg font-medium">Balance</h4>
                     <FormControl>
-                      <Input type="number" disabled {...field} value={displayBalance} />
+                      <Input
+                        type="number"
+                        disabled
+                        {...field}
+                        value={displayBalance || user.balance}
+                      />
                     </FormControl>
                     <FormDescription>This is your wallet balance.</FormDescription>
                     <FormMessage />
@@ -310,12 +323,11 @@ export default function AccountForm() {
             </div>
           </h4>
           <div className="grid justify-items-center">
-            <Dialog>
+            <Dialog open={openDialogs[-1]} onOpenChange={(isOpen) => handleDialogOpen(-1, isOpen)}>
               <DialogHeader>
                 <DialogTitle></DialogTitle>
               </DialogHeader>
               <DialogTrigger>
-                {" "}
                 <Button
                   id={styles["addBtn"]}
                   onClick={() => {
@@ -326,7 +338,7 @@ export default function AccountForm() {
                 </Button>
               </DialogTrigger>
               <DialogContent>
-                <CardsPaymentMethod></CardsPaymentMethod>
+                <CardsPaymentMethod setOpen={(isOpen) => handleDialogOpen(-1, isOpen)} />
               </DialogContent>
             </Dialog>
           </div>
@@ -370,7 +382,10 @@ export default function AccountForm() {
                     )}
                   </div>
                   <div className="col-span-3">
-                    <Dialog>
+                    <Dialog
+                      open={openDialogs[index]}
+                      onOpenChange={(isOpen) => handleDialogOpen(index, isOpen)}
+                    >
                       <DialogHeader>
                         <DialogTitle></DialogTitle>
                       </DialogHeader>
@@ -381,7 +396,9 @@ export default function AccountForm() {
                       </DialogTrigger>
                       <DialogContent>
                         <editCardContext.Provider value={{ editingCard, editedIndex }}>
-                          <CardsPaymentMethod></CardsPaymentMethod>
+                          <CardsPaymentMethod
+                            setOpen={(isOpen) => handleDialogOpen(index, isOpen)}
+                          />
                         </editCardContext.Provider>
                       </DialogContent>
                     </Dialog>
@@ -426,7 +443,7 @@ export default function AccountForm() {
               </div>
             </>
           ))}
-          <Dialog>
+          <Dialog open={openDialogs[-1]} onOpenChange={(isOpen) => handleDialogOpen(-1, isOpen)}>
             <DialogHeader>
               <DialogTitle></DialogTitle>
             </DialogHeader>
@@ -441,7 +458,7 @@ export default function AccountForm() {
               </Button>
             </DialogTrigger>
             <DialogContent>
-              <CardsPaymentMethod></CardsPaymentMethod>
+              <CardsPaymentMethod setOpen={(isOpen) => handleDialogOpen(-1, isOpen)} />
             </DialogContent>
           </Dialog>
         </>

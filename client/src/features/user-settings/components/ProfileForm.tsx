@@ -13,16 +13,15 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useEffect, useState } from "react";
 import { EditContext } from "./SettingsView";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { CONNECTION_STRING } from "@/utils/constants";
 import { Role } from "./SettingsView";
 import { Button } from "@/components/ui/button";
 import defaultProfile from "@/assets/defaultProfile.png";
 import { uploadToFirebaseReady } from "@/utils/firebase";
 import UserDocuments from "@/components/UserDocuments";
 import { UserRoleEnum } from "@/utils/enums";
+import { updateUser } from "@/api-calls/users-api-calls";
 export default function ProfileForm() {
   const { toast } = useToast();
   const { id } = useParams();
@@ -129,19 +128,34 @@ export default function ProfileForm() {
     form.reset(userWithoutProfilePicture);
   }, [user, form]);
 
-  async function updateUser(data: APIPayload) {
-    const USER_SERVICE_URL = CONNECTION_STRING + `${id}`;
+  async function update(data: APIPayload) {
     try {
-      const response = await axios.patch(USER_SERVICE_URL, data);
+      await updateUser(user, data);
+      if (data.profilePicture) user.profilePicture = data.profilePicture;
+      if (data.firstName) user.firstName = data.firstName;
+      if (data.lastName) user.lastName = data.lastName;
+      if (data.companyName) user.companyName = data.companyName;
+      if (data.role) user.role = data.role;
+      if (data.description) user.description = data.description;
+      if (data.previousWork) user.previousWork = data.previousWork;
+      if (data.job) user.job = data.job;
+      if (data.yearsOfExperience) user.yearsOfExperience = data.yearsOfExperience;
+      if (data.phoneNumber) user.phoneNumber = data.phoneNumber;
+      if (data.hotline) user.hotline = data.hotline;
+      if (data.website) user.website = data.website;
+      if (data.companyProfile) user.companyProfile = data.companyProfile;
+      if (data.addresses) user.addresses = data.addresses;
+      setEditForm(false);
       toast({
-        title: "Update " + response.statusText,
+        title: "Updated Successfully",
+        style: {
+          backgroundColor: "#34D399",
+          color: "#FFFFFF",
+        },
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
     } catch (error) {
       toast({
-        title: "Error: " + (error as any).response.data.error,
+        title: "Error: " + error,
         variant: "destructive",
       });
     }
@@ -165,10 +179,10 @@ export default function ProfileForm() {
       //update the user with the data, however instead of the field profilePicture, we will use the url we got from firebase
       const { profilePicture, ...userWithoutProfilePicture } = data;
       const updatedData = { ...userWithoutProfilePicture, profilePicture: url[0] };
-      updateUser(updatedData);
+      update(updatedData);
     } else {
       const { profilePicture, ...userWithoutProfilePicture } = data;
-      updateUser(userWithoutProfilePicture);
+      update(userWithoutProfilePicture);
     }
   }
   return (

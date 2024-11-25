@@ -5,7 +5,7 @@ import { useState, createContext, useEffect } from "react";
 import axios from "axios";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
-import { CONNECTION_STRING } from "@/utils/constants";
+import { SERVICES_URLS } from "@/lib/constants";
 import { TUser } from "@/types/user";
 export enum Role {
   admin = "admin",
@@ -32,7 +32,7 @@ export default function SettingsView() {
   const { toast } = useToast();
   const { id } = useParams();
 
-  const USER_SERVICE_URL = CONNECTION_STRING + `${id}`;
+  const USER_SERVICE_URL = SERVICES_URLS.USER + "/users/" + `${id}`;
   const [user, setUser] = useState<TUser>({
     _id: "",
     username: "",

@@ -19,9 +19,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { EditContext } from "./SettingsView";
-import { useParams } from "react-router-dom";
-import { CONNECTION_STRING } from "@/utils/constants";
-import axios from "axios";
+import { updateUser } from "@/api-calls/users-api-calls";
 
 const FormSchema = z.object({
   preferences: z.array(z.string()),
@@ -38,29 +36,9 @@ export default function CheckboxReactHookFormMultiple() {
   }
 
   // Update User
-  const { id } = useParams();
-
-  async function updateUser(data: APIPayload) {
-    const USER_SERVICE_URL = CONNECTION_STRING + `${id}`;
+  async function update(data: APIPayload) {
     try {
-      const response = await axios.patch(USER_SERVICE_URL, data);
-      toast({
-        title: "Update " + response.statusText,
-      });
-      // Update user data without reloading the page
-      user.preferences = data.preferences;
-      console.log(data);
-    } catch (error) {
-      toast({
-        title: "Error: " + (error as any).response.data.error,
-        variant: "destructive",
-      });
-    }
-  }
-  //   Submitting
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
-    try {
-      await updateUser(data);
+      await updateUser(user, data);
       toast({
         title: "You submitted the following values:",
         description: (
@@ -73,12 +51,22 @@ export default function CheckboxReactHookFormMultiple() {
           </pre>
         ),
       });
+      // Update user data without reloading the page
+      user.preferences = data.preferences;
     } catch (error) {
       toast({
-        title: "Error: " + (error as any).response.data.error,
+        title: "Error: " + error,
         variant: "destructive",
       });
     }
+  }
+  //   Submitting
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    toast({
+      title: "Updating ... ",
+    });
+    setTimeout(() => {}, 1500);
+    await update(data);
   }
 
   const form = useForm<z.infer<typeof FormSchema>>({
