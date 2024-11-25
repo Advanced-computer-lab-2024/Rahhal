@@ -34,6 +34,8 @@ import {
 import { isWithinInterval } from "date-fns";
 import { getPriceValue } from "../utils/price-calculator";
 import { getUserById } from "@/api-calls/users-api-calls";
+import FilterButton from "./FilterButton";
+import SortButton from "./SortButton";
 
 function GeneralGridView() {
   const [activeFilter, setActiveFilter] = useState<string[]>([]);
@@ -428,18 +430,20 @@ function GeneralGridView() {
         ]}
         searchPartsPlaceholders={["Add Category", "Add Tag"]}
         handleSort={handleSort}
-      >
-        <HeaderIcons
-          activeFilters={activeFilter}
-          handleActiveFilterClick={handleActiveFilterClick}
-        />
-      </FilterSortSearchHeader>
+      ></FilterSortSearchHeader>
       <hr className="border-t bg-[var(--gray-scale)] " />
       <div className="flex w-[100vw]">
         <FilterSideBar sideBarItems={combinedSideBarFilters} />
         <div className={GeneralGridStyle["scrollable"]}>
           <div className={GeneralGridStyle["general-grid-view__header"]}>
-            <h1>Entertainment</h1>
+            <HeaderIcons
+              activeFilters={activeFilter}
+              handleActiveFilterClick={handleActiveFilterClick}
+            />
+            <div className={GeneralGridStyle["filter-sort-buttons__container"]}>
+              <FilterButton />
+              <SortButton onSort={handleSort} />
+            </div>
           </div>
 
           <div className={GeneralGridStyle["general-grid-view__cards"]}>
@@ -452,17 +456,44 @@ function GeneralGridView() {
 
             {!skeleton &&
               sortedCombinedItems.map((item) => (
-                <EntertainmentCard
-                  key={item._id}
-                  image={item.images[0]}
-                  rating={getAverageRating(item.ratings)}
-                  title={item.name}
-                  price={item.price}
-                  languages={(item as Itinerary)?.languages}
-                  availability={(item as Activity)?.isBookingOpen}
-                  openingTime={(item as HistoricalPlace)?.openingHours}
-                  onClick={() => handleCardClick(item)}
-                />
+                <>
+                  <EntertainmentCard
+                    key={item._id}
+                    image={item.images[0]}
+                    rating={getAverageRating(item.ratings)}
+                    title={item.name}
+                    price={item.price}
+                    languages={(item as Itinerary)?.languages}
+                    availability={(item as Activity)?.isBookingOpen}
+                    openingTime={(item as HistoricalPlace)?.openingHours}
+                    date={(item as Activity)?.date}
+                    onClick={() => handleCardClick(item)}
+                  />
+                  <EntertainmentCard
+                    key={item._id}
+                    image={item.images[0]}
+                    rating={getAverageRating(item.ratings)}
+                    title={item.name}
+                    price={item.price}
+                    languages={(item as Itinerary)?.languages}
+                    availability={(item as Activity)?.isBookingOpen}
+                    openingTime={(item as HistoricalPlace)?.openingHours}
+                    date={(item as Activity)?.date}
+                    onClick={() => handleCardClick(item)}
+                  />
+                  <EntertainmentCard
+                    key={item._id}
+                    image={item.images[0]}
+                    rating={getAverageRating(item.ratings)}
+                    title={item.name}
+                    price={item.price}
+                    languages={(item as Itinerary)?.languages}
+                    availability={(item as Activity)?.isBookingOpen}
+                    openingTime={(item as HistoricalPlace)?.openingHours}
+                    date={(item as Activity)?.date}
+                    onClick={() => handleCardClick(item)}
+                  />
+                </>
               ))}
           </div>
         </div>

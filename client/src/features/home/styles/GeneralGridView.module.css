@@ -13,7 +13,7 @@ body {
 .general-grid-view__filter-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   background-color: #fff; /* White background */
   width: 100%;
   padding: 10px 0; /* Add some padding */
@@ -31,35 +31,53 @@ body {
 .icon-wrapper {
   display: inline-flex;
   justify-content: center;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  width: 5vw; /* Relative size based on viewport width */
-  height: 5vw; /* Keep container square and proportional */
-  max-width: 100px; /* Limit maximum size for larger screens */
-  max-height: 100px;
-  border-radius: 50%; /* Circular wrapper */
+  width: 3.75vw;
+  height: 3.75vw;
+  position: relative;
   transition:
     background-color 0.7s ease,
-    transform 0.6s ease; /* Smooth hover */
+    transform 0.6s ease;
 }
 
-.selected {
-  background-color: rgb(186, 185, 185); /* Grey background when selected */
+.icon-wrapper p {
+  margin: 8px;
+  font-size: 0.7rem; 
+  white-space: nowrap; 
+  text-overflow: ellipsis; 
+}
+.icon-wrapper::after {
+  content: "";
+  position: absolute;
+  bottom: -8px; 
+  left: 15%; 
+  width: 70%; 
+  height: 3px; /* Thickness of the underline */
+  background-color: transparent; 
+  transform: scaleX(0); /* Initially hidden */
+  transform-origin: center; /* Expand from the center */
+  transition:
+    transform 0.3s ease,
+    background-color 0.3s ease; /* Smooth appearance */
 }
 
-/* Apply the hover effect on the wrapper */
-.icon-wrapper:hover {
-  background-color: rgb(186, 185, 185); /* Grey background on hover */
+.icon-wrapper:hover::after {
+  transform: scaleX(1); /* Show underline */
+  background-color: gray; /* Set underline color */
+}
+.icon-wrapper.selected::after {
+  transform: scaleX(1); /* Show underline */
+  background-color: black; /* Set underline color */
 }
 
 /* The image remains unaffected */
 .icon-wrapper img {
-  max-width: 70%; /* Image adjusts based on the size of the wrapper */
+  max-width: 60%; /* Image adjusts based on the size of the wrapper */
   height: auto;
   transition: transform 0.6s ease; /* Smooth hover transform */
-}
-
-.selected {
-  background-color: rgb(186, 185, 185); /* Grey background on hover */
 }
 
 .scrollable {
@@ -72,15 +90,17 @@ body {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 40px; /* Add some space between cards */
-  padding: 20px;
+  gap: 20px; /* Add some space between cards */
 }
 
 .general-grid-view__header {
   display: flex;
   align-items: center;
   flex-direction: row;
-  padding: 20px;
+  justify-content: space-between;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  padding-left: 0.6rem;
 }
 
 .general-grid-view__header h1 {
@@ -90,7 +110,7 @@ body {
 }
 
 .custom-hr {
-  height: 2px; /* Thickness of the line */
+  height: 2px; 
   background-color: #ccc; /* Line color */
   border: none; /* Remove any borders */
   width: 100%; /* Line width */
@@ -99,8 +119,8 @@ body {
 
 @media (max-width: 768px) {
   .icon-wrapper {
-    width: 15vw; /* Larger icons for smaller devices */
-    height: 15vw;
+    width: 1vw; 
+    height: 1vw;
     max-width: 80px;
     max-height: 80px;
   }
@@ -152,9 +172,7 @@ body {
 .filter-sort-buttons__container {
   display: flex;
   flex-direction: row;
-
-  padding: 10px 20px;
-  background-color: #fff;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly; /* Ensure proper spacing */
+  padding-right: 3%;
 }

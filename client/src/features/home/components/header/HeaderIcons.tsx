@@ -11,7 +11,10 @@ interface HeaderIconsProps {
 }
 function HeaderIcons({ activeFilters, handleActiveFilterClick }: HeaderIconsProps) {
   return (
-    <>
+
+    <div style={{display:"flex", gap:"30%"}}>
+
+   
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger>
@@ -20,11 +23,10 @@ function HeaderIcons({ activeFilters, handleActiveFilterClick }: HeaderIconsProp
               onClick={() => handleActiveFilterClick("itinerary")}
             >
               <img src={itinerarypic} alt="itinerary" />
+              <p>Itinerary</p>
             </div>
           </TooltipTrigger>
-          <TooltipContent>
-            <p>Itineraries</p>
-          </TooltipContent>
+          
         </Tooltip>
       </TooltipProvider>
 
@@ -36,11 +38,10 @@ function HeaderIcons({ activeFilters, handleActiveFilterClick }: HeaderIconsProp
               onClick={() => handleActiveFilterClick("place")}
             >
               <img src={placePic} alt="place" />
+              <p>Historical Places</p>
             </div>
           </TooltipTrigger>
-          <TooltipContent>
-            <p>Places</p>
-          </TooltipContent>
+         
         </Tooltip>
       </TooltipProvider>
 
@@ -52,14 +53,14 @@ function HeaderIcons({ activeFilters, handleActiveFilterClick }: HeaderIconsProp
               onClick={() => handleActiveFilterClick("activity")}
             >
               <img src={activityPic} alt="activity" />
+              <p>Activities</p>
             </div>
           </TooltipTrigger>
-          <TooltipContent>
-            <p>Activities</p>
-          </TooltipContent>
+         
         </Tooltip>
       </TooltipProvider>
-    </>
+
+    </div>
   );
 }
 export default HeaderIcons;

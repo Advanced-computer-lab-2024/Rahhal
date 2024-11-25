@@ -27,7 +27,6 @@ function FilterSortSearchHeader({
   searchPartsTypes,
   searchPartsHandlers,
   children,
-  handleSort,
 }: FilterSortSearchHeaderProps) {
   return (
     <>
@@ -48,10 +47,7 @@ function FilterSortSearchHeader({
             {children}
           </div>
         )}
-        <div className={GeneralGridStyle["filter-sort-buttons__container"]}>
-          <FilterButton />
-          <SortButton onSort={handleSort} />
-        </div>
+        
       </div>
     </>
   );

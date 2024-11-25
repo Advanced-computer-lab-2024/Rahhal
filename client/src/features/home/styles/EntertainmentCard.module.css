@@ -1,108 +1,138 @@
-/* Note: The card component needs to be placed in a div atleast with 280 pixels wide so no wrap occurs in the title */
-
+/* General container styles */
 .entertainment-card-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  width: 330px;
-  cursor: pointer;
-  transition: filter 0.3s ease;
-}
-
-.entertainment-card-container:hover {
-  filter: brightness(0.85);
-}
-
-.entertainment-card-container__image {
+  justify-content: flex-start;
+  align-items: center;
   width: 100%;
-  height: 240px; /* Set a fixed height for the image container */
+  max-width: 330px;
+  aspect-ratio: 3 / 4;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+/* Image styles */
+.entertainment-card-container__image {
+  width: calc(100% - 1.2rem); 
+  height: 70%; 
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
-  border-radius: 20px;
+  background-color: #f5f5f5; 
 }
 
 .entertainment-card-container__image img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* This ensures the image covers the entire container while maintaining its aspect ratio */
+  object-fit: cover;
   border-radius: inherit;
 }
 
+/* Details section */
 .entertainment-card-container__details {
-  display: grid;
-  grid-template-columns: 2.2fr 1fr;
-  grid-gap: 10px; /* Add some space between grid items */
-  padding: 1%;
-}
-
-.entertainment-card-container__rating {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: right;
-  gap: 3%;
-}
-
-.entertainment-card-container__title-location {
+  width: 100%;
+  height: 30%; 
+  padding: 0.8rem;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: start;
-  text-wrap: nowrap;
+  gap: 0.6rem; 
 }
 
-.entertainment-card-container__title-location h3 {
-  margin: 0; /* Remove default margin from the title element */
-  margin: 0;
-  padding: 0;
+/* Title and Rating */
+.entertainment-card-container__title-rating {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
+.entertainment-card-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0 0 0.6rem 0; 
   overflow: hidden;
-  text-overflow: ellipsis; /* This adds the "..." when the text is too long */
-  max-width: 100%; /* Ensure it respects the parent's width */
-  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.entertainment-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.rating-icon {
+  font-size: 0.9rem;
+  color: #222;
+}
+
+.entertainment-card-rating p {
+  font-size: 0.9rem;
+  color: #555;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Location */
+.entertainment-card-container__location {
+  font-size: 0.85rem;
+  color: #555;
+  margin: 0.5rem 0;
+}
+
+.location-icon {
+  font-size: 0.8rem;
+  margin-right: 0.4rem;
+}
+
+/* Booking and price section */
+.entertainment-card-container__booking-price {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  font-size: 0.9rem;
+  font-weight: bold;
+  line-height: 1.7;
+}
+
+.entertainment-card-container__booking-price p {
+  margin: 0;
+}
+
+.entertainment-card-container__languages{
+  font-size: 12px;
+  color: #5e5e5e;
+  font-weight: normal;
+}
+
+.entertainment-card-container__booking-price .entertainment-card-price p {
+  font-weight: normal;
   font-size: medium;
 }
 
-.entertainment-card-container__title-location p {
-  margin: 0;
-  margin-top: 2%; /* Remove default margin from the title and location elements */
-  padding: 0;
-}
-
-.entertainment-card-container__price {
-  display: flex;
-  justify-content: right;
-  align-items: flex-end;
-}
-
-.entertainment-card-container__price p {
-  margin: 0;
-  padding: 0;
-  font-size: 1.01rem;
-  font-weight: 500;
-  overflow: hidden;
-  text-wrap: nowrap;
-  max-width: 100%; /* Ensure it respects the parent's width */
-}
-
-.entertainment-card-container__language-time {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
-}
-
-.entertainment-card-container__language-time p {
-  margin: 0;
-  margin-top: 3%;
+.entertainment-card-container__booking-price .entertainment-card-availability p {
+  font-weight: normal;
   font-size: small;
-  text-align: left;
 }
 
-@media (max-width: 1000px) {
-  .entertainment-card-container {
-    width: 350px;
-  }
+/* Date and time styles */
+.entertainment-card-container__date,
+.entertainment-card-container__time {
+  font-weight: normal;
+  font-size: 12px;
+  color: #5e5e5e;
 }
+
+/* General <h3> styles */
+.entertainment-card-container h3 {
+  font-size: 1.2rem;
+  font-weight:500;
+  color: #222;
+  margin: 0;
+  line-height: 1.4;
+}
+
