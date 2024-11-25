@@ -1,3 +1,5 @@
+
+
 export const CartExample = {
   _id: '5f0b0e7b6f6b6b001f6f3b3d',
   userId: '67433c21ae0c15329a432cc4',
@@ -9,7 +11,7 @@ export const CartExample = {
         picture: 'https://firebasestorage.googleapis.com/v0/b/rahhal-569d6.firebasestorage.app/o/products%2F6740c4795969e92342a1a1ba%2F6740c5579c71a86ca80ed233%2Frahhal%20hoodie.jpeg?alt=media&token=ccb24ddc-faf7-4128-9487-50cd36e8a93c',
         price: 200,
       },
-      quantity: 5
+      quantity: 3
     },
     {
       product: {
@@ -22,6 +24,45 @@ export const CartExample = {
     }
   ]
 };
+export enum PaymentMethod {
+  wallet = "wallet",
+  creditCard = "creditCard",
+  cash = "cash",
+}
+
+export interface IItem {
+  name: string;
+  price: number;
+  quantity: number;
+  seller: string;
+  picture: string; // this will be needed if we want to display the item picture in the order history
+  productId: string;
+}
+
+
+export enum OrderStatus {
+  received = "received",
+  processing = "processing",
+  shipped = "shipped",
+  delivered = "delivered",
+  cancelled = "cancelled",
+}
+
+export interface IOrder {
+  _id: string;
+  userId: string;
+  orderStatus: OrderStatus;
+  paymentMethod: PaymentMethod;
+  items: IItem[];
+  totalPrice: number;
+  totalQuantity: number;
+  promoCode?: string;
+  discountAmount?: number;
+  billingAddress?: string;
+  shippingAddress: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 
 interface PromoCode {

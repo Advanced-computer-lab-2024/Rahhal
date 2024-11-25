@@ -40,7 +40,7 @@ export function OrderSummary({ products }: CartProps) {
   const [error, setError] = useState<string | null>(null);
   const defaultShipping = 100;
   
-  const subtotal = products.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
+  let subtotal = products.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
   const subTotalConverted = currencyExchange(baseCurrency, subtotal);
   const subTotalDisplayed = subTotalConverted ? subTotalConverted.toFixed(2) : 'N/A';
 
@@ -66,11 +66,11 @@ export function OrderSummary({ products }: CartProps) {
     return defaultShipping;
   };
 
-  const discountAmount = calculateDiscount();
+  let discountAmount = calculateDiscount();
   const discountAmountConverted = currencyExchange(baseCurrency, discountAmount);
   const discountAmountDisplayed = discountAmountConverted ? discountAmountConverted.toFixed(2) : 'N/A';
 
-  const shippingCost = getShippingCost();
+  let shippingCost = getShippingCost();
   const shippingCostConverted = currencyExchange(baseCurrency, shippingCost);
   const shippingCostDisplayed = shippingCostConverted ? shippingCostConverted.toFixed(2) : 'N/A';
 
@@ -111,11 +111,17 @@ export function OrderSummary({ products }: CartProps) {
     getShippingCost();
   };
 
+  const productsWithViewingPrices = products.map((item) => ({
+    ...item,
+    viewingPrice: currencyExchange(baseCurrency, item.product.price * item.quantity)?.toFixed(2) || 'N/A'
+  }));
+
+
 
   return (
     <div className="max-w-md mx-auto p-4">
       <div className="space-y-4">
-        {products.map((item) => (
+        {productsWithViewingPrices.map((item) => (
           <div key={item.product._id} className="flex items-center gap-4">
             <div className="relative">
               <img
@@ -132,10 +138,7 @@ export function OrderSummary({ products }: CartProps) {
             </div>
             <div className="text-right">
               <p className="font-medium">
-                {currencyExchange(baseCurrency, (item.product.price * item.quantity)) ?
-                  currencyExchange(baseCurrency, (item.product.price * item.quantity))?.toFixed(2)
-                  :
-                  'N/A'}
+                {item.viewingPrice}
                 {" "} {currency}</p>
             </div>
           </div>
