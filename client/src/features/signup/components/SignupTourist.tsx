@@ -23,13 +23,14 @@ import { termsAndConditions } from "../terms-and-conditions/TouistTermsAndCondit
 import { countries } from "../utils/constants";
 import { touristSchema } from "../utils/ZodSchemas/touristSchema";
 import { createUser } from "@/api-calls/users-api-calls";
+import { SignupProps } from "../utils/constants";
 
 type TouristFormData = z.infer<typeof touristSchema>;
 
-export default function SignupTourist() {
+export default function SignupTourist({ isSubmitting, setIsSubmitting }: SignupProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const {
     control,
@@ -140,11 +141,11 @@ export default function SignupTourist() {
 
   return (
     <div className="flex">
-      <Card className="w-full max-w-3xl flex flex-col">
+      <Card className="w-full max-w-3xl flex flex-col" style={{borderColor : "#FFFFFF"}}>
         <CardHeader className="flex flex-row items-center space-x-4">
           <CardTitle className="text-3xl font-bold">Tourist Sign Up</CardTitle>
         </CardHeader>
-        <CardContent className="flex overflow-y-auto h-[calc(100vh-200px)]">
+        <CardContent className="flex overflow-y-auto h-[calc(100vh-200px)] hide-scrollbar">
           <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
             <Controller
               name="firstName"
