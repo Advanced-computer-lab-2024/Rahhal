@@ -16,13 +16,14 @@ import { termsAndConditions } from "../terms-and-conditions/SellerTermsAndCondit
 import { sellerSchema } from "../utils/ZodSchemas/sellerSchema";
 import { createUser, updateUser } from "@/api-calls/users-api-calls";
 import { uploadToFirebaseReady } from "@/utils/firebase";
+import { SignupProps } from "../utils/constants";
 
 type SellerFormData = z.infer<typeof sellerSchema>;
 
-export default function SignupSeller() {
+
+export default function SignupSeller({ isSubmitting, setIsSubmitting }: SignupProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     control,
@@ -160,11 +161,11 @@ export default function SignupSeller() {
 
   return (
     <div className="flex h-full">
-      <Card className="w-full max-w-3xl flex flex-col shadow-none bg-transparent">
+      <Card className="w-full max-w-3xl flex flex-col shadow-none bg-transparent" style={{borderColor : "#FFFFFF"}}>
         <CardHeader className="flex-none pb-7">
           <CardTitle className="text-3xl font-bold">Seller Sign Up</CardTitle>
         </CardHeader>
-        <CardContent className="flex overflow-y-auto h-[calc(100vh-200px)]">
+        <CardContent className="flex overflow-y-auto h-[calc(100vh-200px)] hide-scrollbar">
           <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
             <Controller
               name="firstName"
