@@ -32,7 +32,7 @@ export default function SettingsView() {
   const { toast } = useToast();
   const { id } = useParams();
 
-  const USER_SERVICE_URL = SERVICES_URLS.USER_CONTROLLER + `${id}`;
+  const USER_SERVICE_URL = SERVICES_URLS.USER + "/users/" + `${id}`;
   const [user, setUser] = useState<TUser>({
     _id: "",
     username: "",
