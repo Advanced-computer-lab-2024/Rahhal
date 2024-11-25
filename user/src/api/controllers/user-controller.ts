@@ -208,7 +208,7 @@ export async function redeemPoints(req: Request, res: Response) {
           .json({ error: "You Have to have at least 10000 points to be able to redeem them!" });
         return;
       } else {
-        const newUser = userService.redeemPoints(user);
+        const newUser = await userService.redeemPoints(user);
         res.status(STATUS_CODES.STATUS_OK).json(newUser);
       }
     }
