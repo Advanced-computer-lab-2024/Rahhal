@@ -320,16 +320,13 @@ export default function AccountForm() {
             <div className="space-y-2">
               <div className="grid grid-cols-12">
                 <div className="col-span-2">
-                  {editForm && (
-                    <>
-                      <button
-                        className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
-                        type="submit"
-                      >
-                        Update account
-                      </button>
-                    </>
-                  )}
+                  <button
+                    className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
+                    type="submit"
+                    disabled={!editForm || !form.formState.isValid}
+                  >
+                    Update account
+                  </button>
                 </div>
                 <div className="col-span-8"></div>
                 <div className="col-span-2 ml-auto">

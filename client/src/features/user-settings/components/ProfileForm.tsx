@@ -603,16 +603,13 @@ export default function ProfileForm() {
               />
             </div>
           )}
-          {editForm && (
-            <>
-              <button
-                className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
-                type="submit"
-              >
-                Update profile
-              </button>
-            </>
-          )}
+          <button
+            className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
+            type="submit"
+            disabled={!editForm || !form.formState.isValid}
+          >
+            Update profile
+          </button>
         </div>
       </form>
     </Form>
