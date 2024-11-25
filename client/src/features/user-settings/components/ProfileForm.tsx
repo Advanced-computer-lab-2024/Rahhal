@@ -188,7 +188,7 @@ export default function ProfileForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="space-y-6" style={{width: "80%"}}>
+        <div className="space-y-6" style={{ width: "80%" }}>
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-medium">Profile</h3>
             <Button
