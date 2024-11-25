@@ -307,29 +307,6 @@ export default function ProfileForm() {
               </div>
             </>
           )}
-          {/* Role */}
-          <div className="space-y-2">
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Role</FormLabel>
-                  <FormControl>
-                    <Button
-                      type="button"
-                      className="ml-5 shadow-lg"
-                      disabled
-                      style={{ width: "45px", color: "white", backgroundColor: "var(--primary-color-dark)", height: "27px", fontSize: "12px" }}
-                    >
-                      {field.value || user.role}
-                    </Button>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
           {/* Phone Number */}
           {user.role == "tourGuide" && (
             <>
