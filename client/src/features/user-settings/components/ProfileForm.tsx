@@ -188,7 +188,7 @@ export default function ProfileForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="space-y-6">
+        <div className="space-y-6" style={{width: "80%"}}>
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-medium">Profile</h3>
             <Button
@@ -196,6 +196,7 @@ export default function ProfileForm() {
                 setEditForm(true);
               }}
               type="button"
+              className="bg-[var(--complimentary-color)] hover:bg-[var(--complimentary-color-dark)] text-white shadow-lg"
             >
               Edit Profile
             </Button>
@@ -315,7 +316,14 @@ export default function ProfileForm() {
                 <FormItem>
                   <FormLabel>Role</FormLabel>
                   <FormControl>
-                    <Input placeholder="e:g tourist" disabled {...field} />
+                    <Button
+                      type="button"
+                      className="ml-5 shadow-lg"
+                      disabled
+                      style={{ width: "45px", color: "white", backgroundColor: "var(--primary-color-dark)", height: "27px", fontSize: "12px" }}
+                    >
+                      {field.value || user.role}
+                    </Button>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -621,7 +629,7 @@ export default function ProfileForm() {
           {editForm && (
             <>
               <button
-                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
+                className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
                 type="submit"
               >
                 Update profile

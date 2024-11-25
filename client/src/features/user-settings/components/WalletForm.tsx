@@ -216,10 +216,10 @@ export default function AccountForm() {
 
   return (
     <>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4"  style={{width:"80%"}}>
         <h3 className="text-lg font-medium">Payment Information</h3>
         {/* <div className="flex items-center"> */}
-        <div className="ml-auto flex items-center" style={{ width: "52%" }}>
+        <div className="ml-auto flex items-center">
           <p style={{ fontSize: "0.875rem" }}>
             <i>
               Experience Level {badgeLevel}: <b>{badgeLevelColor}</b>
@@ -229,11 +229,11 @@ export default function AccountForm() {
         </div>
         {/* </div> */}
       </div>
-      <Separator id={styles["cardWidth"]} className="mt-5 mb-5"></Separator>
+      <Separator className="mt-5 mb-5"  style={{width:"80%"}}></Separator>
       <Form {...form}>
         {/* Wallet */}
         {user.role === "tourist" && (
-          <div className="grid grid-cols-12 gap-6" style={{ maxWidth: "70%" }}>
+          <div className="grid grid-cols-12 gap-6" style={{width:"80%"}}>
             <div className="col-span-6">
               <FormField
                 control={form.control}
@@ -374,7 +374,7 @@ export default function AccountForm() {
                           disabled
                           id={styles["buttonSize"]}
                           className="h-9"
-                          style={{ width: "100%" }}
+                          style={{ width: "50px", color: "white", backgroundColor: "var(--primary-color-dark)", height: "27px", fontSize: "12px" }}
                         >
                           Default
                         </Button>
