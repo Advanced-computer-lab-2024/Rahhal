@@ -130,6 +130,7 @@ export const DEFAULTS = {
     active: true,
     appropriate: true,
     owner: "",
+    ownerName: "",
   },
   COMPLAINT: {
     _id: "",

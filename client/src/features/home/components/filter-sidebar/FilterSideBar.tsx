@@ -34,8 +34,10 @@ function FilterSideBar({
   return (
     <aside
       className={cn(
-        "z-10 ease-in-out duration-300 border border-r-gray-400",
-        isOpen ? `w-[50vh] overflow-y-scroll ${heightClass}` : "w-0 overflow-hidden",
+        "z-10 ease-in-out duration-300 ",
+        isOpen
+          ? `w-[50vh] overflow-y-scroll ${heightClass} border-r border-gray-500`
+          : "w-0 overflow-hidden",
       )}
     >
       {isOpen && (
@@ -54,7 +56,7 @@ function FilterSideBar({
                 <AccordionTrigger className="ml-2 hover:no-underline">
                   {item.title}
                 </AccordionTrigger>
-                <AccordionContent className="flex justify-center items-center mt-7">
+                <AccordionContent className="flex justify-center items-center  relative overflow-visible !overflow-visible">
                   {item.content}
                 </AccordionContent>
               </AccordionItem>

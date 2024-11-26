@@ -28,6 +28,7 @@ export type TActivity = {
   tags: { _id: string; name: string }[];
   ratings: TRating[];
   owner: string;
+  ownerName: string;
 };
 // Derive TNewActivity from TActivity
 export type TNewActivity = Omit<TActivity, "preferenceTags" | "category" | "tags" | "_id"> & {

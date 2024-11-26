@@ -21,8 +21,8 @@ export function validateRatings(ratings: IRating[]) {
 }
 
 // Validate that the given string is not empty
-export function validateStringNotEmpty(str: string) {
-  return str.trim().length > CONSTANTS.ZERO;
+export function validateStringNotEmpty(str: any) {
+  return typeof str === 'string' ? (str.trim()).length > CONSTANTS.ZERO : str.toString().length > CONSTANTS.ZERO;
 }
 
 // validate list is not empty

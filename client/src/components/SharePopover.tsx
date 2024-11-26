@@ -1,24 +1,29 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
-import { Copy,Check } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 interface SharePopoverProps {
   link: string;
+  size?: number;
+  shareText?: boolean;
 }
 import { Share } from "lucide-react";
 
 export default function SharePopover(props: SharePopoverProps) {
   const [checked, setChecked] = useState(false);
   return (
-    <Popover >
+    <Popover>
       <PopoverTrigger>
-        <button>
-          <Share />
+        <button className="flex justify-center">
+          <Share size={props.size} />
+          {props.shareText && (
+            <span className="ml-1 transition-all duration-300 hover:underline text-sm ">Share</span>
+          )}
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-96" align={'start'}>
+      <PopoverContent className="w-96" align={"start"}>
         <div className="flex items-center space-x-2">
           <Input value={props.link} readOnly={true} autoFocus={false} />
           <button
@@ -39,7 +44,7 @@ export default function SharePopover(props: SharePopoverProps) {
           <span className="mx-3 text-gray-600">or</span>
           <hr className="flex-grow border-t border-gray-400" />
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center bg-black rounded-md">
           <a className="w-full" href={`mailto:?subject=Join Rahhal&body=${props.link}`}>
             {" "}
             <Button className="w-full"> Send Email </Button>

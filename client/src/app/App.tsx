@@ -38,6 +38,8 @@ import ProductReport from "@/features/seller/components/ProductReport";
 import HotelsPage from "@/features/home/components/HotelsPage";
 import HotelDetails from "@/features/home/components/HotelDetails";
 import { useHotelStore } from "@/stores/hotel-store";
+import ActivityDetailsPage from "@/features/home/components/activities/ActivityDetailsPage";
+import ItineraryDetailsPage from "@/features/home/components/itineraries/ItineraryDetailsPage";
 
 export default function App() {
   const { setRates } = useRatesStore();
@@ -68,7 +70,9 @@ export default function App() {
               <Route path="/stays/:id" element={<HotelsPage loggedIn={true} />} />
               <Route path="/stays/:id/hotel/:index" element={<HotelDetails hotels={hotels} />} />
             </Route>
-            <Route path="/my-trips-details" element={<TripDetails />} />
+            <Route path="/activities/:id" element={<ActivityDetailsPage />} />
+            <Route path="/itineraries/:id" element={<ItineraryDetailsPage />} />
+            <Route path="/my-trips-details/:id" element={<TripDetails />} />
 
             <Route path="/signup" element={<SignupSelector />} />
             <Route path="/signin" element={<Login />} />

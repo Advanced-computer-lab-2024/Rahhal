@@ -24,6 +24,7 @@ export interface IActivity {
   ratings?: IRating[];
   isAppropriate: boolean;
   owner: string;
+  ownerName: string;
   deleted: boolean;
 }
 
@@ -90,6 +91,14 @@ const activitySchema = new mongoose.Schema<IActivity>({
     validate: {
       validator: validateStringNotEmpty,
       message: "Owner must not be empty",
+    },
+  },
+  ownerName: {
+    type: String,
+    required: true,
+    validate: {
+      validator: validateStringNotEmpty,
+      message: "Owner name must not be empty",
     },
   },
   deleted: { type: Boolean, default: false },

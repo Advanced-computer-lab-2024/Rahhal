@@ -54,6 +54,7 @@ function AdvertiserView() {
           newRowModal={
             <ActivitiesModal
               userId={id}
+              username={user?.companyName}
               activityData={undefined}
               dialogTrigger={<DataTableAddButton />}
             />

@@ -55,7 +55,7 @@ export default function PlacesAutocomplete({ setLocation }: PlacesAutocompletePr
   }, [debouncedInput]);
 
   return (
-    <Command className="rounded-lg border shadow-md w-80 m-1">
+    <Command className="rounded-3xl border shadow-md w-96 mt-2">
       <CommandInput
         placeholder="Start typing to search..."
         value={input}
