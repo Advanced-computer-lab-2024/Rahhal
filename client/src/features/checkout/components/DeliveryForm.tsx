@@ -3,57 +3,55 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TUser } from "@/types/user";
-import { useState } from "react";
 import { PaymentOptions } from "./PaymentOptions";
-import { CartExample , IOrder, OrderStatus , PaymentMethod } from "../utils/CartExample";
 
-export function DeliveryForm({ user }: { user: Partial<TUser> }) {
-  const [selectedAddress, setSelectedAddress] = useState("");
-  const [newAddress, setNewAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [postalCode, setPostalCode] = useState("");
-  const [phone, setPhone] = useState("");
-  const [saveInfo, setSaveInfo] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('cod');
-  const [errors, setErrors] = useState<{ address?: string; city?: string; postalCode?: string; phone?: string }>({});
-
-
-  const handleContinueToPayment = () => {
-    const newErrors: { address?: string; city?: string; postalCode?: string; phone?: string } = {};
-
-    if (!selectedAddress && !newAddress) {
-      newErrors.address = "Address is required";
-    }
-    if (!selectedAddress && !city) {
-      newErrors.city = "City is required";
-    }
-    if (!selectedAddress && !postalCode) {
-      newErrors.postalCode = "Postal code is required";
-    }
-    if (!phone) {
-      newErrors.phone = "Phone is required";
-    }
-
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    if (saveInfo && newAddress && city) {
-      const fullAddress = `${newAddress}, ${city}`;
-      const updatedAddresses = [...(user.addresses || []), fullAddress];
-      setSelectedAddress(fullAddress);
-
-      console.log("Address saved:", fullAddress);
-      console.log("All addresses:", updatedAddresses);
-    }
-
-  
-    console.log("Selected Address", selectedAddress);
-    console.log("Continuing to payment...");
+export function DeliveryForm({
+  user,
+  selectedAddress,
+  setSelectedAddress,
+  newAddress,
+  setNewAddress,
+  city,
+  setCity,
+  postalCode,
+  setPostalCode,
+  phone,
+  setPhone,
+  saveInfo,
+  setSaveInfo,
+  selectedPaymentMethod,
+  setSelectedPaymentMethod,
+  errors,
+  setErrors,
+}: {
+  user: Partial<TUser>;
+  selectedAddress: string;
+  setSelectedAddress: (address: string) => void;
+  newAddress: string;
+  setNewAddress: (address: string) => void;
+  city: string;
+  setCity: (city: string) => void;
+  postalCode: string;
+  setPostalCode: (postalCode: string) => void;
+  phone: string;
+  setPhone: (phone: string) => void;
+  saveInfo: boolean;
+  setSaveInfo: (save: boolean) => void;
+  selectedPaymentMethod: string;
+  setSelectedPaymentMethod: (method: string) => void;
+  errors: {
+    address?: string;
+    city?: string;
+    postalCode?: string;
+    phone?: string;
   };
-
+  setErrors: (errors: {
+    address?: string;
+    city?: string;
+    postalCode?: string;
+    phone?: string;
+  }) => void;
+}) {
   return (
     <div>
       <h2 className="text-xl font-semibold">Delivery</h2>
@@ -150,14 +148,6 @@ export function DeliveryForm({ user }: { user: Partial<TUser> }) {
           </div>
         )}
         <PaymentOptions selectedPaymentMethod={selectedPaymentMethod} setSelectedPaymentMethod={setSelectedPaymentMethod} />
-        <div className="pt-6">
-          <button
-            className="w-full bg-[--complimentary-color-dark] hover:bg-[--complimentary-color-fade] text-white py-3 px-4 rounded-md font-medium transition-colors"
-            onClick={handleContinueToPayment}
-          >
-            {selectedPaymentMethod === 'cod' ? "Complete Order" : "Continue to Payment"}
-          </button>
-        </div>
       </div>
     </div>
   );

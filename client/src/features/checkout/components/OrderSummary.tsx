@@ -5,7 +5,12 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { PROMO_CODES } from '../utils/CartExample';
 import { useState } from 'react';
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
+import { TUser } from "@/types/user";
 import currencyExchange from '@/utils/currency-exchange';
+import { handlePayment } from './Payment';
+import { updateUser } from '@/api-calls/users-api-calls';
+import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 interface Product {
   _id: string;
@@ -31,7 +36,31 @@ interface Promotion {
   description: string;
 }
 
-export function OrderSummary({ products }: CartProps) {
+export function OrderSummary({
+  cart,
+  user,
+  newAddress,
+  city,
+  postalCode,
+  phone,
+  saveInfo,
+  selectedPaymentMethod,
+  setErrors,
+  setCompleted,
+}: {
+  cart:CartProps;
+  user:TUser;
+  newAddress: string;
+  city: string;
+  postalCode: string;
+  phone: string;
+  saveInfo: boolean;
+  selectedPaymentMethod: string;
+  setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  setCompleted: React.Dispatch<React.SetStateAction<boolean>>;
+})  {
+  const {toast} = useToast();
+  const navigate = useNavigate();
   const {currency} = useCurrencyStore();
   const baseCurrency = 'EGP';
 
@@ -40,14 +69,10 @@ export function OrderSummary({ products }: CartProps) {
   const [error, setError] = useState<string | null>(null);
   const defaultShipping = 100;
   
-  let subtotal = products.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
+  let subtotal = cart.products.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
   const subTotalConverted = currencyExchange(baseCurrency, subtotal);
   const subTotalDisplayed = subTotalConverted ? subTotalConverted.toFixed(2) : 'N/A';
-
-
   
-
-
   const calculateDiscount = () => {
     if (!activePromotion) return 0;
 
@@ -84,7 +109,7 @@ export function OrderSummary({ products }: CartProps) {
   const totalConverted = currencyExchange(baseCurrency, total);
   const totalDisplayed = totalConverted ? totalConverted.toFixed(2) : 'N/A';
   
-  const handleApplyPromoCode = () => {
+  const  handleApplyPromoCode = () => {
     setError(null);
 
     if (!promoCode.trim()) {
@@ -111,12 +136,66 @@ export function OrderSummary({ products }: CartProps) {
     getShippingCost();
   };
 
-  const productsWithViewingPrices = products.map((item) => ({
+  const productsWithViewingPrices = cart.products.map((item) => ({
     ...item,
     viewingPrice: currencyExchange(baseCurrency, item.product.price * item.quantity)?.toFixed(2) || 'N/A'
   }));
 
+  async function handleContinueToPayment () {
+    const newErrors: { address?: string; city?: string; postalCode?: string; phone?: string } = {};
 
+    if (!newAddress) {
+      newErrors.address = "Address is required";
+    }
+    if (!city) {
+      newErrors.city = "City is required";
+    }
+    if (!postalCode) {
+      newErrors.postalCode = "Postal code is required";
+    }
+    if (!phone) {
+      newErrors.phone = "Phone is required";
+    }
+
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    else{
+      newErrors.address = "";
+      newErrors.city = "";
+      newErrors.postalCode = "";
+      newErrors.phone = "";
+      setErrors(newErrors);
+    }
+
+
+    try{
+      const fullAddress = `${newAddress}, ${city}`;
+      await handlePayment(selectedPaymentMethod, discountAmount, activePromotion?.code || '', fullAddress);
+      if(saveInfo){
+        const updatedAddresses = [...(user.addresses || []), fullAddress];
+        console.log(updatedAddresses);
+        await updateUser(user, {addresses: updatedAddresses});
+      }
+      setCompleted(true);
+      setTimeout(() => {
+        setCompleted(false);
+        navigate(`/my-orders/${user._id}`);
+
+      }, 7000);
+    }
+    catch(e){
+      toast({
+        title: "Error",
+        description: (e as any).response.data.error,
+        variant: "destructive",
+
+        duration: 3000,
+      });
+    }
+  };
 
   return (
     <div className="max-w-md mx-auto p-4">
@@ -236,6 +315,16 @@ export function OrderSummary({ products }: CartProps) {
           </div>
         </div>
       </div>
+      <div className="pt-6">
+          <button
+            className="w-full bg-[--complimentary-color-dark] hover:bg-[--complimentary-color-fade] disabled:bg-[--complimentary-color-fade] text-white py-3 px-4 rounded-md font-medium transition-colors"
+            onClick={handleContinueToPayment}
+            disabled={selectedPaymentMethod === ''}
+          >
+            {selectedPaymentMethod === 'cash' ? "Complete Order" : "Continue to Payment"}
+            
+          </button>
+        </div>
     </div>
   );
 };

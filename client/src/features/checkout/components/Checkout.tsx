@@ -5,6 +5,8 @@ import { DeliveryForm } from "./DeliveryForm";
 import { getUserById } from "@/api-calls/users-api-calls";
 import { useLocation, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { CompletionPopup } from "./CompletionPopup";
 
 function useIdFromParamsOrQuery() {
   const { id: paramId } = useParams<{ id?: string }>();
@@ -16,11 +18,8 @@ function useIdFromParamsOrQuery() {
   return paramId || queryId;
 }
 
-
-
 export default function Checkout() {
   const id = useIdFromParamsOrQuery();
-
   const {
     data: user,
   } = useQuery({
@@ -28,8 +27,15 @@ export default function Checkout() {
     queryFn: () => getUserById(id as string),
     enabled: !!id,
   });
-
-
+  const [selectedAddress, setSelectedAddress] = useState("");
+  const [newAddress, setNewAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [phone, setPhone] = useState("");
+  const [saveInfo, setSaveInfo] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
+  const [errors, setErrors] = useState<{ address?: string; city?: string; postalCode?: string; phone?: string }>({});
+  const [completed, setCompleted] = useState(false);
 
   return (
     <>
@@ -54,20 +60,48 @@ export default function Checkout() {
                   />
                 </div>
               </div>
-              {user && <DeliveryForm user={user} />}
+              {user && <DeliveryForm
+                user={user}
+                selectedAddress={selectedAddress}
+                setSelectedAddress={setSelectedAddress}
+                newAddress={newAddress}
+                setNewAddress={setNewAddress}
+                city={city}
+                setCity={setCity}
+                postalCode={postalCode}
+                setPostalCode={setPostalCode}
+                phone={phone}
+                setPhone={setPhone}
+                saveInfo={saveInfo}
+                setSaveInfo={setSaveInfo}
+                selectedPaymentMethod={selectedPaymentMethod}
+                setSelectedPaymentMethod={setSelectedPaymentMethod}
+                errors={errors}
+                setErrors={setErrors} />}
             </div>
           </div>
         </div>
 
         <div className="w-1/2 bg-gray-50">
           <div className="p-8 ">
-            <OrderSummary {...CartExample} />
+            {user && <OrderSummary
+              cart={CartExample}
+              user={user}
+              newAddress={newAddress}
+              city={city}
+              postalCode={postalCode}
+              phone={phone}
+              saveInfo={saveInfo}
+              selectedPaymentMethod={selectedPaymentMethod}
+              setErrors={setErrors}
+              setCompleted={setCompleted} />}
           </div>
         </div>
       </div>
+      <CompletionPopup
+        completed={completed}
+        orderDetails="This is a test order"
+      />
     </>
   )
 }
-
-
-
