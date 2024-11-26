@@ -5,11 +5,6 @@ import { HistoricalPlace } from "@/features/home/types/home-page-types";
 import { MapPin } from "lucide-react";
 import { TicketCheck } from "lucide-react";
 import { fetchLocationDetails } from "@/api-calls/google-maps-api-calls";
-import tulun2 from "./image2.png";
-import tulun from "./image.png";
-import prater2 from "./prater2.jpg";
-import prater3 from "./prater3.jpg";
-import prater1 from "./prater1.png";
 import TouristHomePageNavigation from "../TouristHomePageNavigation";
 import HistoricalDetailsStyles from "./HistoricalDetailsPage.module.css";
 import React, { useEffect, useState } from "react";
@@ -104,8 +99,7 @@ export default function HistoricalDetailsPage() {
         variants={imageVariants}
       >
         <img
-          src={prater1}
-          alt="Explore every destination"
+          src={historicalPlace?.images[0]}
           className={HistoricalDetailsStyles.sectionImage}
         />
         <div className={HistoricalDetailsStyles.sectionOverlay}>
@@ -151,7 +145,7 @@ export default function HistoricalDetailsPage() {
           viewport={{ once: true, amount: 0.3 }}
           variants={imageVariants}
         >
-          <img src={prater3} alt="Ibn Tulun Mosque" className={HistoricalDetailsStyles.image} />
+          <img src={historicalPlace?.images[1]}  className={HistoricalDetailsStyles.image} />
         </motion.div>
       </section>
       <section className={HistoricalDetailsStyles.ticketIconSection}>
@@ -167,8 +161,7 @@ export default function HistoricalDetailsPage() {
           variants={imageVariants}
         >
           <img
-            src={prater2}
-            alt="Ibn Tulun Mosque"
+            src={historicalPlace?.images[2]}
             className={HistoricalDetailsStyles.ticketImage}
           />
         </motion.div>
