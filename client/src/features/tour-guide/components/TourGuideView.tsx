@@ -48,7 +48,11 @@ function TourGuideView() {
           data={itineraries}
           columns={itinerariesColumns}
           newRowModal={
-            <ItinerariesModal itineraryData={undefined} dialogTrigger={<DataTableAddButton />} />
+            <ItinerariesModal
+              itineraryData={undefined}
+              dialogTrigger={<DataTableAddButton />}
+              username={user?.firstName + " " + user?.lastName}
+            />
           }
         />
         <div className="con">

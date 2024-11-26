@@ -1,63 +1,55 @@
-
 .content {
-    padding: 16px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    
-  }
-  
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
-  .dateSelector {
-   
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    
-  }
-  
-  
-  .ticketSelection {
-    margin-top: 16px;
-    width: 100%;
-  }
-  
-  .content h3 {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .ticketText {
-    font-size: 0.9rem;
-    color: #333;
-    background-color: #f7f7f7;
-    padding: 8px;
-    border-radius: 5px;
-    margin-bottom: 8px;
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-  }
-  
-  .ticketText:hover {
-    background-color: #e0e0e0;
-  }
-  
-  .ticketText.selected {
-    background-color: #e0e0e0;
-    color: #000;
-    font-weight: medium;
-  }
+.dateSelector {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
 
-  .dateTime {
-   
-  }
-  
-  .dateTime p {
-    margin: 0;
-    font-size: 0.9rem;
-    color: #333;
-  }
+.ticketSelection {
+  margin-top: 16px;
+  width: 100%;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.ticketText {
+  font-size: 0.9rem;
+  color: #333;
+  background-color: #f7f7f7;
+  padding: 8px;
+  border-radius: 5px;
+  margin-bottom: 8px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.ticketText:hover {
+  background-color: #e0e0e0;
+}
+
+.ticketText.selected {
+  background-color: #e0e0e0;
+  color: #000;
+  font-weight: medium;
+}
+
+.dateTime {
+}
+
+.dateTime p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #333;
+}

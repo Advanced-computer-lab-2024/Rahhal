@@ -64,20 +64,7 @@ export const MyTripsPage = () => {
       });
       return;
     }
-    if (
-      !isDateInPast(
-        booking.selectedDate ? booking.selectedDate : booking.selectedDate,
-        booking.status,
-      )
-    ) {
-      return navigate(
-        `/my-trips-details?userId=${userId}&eventId=${booking.entity._id}&bookingId=${booking._id}&type=${booking.type}`,
-      );
-    } else {
-      return navigate(
-        `/my-trips-details?userId=${userId}&eventId=${booking.entity._id}&bookingId=${booking._id}&type=${booking.type}`,
-      );
-    }
+    return navigate(`/my-trips-details/${userId}`, { state: { booking } });
   };
 
   return (

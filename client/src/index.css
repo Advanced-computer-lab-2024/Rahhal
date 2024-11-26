@@ -20,6 +20,8 @@
     --accent-foreground: 0 0% 9%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
+    --complementary: #6d91e1;
+    --complementary-hover: #5875b7;
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
     --ring: 0 0% 3.9%;
@@ -36,15 +38,14 @@
     --primary-color-dark: #C8A259;
     --primary-color-fade: #E0D1A5;
 
-    --secondary-color:#F3DBA2;
-    --secondary-color-hover: #F0E3C0;
+    --secondary-color: #f3dba2;
+    --secondary-color-hover: #f0e3c0;
 
     --complimentary-color: #6D91E1;
     --complimentary-color-dark: #5875B7;
     --complimentary-color-fade: #A4BCE1;
 
     --grey-scale:#E6E6E6;
-
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -80,8 +81,8 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Poppins';
-    
-    padding: 0 16px; 
+    font-family: "Poppins";
+
+    padding: 0 16px;
   }
 }
