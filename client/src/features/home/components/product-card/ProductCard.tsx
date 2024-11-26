@@ -7,11 +7,14 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
+import currencyExchange from "@/utils/currency-exchange";
+
 
 interface ProductCardProps {
   id?: string;
   name: string;
-  price: number | undefined;
+  price: number ;
   imageUrl: string;
   rating: number | undefined;
   seller: string;
@@ -37,22 +40,28 @@ export default function ProductCard({
 
   const handleAddToCart = () => {
     setIsInCart(true);
-    setQuantity(1); // Reset quantity to 1 when adding to cart
+    setQuantity(1); 
     // TODO: Implement add to cart functionality
   };
 
   const handleQuantityChange = (change: number) => {
     const newQuantity = quantity + change;
     if (newQuantity < 1) {
-      setIsInCart(false); // If quantity is less than 1, remove from cart
+      setIsInCart(false); 
     } else {
       setQuantity(newQuantity);
     }
     // TODO: Implement quantity update functionality
   };
 
-  const formattedPrice = typeof price === "number" ? `$${price.toFixed(2)}` : "Price not available";
+  const { currency } = useCurrencyStore();
+  const convertedPrice = currencyExchange("EGP", price);
+  const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
+
   const formattedRating = typeof rating === "number" ? rating.toFixed(1) : "N/A";
+
+
+
 
   return (
     <Card
@@ -86,7 +95,7 @@ export default function ProductCard({
           <h3 className="font-semibold text-lg mb-0">{name}</h3>
         </div>
         <div className="text-sm text-gray-600 p-1">
-          <span className="font-medium">Seller:</span> {"nanna"}
+          <span className="font-medium">Seller:</span> {seller}
         </div>
         <AnimatePresence>
           {isHovered && !isInCart && (
@@ -116,9 +125,9 @@ export default function ProductCard({
           </div>
         )}
       </CardContent>
-      <CardFooter className="flex flex-col items-start p-3 bg-gray-50">
+      <CardFooter className="flex flex-col items-start p-1 bg-gray-50">
         <div className="flex justify-between w-full mb-2">
-          <span className="text-lg font-bold text-primary">{formattedPrice}</span>
+          <span className="text-lg font-bold text-primary">{currency} {displayPrice}</span>
           <div className="flex items-center">
             <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 mr-1" />
             <span className="text-sm font-medium">{formattedRating}</span>
