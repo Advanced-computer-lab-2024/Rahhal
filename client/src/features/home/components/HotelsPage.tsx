@@ -5,6 +5,7 @@ import HotelGridView from "./HotelGridView";
 import { fetchHotels } from "@/api-calls/hotel-api-calls";
 import { useState } from "react";
 import { useHotelStore } from "@/stores/hotel-store";
+import HotelsLandingComponent from "@/features/home/components/hotels-landing-page/HotelsLandingComponent"; // Import the landing page
 
 interface HotelPageProps {
   loggedIn: boolean;
@@ -13,9 +14,10 @@ interface HotelPageProps {
 function HotelsPage({ loggedIn }: HotelPageProps) {
   const { destinationLocation, destinationSuggestions, destinationSuggestionsPlaceId } =
     useHotelSearchBarStore();
-  
-  const [ loading , setLoading ] = useState<boolean>(false);
-  const {hotels , setHotels} = useHotelStore();
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [hasSearched, setHasSearched] = useState<boolean>(false); // Track if a search has been performed
+  const { hotels, setHotels } = useHotelStore();
 
   const onIconClick = async () => {
     const destinationSelectedIndex = destinationSuggestions.indexOf(destinationLocation[0]);
@@ -24,6 +26,7 @@ function HotelsPage({ loggedIn }: HotelPageProps) {
     if (placeDetails) {
       const { name } = placeDetails;
       setLoading(true);
+      setHasSearched(true); // Mark that a search has been performed
       const newHotels = await fetchHotels(name);
       setHotels(newHotels);
       setLoading(false);
@@ -32,17 +35,19 @@ function HotelsPage({ loggedIn }: HotelPageProps) {
     }
   };
 
-
-
   return (
     <>
-    <div className=" w-[100%] flex justify-center">
-      <HotelSearchBar onIconClick={onIconClick} />
-    </div>
-    <hr className="border bg-[var(--gray-scale)] w-full my-5" />
-    <HotelGridView loading={loading} hotels={hotels} />
-  </>
-    
+      <div className="w-[100%] flex justify-center">
+        <HotelSearchBar onIconClick={onIconClick} />
+      </div>
+      <hr className="border bg-[var(--gray-scale)] w-full my-5" />
+
+      {!hasSearched ? (
+        <HotelsLandingComponent />
+      ) : (
+        <HotelGridView loading={loading} hotels={hotels} />
+      )}
+    </>
   );
 }
 
