@@ -42,6 +42,7 @@ import ActivityDetailsPage from "@/features/home/components/activities/ActivityD
 import ItineraryDetailsPage from "@/features/home/components/itineraries/ItineraryDetailsPage";
 import Checkout from "@/features/checkout/components/Checkout";
 import CheckoutPage from "@/features/home/components/CheckoutPage";
+import HistoricalDetailsPage from "@/features/home/components/historical-place-details-page/HistoricalDetailsPage";
 
 export default function App() {
   const { setRates } = useRatesStore();
@@ -82,8 +83,8 @@ export default function App() {
 
             <Route path="/signup" element={<SignupSelector />} />
             <Route path="/signin" element={<Login />} />
-            <Route path="/:type/details/:placeid/:id" element={<DetailsPage />} />
-            <Route path="/:type/details/:placeid/" element={<DetailsPage />} />
+            <Route path="/:type/details/:placeid/:id" element={<HistoricalDetailsPage />} />
+            <Route path="/:type/details/:placeid/" element={<HistoricalDetailsPage />} />
             <Route element={<SettingsView />}>
               <Route path="/user-settings/:id" element={<ProfileForm />} />
               <Route path="/user-settings/account/:id" element={<AccountForm />} />
