@@ -162,8 +162,6 @@ function GeneralGridView() {
     }
   }, [finishedLoading]);
 
- 
-
   const searchParts = ["Category", "Tag"];
   useEffect(() => {
     if (isSuccessCategories && isSuccessPreferenceTags && isSuccessHistoricalTags) {
@@ -424,25 +422,23 @@ function GeneralGridView() {
     }
   });
 
-
   useEffect(() => {
-    if(!skeleton) {
-    const loadImages = async () => {
-      const imagePromises = sortedCombinedItems.map(
-        (item) =>
-          new Promise<void>((resolve, reject) => {
-            const img = new Image();
-            img.src = item.images[0];
-            img.onload = () => resolve();
-            img.onerror = () => reject();
-          }),
-      );
-      await Promise.all(imagePromises);
-      setLoaded(true);
-    };
-    loadImages();
-  }
-
+    if (!skeleton) {
+      const loadImages = async () => {
+        const imagePromises = sortedCombinedItems.map(
+          (item) =>
+            new Promise<void>((resolve, reject) => {
+              const img = new Image();
+              img.src = item.images[0];
+              img.onload = () => resolve();
+              img.onerror = () => reject();
+            }),
+        );
+        await Promise.all(imagePromises);
+        setLoaded(true);
+      };
+      loadImages();
+    }
   }, [sortedCombinedItems]);
 
   return (
@@ -464,16 +460,26 @@ function GeneralGridView() {
       <div className="flex w-[100vw]">
         <FilterSideBar sideBarItems={combinedSideBarFilters} />
         <div className={GeneralGridStyle["scrollable"]}>
-          <div className={GeneralGridStyle["general-grid-view__cards"]}>
+          <div className={GeneralGridStyle["general-grid-view__header"]}>
+            <HeaderIcons
+              activeFilters={activeFilter}
+              handleActiveFilterClick={handleActiveFilterClick}
+            />
+            <div className={GeneralGridStyle["filter-sort-buttons__container"]}>
+              <FilterButton />
+              <SortButton onSort={handleSort} />
+            </div>
+          </div>
 
-            {!loaded && (
+          <div className={GeneralGridStyle["general-grid-view__cards"]}>
+            {skeleton && (
               <div className="space-y-2">
                 <Skeleton className="h-4 w-[250px]" />
                 <Skeleton className="h-4 w-[200px]" />
               </div>
             )}
 
-            {loaded &&
+            {!skeleton &&
               sortedCombinedItems.map((item) => (
                 <EntertainmentCard
                   key={item._id}
