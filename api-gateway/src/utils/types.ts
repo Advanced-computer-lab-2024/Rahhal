@@ -123,7 +123,7 @@ export interface IItinerary {
   preferenceTags?: PreferenceTag[];
   category?: Category;
   owner: string;
-
+  
 }
 
 export interface IActivity {
@@ -211,4 +211,13 @@ export interface IBookmark {
   user: string;
   entity: string;
   type: bookmarkType;
+}
+
+export interface IWishlist {
+  user: string;
+  product: string;
+}
+
+export interface PopulatedWishlist {
+  product: IProduct;
 }
