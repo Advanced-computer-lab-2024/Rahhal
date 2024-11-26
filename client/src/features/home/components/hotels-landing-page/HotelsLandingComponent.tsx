@@ -10,20 +10,16 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Card } from "@/components/ui/card";
 import useEmblaCarousel from "embla-carousel-react";
 import { fetchHotels } from "@/api-calls/hotel-api-calls";
 import { useHotelStore } from "@/stores/hotel-store";
-import HotelGridView from "../HotelGridView";
 import HotelCard from "../HotelCard";
-import { Hotel } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
-interface Destination {
-  name: string;
-  image: string;
-}
 
-export default function HotelsLandinComponent() {
+
+export default function HotelsLandingComponent() {
+  const [loading, setLoading] = useState<boolean>(true);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [slidesPerView, setSlidesPerView] = useState(1);
   const { hotels, setHotels } = useHotelStore();
@@ -57,6 +53,7 @@ export default function HotelsLandinComponent() {
       try {
         const newHotels = await fetchHotels("Egypt");
         setHotels(newHotels);
+        setLoading(false);
       } catch (error) {
         console.error("Failed to fetch hotels:", error);
       }
@@ -84,8 +81,8 @@ export default function HotelsLandinComponent() {
         </div>
       </div>
 
- {/* Carousel Section */}
- <div className="px-4 sm:px-0 py-8">
+      {/* Carousel Section */}
+      <div className="px-4 sm:px-0 py-8">
         <h1 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">Trending destinations</h1>
         <div className="relative">
           <Carousel
@@ -97,15 +94,31 @@ export default function HotelsLandinComponent() {
             ref={emblaRef}
           >
             <CarouselContent className="flex gap-0">
-              {hotels.map((hotel, index) => (
-                <CarouselItem
-                  key={index}
-                  className="pl-0 md:pl-4 cursor-pointer" // Remove padding for the leftmost item
-                  style={{ flex: `0 0 ${100 / slidesPerView}%` }}
-                >
-                  <HotelCard hotel={hotel} index={index}/>
-                </CarouselItem>
-              ))}
+              {loading
+                ? Array.from({ length: slidesPerView }).map((_, index) => (
+                    <CarouselItem
+                      key={index}
+                      className="pl-0 md:pl-4 cursor-pointer"
+                      style={{ flex: `0 0 ${100 / slidesPerView}%` }}
+                    >
+                      <div className="flex flex-col gap-4 w-full h-[24rem] justify-center">
+                        <Skeleton className="w-full h-[24rem]" />
+                        <div className="space-y-2">
+                          <Skeleton className="h-4 w-full" />
+                          <Skeleton className="h-4 w-64" />
+                        </div>
+                      </div>
+                    </CarouselItem>
+                  ))
+                : hotels.map((hotel, index) => (
+                    <CarouselItem
+                      key={index}
+                      className="pl-0 md:pl-4 cursor-pointer"
+                      style={{ flex: `0 0 ${100 / slidesPerView}%` }}
+                    >
+                      <HotelCard hotel={hotel} index={index} />
+                    </CarouselItem>
+                  ))}
             </CarouselContent>
             <CarouselPrevious className="hidden sm:flex left-0 sm:-left-12" />
             <CarouselNext className="hidden sm:flex right-0 sm:-right-12" />
