@@ -22,6 +22,11 @@ export enum bookingStatus {
   Cancelled = "cancelled",
 }
 
+export enum bookmarkType {
+  Activity = "activity",
+  Itinerary = "itinerary",
+}
+
 // ---------------- ZOD RELATED -----------------
 // TODO: To be moved later in a sperate types file
 export type TRating = z.infer<typeof RatingSchema>;
@@ -60,6 +65,13 @@ export interface IBookingQueryParamsFilter {
   owner: string;
 }
 
+export interface IBookmarkQueryParamsFilter {
+  _id: string;
+  user: string;
+  entity: string;
+  type?: bookmarkType;
+}
+
 export interface IProduct {
   name: string;
   picture: string;
@@ -85,6 +97,13 @@ export interface PopulatedBooking {
   itineraryTourGuideRating?: number;
 }
 
+export interface PopulatedBookmark {
+  _id: string;
+  user: string;
+  entity: IActivity | IItinerary | string;
+  type: bookmarkType;
+}
+
 export interface IItinerary {
   _id: string;
   name: string;
@@ -104,7 +123,7 @@ export interface IItinerary {
   preferenceTags?: PreferenceTag[];
   category?: Category;
   owner: string;
-  
+
 }
 
 export interface IActivity {
@@ -170,4 +189,11 @@ export interface IRating {
   userName: string;
   rating: number;
   review?: string;
+}
+
+export interface IBookmark {
+  _id: string;
+  user: string;
+  entity: string;
+  type: bookmarkType;
 }
