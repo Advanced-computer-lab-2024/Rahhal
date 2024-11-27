@@ -1,14 +1,21 @@
-import type { IWishlist, PopulatedWishlist } from "@/utils/types";
+import type { IProduct, IWishlist, PopulatedWishlist } from "@/utils/types";
 import { entertainmentAxiosInstance } from "@/utils/axios-instances";
 
-export async function populateWishlist(wishlist: IWishlist[]): Promise<PopulatedWishlist[]> {
+export async function populateWishlist(wishlistItem: IWishlist) {
+  const populatedProduct = await entertainmentAxiosInstance.get<IProduct>(
+    `/wishlists/${wishlistItem.product}`,
+  );
+  return {
+    _id: wishlistItem._id,
+    user: wishlistItem.user,
+    product: populatedProduct.data,
+  };
+}
+
+export async function populateWishlists(wishlist: IWishlist[]): Promise<PopulatedWishlist[]> {
   const populatedWishlist = await Promise.all(
-    wishlist.map(async (item) => {
-      const populatedProduct = await entertainmentAxiosInstance.get(`/wishlists/${item.product}`);
-      return {
-        user: item.user,
-        ...populatedProduct.data,
-      };
+    wishlist.map(async (wishlistItem) => {
+      return await populateWishlist(wishlistItem);
     }),
   );
   return populatedWishlist;

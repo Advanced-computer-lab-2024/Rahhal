@@ -214,10 +214,13 @@ export interface IBookmark {
 }
 
 export interface IWishlist {
+  _id: string;
   user: string;
   product: string;
 }
 
 export interface PopulatedWishlist {
+  _id: string;
+  user: string;
   product: IProduct;
 }
