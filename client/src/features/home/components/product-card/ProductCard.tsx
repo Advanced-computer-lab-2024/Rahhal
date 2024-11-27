@@ -1,12 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Heart, ShoppingCart, Plus, Minus, Star } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import currencyExchange from "@/utils/currency-exchange";
+import { useParams } from "react-router-dom";
+import {
+  addToWishlist,
+  isProductWishlisted,
+  removeFromWishlist,
+} from "@/api-calls/wishlist-api-calls";
 import useWishlistStore from "@/stores/wishlist-count-store";
 
 interface ProductCardProps {
@@ -16,7 +22,6 @@ interface ProductCardProps {
   imageUrl: string;
   rating: number | undefined;
   seller: string;
-  handleWishlistClick: () => void;
   handleAddToCart?: () => void;
 }
 
@@ -27,24 +32,44 @@ export default function ProductCard({
   imageUrl,
   rating,
   seller,
-  handleWishlistClick,
 }: ProductCardProps) {
+  const userId = useParams().id;
+  const { incrementCount, decrementCount } = useWishlistStore();
   const [isInCart, setIsInCart] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [isHovered, setIsHovered] = useState(false);
+  const [isWishlisted, setWishlisted] = useState(false);
 
-  const { addToWishlist, removeFromWishlist, isWishlisted } = useWishlistStore();
+  useEffect(() => {
+    if (!userId) return;
+    isProductWishlisted(userId, id).then(setWishlisted);
+    console.log("Wishlist status", isWishlisted);
+  }, [userId, id]);
 
-  const handleWishlist = () => {
+  const handleWishlistClick = async () => {
     if (!id) return; // Ensure the product has a valid ID
 
-    if (isWishlisted(id)) {
-      removeFromWishlist(id); // Remove the product by ID
-     
-     
+    if (!userId) {
+      alert("You must login");
+      return;
+    }
+
+    if (isWishlisted) {
+      try {
+        await removeFromWishlist(userId, id);
+        setWishlisted(false);
+        decrementCount();
+      } catch (error) {
+        console.error("Failed to remove from wishlist", error);
+      }
     } else {
-      addToWishlist({ id }); // Add the product ID to the store
-      handleWishlistClick();
+      try {
+        await addToWishlist(userId, id);
+        setWishlisted(true);
+        incrementCount();
+      } catch (error) {
+        console.error("Failed to add to wishlist", error);
+      }
     }
   };
 
@@ -81,13 +106,11 @@ export default function ProductCard({
           <img src={imageUrl} alt={name} className="w-full h-full object-cover rounded-[12px]" />
           <motion.button
             className="absolute top-2 right-2 z-10"
-            onClick={handleWishlist}
+            onClick={handleWishlistClick}
             whileTap={{ scale: 0.9 }}
           >
             <Heart
-              className={`h-6 w-6 ${
-                isWishlisted(id) ? "text-red-500 fill-red-500" : "text-gray-500"
-              }`}
+              className={`h-6 w-6 ${isWishlisted ? "text-red-500 fill-red-500" : "text-gray-500"}`}
             />
           </motion.button>
         </div>

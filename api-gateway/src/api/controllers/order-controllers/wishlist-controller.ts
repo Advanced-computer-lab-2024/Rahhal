@@ -5,8 +5,8 @@ import { STATUS_CODES } from "@/utils/constants";
 export async function getWishlist(req: Request, res: Response) {
   const filter = req.query;
   try {
-    const wishlist = await wishlistService.getWishlist(filter);
-    res.status(STATUS_CODES.STATUS_OK).json(wishlist);
+    const wishlists = await wishlistService.getWishlist(filter);
+    res.status(STATUS_CODES.STATUS_OK).json(wishlists);
   } catch (error) {
     res.status(STATUS_CODES.BAD_GATEWAY).json(error);
   }
@@ -16,11 +16,7 @@ export async function getWishlistById(req: Request, res: Response) {
   const wishlistId = req.params.id;
   try {
     const wishlist = await wishlistService.getWishlistById(wishlistId);
-    if (wishlist) {
-      res.status(STATUS_CODES.STATUS_OK).json(wishlist);
-    } else {
-      res.status(STATUS_CODES.NOT_FOUND).json({ message: "Wishlist not found" });
-    }
+    res.status(STATUS_CODES.STATUS_OK).json(wishlist);
   } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
