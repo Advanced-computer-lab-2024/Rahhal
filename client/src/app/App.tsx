@@ -45,6 +45,9 @@ import CheckoutPage from "@/features/home/components/CheckoutPage";
 import HistoricalDetailsPage from "@/features/home/components/historical-place-details-page/HistoricalDetailsPage";
 import WishListPage from "@/features/home/components/wishlist/WishListPage";
 import BookmarksPage from "@/features/home/components/bookmarks/BookmarksPage";
+import ItineraryReport from "@/features/tour-guide/components/ItineraryReport";
+import ActivityReport from "@/features/advertiser/components/ActivityReport";
+import AdminReport from "@/features/admin/components/AdminReport";
 
 export default function App() {
   const { setRates } = useRatesStore();
@@ -99,6 +102,7 @@ export default function App() {
               <Route path="account" element={<AccountForm />} />
             </Route>
             <Route path="/advertiser/:id" element={<AdvertiserView />} />
+            <Route path="/advertiser/activity/:id" element={<ActivityReport />} />
             <Route path="/tourism-governor/:id" element={<TouristGovernerHomepage />} />
             <Route
               path="/tourism-governor/historical-places/:id"
@@ -110,6 +114,7 @@ export default function App() {
             <Route path="/seller/product/:id" element={<ProductReport />} />
 
             <Route path="/tour-guide/:id" element={<TourGuideView />} />
+            <Route path="/tour-guide/itinerary/:id" element={<ItineraryReport />} />
 
             <Route element={<AdminHomepage />}>
               <Route path="/admin/:id?/home" element={<h1>Home</h1>} />
