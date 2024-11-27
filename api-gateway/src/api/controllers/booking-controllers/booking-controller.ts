@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { STATUS_CODES } from "@/utils/constants";
-import * as bookingService from "@/services/booking-service";
+import * as bookingService from "@/services/booking-services/booking-service";
 
 export async function getBookings(req: Request, res: Response) {
   const filter = req.query;
