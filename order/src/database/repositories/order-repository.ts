@@ -28,8 +28,18 @@ export async function getOrderById(id: string) {
 }
 
 // Get orders by date range
-export async function getOrdersByDateRange(startDate: Date, endDate: Date) {
-  return Order.find({ createdAt: { $gte: startDate, $lte: endDate } }).exec();
+export async function getOrdersByDateRange(startDate: Date, endDate: Date, productId: string | undefined) {
+
+  // filter orders by date range and product id if provided
+  if (productId) {
+    return Order.find({
+      createdAt: { $gte: startDate, $lte: endDate },
+      "items.productId": productId,
+    }).exec();
+  }
+
+  // filter orders by date range only
+  return Order.find({ createdAt: { $gte: startDate, $lte: endDate, }}).exec();
 }
 
 // Create a new order

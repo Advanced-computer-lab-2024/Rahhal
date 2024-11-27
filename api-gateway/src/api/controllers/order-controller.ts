@@ -28,6 +28,7 @@ export async function getOrdersByDateRange(req: Request, res: Response) {
     const filter: OrderDateRangeFilter = {
       startDate: new Date(req.query.startDate as string),
       endDate: new Date(req.query.endDate as string),
+      productId: req.query.productId as string,
     };
     const orders = await orderService.getOrdersByDateRange(filter);
     res.status(orders.status).json(orders.data);
