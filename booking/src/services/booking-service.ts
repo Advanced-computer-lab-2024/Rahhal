@@ -9,6 +9,10 @@ export async function getBookingById(id: string) {
   return await bookingRepository.getBookingById(id);
 }
 
+export async function getBookingByDateRange(startDate: Date, endDate: Date, entity?: string, owner?: string) {
+  return await bookingRepository.getBookingByDateRange(startDate, endDate, entity, owner);
+}
+
 export async function createBooking(bookingData: Partial<IBooking>) {
   return await bookingRepository.createBooking(bookingData);
 }

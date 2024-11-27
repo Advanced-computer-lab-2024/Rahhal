@@ -1,7 +1,7 @@
 import { bookingAxiosInstance } from "@/utils/axios-instances";
 import { populateBooking, populateBookings } from "@/utils/booking-populator";
 
-import type { IBookingQueryParamsFilter } from "@/utils/types";
+import type { BookingDateRangeFilter, IBookingQueryParamsFilter } from "@/utils/types";
 
 export async function getBookings(filter: Partial<IBookingQueryParamsFilter>) {
   try {
@@ -18,13 +18,21 @@ export async function getBookings(filter: Partial<IBookingQueryParamsFilter>) {
 }
 
 export async function getBookingById(id: string) {
-
   try {
     const booking = await bookingAxiosInstance.get(`/bookings/${id}`);
     return populateBooking(booking.data);
-
   } catch (error) {
     return new Error("Failed to fetch booking from booking server\n" + error);
+  }
+}
+
+export async function getBookingByDateRange(filter: BookingDateRangeFilter) {
+  try {
+    const bookings = await bookingAxiosInstance.get("/bookings/date/date-range", { params: filter });
+    
+    return populateBookings(bookings.data, {entity: filter.entity}, filter.owner ?? "");
+  } catch (error) {
+    return new Error("Failed to fetch bookings from booking server\n" + error);
   }
 }
 

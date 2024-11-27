@@ -9,6 +9,15 @@ export async function getBookingById(id: string) {
   return await Booking.findById(id);
 }
 
+export async function getBookingByDateRange(startDate: Date, endDate: Date, entity?: string, owner?: string) {
+  if (entity && owner) {
+    return await Booking.find({ selectedDate: { $gte: startDate, $lte: endDate }, entity, owner });
+  } else if (entity) {
+    return await Booking.find({ selectedDate: { $gte: startDate, $lte: endDate }, entity });
+  }
+  return await Booking.find({ selectedDate: { $gte: startDate, $lte: endDate } });
+}
+
 export async function createBooking(bookingData: Partial<IBooking>) {
   const newBooking = new Booking(bookingData);
   return await newBooking.save();
