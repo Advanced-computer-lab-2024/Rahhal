@@ -1,7 +1,8 @@
 import app from "./app";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-
+import cron from "node-cron";
+import hourlyUpdate from "./utils/cronjobs";
 // Load environment variables
 dotenv.config();
 
@@ -12,12 +13,20 @@ async function connectToDB() {
   try {
     await mongoose.connect(MONGODB_URI as string);
     console.log("Connected to MongoDB");
+    return true;
   } catch (error) {
     console.error("Error connecting to MongoDB: ", error);
+    return false;
   }
 }
 
-await connectToDB();
+const connected = await connectToDB();
+
+if (connected) {
+  hourlyUpdate();
+  cron.schedule("0 * * * *", hourlyUpdate);
+}
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });
