@@ -1,5 +1,5 @@
 import { SERVICES_URLS } from "@/lib/constants";
-import { TOrder } from "@/features/home/types/home-page-types";
+import {  TOrder } from "@/features/home/types/home-page-types";
 import axios from "axios";
 
 // fetch all orders from orders endpoint
@@ -25,6 +25,11 @@ export async function fetchProductOrders(productId: string) {
       productId: productId,
     },
   });
+  return response.data;
+}
+
+export async function createOrder(order: TOrder) {
+  const response = await axios.post(SERVICES_URLS.ORDER + `/orders`, order);
   return response.data;
 }
 
