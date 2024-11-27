@@ -56,3 +56,13 @@ export async function deleteWishlist(req: Request, res: Response) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
 }
+
+export async function deleteWishlistItem(req: Request, res: Response) {
+  const wishlistItem = req.body;
+  try {
+    const deletedWishlistItem = await wishlistService.deleteWishlistItem(wishlistItem);
+    res.status(deletedWishlistItem.status).json(deletedWishlistItem.data);
+  } catch (error) {
+    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
+  }
+}

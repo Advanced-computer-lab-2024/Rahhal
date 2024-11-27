@@ -68,3 +68,18 @@ export async function deleteWishlist(req: Request, res: Response) {
     });
   }
 }
+
+export async function deleteWishlistItem(req: Request, res: Response) {
+  try {
+    const wishlist = await wishlistService.deleteWishlistItem(req.body);
+    if (wishlist) {
+      res.status(STATUS_CODES.STATUS_OK).json(wishlist);
+    } else {
+      res.status(STATUS_CODES.NOT_FOUND).json({ message: ERROR_MESSAGES.NOT_FOUND });
+    }
+  } catch (error: unknown) {
+    res.status(STATUS_CODES.SERVER_ERROR).json({
+      message: error instanceof Error ? error.message : ERROR_MESSAGES.SERVER_ERROR,
+    });
+  }
+}

@@ -17,6 +17,7 @@ router.get("/wishlists", wishlistController.getWishlist);
 router.get("/wishlists/:id", wishlistController.getWishlistById);
 router.post("/wishlists", wishlistController.createWishlist);
 router.patch("/wishlists/:id", wishlistController.updateWishlist);
+router.delete("/wishlists", wishlistController.deleteWishlistItem);
 router.delete("/wishlists/:id", wishlistController.deleteWishlist);
 
 export default router;

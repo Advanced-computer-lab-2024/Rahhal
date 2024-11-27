@@ -9,7 +9,7 @@ export async function getWishlistById(id: string) {
   return await Wishlist.findById(id);
 }
 
-export async function createWishlist(wishlistData: IWishlist) {
+export async function createWishlist(wishlistData: Partial<IWishlist>) {
   const newWishlist = new Wishlist(wishlistData);
   return await newWishlist.save();
 }
@@ -20,4 +20,8 @@ export async function updateWishlist(id: string, wishlistData: Partial<IWishlist
 
 export async function deleteWishlist(id: string) {
   return await Wishlist.findByIdAndDelete(id);
+}
+
+export async function deleteWishlistItem(wishlistData: Partial<IWishlist>) {
+  return await Wishlist.deleteOne(wishlistData);
 }
