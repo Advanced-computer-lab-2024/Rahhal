@@ -27,9 +27,9 @@ export interface IItem {
 }
 
 export type TOrder = {
-  _id: string;
+  _id?: string;
   userId: string;
-  createdAt: Date;
+  createdAt?: Date;
   orderStatus: OrderStatus;
   paymentMethod: PaymentMethod;
   items: IItem[];
