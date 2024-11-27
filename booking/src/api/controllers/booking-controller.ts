@@ -53,6 +53,8 @@ export async function getBookingByDateRange(req: Request, res: Response) {
       endDate: z.string(),
       entity: z.string().optional(),
       owner: z.string().optional(),
+      type: z.string().optional() as bookingType,
+      status: z.string().optional() as bookingStatus,
     });
 
     const validationResult = queryParametersSchema.safeParse(req.query);
@@ -61,7 +63,7 @@ export async function getBookingByDateRange(req: Request, res: Response) {
       return res.status(STATUS_CODES.BAD_REQUEST).json(validationResult.error);
     }
 
-    const { startDate, endDate, entity, owner } = validationResult.data;
+    const { startDate, endDate, entity, owner, type, status } = validationResult.data;
 
     
    
@@ -69,7 +71,9 @@ export async function getBookingByDateRange(req: Request, res: Response) {
       new Date(startDate),
       new Date(endDate),
       entity,
-      owner
+      owner,
+      type,
+      status
     );
     res.status(STATUS_CODES.STATUS_OK).json(bookings);
 

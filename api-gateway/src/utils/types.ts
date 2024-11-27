@@ -187,6 +187,8 @@ export interface BookingDateRangeFilter {
   endDate: Date;
   entity?: string;
   owner?: string;
+  type?: string;
+  status?: string;
 }
 
 export enum OrderStatus {

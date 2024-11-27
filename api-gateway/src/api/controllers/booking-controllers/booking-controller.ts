@@ -36,6 +36,8 @@ export async function getBookingByDateRange(req: Request, res: Response) {
       endDate: new Date(req.query.endDate as string),
       entity: req.query.entity as string,
       owner: req.query.owner as string,
+      type: req.query.type as string,
+      status: req.query.status as string,
     };
 
     
