@@ -74,6 +74,11 @@ export type TBookingType = {
   itineraryTourGuideRating?: number;
 };
 
+export interface IWishlist {
+  user: string;
+  product: string;
+}
+
 export type TPopulatedWishlist = {
   _id: string;
   user: string;

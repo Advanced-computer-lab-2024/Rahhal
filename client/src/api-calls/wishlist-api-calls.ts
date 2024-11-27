@@ -1,6 +1,6 @@
 import axios from "axios";
 import { SERVICES_URLS } from "@/lib/constants";
-import type { TPopulatedWishlist } from "@/features/home/types/home-page-types";
+import type { IWishlist, TPopulatedWishlist } from "@/features/home/types/home-page-types";
 
 export async function fetchUserWishlist(userId: string): Promise<TPopulatedWishlist[]> {
   const response = await axios.get(SERVICES_URLS.ORDER + `/wishlists`, {
@@ -19,7 +19,12 @@ export async function addToWishlist(userId: string, productId: string) {
   return response.data;
 }
 
-export async function removeFromWishlist(wishlistId: string) {
-  const response = await axios.delete(SERVICES_URLS.ORDER + `/wishlists/${wishlistId}`);
+export async function removeFromWishlist(userId: string, productId: string) {
+  const response = await axios.delete(SERVICES_URLS.ORDER + `/wishlists`, {
+    params: {
+      user: userId,
+      product: productId,
+    },
+  });
   return response.data;
 }

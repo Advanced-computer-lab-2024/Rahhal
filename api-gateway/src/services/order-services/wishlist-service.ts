@@ -27,6 +27,6 @@ export async function deleteWishlist(id: string) {
   return orderAxiosInstance.delete(`/wishlists/${id}`);
 }
 
-export async function deleteWishlistItem(body: string) {
-  return orderAxiosInstance.delete("/wishlists", { data: body });
+export async function deleteWishlistItem(wishlistItem: Partial<IWishlist>) {
+  return orderAxiosInstance.delete("/wishlists", { params: wishlistItem });
 }

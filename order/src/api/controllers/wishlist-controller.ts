@@ -71,7 +71,7 @@ export async function deleteWishlist(req: Request, res: Response) {
 
 export async function deleteWishlistItem(req: Request, res: Response) {
   try {
-    const wishlist = await wishlistService.deleteWishlistItem(req.body);
+    const wishlist = await wishlistService.deleteWishlistItem(req.query);
     if (wishlist) {
       res.status(STATUS_CODES.STATUS_OK).json(wishlist);
     } else {
