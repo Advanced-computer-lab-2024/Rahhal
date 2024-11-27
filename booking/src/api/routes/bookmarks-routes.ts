@@ -7,6 +7,7 @@ router.get("/", bookmarkController.getBookmarks);
 router.get("/:id", bookmarkController.getBookmarkById);
 router.post("/", bookmarkController.createBookmark);
 router.patch("/:id", bookmarkController.updateBookmark);
-router.delete("/:id", bookmarkController.deleteBookmark);
+router.delete("/", bookmarkController.deleteBookmark);
+router.delete("/:id", bookmarkController.deleteBookmarkById);
 
 export default router;

@@ -17,6 +17,10 @@ export async function updateBookmark(id: string, bookmarkData: Partial<IBookmark
   return await bookmarkRepository.updateBookmark(id, bookmarkData);
 }
 
-export async function deleteBookmark(id: string) {
-  return await bookmarkRepository.deleteBookmark(id);
+export async function deleteBookmarkById(id: string) {
+  return await bookmarkRepository.deleteBookmarkById(id);
+}
+
+export async function deleteBookmark(bookmarkData: Partial<IBookmark>){
+  return await bookmarkRepository.deleteBookmark(bookmarkData);
 }
