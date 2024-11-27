@@ -41,6 +41,7 @@ import { useHotelStore } from "@/stores/hotel-store";
 import ActivityDetailsPage from "@/features/home/components/activities/ActivityDetailsPage";
 import ItineraryDetailsPage from "@/features/home/components/itineraries/ItineraryDetailsPage";
 import Checkout from "@/features/checkout/components/Checkout";
+import CheckoutPage from "@/features/home/components/CheckoutPage";
 
 export default function App() {
   const { setRates } = useRatesStore();
@@ -70,6 +71,9 @@ export default function App() {
               <Route path="/my-orders/:id" element={<MyOrdersPage />} />
               <Route path="/stays/:id" element={<HotelsPage loggedIn={true} />} />
               <Route path="/stays/:id/hotel/:index" element={<HotelDetails hotels={hotels} />} />
+              
+            </Route>
+            <Route element={<CheckoutPage />}>
               <Route path="/checkout/:id" element={<Checkout />} />
             </Route>
             <Route path="/activities/:id" element={<ActivityDetailsPage />} />

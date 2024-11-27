@@ -39,7 +39,6 @@ export default function Checkout() {
 
   return (
     <>
-      <hr />
       <div className="min-h-screen flex">
         <div className="w-1/2 bg-white">
           <div className="p-8">
