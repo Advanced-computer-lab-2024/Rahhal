@@ -1,22 +1,23 @@
 "use client";
 
 import { useState } from "react";
-
 import { Heart, ShoppingCart, Plus, Minus, Star } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import currencyExchange from "@/utils/currency-exchange";
+import useWishlistStore from "@/stores/wishlist-count-store";
 
 interface ProductCardProps {
-  id?: string;
+  id: string;
   name: string;
   price: number;
   imageUrl: string;
   rating: number | undefined;
   seller: string;
+  handleWishlistClick: () => void;
+  handleAddToCart?: () => void;
 }
 
 export default function ProductCard({
@@ -26,15 +27,25 @@ export default function ProductCard({
   imageUrl,
   rating,
   seller,
+  handleWishlistClick,
 }: ProductCardProps) {
-  const [isWishlisted, setIsWishlisted] = useState(false);
   const [isInCart, setIsInCart] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [isHovered, setIsHovered] = useState(false);
 
+  const { addToWishlist, removeFromWishlist, isWishlisted } = useWishlistStore();
+
   const handleWishlist = () => {
-    setIsWishlisted(!isWishlisted);
-    // TODO: Implement wishlist functionality
+    if (!id) return; // Ensure the product has a valid ID
+
+    if (isWishlisted(id)) {
+      removeFromWishlist(id); // Remove the product by ID
+     
+     
+    } else {
+      addToWishlist({ id }); // Add the product ID to the store
+      handleWishlistClick();
+    }
   };
 
   const handleAddToCart = () => {
@@ -74,7 +85,9 @@ export default function ProductCard({
             whileTap={{ scale: 0.9 }}
           >
             <Heart
-              className={`h-6 w-6 ${isWishlisted ? "text-red-500 fill-red-500" : "text-gray-500"}`}
+              className={`h-6 w-6 ${
+                isWishlisted(id) ? "text-red-500 fill-red-500" : "text-gray-500"
+              }`}
             />
           </motion.button>
         </div>
