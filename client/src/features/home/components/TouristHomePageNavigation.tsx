@@ -5,6 +5,7 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { ProfileAvatar } from "./ProfileAvatar";
 import CurrencyDropdown from "./CurrencyDropdown";
 import SecondaryLogo from "../../logos/SecondaryLogo";
+import { CartIcon } from "@/features/checkout/components/CartIcon";
 
 interface ButtonProps {
   navigation: number;
@@ -73,6 +74,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
         ) : (
           <>
             <div className="flex space-x-4 items-center">
+              <CartIcon />
               <CurrencyDropdown />
               <ProfileAvatar />
             </div>
