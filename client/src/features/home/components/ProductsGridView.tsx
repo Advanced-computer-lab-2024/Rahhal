@@ -1,7 +1,6 @@
 import ProductGridStyle from "../styles/ProductsGridView.module.css";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import FilterSortSearchHeader from "@/features/home/components/FilterSortSearchHeader";
 import FilterSideBar from "@/features/home/components/filter-sidebar/FilterSideBar";
@@ -16,7 +15,6 @@ import ProductCard from "@/features/home/components/product-card/ProductCard";
 
 // Fetching logic from the database
 const ProductGridView = () => {
-  const { id } = useParams<{ id: string }>();
   const [search, setSearch] = useState<string>("");
   const [skeleton, setSkeleton] = useState<boolean>(true);
   const [combined, setCombined] = useState<Product[]>([]);
@@ -31,12 +29,6 @@ const ProductGridView = () => {
     select: (data) => data as Product[],
   });
 
-  const navigate = useNavigate();
-
-  const handleCardClick = (item: Product) => {
-    // Navigate to detail page, pass the item data via state
-    navigate(`/product/details/${item._id}/${id ? id : ""}`, { state: { item } });
-  };
   useEffect(() => {
     if (!isLoadingProducts) {
       setSkeleton(false);
