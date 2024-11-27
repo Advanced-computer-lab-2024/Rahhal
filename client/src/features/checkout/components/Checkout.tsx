@@ -82,8 +82,8 @@ export default function Checkout() {
           </div>
         </div>
 
-        <div className="w-1/2 bg-gray-50">
-          <div className="p-8 ">
+        <div className="w-1/2 bg-gray-50 ">
+          <div className="p-8 sticky top-0  ">
             {user && <OrderSummary
               cart={CartExample}
               user={user}
