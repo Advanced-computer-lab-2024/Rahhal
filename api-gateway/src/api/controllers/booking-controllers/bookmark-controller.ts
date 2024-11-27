@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { STATUS_CODES } from "@/utils/constants";
-import * as bookmarkService from "@/services/bookmark-service";
+import * as bookmarkService from "@/services/booking-services/bookmark-service";
 
 export async function getBookmarks(req: Request, res: Response) {
   const filter = req.query;
@@ -47,10 +47,20 @@ export async function updateBookmark(req: Request, res: Response) {
   }
 }
 
-export async function deleteBookmark(req: Request, res: Response) {
+export async function deleteBookmarkById(req: Request, res: Response) {
   const bookmarkId = req.params.id;
   try {
-    const deletedBookmark = await bookmarkService.deleteBookmark(bookmarkId);
+    const deletedBookmark = await bookmarkService.deleteBookmarkById(bookmarkId);
+    res.status(deletedBookmark.status).json(deletedBookmark.data);
+  } catch (error) {
+    res.status(STATUS_CODES.BAD_GATEWAY).json(error);
+  }
+}
+
+export async function deleteBookmark(req: Request, res: Response) {
+  const bookmark = req.query;
+  try {
+    const deletedBookmark = await bookmarkService.deleteBookmark(bookmark);
     res.status(deletedBookmark.status).json(deletedBookmark.data);
   } catch (error) {
     res.status(STATUS_CODES.BAD_GATEWAY).json(error);
