@@ -1,8 +1,6 @@
 import ProductGridStyle from "../styles/ProductsGridView.module.css";
-import ProductCard from "@/features/home/components/ProductCard";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate , useParams} from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import FilterSortSearchHeader from "@/features/home/components/FilterSortSearchHeader";
 import FilterSideBar from "@/features/home/components/filter-sidebar/FilterSideBar";
@@ -13,11 +11,10 @@ import { Product, IRating, SortOption } from "../types/home-page-types";
 import MinMaxRangeSlider from "@/features/home/components/filter-sidebar/MinMaxRangeSlider";
 import FilterStarRating from "@/features/home/components/filter-sidebar/FilterStarRating";
 import { getPriceValue } from "../utils/price-calculator";
-
+import ProductCard from "@/features/home/components/product-card/ProductCard";
 
 // Fetching logic from the database
 const ProductGridView = () => {
-  const { id } = useParams<{ id: string }>();
   const [search, setSearch] = useState<string>("");
   const [skeleton, setSkeleton] = useState<boolean>(true);
   const [combined, setCombined] = useState<Product[]>([]);
@@ -32,12 +29,6 @@ const ProductGridView = () => {
     select: (data) => data as Product[],
   });
 
-  const navigate = useNavigate();
-
-  const handleCardClick = (item: Product) => {
-    // Navigate to detail page, pass the item data via state
-    navigate(`/product/details/${item._id}/${id?id:""}`, { state: { item } });
-  };
   useEffect(() => {
     if (!isLoadingProducts) {
       setSkeleton(false);
@@ -151,15 +142,16 @@ const ProductGridView = () => {
 
             {!skeleton &&
               sortedProducts?.map((products: Product) => (
-                <ProductCard
-                  key={products._id}
-                  picture={products.picture}
-                  rating={getAverageRating(products.ratings)}
-                  title={products.name}
-                  price={products.price}
-                  seller={products.seller}
-                  onClick={() => handleCardClick(products)}
-                />
+                <>
+                  <ProductCard
+                    key={products._id}
+                    imageUrl={products.picture}
+                    name={products.name}
+                    price={products.price}
+                    seller={products.seller}
+                    rating={getAverageRating(products.ratings)}
+                  />
+                </>
               ))}
           </div>
         </div>
