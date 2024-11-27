@@ -75,10 +75,26 @@ export async function updateBookmark(req: Request, res: Response) {
   }
 }
 
-export async function deleteBookmark(req: Request, res: Response) {
+export async function deleteBookmarkById(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const bookmark = await bookmarkService.deleteBookmark(id);
+    const bookmark = await bookmarkService.deleteBookmarkById(id);
+    if (bookmark) {
+      res.status(STATUS_CODES.STATUS_OK).send(bookmark);
+    } else {
+      res.status(STATUS_CODES.NOT_FOUND).json({ message: ERROR_MESSAGES.NOT_FOUND });
+    }
+  } catch (error: unknown) {
+    res.status(STATUS_CODES.SERVER_ERROR).json({
+      message: error instanceof Error ? error.message : ERROR_MESSAGES.SERVER_ERROR,
+    });
+  }
+}
+
+export async function deleteBookmark(req: Request, res: Response){
+
+  try {
+    const bookmark = await bookmarkService.deleteBookmark(req.query);
     if (bookmark) {
       res.status(STATUS_CODES.STATUS_OK).send(bookmark);
     } else {

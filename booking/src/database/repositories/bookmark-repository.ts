@@ -18,6 +18,10 @@ export async function updateBookmark(id: string, bookmarkData: Partial<IBookmark
   return await Bookmark.findByIdAndUpdate(id, bookmarkData, { new: true, runValidators: true });
 }
 
-export async function deleteBookmark(id: string) {
+export async function deleteBookmarkById(id: string) {
   return await Bookmark.findByIdAndDelete(id);
+}
+
+export async function deleteBookmark(bookmarkData: Partial<IBookmark>){
+  return Bookmark.deleteOne(bookmarkData);
 }
