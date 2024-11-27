@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import * as orderService from "@/services/order-service";
 import { STATUS_CODES } from "@/utils/constants";
-import type { OrderQueryParams } from "@/utils/types";
+import type { OrderDateRangeFilter, OrderQueryParams } from "@/utils/types";
 
 export async function getOrders(req: Request, res: Response) {
   try {
@@ -25,8 +25,11 @@ export async function getOrderById(req: Request, res: Response) {
 
 export async function getOrdersByDateRange(req: Request, res: Response) {
   try {
-    const filter = req.query;
-    const orders = await orderService.getOrdersByDateRange(JSON.stringify(filter));
+    const filter: OrderDateRangeFilter = {
+      startDate: new Date(req.query.startDate as string),
+      endDate: new Date(req.query.endDate as string),
+    };
+    const orders = await orderService.getOrdersByDateRange(filter);
     res.status(orders.status).json(orders.data);
   } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
