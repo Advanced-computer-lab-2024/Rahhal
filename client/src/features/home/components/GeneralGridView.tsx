@@ -36,6 +36,7 @@ import { getPriceValue } from "../utils/price-calculator";
 import { getUserById } from "@/api-calls/users-api-calls";
 import FilterButton from "./FilterButton";
 import SortButton from "./SortButton";
+import { bookmarkType } from "@/utils/enums";
 
 function GeneralGridView() {
   const [activeFilter, setActiveFilter] = useState<string[]>([]);
@@ -482,6 +483,14 @@ function GeneralGridView() {
               sortedCombinedItems.map((item) => (
                 <EntertainmentCard
                   key={item._id}
+                  id={item._id}
+                  entityType={
+                    "languages" in item
+                      ? bookmarkType.Itinerary
+                      : "isBookingOpen" in item
+                        ? bookmarkType.Activity
+                        : bookmarkType.HistoricalPlace
+                  }
                   image={item.images[0]}
                   rating={getAverageRating(item.ratings)}
                   title={item.name}
