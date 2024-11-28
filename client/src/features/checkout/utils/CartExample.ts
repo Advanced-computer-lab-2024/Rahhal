@@ -1,27 +1,30 @@
 export const CartExample = {
   _id: '5f0b0e7b6f6b6b001f6f3b3d',
   userId: '67433c21ae0c15329a432cc4',
-  products: [
+  products:
+   [
     {
       product: {
         _id: '6730d3d65f3b0ac5f0d209f1',
         name: 'Hoodie Seller',
         picture: 'https://firebasestorage.googleapis.com/v0/b/rahhal-569d6.firebasestorage.app/o/products%2F6740c4795969e92342a1a1ba%2F6740c5579c71a86ca80ed233%2Frahhal%20hoodie.jpeg?alt=media&token=ccb24ddc-faf7-4128-9487-50cd36e8a93c',
         price: 200,
-        seller: 'Rahhal'
+        seller: 'Rahhal',
+        quantity: 40
       },
       quantity: 3
     },
     {
       product: {
         _id: '6730d4085f3b0ac5f0d209f8',
-        name: 'Hoodie Rahhal',
+        name: 'ezaza2',
         picture: 'https://firebasestorage.googleapis.com/v0/b/rahhal-569d6.firebasestorage.app/o/products%2F6740c4795969e92342a1a1ba%2F6740c5f39c71a86ca80ed237%2Frahhal%20bottle.jpeg?alt=media&token=9a959be4-efa8-42c4-901a-5b99c73cf07c',
         price: 100,
-        seller : 'Batee5a'
+        seller : 'Batee5a',
+        quantity: 3
       },
       quantity: 2
-    }
+    },
   ]
 };
 
