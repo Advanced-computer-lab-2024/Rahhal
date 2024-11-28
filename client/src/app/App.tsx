@@ -44,6 +44,7 @@ import Checkout from "@/features/checkout/components/Checkout";
 import CheckoutPage from "@/features/home/components/CheckoutPage";
 import HistoricalDetailsPage from "@/features/home/components/historical-place-details-page/HistoricalDetailsPage";
 import WishListPage from "@/features/home/components/wishlist/WishListPage";
+import BookmarksPage from "@/features/home/components/bookmarks/BookmarksPage";
 
 export default function App() {
   const { setRates } = useRatesStore();
@@ -71,6 +72,7 @@ export default function App() {
               <Route path="/my-trips/:id" element={<MyTripsPage />} />
               <Route path="/travel/:id" element={<TravelPage loggedIn={true} />} />
               <Route path="/my-orders/:id" element={<MyOrdersPage />} />
+              <Route path="/my-bookmarks/:id" element={<BookmarksPage />} />
               <Route path="/stays/:id" element={<HotelsPage loggedIn={true} />} />
               <Route path="/stays/:id/hotel/:index" element={<HotelDetails hotels={hotels} />} />
               <Route path="/my-wishlist/:id" element={<WishListPage />} />
