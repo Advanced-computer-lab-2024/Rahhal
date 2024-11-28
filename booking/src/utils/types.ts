@@ -28,6 +28,7 @@ export interface IBooking {
 export enum bookmarkType {
   Activity = "activity",
   Itinerary = "itinerary",
+  HistoricalPlace = "historical-place"
 }
 
 export interface IBookmark {
