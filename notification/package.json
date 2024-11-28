@@ -1,0 +1,46 @@
+{
+  "name": "product",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "src/app.ts",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "test": "vitest",
+    "lint": "eslint . --fix",
+    "format": "prettier . --write",
+    "pre-commit": "prettier . --write --log-level silent && eslint . --fix --quiet && vitest run --passWithNoTests",
+    "swagger": "tsx src/api/swagger/swagger.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.11.1",
+    "@types/amqplib": "^0.10.5",
+    "@types/cors": "^2.8.17",
+    "@types/eslint__js": "^8.42.3",
+    "@types/express": "^5.0.0",
+    "@types/morgan": "^1.9.9",
+    "@types/nodemailer": "^6.4.17",
+    "@types/swagger-ui-express": "^4.1.7",
+    "eslint": "^9.11.1",
+    "prettier": "^3.3.3",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.7.0",
+    "vitest": "^2.1.1"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.5",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^7.6.8",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.9.16",
+    "product": "file:",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1"
+  }
+}

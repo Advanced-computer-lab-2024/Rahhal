@@ -1,0 +1,77 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Notification API",
+    "description": "API documentation for notifications",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/{id}": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "patch": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/{id}/seen": {
+      "patch": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    }
+  }
+}
