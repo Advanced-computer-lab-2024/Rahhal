@@ -47,3 +47,14 @@ export async function getBookingsWithFilters(filters: Record<string, any>) {
   });
   return response.data;
 }
+
+export async function fetchBookingsByDateRange(startDate: Date, endDate: Date, filters?: Record<string, any>) {
+  const response = await axios.get(SERVICES_URLS.BOOKING + `/bookings/date/date-range`, {
+    params: {
+      startDate,
+      endDate,
+      ...filters,
+    },
+  });
+  return response.data;
+}

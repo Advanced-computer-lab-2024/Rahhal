@@ -22,7 +22,7 @@ export default function ProductReport() {
         const orders = value as TOrder[];
 
         const salesItems: SalesItem[] = orders.map((order) => ({
-          id: order._id,
+          id: order.items[0].productId,
           name: order.items[0].name,
           type: "gift_shop",
           price: order.totalPrice,
@@ -39,10 +39,10 @@ export default function ProductReport() {
 
       fetchOrdersByDateRange(startDate, endDate).then((value) => {
         const orders = value as TOrder[];
-        console.log("Orders", orders);
+        
 
         const salesItems: SalesItem[] = orders.map((order) => ({
-          id: order._id,
+          id: order.items[0].productId,
           name: order.items[0].name,
           type: "gift_shop",
           price: order.totalPrice,

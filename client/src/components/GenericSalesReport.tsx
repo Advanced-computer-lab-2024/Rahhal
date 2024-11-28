@@ -76,9 +76,20 @@ const GenericSalesReport: React.FC<SalesReportProps> = ({ data, type = "all", on
   });
 
   // Get unique items for the filter dropdown
-  const items = Array.from(
-    new Set(data.map((item) => ({ id: item.id, name: item.name, type: item.type }))),
-  ).filter((item) => filters.itemType === "all" || item.type === filters.itemType);
+  // Get unique items for the filter dropdown
+  const items = Array.from(new Set(data.map((item) => item.id)))
+    .map((id) => data.find((item) => item.id === id))
+    .filter(
+      (item): item is NonNullable<typeof item> =>
+        item !== undefined && (filters.itemType === "all" || item.type === filters.itemType),
+    )
+    .map((item) => ({
+      id: item.id,
+      name: item.name,
+      type: item.type,
+    }));
+
+  console.log(items);
 
   useEffect(() => {
     // Apply filters
@@ -208,8 +219,8 @@ const GenericSalesReport: React.FC<SalesReportProps> = ({ data, type = "all", on
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Items</SelectItem>
-              {items.map((item) => (
-                <SelectItem key={item.id} value={item.id}>
+              {items.map((item, index) => (
+                <SelectItem key={index} value={item.id}>
                   {item.name}
                 </SelectItem>
               ))}
