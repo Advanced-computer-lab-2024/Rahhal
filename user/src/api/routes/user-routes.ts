@@ -3,9 +3,9 @@ import * as userController from "../controllers/user-controller";
 
 const router = express.Router();
 // for user routes
-router.get("/:id", userController.getUserById);
+router.get("/:id", userController.getUser);
 router.get("/", userController.getAllUsers);
-router.patch("/:id", userController.updateUserById);
+router.patch("/:id", userController.updateUser);
 
 router.post("/", userController.createUser);
 router.delete("/:id", userController.deleteUser);

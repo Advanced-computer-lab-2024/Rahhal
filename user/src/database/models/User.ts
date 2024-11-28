@@ -77,7 +77,7 @@ const userSchema: Schema = new Schema<IUser>(
         );
       },
       validate: {
-        validator: userValidators.validateFirstName,
+        validator: userValidators.validateStringNotEmpty,
         message: "Invalid first name entry",
       },
     },
@@ -93,7 +93,7 @@ const userSchema: Schema = new Schema<IUser>(
         );
       },
       validate: {
-        validator: userValidators.validateLastName,
+        validator: userValidators.validateStringNotEmpty,
         message: "Invalid last name entry",
       },
     },
@@ -109,16 +109,9 @@ const userSchema: Schema = new Schema<IUser>(
     },
     email: {
       type: String,
-      // unique: function () {
-      //   return this.role !== Role.admin && this.role !== Role.tourismGovernor;
-      // },
       required: function () {
         return this.role !== Role.tourismGovernor && this.role !== Role.admin;
       },
-      // validate: {
-      //   validator: userValidators.validateEmail,
-      //   message: "Invalid email entry",
-      // },
     },
     password: {
       type: String,
@@ -137,7 +130,6 @@ const userSchema: Schema = new Schema<IUser>(
     approved: {
       type: Boolean,
       default: function () {
-        //tourism governor is added by admin so approved by default
         return (
           this.role === Role.tourist ||
           this.role === Role.tourismGovernor ||
@@ -155,7 +147,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.tourist;
       },
       validate: {
-        validator: userValidators.validateDOB,
+        validator: userValidators.validateDate,
         message: "Invalid date of birth entry",
       },
     },
@@ -165,7 +157,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.tourist;
       },
       validate: {
-        validator: userValidators.validateNationality,
+        validator: userValidators.validateStringNotEmpty,
         message: "Invalid natiopnality entry",
       },
     },
@@ -175,7 +167,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.tourist;
       },
       validate: {
-        validator: userValidators.validateJob,
+        validator: userValidators.validateStringNotEmpty,
         message: "Invalid job entry",
       },
     },
@@ -189,14 +181,14 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.tourGuide;
       },
       validate: {
-        validator: userValidators.validatePhoneNumber,
+        validator: userValidators.validateStringNotEmpty,
         message: "Invalid phone number entry",
       },
     },
     yearsOfExperience: {
       type: Number,
       validate: {
-        validator: userValidators.validateYearsOfExperience,
+        validator: userValidators.validateNumber,
         message: "Invalid number, must be a positive number entry",
       },
       required: function () {
@@ -206,7 +198,7 @@ const userSchema: Schema = new Schema<IUser>(
     previousWork: {
       type: String,
       validate: {
-        validator: userValidators.validatePreviousWork,
+        validator: userValidators.validateStringNotEmpty,
         message: "Invalid previous work entry",
       },
     },
@@ -216,7 +208,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.advertiser;
       },
       validate: {
-        validator: userValidators.validateWebsite,
+        validator: userValidators.validateStringNotEmpty,
         message: "Invalid website entry",
       },
     },
@@ -226,7 +218,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.advertiser;
       },
       validate: {
-        validator: userValidators.validateHotline,
+        validator: userValidators.validateStringNotEmpty,
         message: "Invalid hotline entry",
       },
     },
@@ -236,7 +228,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.advertiser;
       },
       validate: {
-        validator: userValidators.validateCompanyProfile,
+        validator: userValidators.validateStringNotEmpty,
         message: "Invalid company profile entry",
       },
     },
@@ -246,7 +238,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.advertiser;
       },
       validate: {
-        validator: userValidators.validateCompanyName,
+        validator: userValidators.validateStringNotEmpty,
         message: "Invalid company name entry",
       },
     },
@@ -256,7 +248,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.seller;
       },
       validate: {
-        validator: userValidators.validateDescription,
+        validator: userValidators.validateStringNotEmpty,
         message: "Invalid description entry",
       },
     },
@@ -274,7 +266,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.tourist;
       },
       validate: {
-        validator: userValidators.validatePoints,
+        validator: userValidators.validateNumber,
         message: "Invalid points entry",
       },
     },
@@ -284,7 +276,7 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role === Role.tourist;
       },
       validate: {
-        validator: userValidators.validateAccumulativePoints,
+        validator: userValidators.validateNumber,
         message: "Invalid accumulative points entry",
       },
     },
@@ -298,7 +290,7 @@ const userSchema: Schema = new Schema<IUser>(
       type: Number,
       default: 0,
       validate: {
-        validator: userValidators.validateBalance,
+        validator: userValidators.validateNumber,
         message: "Invalid wallet balance entry",
       },
       required: function () {
@@ -314,7 +306,7 @@ const userSchema: Schema = new Schema<IUser>(
               default: "",
               required: true,
               validate: {
-                validator: userValidators.validateCardHolderName,
+                validator: userValidators.validateStringNotEmpty,
                 message: "Invalid card holder name entry",
               },
             },
@@ -332,7 +324,7 @@ const userSchema: Schema = new Schema<IUser>(
               default: undefined,
               required: true,
               validate: {
-                validator: userValidators.validateExpirationDate,
+                validator: userValidators.validateDate,
                 message: "Invalid expiration date entry",
               },
             },
@@ -351,7 +343,7 @@ const userSchema: Schema = new Schema<IUser>(
           type: Number,
           default: 0,
           validate: {
-            validator: userValidators.validateDefaultCreditCardIndex,
+            validator: userValidators.validateNumber,
             message: "Invalid default credit card index entry",
           },
         },

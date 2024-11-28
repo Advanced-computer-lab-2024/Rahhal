@@ -26,6 +26,36 @@ export async function hasBookings(filter : {owner:string , type:bookingType , st
     }
 }
 
+export async function deactivateEntities(filter : {owner:string , role:Role}) {
+    try{
+        let url = "";
+        let params ;
+        let body: { active?: boolean; isBookingOpen?: boolean;};
+        let axiosInstance: AxiosInstance = entertainmentAxiosInstance;
+        switch(filter.role){
+            case Role.tourGuide:
+                url = "/itineraries/";
+                params = {ownerId : filter.owner}
+                body = {active : false}
+                break;
+            case Role.advertiser:
+                url = "/activities/";
+                params = {owner : filter.owner}
+                body = { isBookingOpen : false}
+                break;
+        }
+
+        const entitiesToBeDeactivated = await axiosInstance.get(url, {params: params});
+
+        entitiesToBeDeactivated.data.forEach(async (entity: IItinerary | IActivity ) => {
+            await axiosInstance.patch(`${url}/${entity._id}`, body);
+        });
+    }
+    catch(error){
+        console.error(error);
+    }
+}
+
 export async function deleteEntities(filter : {owner:string , role:Role}){
     try{
         let url = "";
