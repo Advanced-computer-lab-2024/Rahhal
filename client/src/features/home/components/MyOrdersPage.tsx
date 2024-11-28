@@ -161,21 +161,23 @@ export const MyOrdersPage = () => {
 
           {showRating && (
             <div className={OrdersPageStyles.modalOverlay}>
-              <RatingForm
-                ratingEntities={{
-                  rating: {
-                    label: "How good is your Product?",
-                    description: "",
-                    type: "rating",
-                  },
-                  comment: {
-                    label: "Care to share more?",
-                    description: "Your feedback is important to us!",
-                    type: "comment",
-                  },
-                }}
-                onSubmit={handleRatingSubmit}
-              />
+              <div className={OrdersPageStyles.modalContent}>
+                <RatingForm
+                  ratingEntities={{
+                    rating: {
+                      label: "How good is your Product?",
+                      description: "",
+                      type: "rating",
+                    },
+                    comment: {
+                      label: "Care to share more?",
+                      description: "Your feedback is important to us!",
+                      type: "comment",
+                    },
+                  }}
+                  onSubmit={handleRatingSubmit}
+                />
+              </div>
             </div>
           )}
         </div>
