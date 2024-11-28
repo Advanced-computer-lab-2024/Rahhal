@@ -65,7 +65,6 @@ export function OrderDetails({ order, onClose }: OrderDetailsProps) {
   const handleShowRating = (productId: string) => {
     setSelectedProductId(productId);
     setShowRating(true);
-    console.log("Product ID:", productId);
   };
 
   const handleCloseForm = () => {
