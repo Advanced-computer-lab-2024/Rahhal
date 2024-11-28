@@ -36,9 +36,14 @@ export enum OrderStatus {
   cancelled = "cancelled",
 }
 
-
 export enum PaymentMethod {
   wallet = "wallet",
   creditCard = "creditCard",
   cash = "cash",
+}
+
+export enum bookmarkType {
+  Activity = "activity",
+  Itinerary = "itinerary",
+  HistoricalPlace = "historicalPlace",
 }
