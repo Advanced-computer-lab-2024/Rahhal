@@ -176,6 +176,12 @@ export interface OrderQueryParams {
   productId?: string;
 }
 
+export interface OrderDateRangeFilter {
+  startDate: Date;
+  endDate: Date;
+  productId?: string;
+}
+
 export enum OrderStatus {
   received = "received",
   processing = "processing",

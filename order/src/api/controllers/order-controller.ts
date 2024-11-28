@@ -91,6 +91,7 @@ export async function getOrdersByDateRange(req: Request, res: Response) {
     const queryParametersSchema = z.object({
       startDate: z.string(),
       endDate: z.string(),
+      productId: z.string().optional(),
     });
 
     const validationResult = queryParametersSchema.safeParse(req.query);
@@ -100,9 +101,9 @@ export async function getOrdersByDateRange(req: Request, res: Response) {
       return;
     }
 
-    const { startDate, endDate } = validationResult.data;
+    const { startDate, endDate, productId } = validationResult.data;
 
-    const orders = await orderService.getOrdersByDateRange(new Date(startDate), new Date(endDate));
+    const orders = await orderService.getOrdersByDateRange(new Date(startDate), new Date(endDate), productId);
     res.status(STATUS_CODES.STATUS_OK).json(orders);
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({

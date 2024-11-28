@@ -1,5 +1,5 @@
 import { orderAxiosInstance } from "@/utils/axios-instances";
-import type { OrderQueryParams } from "@/utils/types";
+import type { OrderDateRangeFilter, OrderQueryParams } from "@/utils/types";
 
 export async function getOrders(filter: OrderQueryParams) {
   return orderAxiosInstance.get("/orders", { params: filter });
@@ -7,7 +7,7 @@ export async function getOrders(filter: OrderQueryParams) {
 export async function getOrderById(id: string) {
   return orderAxiosInstance.get(`/orders/${id}`);
 }
-export async function getOrdersByDateRange(filter: string) {
+export async function getOrdersByDateRange(filter: OrderDateRangeFilter) {
   return orderAxiosInstance.get("/orders/date/date-range", { params: filter });
 }
 export async function createOrder(body: string) {
