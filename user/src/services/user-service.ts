@@ -43,6 +43,10 @@ export async function deleteUser(userId: string) {
   return await userRepository.deleteUser(userId);
 }
 
+export async function getAllUsers(filter: Partial<IUser>) {
+  return await userRepository.getAllUsers(filter);
+}
+
 export async function getUser(filter: Partial<IUser>): Promise<IUser | null> {
   return await userRepository.getUser(filter);
 }

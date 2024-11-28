@@ -25,7 +25,7 @@ export async function getAllUsers(req: Request, res: Response) {
 
   try {
     // If approved is not provided (== undefined), it will get all users
-    const users = await userService.getUser({approved : approved});
+    const users = await userService.getAllUsers({approved : approved});
     if (!users) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "No users found" });
     } else {

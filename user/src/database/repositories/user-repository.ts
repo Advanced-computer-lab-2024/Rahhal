@@ -2,6 +2,10 @@ import type { TRating } from "@/types";
 import type { IUser } from "../models/User";
 import User from "../models/User";
 
+export async function getAllUsers(filter: Partial<IUser>) {
+  return await User.find({deleted: false , ...filter});
+}
+
 export async function getUser(filter: Partial<IUser>){
   return await User.findOne({deleted: false , ...filter});
 }
