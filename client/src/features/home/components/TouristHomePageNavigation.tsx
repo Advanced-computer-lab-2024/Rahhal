@@ -6,7 +6,6 @@ import { ProfileAvatar } from "./ProfileAvatar";
 import CurrencyDropdown from "./CurrencyDropdown";
 import SecondaryLogo from "../../logos/SecondaryLogo";
 import { CartIcon } from "@/features/checkout/components/CartIcon";
-import WishlistIcon from "./wishlist/WishListIcon";
 import BookmarkNavIcon from "./bookmarks/BookmarkNavIcon";
 
 interface ButtonProps {
@@ -75,10 +74,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
           </div>
         ) : (
           <>
-            <div className="flex space-x-6 items-center">
-              <Link to={`/my-wishlist/${id}`}>
-                <WishlistIcon />
-              </Link>
+            <div className="flex space-x-4 items-center">
               <CartIcon />
               <BookmarkNavIcon />
               <CurrencyDropdown />
