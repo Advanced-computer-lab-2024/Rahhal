@@ -27,6 +27,7 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
   ratingFormRef,
 }) => {
   const {
+    _id,
     name,
     images,
     description,
@@ -175,6 +176,7 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
         }
       />
       <DetailsPageTemplateProps
+        _id={_id ?? ""}
         name={name}
         ownerName={ownerName}
         images={images}
