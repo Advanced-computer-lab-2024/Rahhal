@@ -1,0 +1,64 @@
+import { IPromocode } from "@/utils/types";
+import * as promocodeRepository from "@/database/repositories/promocode-repository";
+import { isHisBirthday } from "@/utils/axios-instances";
+
+export async function getAllPromocodes() {
+    return promocodeRepository.getAllPromocodes();
+}
+
+export async function createPromocode(promocode: IPromocode) {
+    return promocodeRepository.createPromocode(promocode);
+}
+
+export async function updatePromocode(id: string, promocode: Partial<IPromocode>) {
+    return promocodeRepository.updatePromocode(id, promocode);
+}
+
+export async function deletePromocode(id: string) {
+    return promocodeRepository.deletePromocode(id);
+}
+
+export async function validatePromocode(id: string, code: string) {
+    let promocode;
+    if (code == "HBD" + (new Date()).toLocaleDateString('en', { year: '2-digit' })) {
+        if (!(await isHisBirthday(id))) {
+            throw new Error("Promocode is not found");
+        }
+        promocode = {
+            type: "percentage",
+            value: 25,
+        }
+    }
+    else {
+        promocode = await promocodeRepository.findPromocode({ code: code });
+        if (!promocode) {
+            throw new Error("Promocode is not found");
+        }
+        if (!promocode.isActive) {
+            throw new Error("Promocode is not active");
+        }
+        if (promocode.expiresAt < new Date()) {
+            throw new Error("Promocode is expired");
+        }
+    }
+
+    const usedByUser = await promocodeRepository.findPromocodeUsage({ promocode: code, usedBy: id, deleted: false });
+    if (usedByUser) {
+        throw new Error("Promocode already used");
+    }
+
+    return {
+        [code]: {
+            type: promocode.type,
+            value: promocode.value,
+            description: promocode.type == "percentage" ? `${promocode.value}% off your order` : `Free shipping on your order`
+        }
+    }
+}
+
+export async function usePromocode(id: string, code: string) {
+    const promocode = await validatePromocode(id, code);
+    await promocodeRepository.createPromocodeUsage(code, id);
+    return promocode;
+}
+
