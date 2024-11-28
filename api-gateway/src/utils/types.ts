@@ -182,6 +182,15 @@ export interface OrderDateRangeFilter {
   productId?: string;
 }
 
+export interface BookingDateRangeFilter {
+  startDate: Date;
+  endDate: Date;
+  entity?: string;
+  owner?: string;
+  type?: string;
+  status?: string;
+}
+
 export enum OrderStatus {
   received = "received",
   processing = "processing",
