@@ -232,6 +232,7 @@ export interface Product {
   picture: string; // changed from picture: string in the schema to pictures: string[]
   price: number;
   seller: string;
+  sellerName: string;
   ratings: IRating[];
 }
 
@@ -423,4 +424,11 @@ export interface IHotelDetails {
 
 export interface HotelDetailsProps {
   hotels: IHotelDetails[];
+}
+
+export interface TPopulatedBookmark {
+  _id: string;
+  user: string;
+  entity: IActivity | IItinerary;
+  type: bookmarkType;
 }
