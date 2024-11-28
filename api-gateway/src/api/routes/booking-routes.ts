@@ -7,6 +7,7 @@ const router = express.Router();
 // Bookings routes
 router.get("/bookings", bookingController.getBookings);
 router.get("/bookings/:id", bookingController.getBookingById);
+router.get("/bookings/date/date-range", bookingController.getBookingByDateRange);
 router.post("/bookings", bookingController.createBooking);
 router.patch("/bookings/:id", bookingController.updateBooking);
 router.delete("/bookings/:id", bookingController.deleteBooking);

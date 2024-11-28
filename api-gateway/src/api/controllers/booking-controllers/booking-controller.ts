@@ -1,6 +1,8 @@
 import type { Request, Response } from "express";
 import { STATUS_CODES } from "@/utils/constants";
 import * as bookingService from "@/services/booking-services/booking-service";
+import { BookingDateRangeFilter } from "@/utils/types";
+
 
 export async function getBookings(req: Request, res: Response) {
   const filter = req.query;
@@ -21,6 +23,28 @@ export async function getBookingById(req: Request, res: Response) {
     } else {
       res.status(STATUS_CODES.NOT_FOUND).json({ message: "Booking not found" });
     }
+  } catch (error) {
+    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
+  }
+}
+
+export async function getBookingByDateRange(req: Request, res: Response) {
+  try {
+    
+    const filter: BookingDateRangeFilter = {
+      startDate: new Date(req.query.startDate as string),
+      endDate: new Date(req.query.endDate as string),
+      entity: req.query.entity as string,
+      owner: req.query.owner as string,
+      type: req.query.type as string,
+      status: req.query.status as string,
+    };
+
+    
+    
+
+    const bookings = await bookingService.getBookingByDateRange(filter);
+    res.status(STATUS_CODES.STATUS_OK).json(bookings);
   } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
