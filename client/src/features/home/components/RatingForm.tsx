@@ -4,6 +4,7 @@ import AutoFormTextarea from "@/components/ui/auto-form/fields/textarea";
 import { AutoFormInputComponentProps } from "@/components/ui/auto-form/types";
 import { FormControl, FormDescription, FormItem } from "@/components/ui/form";
 import { z } from "zod";
+import { X } from 'lucide-react'; // Import the X icon from lucide-react
 
 export type TRatingEntity = {
   label: string;
@@ -21,6 +22,7 @@ function getFieldsConfig(ratingEntities: Record<string, TRatingEntity>) {
     return acc;
   }, {});
 }
+
 function getZodSchema(ratingEntities: Record<string, TRatingEntity>) {
   const schemaConfig = Object.entries(ratingEntities).reduce(
     (acc: Record<string, any>, [key, value]) => {
@@ -103,22 +105,29 @@ function AutoFormRating({
 export default function RatingForm({
   ratingEntities,
   onSubmit,
+  onClose,
 }: {
   ratingEntities: Record<string, TRatingEntity>;
-
-  /* TODO
-  Tried to achieve type safety here with the values parameter
-  to only allow keys existing the the ratingEntities object but failed :(
-  */
   onSubmit: (values: Record<string, any>) => void;
+  onClose: () => void; // Add this prop for the close functionality
 }) {
   return (
-    <AutoForm
-      formSchema={getZodSchema(ratingEntities)}
-      onSubmit={(values) => onSubmit(values)}
-      fieldConfig={getFieldsConfig(ratingEntities)}
-    >
-      <AutoFormSubmit className="bg-primary text-white w-full mt-4">Submit</AutoFormSubmit>
-    </AutoForm>
+    <div className="relative">
+      <button
+        onClick={onClose}
+        className="absolute top-0 right-0 p-2 text-gray-500 hover:text-gray-700"
+        aria-label="Close"
+      >
+        <X size={24} />
+      </button>
+      <AutoForm
+        formSchema={getZodSchema(ratingEntities)}
+        onSubmit={(values) => onSubmit(values)}
+        fieldConfig={getFieldsConfig(ratingEntities)}
+      >
+        <AutoFormSubmit className="bg-primary text-white w-full mt-4">Submit</AutoFormSubmit>
+      </AutoForm>
+    </div>
   );
 }
+
