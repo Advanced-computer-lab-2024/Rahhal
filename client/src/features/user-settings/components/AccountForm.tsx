@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useContext } from "react";
 import { EditContext } from "./SettingsView";
+import { EditContextAdmin } from "@/features/admin/components/AdminHomepage";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { updateUser } from "@/api-calls/users-api-calls";
@@ -25,7 +26,10 @@ export default function AccountForm() {
   const [preferenceTags, setPreferenceTags] = useState<{ _id: string; name: string }[]>([]);
   const { toast } = useToast();
   const [editForm, setEditForm] = useState(false);
-  const { user } = useContext(EditContext);
+
+  const url = window.location.href;
+  const context = url.includes("admin") ? EditContextAdmin : EditContext;
+  const { user } = useContext(context);
   const { id } = useParams();
 
   const passwordValidator = z.object({

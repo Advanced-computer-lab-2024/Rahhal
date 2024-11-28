@@ -154,6 +154,14 @@ export const DEFAULTS = {
     owner: "",
     replies: [],
   },
+  ADMIN_DATA:{
+    _id: "",
+    username: "",
+    email: "",
+    password: "",
+    role: undefined,
+    approved: false,
+  }
 };
 export const NATIONALITIES = [
   { value: "Afghanistan", label: "Afghanistan" },

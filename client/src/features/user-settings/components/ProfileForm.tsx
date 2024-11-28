@@ -13,6 +13,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useEffect, useRef, useState } from "react";
 import { EditContext } from "./SettingsView";
+import { EditContextAdmin } from "@/features/admin/components/AdminHomepage";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Role } from "./SettingsView";
@@ -26,8 +27,13 @@ export default function ProfileForm() {
   const { toast } = useToast();
   const { id } = useParams();
   const [editForm, setEditForm] = useState(false);
-  const { user } = useContext(EditContext);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // get the url of tthe window
+  const url = window.location.href;
+  const context = url.includes("admin") ? EditContextAdmin : EditContext;
+  const { user } = useContext( context );
+
   const profileFormSchema = z.object({
     firstName: z
       .string()

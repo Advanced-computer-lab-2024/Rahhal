@@ -15,13 +15,21 @@ import {
 import { ChevronDown, Settings } from "lucide-react";
 import { SidebarMenuItems } from "@/features/admin/utils/SidebarMenuItems";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import SettingsView from "@/features/user-settings/components/SettingsView";
 import SecondaryLogo from "@/features/logos/SecondaryLogo";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import ProfileForm from "@/features/user-settings/components/ProfileForm";
+import AccountForm from "@/features/user-settings/components/AccountForm";
 interface AdminSidebarProps {
   setActiveComponent: (component: React.ReactNode) => void;
   activeComponent: React.ReactNode;
   id?: string;
 }
+
 
 export function AdminSidebar({ setActiveComponent, activeComponent, id }: AdminSidebarProps) {
   return (
@@ -72,14 +80,28 @@ export function AdminSidebar({ setActiveComponent, activeComponent, id }: AdminS
       </SidebarContent>
       {id && (
         <SidebarFooter>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild onClick={() => setActiveComponent(<SettingsView/>)} tooltip="Account Settings">
-              <a>
-                <Settings />
-                <span>Account Settings</span>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton asChild tooltip="Account Settings">
+                    <a>
+                      <Settings />
+                      <span>Account Settings</span>
+                    </a>
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
+                  <DropdownMenuItem onClick={() => setActiveComponent(<AccountForm />)}>
+                    <span>Account</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setActiveComponent(<ProfileForm />)}>
+                    <span>Profile</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
         </SidebarFooter>
       )}
     </Sidebar>
