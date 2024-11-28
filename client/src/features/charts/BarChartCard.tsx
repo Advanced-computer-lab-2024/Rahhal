@@ -11,6 +11,10 @@ type BarChartCardProps = {
 
 
 function BarChartCard({ title, data, dataKey, height = 300 }: BarChartCardProps) {
+
+  // get color from css
+  const color = getComputedStyle(document.documentElement).getPropertyValue('--complementary-hover');
+
   return (
     <div className="bg-white p-4 rounded-lg shadow mb-8">
           <h2 className="text-xl font-bold mb-4">{title}</h2>
@@ -21,7 +25,7 @@ function BarChartCard({ title, data, dataKey, height = 300 }: BarChartCardProps)
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="quantity" fill="#82ca9d" name="Units Sold" />
+              <Bar dataKey="quantity" fill={color} name="Units Sold" />
             </BarChart>
           </ResponsiveContainer>
         </div>
