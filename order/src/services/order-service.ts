@@ -28,11 +28,11 @@ export async function deleteOrder(id: string) {
 }
 
 // Get orders by date range
-export async function getOrdersByDateRange(startDate: Date, endDate: Date) {
+export async function getOrdersByDateRange(startDate: Date, endDate: Date, productId: string | undefined) {
   if (startDate > endDate) {
     throw new Error("Start date must be before end date");
   }
-  return orderRepository.getOrdersByDateRange(startDate, endDate);
+  return orderRepository.getOrdersByDateRange(startDate, endDate, productId);
 }
 
 export async function rateProduct(
