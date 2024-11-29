@@ -33,7 +33,7 @@ import { TripDetails } from "@/features/home/components/TripDetails";
 import { getCurrencyExchangeRates } from "@/api-calls/currency-exchange-api-calls";
 import { useEffect } from "react";
 import { useRatesStore } from "@/stores/currency-exchange-store";
-import  MyOrdersPage  from "@/features/home/components/my-orders-section/MyOrdersPage";
+import MyOrdersPage from "@/features/home/components/my-orders-section/MyOrdersPage";
 import ProductReport from "@/features/seller/components/ProductReport";
 import HotelsPage from "@/features/home/components/HotelsPage";
 import HotelDetails from "@/features/home/components/HotelDetails";
@@ -43,6 +43,7 @@ import ItineraryDetailsPage from "@/features/home/components/itineraries/Itinera
 import Checkout from "@/features/checkout/components/Checkout";
 import CheckoutPage from "@/features/home/components/CheckoutPage";
 import HistoricalDetailsPage from "@/features/home/components/historical-place-details-page/HistoricalDetailsPage";
+import WishListPage from "@/features/home/components/wishlist/WishListPage";
 
 export default function App() {
   const { setRates } = useRatesStore();
@@ -72,7 +73,7 @@ export default function App() {
               <Route path="/my-orders/:id" element={<MyOrdersPage />} />
               <Route path="/stays/:id" element={<HotelsPage loggedIn={true} />} />
               <Route path="/stays/:id/hotel/:index" element={<HotelDetails hotels={hotels} />} />
-              
+              <Route path="/my-wishlist/:id" element={<WishListPage />} />
             </Route>
             <Route element={<CheckoutPage />}>
               <Route path="/checkout/:id" element={<Checkout />} />
@@ -124,7 +125,6 @@ export default function App() {
         </Router>
       </QueryClientProvider>
     </div>
-    
   );
 
   function ApiCurrencyCall() {
