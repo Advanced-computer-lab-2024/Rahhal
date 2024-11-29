@@ -23,3 +23,10 @@ export interface ICart{
   userId: string;
   products: CartItem[];
 }
+
+export enum CartUpdates {
+  EmptyCart = "emptyCart",
+  RemoveProduct = "removeProduct",
+  IncrementQuantity = "incrementQuantity",
+  DecrementQuantity = "decrementQuantity",
+}

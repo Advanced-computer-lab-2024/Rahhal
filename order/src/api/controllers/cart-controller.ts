@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type { ICart, CartItem } from "@/utils/types";
+import type { ICart, CartItem ,CartUpdates} from "@/utils/types";
 import * as cartService from "@/services/cart-service";
 import { STATUS_CODES } from "@/utils/constants";
 
@@ -58,28 +58,32 @@ export async function updateCart(req: Request, res: Response) {
     try {
         const { userId } = req.query;
         if (!userId) {
-            res.status(STATUS_CODES.BAD_REQUEST).json({ message: "userId is required" });
+             res.status(STATUS_CODES.BAD_REQUEST).json({ message: "userId is required" });
         }
 
         const { operation, productId, quantity } = req.body;
 
-        const cart = await cartService.getCart(userId as string);
-        if (!cart) {
-            res.status(STATUS_CODES.NOT_FOUND).json({ message: "Cart not found" });
+        if (!Object.values(CartUpdates).includes(operation)) {
+             res.status(STATUS_CODES.BAD_REQUEST).json({ message: "Invalid operation" });
         }
 
-        let updatedProducts = cart!.products;
+        const cart = await cartService.getCart(userId as string);
+        if (!cart) {
+             res.status(STATUS_CODES.NOT_FOUND).json({ message: "Cart not found" });
+        }
+
+        let updatedProducts = cart.products;
 
         switch (operation) {
-            case "emptyCart":
+            case CartUpdates.EmptyCart:
                 updatedProducts = [];
                 break;
 
-            case "removeProduct":
+            case CartUpdates.RemoveProduct:
                 updatedProducts = updatedProducts.filter((item) => item.productId !== productId);
                 break;
 
-            case "incrementQuantity":
+            case CartUpdates.IncrementQuantity:
                 updatedProducts = updatedProducts.map((item) => {
                     if (item.productId === productId) {
                         return { productId: item.productId, quantity: item.quantity + (quantity || 1) };
@@ -87,14 +91,12 @@ export async function updateCart(req: Request, res: Response) {
                     return item;
                 });
 
-                // If product is not in the list, add it with quantity == 1 
                 if (!updatedProducts.some((item) => item.productId === productId)) {
                     updatedProducts.push({ productId, quantity: 1 });
                 }
                 break;
 
-
-            case "decrementQuantity":
+            case CartUpdates.DecrementQuantity:
                 updatedProducts = updatedProducts
                     .map((item) => {
                         if (item.productId === productId) {
@@ -109,7 +111,7 @@ export async function updateCart(req: Request, res: Response) {
                 break;
 
             default:
-                res.status(STATUS_CODES.BAD_REQUEST).json({ message: "Invalid operation" });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ message: "Invalid operation" });
         }
 
         const updatedCart = await cartService.updateCart(userId as string, { products: updatedProducts });
