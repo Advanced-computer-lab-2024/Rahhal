@@ -89,7 +89,6 @@ export default function App() {
               <Route path="/user-settings/:id" element={<ProfileForm />} />
               <Route path="/user-settings/account/:id" element={<AccountForm />} />
               <Route path="/user-settings/wallet/:id" element={<WalletForm />} />
-              <Route path="/user-settings/preferences/:id" element={<PreferenceTagsForm />} />
             </Route>
             <Route path="/help-center/:id" element={<ComplaintsTable />} />
             <Route path="/user-settings/:id" element={<SettingsView />}>
