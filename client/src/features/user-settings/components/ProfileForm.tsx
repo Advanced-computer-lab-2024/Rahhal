@@ -164,7 +164,11 @@ export default function ProfileForm() {
     toast({
       title: "Updating ... ",
     });
-    setTimeout(() => {}, 1500);
+    setTimeout(() => { }, 1500);
+
+    if (data.addresses) {
+      data.addresses = data.addresses.filter(address => address.trim() !== "");
+    }
 
     if (data.profilePicture) {
       const profileImage: string = `images/profile_pictures/${id}/profile.jpg`;
@@ -194,15 +198,16 @@ export default function ProfileForm() {
             <h3 className="text-lg font-medium">Profile</h3>
             <Button
               onClick={() => {
-                if(!editForm){
+                if (!editForm) {
                   setEditForm(true);
                 }
-                else{
+                else {
                   const { profilePicture, ...userWithoutProfilePicture } = user;
                   form.reset(userWithoutProfilePicture);
+
                   setEditForm(false);
                 }
-                
+
               }}
               type="button"
               className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
@@ -612,13 +617,17 @@ export default function ProfileForm() {
               />
             </div>
           )}
-          <button
+            <button
             className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
             type="submit"
-            disabled={!editForm || !form.formState.isDirty}
-          >
+            disabled={
+              !editForm ||
+              !form.formState.isDirty ||
+              (form.watch("addresses")?.every((address) => address.trim() === "") && form.getValues("addresses")?.length !== 0)
+            }
+            >
             Update profile
-          </button>
+            </button>
         </div>
       </form>
     </Form>
