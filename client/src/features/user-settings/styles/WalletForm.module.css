@@ -1,6 +1,6 @@
 #NO_CARD_CONTAINER {
   @media (min-width: 450px) {
-    width: 70%;
+    width: 80%;
   }
 }
 #NO_CARD_CONTAINER.hero-body .title {
@@ -46,7 +46,7 @@
 
 #cardWidth {
   @media (min-width: 450px) {
-    width: 70%;
+    width: 80%;
   }
 }
 

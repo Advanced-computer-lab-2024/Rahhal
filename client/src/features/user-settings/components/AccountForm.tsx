@@ -19,7 +19,10 @@ import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { updateUser } from "@/api-calls/users-api-calls";
 import DeleteAccountButton from "./DeleteAccountButton";
+import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
+import { Checkbox } from "@/components/ui/checkbox";
 export default function AccountForm() {
+  const [preferenceTags, setPreferenceTags] = useState<{ _id: string; name: string }[]>([]);
   const { toast } = useToast();
   const [editForm, setEditForm] = useState(false);
   const { user } = useContext(EditContext);
@@ -67,6 +70,7 @@ export default function AccountForm() {
       .optional(),
 
     password: z.string().optional(),
+    preferences: z.array(z.string()),
   });
 
   type AccountFormValues = z.infer<typeof accountFormSchema>;
@@ -80,6 +84,7 @@ export default function AccountForm() {
       username: user.username || "",
       email: user.email || "",
       password: user.password || "",
+      preferences: user.preferences || [],
     },
   });
   const oldPasswordForm = useForm<passwordValidatorValue>({
@@ -90,15 +95,26 @@ export default function AccountForm() {
       newPassword: "",
     },
   });
+
+  //for preferences
   useEffect(() => {
-    form.reset(user);
+    fetchPreferenceTags().then((tags) =>
+      setPreferenceTags(tags as { _id: string; name: string }[]),
+    );
+    form.reset(
+      user
+    );
   }, [user, form]);
+
+  //submiting preferences
   async function update(data: AccountFormValues) {
     try {
       await updateUser(user, data);
-      if(data.email) user.email = data.email;
-      if(data.password) user.password = data.password;
+      if (data.email) user.email = data.email;
+      if (data.password) user.password = data.password;
+      if (data.preferences) user.preferences = data.preferences;
       setEditForm(false);
+
       toast({
         title: "Updated Successfully",
         style: {
@@ -117,8 +133,8 @@ export default function AccountForm() {
     toast({
       title: "Updating ... ",
     });
-    setTimeout(() => {}, 1500);
-    
+    setTimeout(() => { }, 1500);
+
     if (changePassword) {
       const isOldPasswordValid = await oldPasswordForm.trigger();
 
@@ -132,22 +148,34 @@ export default function AccountForm() {
     } else {
       update(data);
     }
+    form.reset(data);
+    oldPasswordForm.reset();
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex-1">
+        <div className="flex-1" style={{ width: "80%" }}>
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-medium">Account</h3>
               <Button
                 onClick={() => {
-                  setEditForm(true);
+                  if(!editForm){
+                    setEditForm(true);
+                  }
+                  else{
+                    form.reset(user);
+                    oldPasswordForm.reset();
+                    setChangePassword(false);
+                    setEditForm(false);
+                  }
+
                 }}
                 type="button"
+                className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
               >
-                <span>Edit Account</span>
+                <span>{editForm ? "Cancel" : "Edit Account"}</span>
               </Button>
             </div>
             <p className="text-sm text-muted-foreground">
@@ -235,10 +263,9 @@ export default function AccountForm() {
                 </div>
               </Form>
             )}
-
             <div className="flex gap-4 item">
-              <Button
-                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
+              <button
+                className={`mt-2 ${editForm ? "text-blue-500" : "text-blue-300"}`}
                 type="button"
                 disabled={!editForm}
                 onClick={() => {
@@ -249,20 +276,76 @@ export default function AccountForm() {
                 }}
               >
                 {changePassword ? "Cancel" : "Change password"}
-              </Button>
-              <DeleteAccountButton user={{ ...user, _id: id }} />
+              </button>
             </div>
+            {/* Preferences */}
+            {user.role === "tourist" && (
+              <div className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="preferences"
+                  render={() => (
+                    <FormItem>
+                      <div className="mb-4">
+                        <FormLabel className="text-base">Preferences</FormLabel>
+                        <FormDescription>Select your favorite categories.</FormDescription>
+                      </div>
+                      {preferenceTags.map((item) => (
+                        <FormField
+                          key={item._id}
+                          control={form.control}
+                          name="preferences"
+                          render={({ field }) => {
+                            return (
+                              <FormItem
+                                key={item._id}
+                                className="flex flex-row items-start space-x-3 space-y-0"
+                              >
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value?.includes(item.name)}
+                                    disabled={!editForm}
+                                    onCheckedChange={(checked) => {
+                                      return checked
+                                        ? field.onChange([...field.value, item.name])
+                                        : field.onChange(
+                                          field.value?.filter((value) => value !== item.name),
+                                        );
+                                    }}
+                                  />
+                                </FormControl>
+                                <FormLabel className="text-sm font-normal">{item.name}</FormLabel>
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      ))}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
             <div className="space-y-2">
-              {editForm && (
-                <>
+              <div className="grid grid-cols-12">
+                <div className="col-span-2">
                   <button
-                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
+                    className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
                     type="submit"
+                    disabled={
+                      !editForm ||
+                      (!form.formState.isDirty && !oldPasswordForm.formState.isDirty) ||
+                      (changePassword && !oldPasswordForm.formState.isValid)
+                    }
                   >
                     Update account
                   </button>
-                </>
-              )}
+                </div>
+                <div className="col-span-8"></div>
+                <div className="col-span-2 ml-auto">
+                  <DeleteAccountButton user={{ ...user, _id: id }} />
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -220,225 +220,228 @@ export function CardsPaymentMethod({ setOpen }: PaymentMethodFormProps) {
 
   return (
     <>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>Payment Method</CardTitle>
-                <CardDescription>Add a new payment method to your account.</CardDescription>
-              </CardHeader>
-              <CardContent className="grid gap-6">
-                {/* Type of Card */}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>Payment Method</CardTitle>
+              <CardDescription>Add a new payment method to your account.</CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-6">
+              {/* Type of Card */}
+              <FormField
+                control={form.control}
+                name="paymentMethod"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="grid grid-cols-3 gap-4"
+                      >
+                        <div>
+                          <RadioGroupItem value="card" id="card" className="peer sr-only" />
+                          <Label
+                            htmlFor="card"
+                            className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              className="mb-3 h-6 w-6"
+                            >
+                              <rect width="20" height="14" x="2" y="5" rx="2" />
+                              <path d="M2 10h20" />
+                            </svg>
+                            Card
+                          </Label>
+                        </div>
+                        <div>
+                          <RadioGroupItem value="paypal" id="paypal" className="peer sr-only" />
+                          <Label
+                            htmlFor="paypal"
+                            className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                          >
+                            <Icons.paypal className="mb-3 h-6 w-6" />
+                            Paypal
+                          </Label>
+                        </div>
+                        <div>
+                          <RadioGroupItem value="apple" id="apple" className="peer sr-only" />
+                          <Label
+                            htmlFor="apple"
+                            className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                          >
+                            <Icons.apple className="mb-3 h-6 w-6" />
+                            Apple
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* CardHolder Name */}
+              <FormField
+                control={form.control}
+                name="wallet.creditCard.0.cardHolderName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Cardholder Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="Your name as it appears on the card"
+                        value={field.value as string}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* CardNumber */}
+              <FormField
+                control={form.control}
+                name="wallet.creditCard.0.cardNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Card Number</FormLabel>
+                    <FormControl>
+                      <div className="flex w-full items-center space-x-2 relative">
+                        <Input
+                          placeholder="XXXX-XXXX-XXXX-XXXX"
+                          maxLength={19}
+                          {...field}
+                          inputMode="numeric"
+                          onInput={(e) => {
+                            e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, "");
+                            field.onChange(e);
+                          }}
+                          onChange={(e) => {
+                            const cardType = GetCardType(e.target.value);
+                            setCardType(cardType);
+                            field.onChange(e);
+                          }}
+                          value={field.value.replace(/\d{4}(?=.)/g, "$& ")}
+                        />
+                        <div className="absolute right-5 flex items-center h-full pointer-events-none">
+                          {cardType === "Visa" && (
+                            <img
+                              src={visaLogo}
+                              alt="Visa Logo"
+                              className="h-11 w-auto object-contain"
+                            />
+                          )}
+                          {cardType === "Mastercard" && (
+                            <img
+                              src={mastercardLogo}
+                              alt="Mastercard Logo"
+                              className="h-8 w-auto object-contain"
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* Expiration Month */}
+              <div className="grid grid-cols-3 gap-4">
                 <FormField
                   control={form.control}
-                  name="paymentMethod"
+                  name="wallet.creditCard.0.expirationMonth"
                   render={({ field }) => (
                     <FormItem>
-                      <FormControl>
-                        <RadioGroup
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          className="grid grid-cols-3 gap-4"
-                        >
-                          <div>
-                            <RadioGroupItem value="card" id="card" className="peer sr-only" />
-                            <Label
-                              htmlFor="card"
-                              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                className="mb-3 h-6 w-6"
-                              >
-                                <rect width="20" height="14" x="2" y="5" rx="2" />
-                                <path d="M2 10h20" />
-                              </svg>
-                              Card
-                            </Label>
-                          </div>
-                          <div>
-                            <RadioGroupItem value="paypal" id="paypal" className="peer sr-only" />
-                            <Label
-                              htmlFor="paypal"
-                              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                            >
-                              <Icons.paypal className="mb-3 h-6 w-6" />
-                              Paypal
-                            </Label>
-                          </div>
-                          <div>
-                            <RadioGroupItem value="apple" id="apple" className="peer sr-only" />
-                            <Label
-                              htmlFor="apple"
-                              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                            >
-                              <Icons.apple className="mb-3 h-6 w-6" />
-                              Apple
-                            </Label>
-                          </div>
-                        </RadioGroup>
-                      </FormControl>
+                      <FormLabel>Expires</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Month" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                            <SelectItem key={month} value={month.toString()}>
+                              {new Date(0, month - 1).toLocaleString("default", {
+                                month: "long",
+                              })}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                {/* CardHolder Name */}
+                {/* Expiration Year */}
                 <FormField
                   control={form.control}
-                  name="wallet.creditCard.0.cardHolderName"
+                  name="wallet.creditCard.0.expirationYear"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Cardholder Name</FormLabel>
+                      <FormLabel>Year</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Year" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Array.from({ length: 10 }, (_, i) => (
+                            <SelectItem key={i} value={`${new Date().getFullYear() + i}`}>
+                              {new Date().getFullYear() + i}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/* CVV */}
+                <FormField
+                  control={form.control}
+                  name="wallet.creditCard.0.cvv"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>CVV</FormLabel>
                       <FormControl>
                         <Input
+                          maxLength={3}
+                          inputMode="numeric"
+                          onInput={(e) => {
+                            e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, "");
+                            field.onChange(e);
+                          }}
+                          placeholder="CVV"
                           {...field}
-                          placeholder="Your name as it appears on the card"
-                          value={field.value as string}
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                {/* CardNumber */}
-                <FormField
-                  control={form.control}
-                  name="wallet.creditCard.0.cardNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Card Number</FormLabel>
-                      <FormControl>
-                        <div className="flex w-full items-center space-x-2 relative">
-                          <Input
-                            placeholder="XXXX-XXXX-XXXX-XXXX"
-                            maxLength={19}
-                            {...field}
-                            inputMode="numeric"
-                            onInput={(e) => {
-                              e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, "");
-                              field.onChange(e);
-                            }}
-                            onChange={(e) => {
-                              const cardType = GetCardType(e.target.value);
-                              setCardType(cardType);
-                              field.onChange(e);
-                            }}
-                            value={field.value.replace(/\d{4}(?=.)/g, "$& ")}
-                          />
-                          <div className="absolute right-5 flex items-center h-full pointer-events-none">
-                            {cardType === "Visa" && (
-                              <img
-                                src={visaLogo}
-                                alt="Visa Logo"
-                                className="h-11 w-auto object-contain"
-                              />
-                            )}
-                            {cardType === "Mastercard" && (
-                              <img
-                                src={mastercardLogo}
-                                alt="Mastercard Logo"
-                                className="h-8 w-auto object-contain"
-                              />
-                            )}
-                          </div>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* Expiration Month */}
-                <div className="grid grid-cols-3 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="wallet.creditCard.0.expirationMonth"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Expires</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Month" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
-                              <SelectItem key={month} value={month.toString()}>
-                                {new Date(0, month - 1).toLocaleString("default", {
-                                  month: "long",
-                                })}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {/* Expiration Year */}
-                  <FormField
-                    control={form.control}
-                    name="wallet.creditCard.0.expirationYear"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Year</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Year" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {Array.from({ length: 10 }, (_, i) => (
-                              <SelectItem key={i} value={`${new Date().getFullYear() + i}`}>
-                                {new Date().getFullYear() + i}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {/* CVV */}
-                  <FormField
-                    control={form.control}
-                    name="wallet.creditCard.0.cvv"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>CVV</FormLabel>
-                        <FormControl>
-                          <Input
-                            maxLength={3}
-                            inputMode="numeric"
-                            onInput={(e) => {
-                              e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, "");
-                              field.onChange(e);
-                            }}
-                            placeholder="CVV"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full" type="submit">
-                  {editingCard ? "Save" : "Continue"}
-                </Button>
-              </CardFooter>
-            </Card>
-          </form>
-        </Form>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button
+                className="w-full bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
+                type="submit"
+              >
+                {editingCard ? "Save" : "Continue"}
+              </Button>
+            </CardFooter>
+          </Card>
+        </form>
+      </Form>
     </>
   );
 }
