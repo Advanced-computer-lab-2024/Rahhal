@@ -95,19 +95,16 @@ export default function AccountForm() {
       newPassword: "",
     },
   });
-  useEffect(() => {
-    form.reset(user);
-  }, [user, form]);
 
   //for preferences
   useEffect(() => {
     fetchPreferenceTags().then((tags) =>
       setPreferenceTags(tags as { _id: string; name: string }[]),
     );
-    form.reset({
-      preferences: user.preferences || [],
-    });
-  }, [user.preferences, form]);
+    form.reset(
+      user
+    );
+  }, [user, form]);
 
   //submiting preferences
   async function update(data: AccountFormValues) {
@@ -135,7 +132,7 @@ export default function AccountForm() {
     toast({
       title: "Updating ... ",
     });
-    setTimeout(() => {}, 1500);
+    setTimeout(() => { }, 1500);
 
     if (changePassword) {
       const isOldPasswordValid = await oldPasswordForm.trigger();
@@ -164,7 +161,7 @@ export default function AccountForm() {
                   setEditForm(true);
                 }}
                 type="button"
-                className="bg-[var(--complimentary-color)] hover:bg-[var(--complimentary-color-dark)] text-white shadow-lg"
+                className="bg-[var(--primary-color-hover)] hover:bg-[var(--primary-color-fade)] text-white shadow-lg"
               >
                 <span>Edit Account</span>
               </Button>
@@ -254,6 +251,21 @@ export default function AccountForm() {
                 </div>
               </Form>
             )}
+            <div className="flex gap-4 item">
+              <button
+                className={`mt-2 ${editForm ? "text-blue-500" : "text-blue-300"}`}
+                type="button"
+                disabled={!editForm}
+                onClick={() => {
+                  setChangePassword((prev) => !prev);
+                  if (changePassword) {
+                    oldPasswordForm.reset();
+                  }
+                }}
+              >
+                {changePassword ? "Cancel" : "Change password"}
+              </button>
+            </div>
             {/* Preferences */}
             {user.role === "tourist" && (
               <div className="space-y-2">
@@ -285,8 +297,8 @@ export default function AccountForm() {
                                       return checked
                                         ? field.onChange([...field.value, item.name])
                                         : field.onChange(
-                                            field.value?.filter((value) => value !== item.name),
-                                          );
+                                          field.value?.filter((value) => value !== item.name),
+                                        );
                                     }}
                                   />
                                 </FormControl>
@@ -302,21 +314,6 @@ export default function AccountForm() {
                 />
               </div>
             )}
-            <div className="flex gap-4 item">
-              <button
-                className={`mt-2 ${editForm ? "text-blue-500" : "text-blue-300"}`}
-                type="button"
-                disabled={!editForm}
-                onClick={() => {
-                  setChangePassword((prev) => !prev);
-                  if (changePassword) {
-                    oldPasswordForm.reset();
-                  }
-                }}
-              >
-                {changePassword ? "Cancel" : "Change password"}
-              </button>
-            </div>
             <div className="space-y-2">
               <div className="grid grid-cols-12">
                 <div className="col-span-2">

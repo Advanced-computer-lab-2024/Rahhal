@@ -196,7 +196,7 @@ export default function ProfileForm() {
                 setEditForm(true);
               }}
               type="button"
-              className="bg-[var(--complimentary-color)] hover:bg-[var(--complimentary-color-dark)] text-white shadow-lg"
+              className="bg-[var(--primary-color-hover)] hover:bg-[var(--primary-color-fade)] text-white shadow-lg"
             >
               Edit Profile
             </Button>
