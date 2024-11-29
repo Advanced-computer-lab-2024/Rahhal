@@ -1,9 +1,13 @@
-export default function PrimaryLogo() {
+interface PrimaryLogoProps {
+  width?: number;
+  height?: number;
+}
+export default function PrimaryLogo({ width = 200, height = 276 }: PrimaryLogoProps) {
   return (
     <svg
-      width="200"
-      height="276"
-      viewBox="0 0 300 276"
+      width={width}
+      height={height}
+      viewBox={`0 0 300 276`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
