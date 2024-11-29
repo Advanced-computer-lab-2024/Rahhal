@@ -10,6 +10,7 @@ import DetailsPageTemplateProps from "../DetailsPageTemplate";
 import { useLocation, useParams } from "react-router-dom";
 import TouristHomePageNavigation from "../TouristHomePageNavigation";
 import { bookingType } from "@/utils/enums";
+import SignUpModal from "../SignupModal";
 
 const ActivityDetailsPage: React.FC = () => {
   const loc = useLocation();
@@ -33,9 +34,9 @@ const ActivityDetailsPage: React.FC = () => {
   const [selectedPrice, setSelectedPrice] = React.useState<number | undefined>(
     price[Object.keys(price)[0]],
   );
+  const [isGuestAction, setIsGuestAction] = React.useState(false);
   const { currency } = useCurrencyStore();
   const { rates } = useRatesStore();
-
   const { id } = useParams();
 
   React.useEffect(() => {
@@ -75,7 +76,7 @@ const ActivityDetailsPage: React.FC = () => {
         alert("You have successfully booked");
       });
     } else {
-      alert("You must login");
+      setIsGuestAction(true);
     }
   };
 
@@ -104,6 +105,14 @@ const ActivityDetailsPage: React.FC = () => {
   });
   return (
     <div>
+      {isGuestAction && (
+        <SignUpModal
+          onClose={() => {
+            setIsGuestAction(false);
+          }}
+          text={"Excited to book? Sign in or create an account to secure your spot now!"}
+        />
+      )}
       <TouristHomePageNavigation loggedIn={id ? id !== "undefined" : false} />
       <DetailsPageTemplateProps
         _id={_id}
