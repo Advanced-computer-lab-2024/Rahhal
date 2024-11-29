@@ -60,15 +60,6 @@ export async function getUserProducts(req: Request, res: Response) {
   }
 }
 
-export async function createUser(req: Request, res: Response) {
-  const userData = req.body;
-  try {
-    const user = await userService.createUser(userData);
-    res.status(user.status).json(user.data);
-  } catch (error) {
-    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
-  }
-}
 
 export async function updateUser(req: Request, res: Response) {
   const userId = req.params.id;
@@ -87,16 +78,6 @@ export async function deleteUser(req: Request, res: Response) {
   const userId = req.params.id;
   try {
     const user = await userService.deleteUser(userId);
-    res.status(user.status).json(user.data);
-  } catch (error) {
-    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
-  }
-}
-
-export async function loginUser(req: Request, res: Response) {
-  const userData = req.body;
-  try {
-    const user = await userService.loginUser(userData);
     res.status(user.status).json(user.data);
   } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
