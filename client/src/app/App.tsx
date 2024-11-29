@@ -110,19 +110,35 @@ export default function App() {
             <Route path="/seller/product/:id" element={<ProductReport />} />
 
             <Route path="/tour-guide/:id" element={<TourGuideView />} />
+            
+            <Route element={<AdminHomepage />}>
+              <Route path="/admin" element={<h1>Home</h1>} />
+              <Route path="/admin/categories" element={<CategoryView />} />
+              <Route path="/admin/users" element={<UserView />} />
+              <Route path="/admin/users/requests" element={<UsersPendingRequests />} />
+              <Route path="/admin/products" element={<AdminProductsView />} />
+              <Route path="/admin/categories" element={<CategoryView />} />
+              <Route path="/admin/preference-tags" element={<PreferenceTagsAdminView />} />
+              <Route path="/admin/complaints" element={<AdminComplaintsView />} />
+              <Route path="/admin/itineraries" element={<AdminItinerariesView />} />
+              <Route path="/admin/activities" element={<AdminActivitiesView />} />
+            </Route>
 
-            <Route path="/admin" element={<AdminHomepage />} />
-            <Route path="/admin/:id" element={<AdminHomepage />} />
-            <Route path="/admin/categories" element={<CategoryView />} />
-            <Route path="/admin/users" element={<UserView />} />
-            <Route path="/admin/users/requests" element={<UsersPendingRequests />} />
-            <Route path="/admin/products" element={<AdminProductsView />} />
-            <Route path="/admin" element={<AdminHomepage />} />
-            <Route path="/admin/categories" element={<CategoryView />} />
-            <Route path="/admin/preference-tags" element={<PreferenceTagsAdminView />} />
-            <Route path="/admin/complaints" element={<AdminComplaintsView />} />
-            <Route path="/admin/itineraries" element={<AdminItinerariesView />} />
-            <Route path="/admin/activities" element={<AdminActivitiesView />} />
+            <Route element={<AdminHomepage />}>
+              <Route path="/admin/:id" element={<h1>Home</h1>} />
+              <Route path="/admin/:id/categories" element={<CategoryView />} />
+              <Route path="/admin/:id/users" element={<UserView />} />
+              <Route path="/admin/:id/users/requests" element={<UsersPendingRequests />} />
+              <Route path="/admin/:id/products" element={<AdminProductsView />} />
+              <Route path="/admin/:id/categories" element={<CategoryView />} />
+              <Route path="/admin/:id/preference-tags" element={<PreferenceTagsAdminView />} />
+              <Route path="/admin/:id/complaints" element={<AdminComplaintsView />} />
+              <Route path="/admin/:id/itineraries" element={<AdminItinerariesView />} />
+              <Route path="/admin/:id/activities" element={<AdminActivitiesView />} />
+              <Route path="/admin/:id/user-settings" element={<ProfileForm />} />
+              <Route path="/admin/:id/user-settings/account" element={<AccountForm />} />
+            </Route>
+
           </Routes>
         </Router>
       </QueryClientProvider>

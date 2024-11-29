@@ -22,16 +22,11 @@ import {
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import ProfileForm from "@/features/user-settings/components/ProfileForm";
-import AccountForm from "@/features/user-settings/components/AccountForm";
 interface AdminSidebarProps {
-  setActiveComponent: (component: React.ReactNode) => void;
-  activeComponent: React.ReactNode;
   id?: string;
 }
 
-
-export function AdminSidebar({ setActiveComponent, activeComponent, id }: AdminSidebarProps) {
+export function AdminSidebar({ id }: AdminSidebarProps) {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -55,22 +50,30 @@ export function AdminSidebar({ setActiveComponent, activeComponent, id }: AdminS
               <CollapsibleContent>
                 <SidebarGroupContent>
                   <SidebarMenu>
-                    {group.items.map((item) => (
-                      <SidebarMenuItem key={item.label}>
-                        <SidebarMenuButton
-                          asChild
-                          onClick={() => setActiveComponent(item.component)}
-                          isActive={activeComponent === item.component}
-                          tooltip={item.label}
-                        >
-                          <a>
-                            <item.icon />
-                            <span>{item.label}</span>
-                          </a>
-                        </SidebarMenuButton>
-                        <SidebarMenuAction className="peer-data-[active=true]/menu-button:opacity-100" />
-                      </SidebarMenuItem>
-                    ))}
+                    {group.items.map((item) => {
+                      const pathParts = window.location.pathname.split("/");
+                      const basePath = pathParts[1]; // 'admin'
+                      const userId = pathParts[2]; // potential ID
+                      const fullPath = userId
+                        ? `/${basePath}/${userId}${item.url}`
+                        : `/${basePath}${item.url}`;
+
+                      return (
+                        <SidebarMenuItem key={item.label}>
+                          <SidebarMenuButton
+                            asChild
+                            isActive={window.location.pathname === fullPath}
+                            tooltip={item.label}
+                          >
+                            <a href={fullPath}>
+                              <item.icon />
+                              <span>{item.label}</span>
+                            </a>
+                          </SidebarMenuButton>
+                          <SidebarMenuAction className="peer-data-[active=true]/menu-button:opacity-100" />
+                        </SidebarMenuItem>
+                      );
+                    })}
                   </SidebarMenu>
                 </SidebarGroupContent>
               </CollapsibleContent>
@@ -92,12 +95,12 @@ export function AdminSidebar({ setActiveComponent, activeComponent, id }: AdminS
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                  <DropdownMenuItem onClick={() => setActiveComponent(<AccountForm />)}>
-                    <span>Account</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setActiveComponent(<ProfileForm />)}>
-                    <span>Profile</span>
-                  </DropdownMenuItem>
+                  <a href={`/admin/${id}/user-settings/account`}>
+                    <DropdownMenuItem>Account</DropdownMenuItem>
+                  </a>
+                  <a href={`/admin/${id}/user-settings`}>
+                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                  </a>
                 </DropdownMenuContent>
               </DropdownMenu>
             </SidebarMenuItem>
