@@ -23,11 +23,11 @@ export async function getCart(req: Request, res: Response) {
   }
 
   export async function updateCart(req: Request, res: Response) {
-    const cartId = req.params.cartId;
+    const userId = req.params.userId;
     const updatedCart = req.body;
   
     try {
-      const populatedCart = await cartService.updateCart(cartId, updatedCart);
+      const populatedCart = await cartService.updateCart(userId, updatedCart);
       res.status(STATUS_CODES.STATUS_OK).json(populatedCart);
     } catch (error) {
       res.status(STATUS_CODES.SERVER_ERROR).json(error);
