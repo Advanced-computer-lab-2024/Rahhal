@@ -15,8 +15,10 @@ import ratingRoutes from "@/api/routes/rating-routes";
 import orderRoutes from "@/api/routes/order-routes";
 import externalApiRoutes from "@/api/routes/external-api-routes";
 import paymentRoutes from "@/api/routes/payment-routes";
-import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './api/swagger/swagger-output.json'
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./api/swagger/swagger-output.json";
+import authRoutes from "@/api/routes/auth-routes";
+import generalRoutes from "@/api/routes/general-routes";
 
 const app = express();
 
@@ -27,7 +29,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 // Setup Swagger UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Routes
 app.use("/api/user", userRoutes);
@@ -43,5 +45,7 @@ app.use("/api/rating", ratingRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/external-api", externalApiRoutes);
 app.use("/api/payment", paymentRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/", generalRoutes);
 
 export default app;

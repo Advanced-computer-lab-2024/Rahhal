@@ -3,7 +3,7 @@ import {
   entertainmentAxiosInstance,
   productAxiosInstance,
 } from "@/utils/axios-instances";
-import type { TRating } from "@/utils/types";
+import type { IUser, TRating } from "@/utils/types";
 
 // users service calls
 export async function getApprovedUsers() {
@@ -30,7 +30,7 @@ export async function getUserProducts(userId: string) {
   return await productAxiosInstance.get(`/products?sellerId=${userId}`);
 }
 
-export async function createUser(body: string) {
+export async function createUser(body: IUser) {
   return await userAxiosInstance.post("/users", body);
 }
 
@@ -50,10 +50,6 @@ export async function updateUser(
 
 export async function deleteUser(id: string) {
   return await userAxiosInstance.delete(`/users/${id}`);
-}
-
-export async function loginUser(body: string) {
-  return await userAxiosInstance.post("/users/login", body);
 }
 
 export async function addUserRating(ratedUserId: string, rating: TRating) {
