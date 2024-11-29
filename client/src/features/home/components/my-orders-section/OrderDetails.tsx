@@ -12,7 +12,7 @@ import { cancelOrder, rateProduct } from "@/api-calls/order-api-calls";
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { useParams } from "react-router-dom";
-import { getUserById } from "@/api-calls/users-api-calls";
+import { getUserById, refundMoney } from "@/api-calls/users-api-calls";
 import { RateableEntityType, OrderStatus } from "@/utils/enums";
 import { useQuery } from "@tanstack/react-query";
 import OrdersPageStyles from "@/features/home/styles/MyOrdersPage.module.css";
@@ -21,13 +21,15 @@ import currencyExchange from "@/utils/currency-exchange";
 interface OrderDetailsProps {
   order: TOrder; // Use the TOrder type
   onClose: () => void;
+  onUpdateOrder: (updatedOrder: TOrder) => void;
 }
 
-export function OrderDetails({ order, onClose }: OrderDetailsProps) {
+export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProps) {
   const [showRating, setShowRating] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [isRated, setIsRated] = useState(false);
+  const [currentOrder, setCurrentOrder] = useState(order);
 
   const { id } = useParams<{ id: string }>();
   const { data: user } = useQuery({
@@ -45,8 +47,12 @@ export function OrderDetails({ order, onClose }: OrderDetailsProps) {
       const orderData = {
         orderStatus: OrderStatus.cancelled,
       };
-      await cancelOrder(order._id as string, orderData);
-      window.location.reload();
+      const updatedOrder = await cancelOrder(order._id as string, orderData);
+      if (id && (order.paymentMethod === "credit" || order.paymentMethod==="wallet")) {
+        await refundMoney(id, order.totalPrice);
+      } 
+      setCurrentOrder(updatedOrder as TOrder);
+      onUpdateOrder(updatedOrder as TOrder); 
     } catch (error) {
       toast({
         title: `Failed to cancel order, please try again later`,
@@ -176,14 +182,14 @@ export function OrderDetails({ order, onClose }: OrderDetailsProps) {
               <strong>Status:</strong>{" "}
               <span
                 className={
-                  order.orderStatus === OrderStatus.cancelled
+                  currentOrder.orderStatus === OrderStatus.cancelled
                     ? "text-red-500 font-semibold"
-                    : order.orderStatus === OrderStatus.delivered
+                    : currentOrder.orderStatus === OrderStatus.delivered
                       ? "text-green-500 font-semibold"
                       : "text-black"
                 }
               >
-                {order.orderStatus}
+                {currentOrder.orderStatus}
               </span>
             </p>
             <p>
@@ -197,8 +203,8 @@ export function OrderDetails({ order, onClose }: OrderDetailsProps) {
             <p>{order.shippingAddress || "Not provided"}</p>
           </div>
         </div>
-        {order.orderStatus !== OrderStatus.delivered &&
-          order.orderStatus !== OrderStatus.cancelled && (
+        {currentOrder.orderStatus !== OrderStatus.delivered &&
+          currentOrder.orderStatus !== OrderStatus.cancelled && (
             <button
               className="mt-4 px-3 py-1 text-sm bg-red-500 text-white font-medium rounded shadow-sm hover:bg-red-600 focus:outline-none  transition-colors"
               onClick={handleShowCancelModal}

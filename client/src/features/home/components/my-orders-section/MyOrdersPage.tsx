@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Star, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +13,7 @@ import { getUserById } from "@/api-calls/users-api-calls";
 import { TOrder } from "@/features/home/types/home-page-types";
 import { OrderStatus } from "@/utils/enums";
 import EmptyStatePlaceholder from "../EmptyStatePlaceholder";
-import OrdersPageStyles from "@/features/home/styles/MyOrdersPage.module.css"
+import OrdersPageStyles from "@/features/home/styles/MyOrdersPage.module.css";
 import cart from "@/assets/cart.png";
 
 export const formatOrderDate = (dateString: string | undefined) => {
@@ -32,9 +32,11 @@ export const formatOrderDate = (dateString: string | undefined) => {
 export default function OrdersPage() {
   const { id } = useParams<{ id: string }>();
   const [selectedOrderId, setSelectedOrderId] = useState<TOrder | null>(null);
+  const [orders, setOrders] = useState<TOrder[]>([]); // Use `orders` for rendering
 
+  // Fetch orders and initialize the local state
   const {
-    data: order,
+    data: fetchedOrders,
     isLoading,
     isError,
   } = useQuery<TOrder[]>({
@@ -43,42 +45,55 @@ export default function OrdersPage() {
     enabled: !!id,
   });
 
+
+  useEffect(() => {
+    if (fetchedOrders) {
+      setOrders(fetchedOrders);
+    }
+  }, [fetchedOrders]);
+
   const { data: user } = useQuery({
     queryKey: ["user", id],
     queryFn: () => getUserById(id as string),
     enabled: !!id,
   });
 
-  const handleViewDetails = (orderId: TOrder) => {
-    setSelectedOrderId(orderId);
+  const handleViewDetails = (order: TOrder) => {
+    setSelectedOrderId(order);
   };
 
   const handleCloseDetails = () => {
     setSelectedOrderId(null);
   };
 
+  const handleUpdateOrder = (updatedOrder: TOrder) => {
+    // Update the orders list dynamically
+    setOrders((prevOrders) =>
+      prevOrders.map((order) => (order._id === updatedOrder._id ? updatedOrder : order)),
+    );
+
+  };
+
   return (
     <>
-    
-      {order?.length === 0 ? (
-        !isLoading &&
-        !isError && (
-          <div className={OrdersPageStyles["no-orders"]}>
-            <EmptyStatePlaceholder
-              img={cart}
-              img_alt="No orders"
-              textOne="No Purchases Yet!"
-              textTwo="Once you Buy a product - it will appear here. Ready to get started?"
-              buttonText="Start Shopping"
-              navigateTo={`/shop/${id}`}
-            />
-          </div>
-        )
+      {/* No Orders Placeholder */}
+      {orders.length === 0 && !isLoading && !isError ? (
+        <div className={OrdersPageStyles["no-orders"]}>
+          <EmptyStatePlaceholder
+            img={cart}
+            img_alt="No orders"
+            textOne="No Purchases Yet!"
+            textTwo="Once you Buy a product - it will appear here. Ready to get started?"
+            buttonText="Start Shopping"
+            navigateTo={`/shop/${id}`}
+          />
+        </div>
       ) : (
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold mb-6">My Orders</h1>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {order?.map((order) => (
+            {/* Render orders from the `orders` state */}
+            {orders.map((order) => (
               <Card key={order._id}>
                 <CardHeader>
                   <CardTitle className="flex justify-between items-center">
@@ -98,10 +113,10 @@ export default function OrdersPage() {
                       <span
                         className={
                           order.orderStatus === OrderStatus.cancelled
-                            ? "text-red-500 "
+                            ? "text-red-500"
                             : order.orderStatus === OrderStatus.delivered
-                            ? "text-green-500 "
-                            : "text-black"
+                              ? "text-green-500"
+                              : "text-black"
                         }
                       >
                         {order.orderStatus}
@@ -119,8 +134,14 @@ export default function OrdersPage() {
               </Card>
             ))}
           </div>
-          {selectedOrderId !== null && (
-            <OrderDetails order={selectedOrderId} onClose={handleCloseDetails} />
+
+          {/* Render OrderDetails when selected */}
+          {selectedOrderId && (
+            <OrderDetails
+              order={selectedOrderId}
+              onClose={handleCloseDetails}
+              onUpdateOrder={handleUpdateOrder} // Pass update handler to child
+            />
           )}
         </div>
       )}
