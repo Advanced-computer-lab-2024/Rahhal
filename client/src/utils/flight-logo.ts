@@ -24,22 +24,6 @@ const airlineLogos: { [key: string]: string } = {
     "JETBLUE AIRWAYS":"https://1000logos.net/wp-content/uploads/2019/12/JetBlue-Airways-Logo.png",
     "ITA AIRWAYS":"https://1000logos.net/wp-content/uploads/2023/06/ITA-Airways-Logo.png",
     "SAUDI ARABIAN AIRLINES":"https://1000logos.net/wp-content/uploads/2021/04/Saudi-Arabian-Airlines-logo.png",
-    // "Cathay Pacific": "/assets/logos/cathay-pacific.png",
-    // "Qantas": "/assets/logos/qantas.png",
-    // "All Nippon Airways (ANA)": "/assets/logos/ana.png",
-    // "Japan Airlines (JAL)": "/assets/logos/japan-airlines.png",
-    // "Air Canada": "/assets/logos/air-canada.png",
-    // "United Airlines": "/assets/logos/united-airlines.png",
-    // "Delta Air Lines": "/assets/logos/delta-air-lines.png",
-    // "Southwest Airlines": "/assets/logos/southwest-airlines.png",
-    // "Virgin Atlantic": "/assets/logos/virgin-atlantic.png",
-    // "Iberia": "/assets/logos/iberia.png",
-    // "Alitalia": "/assets/logos/alitalia.png",
-    // "KLM Royal Dutch Airlines": "/assets/logos/klm.png",
-    // "Turkish Airlines": "/assets/logos/turkish-airlines.png",
-    // "Air India": "/assets/logos/air-india.png",
-    // "Malaysia Airlines": "/assets/logos/malaysia-airlines.png",
-    // "Ethiopian Airlines": "/assets/logos/ethiopian-airlines.png",
   };
   
   // Function to retrieve the airline logo path by name
