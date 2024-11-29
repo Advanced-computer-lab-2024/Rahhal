@@ -20,7 +20,7 @@ function TravelPageHeader({
 }: TravelPageHeaderProps) {
   return (
     <>
-      <div className="flex justify-between py-10 px-0 items-center w-[100%]">
+      <div className="flex justify-between py-10 px-[16px] items-center w-[100%] ">
         {transferType === "taxis" ? (
           <TransportationSearchBar onIconClick={onIconClickTaxis} />
         ) : transferType === "flights" ? (

@@ -36,7 +36,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
   const [id, setId] = useState(useIdFromParamsOrQuery);
 
   return (
-    <div className="w-full h-16 flex items-center justify-between z-10 relative">
+    <div className="w-full h-16 flex items-center justify-between z-10 relative px-[16px]">
       {/* Left placeholder to balance layout */}
       <div className="flex-1">
         <SecondaryLogo/>
