@@ -8,6 +8,7 @@ body {
 .general-grid-view {
   overflow-x: hidden; /* Prevent horizontal scrolling */
   width: 100%; /* Ensure the container width is 100% */
+  padding: 0 16px;
 }
 
 .general-grid-view__filter-container {
