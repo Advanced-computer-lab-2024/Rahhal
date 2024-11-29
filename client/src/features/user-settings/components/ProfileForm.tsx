@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { EditContext } from "./SettingsView";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -27,7 +27,7 @@ export default function ProfileForm() {
   const { id } = useParams();
   const [editForm, setEditForm] = useState(false);
   const { user } = useContext(EditContext);
-
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const profileFormSchema = z.object({
     firstName: z
       .string()
@@ -205,8 +205,16 @@ export default function ProfileForm() {
                   const { profilePicture, ...userWithoutProfilePicture } = user;
                   form.reset(userWithoutProfilePicture);
 
+                  // Reset the file input
+                  if (fileInputRef.current) {
+                    fileInputRef.current.value = ''; // Clear the file input
+                  }
                   setEditForm(false);
                 }
+                console.log("Dirty fields:", form.formState.dirtyFields);
+                console.log("editForm:", !editForm);
+                console.log("formState.isDirty:", !form.formState.isDirty);
+                console.log("addresses check:", form.watch("addresses")?.every((address) => address.trim() === "") && form.getValues("addresses")?.length !== 0);
 
               }}
               type="button"
@@ -253,6 +261,7 @@ export default function ProfileForm() {
                           }
                         }}
                         {...field}
+                        ref={fileInputRef}
                         accept=".png,.jpg,.jpeg"
                       />
                     </div>
@@ -617,17 +626,17 @@ export default function ProfileForm() {
               />
             </div>
           )}
-            <button
+          <button
             className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
             type="submit"
             disabled={
               !editForm ||
-              !form.formState.isDirty ||
+              (Object.keys(form.formState.dirtyFields).length === 0) ||
               (form.watch("addresses")?.every((address) => address.trim() === "") && form.getValues("addresses")?.length !== 0)
             }
-            >
+          >
             Update profile
-            </button>
+          </button>
         </div>
       </form>
     </Form>
