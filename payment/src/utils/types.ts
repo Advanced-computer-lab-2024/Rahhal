@@ -5,3 +5,10 @@ export interface IPromocode {
     value: Number;
     expiresAt: Date;
 }
+
+export interface IPromoCodeUsage {
+    promocode: String;
+    usedBy: String;
+    usedAt: Date;
+    deleted: Boolean;
+}

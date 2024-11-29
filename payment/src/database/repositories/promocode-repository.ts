@@ -1,5 +1,5 @@
 import Promocode, { PromocodeUsage } from "@/database/models/Promocode";
-import { IPromocode } from "@/utils/types";
+import { IPromocode, IPromoCodeUsage } from "@/utils/types";
 
 export async function getAllPromocodes() {
     return Promocode.find();
@@ -20,11 +20,11 @@ export async function deletePromocode(id: string) {
 }
 
 
-export async function findPromocode(filter = {}) {
+export async function findPromocode(filter: Partial<IPromocode>) {
     return Promocode.findOne(filter);
 }
 
-export async function findPromocodeUsage(filter = {}) {
+export async function findPromocodeUsage(filter: Partial<IPromoCodeUsage>) {
     return PromocodeUsage.findOne(filter);
 }
 

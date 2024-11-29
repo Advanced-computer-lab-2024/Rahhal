@@ -1,10 +1,10 @@
 import express from "express";
-import promocodesRoutes from "./api/routes/promocode-routes";
+import promocodeRoutes from "./api/routes/promocode-routes";
 
 const app = express();
 
 app.use(express.json());
 
-app.use("/promocodes", promocodesRoutes)
+app.use("/promocode", promocodeRoutes)
 
 export default app;

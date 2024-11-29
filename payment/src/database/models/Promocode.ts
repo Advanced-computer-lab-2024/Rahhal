@@ -28,7 +28,7 @@ const promocodeSchema = new mongoose.Schema({
 
 const promocodeUsageSchema = new mongoose.Schema({
     promocode: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: "Promocode",
         required: true,
     },

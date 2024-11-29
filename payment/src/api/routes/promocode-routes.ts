@@ -4,9 +4,9 @@ const router = express.Router();
 
 router.get("/", promocodeController.getAllPromocodes);
 router.post("/", promocodeController.createPromocode);
-router.put("/:id", promocodeController.updatePromocode);
+router.patch("/:id", promocodeController.updatePromocode);
 router.delete("/:id", promocodeController.deletePromocode);
-router.get("/:id", promocodeController.validatePromocode);
+router.post("/:id", promocodeController.applyPromocode);
 
 
 export default router;

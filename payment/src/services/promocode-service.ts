@@ -7,10 +7,13 @@ export async function getAllPromocodes() {
 }
 
 export async function createPromocode(promocode: IPromocode) {
+    promocode.code = promocode.code.toUpperCase();
     return promocodeRepository.createPromocode(promocode);
 }
 
 export async function updatePromocode(id: string, promocode: Partial<IPromocode>) {
+    if (promocode.code)
+        promocode.code = promocode.code.toUpperCase();
     return promocodeRepository.updatePromocode(id, promocode);
 }
 
@@ -18,7 +21,8 @@ export async function deletePromocode(id: string) {
     return promocodeRepository.deletePromocode(id);
 }
 
-export async function validatePromocode(id: string, code: string) {
+export async function applyPromocode(id: string, code: string) {
+    code = code.toUpperCase();
     let promocode;
     if (code == "HBD" + (new Date()).toLocaleDateString('en', { year: '2-digit' })) {
         if (!(await isHisBirthday(id))) {
@@ -57,7 +61,8 @@ export async function validatePromocode(id: string, code: string) {
 }
 
 export async function usePromocode(id: string, code: string) {
-    const promocode = await validatePromocode(id, code);
+    code = code.toUpperCase();
+    const promocode = await applyPromocode(id, code);
     await promocodeRepository.createPromocodeUsage(code, id);
     return promocode;
 }
