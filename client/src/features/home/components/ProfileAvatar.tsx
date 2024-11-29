@@ -63,6 +63,11 @@ export const ProfileAvatar = () => {
             {" "}
             <div className={AvatarStyles["menuItem"]}>Trips</div>
           </Link>
+
+          <Link to={`/my-wishlist/${id}`} onClick={toggleDropdown}>
+            <div className={AvatarStyles["menuItem"]}>Wishlist</div>
+          </Link>
+
           <Link to={`/my-orders/${id}`}>
             {" "}
             <div className={AvatarStyles["menuItem"]} onClick={toggleDropdown}>
