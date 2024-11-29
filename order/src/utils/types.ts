@@ -1,4 +1,5 @@
 import type { OrderStatus } from "@/database/models/Order";
+import { ObjectIdSchemaDefinition, Types } from "mongoose";
 
 export interface OrderQueryParams {
   userId?: string;
@@ -10,4 +11,15 @@ export interface OrderQueryParams {
 export interface IWishlist {
   user: string;
   product: string;
+};
+
+export interface CartItem {
+  productId: string;
+  quantity: number;
+};
+
+export interface ICart{
+  _id: Types.ObjectId;
+  userId: string;
+  products: CartItem[];
 }

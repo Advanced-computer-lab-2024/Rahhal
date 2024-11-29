@@ -223,4 +223,19 @@ export interface PopulatedWishlist {
   _id: string;
   user: string;
   product: IProduct;
+export interface CartItem {
+  productId: string;
+  quantity: number;
+};
+
+export interface ICart{
+  _id:string;
+  userId: string;
+  products: CartItem[];
+}
+
+export interface PopulatedCart {
+  _id: string;
+  user: string;
+  products: IProduct[];
 }
