@@ -75,9 +75,10 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
         ) : (
           <>
             <div className="flex space-x-6 items-center">
-              <WishlistIcon itemCount={5} />
+              <Link to={`/my-wishlist/${id}`}>
+                <WishlistIcon />
+              </Link>
               <CartIcon />
-
               <CurrencyDropdown />
               <ProfileAvatar />
             </div>
