@@ -9,7 +9,7 @@ import { TooltipProvider, TooltipContent } from "@/components/ui/tooltip";
 import RatingForm from "@/features/home/components/RatingForm";
 import { createRating } from "@/api-calls/rating-api-calls";
 import { cancelOrder, rateProduct } from "@/api-calls/order-api-calls";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { useParams } from "react-router-dom";
 import { getUserById, refundMoney } from "@/api-calls/users-api-calls";
@@ -32,6 +32,11 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
   const [currentOrder, setCurrentOrder] = useState(order);
 
   const { id } = useParams<{ id: string }>();
+
+  useEffect(() => {
+    setCurrentOrder(order);
+  }, [order]);
+
   const { data: user } = useQuery({
     queryKey: ["user", id],
     queryFn: () => getUserById(id as string),
@@ -48,11 +53,11 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
         orderStatus: OrderStatus.cancelled,
       };
       const updatedOrder = await cancelOrder(order._id as string, orderData);
-      if (id && (order.paymentMethod === "credit" || order.paymentMethod==="wallet")) {
+      if (id && (order.paymentMethod === "credit" || order.paymentMethod === "wallet")) {
         await refundMoney(id, order.totalPrice);
-      } 
+      }
       setCurrentOrder(updatedOrder as TOrder);
-      onUpdateOrder(updatedOrder as TOrder); 
+      onUpdateOrder(updatedOrder as TOrder);
     } catch (error) {
       toast({
         title: `Failed to cancel order, please try again later`,
@@ -109,7 +114,7 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
   };
 
   const { currency } = useCurrencyStore();
-  const convertedTotalPrice = currencyExchange("EGP", order.totalPrice);
+  const convertedTotalPrice = currencyExchange("EGP", currentOrder.totalPrice);
   const displayTotalPrice = convertedTotalPrice ? convertedTotalPrice.toFixed(0) : "N/A";
 
   return (
@@ -145,7 +150,7 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
                       </div>
                     ) : (
                       // Show "Rate" button if the item is not rated
-                      order.orderStatus === OrderStatus.delivered && (
+                      currentOrder.orderStatus === OrderStatus.delivered && (
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger>
