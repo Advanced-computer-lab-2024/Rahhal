@@ -16,11 +16,11 @@ export async function createCart(body: string) {
   return orderAxiosInstance.post("/carts", body);
 }
 
-export async function updateCart(cartId: string, updatedCart: Partial<ICart>) {
+export async function updateCart(userId: string, updatedCart: Partial<ICart>) {
   try {
-    const updatedCartResponse = await orderAxiosInstance.patch(`/carts/${cartId}`, updatedCart);
+    const updatedCartResponse = await orderAxiosInstance.patch(`/carts/${userId}`, updatedCart);
     const populatedCart = await populateCart(updatedCartResponse.data);
-
+    
     return populatedCart;
   } catch (error) {
     throw new Error("Failed to update the cart\n" + error);
