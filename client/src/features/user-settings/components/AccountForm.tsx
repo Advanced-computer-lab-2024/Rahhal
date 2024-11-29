@@ -114,6 +114,7 @@ export default function AccountForm() {
       if (data.password) user.password = data.password;
       if (data.preferences) user.preferences = data.preferences;
       setEditForm(false);
+
       toast({
         title: "Updated Successfully",
         style: {
@@ -147,6 +148,8 @@ export default function AccountForm() {
     } else {
       update(data);
     }
+    form.reset(data);
+    oldPasswordForm.reset();
   }
 
   return (
@@ -158,12 +161,21 @@ export default function AccountForm() {
               <h3 className="text-lg font-medium">Account</h3>
               <Button
                 onClick={() => {
-                  setEditForm(true);
+                  if(!editForm){
+                    setEditForm(true);
+                  }
+                  else{
+                    form.reset(user);
+                    oldPasswordForm.reset();
+                    setChangePassword(false);
+                    setEditForm(false);
+                  }
+
                 }}
                 type="button"
-                className="bg-[var(--primary-color-hover)] hover:bg-[var(--primary-color-fade)] text-white shadow-lg"
+                className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
               >
-                <span>Edit Account</span>
+                <span>{editForm ? "Cancel" : "Edit Account"}</span>
               </Button>
             </div>
             <p className="text-sm text-muted-foreground">
@@ -320,7 +332,11 @@ export default function AccountForm() {
                   <button
                     className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
                     type="submit"
-                    disabled={!editForm || !form.formState.isValid}
+                    disabled={
+                      !editForm ||
+                      (!form.formState.isDirty && !oldPasswordForm.formState.isDirty) ||
+                      (changePassword && !oldPasswordForm.formState.isValid)
+                    }
                   >
                     Update account
                   </button>

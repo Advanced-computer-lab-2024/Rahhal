@@ -184,6 +184,7 @@ export default function ProfileForm() {
       const { profilePicture, ...userWithoutProfilePicture } = data;
       update(userWithoutProfilePicture);
     }
+    form.reset(data);
   }
   return (
     <Form {...form}>
@@ -193,12 +194,20 @@ export default function ProfileForm() {
             <h3 className="text-lg font-medium">Profile</h3>
             <Button
               onClick={() => {
-                setEditForm(true);
+                if(!editForm){
+                  setEditForm(true);
+                }
+                else{
+                  const { profilePicture, ...userWithoutProfilePicture } = user;
+                  form.reset(userWithoutProfilePicture);
+                  setEditForm(false);
+                }
+                
               }}
               type="button"
-              className="bg-[var(--primary-color-hover)] hover:bg-[var(--primary-color-fade)] text-white shadow-lg"
+              className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
             >
-              Edit Profile
+              {editForm ? "Cancel" : "Edit Profile"}
             </Button>
           </div>
           <p className="text-sm text-muted-foreground">
@@ -606,7 +615,7 @@ export default function ProfileForm() {
           <button
             className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
             type="submit"
-            disabled={!editForm || !form.formState.isValid}
+            disabled={!editForm || !form.formState.isDirty}
           >
             Update profile
           </button>
