@@ -1,0 +1,22 @@
+export enum Role {
+    admin = "admin",
+    tourist = "tourist",
+    tourGuide = "tourGuide",
+    advertiser = "advertiser",
+    seller = "seller",
+    tourismGovernor = "tourismGovernor",
+  }
+
+
+export const STATUS_CODES = {
+    NOT_FOUND: 404,
+    CONFLICT: 409,
+    BAD_REQUEST: 400,
+    CREATED: 201,
+    STATUS_OK: 200,
+    SERVER_ERROR: 500,
+    UNPROCESSABLE_ENTITY: 422,
+  };
+
+
+export const MAXAGE = 86400000;
