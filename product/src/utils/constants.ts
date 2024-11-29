@@ -11,3 +11,10 @@ export const CONSTANTS = {
   MAX_RATING: 5,
   ZERO: 0,
 };
+
+export const RABBITMQ = {
+  QUEUE: {
+    NOTIFICATION: "notification_queue",
+    ADMIN_ALERT: "admin_alert_queue",
+  },
+};
