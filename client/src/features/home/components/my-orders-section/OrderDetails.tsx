@@ -48,9 +48,8 @@ export function OrderDetails({ order, onClose }: OrderDetailsProps) {
       await cancelOrder(order._id as string, orderData);
       window.location.reload();
     } catch (error) {
-      console.error("Failed to cancel order:", error);
       toast({
-        title: `Failed to cancel order: ${error instanceof Error ? error.message : error}`,
+        title: `Failed to cancel order, please try again later`,
         variant: "destructive",
         duration: 3500,
       });
@@ -94,11 +93,9 @@ export function OrderDetails({ order, onClose }: OrderDetailsProps) {
         values.rating,
         values.comment,
       );
-      console.log("Product rating response:", response);
     } catch (error) {
-      console.error("Failed to submit rating:", error);
       toast({
-        title: `Failed to submit rating: ${error instanceof Error ? error.message : error}`,
+        title: `Failed to submit rating, please try again later`,
         variant: "destructive",
         duration: 3500,
       });
