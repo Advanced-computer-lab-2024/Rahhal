@@ -15,7 +15,7 @@ import CategoryView from "@/features/admin/components/CategoriesTable";
 import GeneralGridView from "@/features/home/components/GeneralGridView";
 import ProductGridView from "@/features/home/components/ProductsGridView";
 import TourGuideView from "@/features/tour-guide/components/TourGuideView";
-import { Login } from "@/components/Login";
+import { LoginPage } from "@/components/LoginPage";
 import PreferenceTagsAdminView from "@/features/admin/components/PreferenceTagsTable";
 import AdminComplaintsView from "@/features/admin/components/ComplaintsTable";
 import SellerView from "@/features/seller/components/SellerView";
@@ -82,7 +82,7 @@ export default function App() {
             <Route path="/my-trips-details/:id" element={<TripDetails />} />
 
             <Route path="/signup" element={<SignupSelector />} />
-            <Route path="/signin" element={<Login />} />
+            <Route path="/signin" element={<LoginPage />} />
             <Route path="/:type/details/:placeid/:id" element={<HistoricalDetailsPage />} />
             <Route path="/:type/details/:placeid/" element={<HistoricalDetailsPage />} />
             <Route element={<SettingsView />}>
