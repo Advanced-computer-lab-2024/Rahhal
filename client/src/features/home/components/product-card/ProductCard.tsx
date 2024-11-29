@@ -14,6 +14,8 @@ import {
   removeFromWishlist,
 } from "@/api-calls/wishlist-api-calls";
 import useWishlistStore from "@/stores/wishlist-count-store";
+import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
   id: string;
@@ -43,7 +45,6 @@ export default function ProductCard({
   useEffect(() => {
     if (!userId) return;
     isProductWishlisted(userId, id).then(setWishlisted);
-    console.log("Wishlist status", isWishlisted);
   }, [userId, id]);
 
   const handleWishlistClick = async () => {
@@ -60,7 +61,11 @@ export default function ProductCard({
         setWishlisted(false);
         decrementCount();
       } catch (error) {
-        console.error("Failed to remove from wishlist", error);
+        toast({
+          title: `Failed to remove from wishlist, Please try again later.`,
+          variant: "destructive",
+          duration: 3500,
+        });
       }
     } else {
       try {
@@ -68,7 +73,11 @@ export default function ProductCard({
         setWishlisted(true);
         incrementCount();
       } catch (error) {
-        console.error("Failed to add to wishlist", error);
+        toast({
+          title: `Failed to add to wishlist, Please try again later.`,
+          variant: "destructive",
+          duration: 3500,
+        });
       }
     }
   };
@@ -110,7 +119,14 @@ export default function ProductCard({
             whileTap={{ scale: 0.9 }}
           >
             <Heart
-              className={`h-6 w-6 ${isWishlisted ? "text-red-500 fill-red-500" : "text-gray-500"}`}
+              className={cn(
+                "h-6 w-6",
+                "transition-all duration-200",
+                "hover:scale-110 active:scale-95",
+                "stroke-[1.5]",
+                "stroke-white",
+                isWishlisted ? "fill-red-500" : " fill-foreground/40",
+              )}
             />
           </motion.button>
         </div>
