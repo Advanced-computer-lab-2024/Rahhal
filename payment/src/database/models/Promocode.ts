@@ -5,6 +5,12 @@ const promocodeSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
+        validator: {
+            validate: (v: string) => {
+                return v.trim().length > 0;
+            },
+            message: "Invalid code",
+        },
     },
     type: {
         type: String,
@@ -23,6 +29,7 @@ const promocodeSchema = new mongoose.Schema({
     value: {
         type: Number,
         required: true,
+        default: 0,
     },
 });
 

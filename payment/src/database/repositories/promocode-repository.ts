@@ -11,7 +11,7 @@ export async function createPromocode(promocode: IPromocode) {
 }
 
 export async function updatePromocode(id: string, promocode: Partial<IPromocode>) {
-    return Promocode.findByIdAndUpdate(id, promocode, { new: true });
+    return Promocode.findByIdAndUpdate(id, promocode, { new: true, runValidators: true });
 }
 
 export async function deletePromocode(id: string) {
