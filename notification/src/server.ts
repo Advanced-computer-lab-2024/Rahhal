@@ -2,6 +2,8 @@ import app from "./app";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import NotificationWorker from "@/workers/notification-worker";
+import EventReminderWorker from "@/workers/event-reminder-worker";
+import AdminAlertWorker from "@/workers/admin-alert-worker";
 
 dotenv.config();
 
@@ -19,6 +21,8 @@ async function connectToDB() {
 
 await connectToDB();
 NotificationWorker.start();
+EventReminderWorker.start();
+AdminAlertWorker.start();
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

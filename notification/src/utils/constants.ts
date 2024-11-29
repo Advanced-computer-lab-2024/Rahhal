@@ -4,6 +4,7 @@ export const STATUS_CODES = {
   STATUS_OK: 200,
   BAD_REQUEST: 400,
   SERVER_ERROR: 500,
+  GATEWAY_TIMEOUT: 504,
 };
 
 export const CONSTANTS = {
@@ -15,4 +16,12 @@ export const CONSTANTS = {
 export const MESSAGES = {
   NOTIFICATION_NOT_FOUND: "Notificaion not found",
   UNKNOWN_ERROR: "An unknown error occurred",
+};
+
+export const RABBITMQ = {
+  QUEUE: {
+    NOTIFICATION: "notification_queue",
+    EVENT_REMINDER: "event_reminder_queue",
+    ADMIN_ALERT: "admin_alert_queue",
+  },
 };

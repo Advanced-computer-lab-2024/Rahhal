@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import * as notificationService from "@/services/notification-service";
+import SSEService from "@/services/server-sent-events-service";
 import { STATUS_CODES, MESSAGES } from "@/utils/constants";
 
 export async function getAllNotifications(req: Request, res: Response) {
@@ -97,3 +98,21 @@ export async function markNotificationAsSeen(req: Request, res: Response) {
     });
   }
 }
+
+// export async function sseStream(req: Request<{}, any, any, NotificationStreamQuery>, res: Response) {
+//   const userId = req.query.userId as string;
+  
+//   if (!userId) {
+//     return res.status(STATUS_CODES.BAD_REQUEST).send('User ID is required');
+//   }
+
+//   SSEService.registerClient(userId, res);
+
+//   req.on('close', () => {
+//     SSEService.removeClient(userId);
+//   });
+// }
+
+// interface NotificationStreamQuery {
+//   userId?: string;
+// }

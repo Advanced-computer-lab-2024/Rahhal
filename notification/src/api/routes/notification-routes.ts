@@ -11,5 +11,6 @@ router.patch("/:id", notificationController.updateNotification);
 router.delete("/:id", notificationController.deleteNotificationById);
 router.delete("/", notificationController.deleteNotifications);
 router.patch("/:id/seen", notificationController.markNotificationAsSeen);
+// router.get("/stream", notificationController.sseStream);
 
 export default router;
