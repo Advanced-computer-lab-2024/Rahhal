@@ -13,6 +13,7 @@ function BookmarksPage() {
     data: wishlistData,
     isLoading,
     isError,
+    isSuccess,
   } = useQuery({
     queryKey: ["userOrders", id],
     queryFn: () => fetchUserWishlist(id as string),
@@ -39,7 +40,7 @@ function BookmarksPage() {
           </div>
         )}
 
-        {wishlistData?.length === 0 && (
+        {wishlistData?.length === 0 && isSuccess && (
           <div className="flex flex-col justify-center items-center h-[50vh] w-full">
             <img
               src={NoWishlist}
