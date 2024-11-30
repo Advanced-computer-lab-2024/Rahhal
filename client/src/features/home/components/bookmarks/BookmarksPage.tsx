@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchUserBookmarks } from "@/api-calls/bookmark-api-calls";
+import NoBookMarks from "@/assets/NoBookMark.png"
 import type {
   Activity,
   HistoricalPlace,
@@ -58,6 +59,17 @@ function BookmarksPage() {
             <Skeleton className="h-4 w-[250px]" />
             <Skeleton className="h-4 w-[200px]" />
           </div>
+        )}
+
+        {bookmarks?.length === 0 && isSuccess && (
+          <div className="flex flex-col justify-center items-center h-[50vh] w-full gap-[5%]">
+          <img
+            src={NoBookMarks}
+            className="w-[10.5rem] max-w-xs h-auto mb-4"
+            alt="No Bookmarked Items"
+          />
+          <p className="text-[1.5rem] font-normal text-black ">No Saved Events</p>
+        </div> 
         )}
 
         {isSuccess &&
