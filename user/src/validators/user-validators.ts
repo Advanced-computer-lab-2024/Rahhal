@@ -12,7 +12,7 @@ function validateNumber(value: number) {
 }
 
 function validateDate(value: Date) {
-  return value instanceof Date && value > new Date();
+  return value instanceof Date && value < new Date();
 }
 
 function validateUsername(username: string) {
