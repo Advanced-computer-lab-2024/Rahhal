@@ -39,7 +39,7 @@ export default function CardBookmark({ id, entityType, className, ...props }: Bo
         setBookmarked(false);
         decrementCount();
       } catch (error) {
-        console.error("Failed to remove from wishlist", error);
+        console.error("Failed to remove from Bookmarks", error);
       }
     } else {
       try {
@@ -47,7 +47,7 @@ export default function CardBookmark({ id, entityType, className, ...props }: Bo
         setBookmarked(true);
         incrementCount();
       } catch (error) {
-        console.error("Failed to add to wishlist", error);
+        console.error("Failed to add to Bookmarks", error);
       }
     }
   };
