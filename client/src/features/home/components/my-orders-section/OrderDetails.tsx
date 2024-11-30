@@ -18,6 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import OrdersPageStyles from "@/features/home/styles/MyOrdersPage.module.css";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import currencyExchange from "@/utils/currency-exchange";
+import {PaymentMethod} from "@/utils/enums";
 interface OrderDetailsProps {
   order: TOrder; // Use the TOrder type
   onClose: () => void;
@@ -53,7 +54,7 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
         orderStatus: OrderStatus.cancelled,
       };
       const updatedOrder = await cancelOrder(order._id as string, orderData);
-      if (id && (order.paymentMethod === "credit" || order.paymentMethod === "wallet")) {
+      if (id && (order.paymentMethod === PaymentMethod.creditCard || order.paymentMethod === PaymentMethod.wallet)) {
         await refundMoney(id, order.totalPrice);
       }
       setCurrentOrder(updatedOrder as TOrder);
