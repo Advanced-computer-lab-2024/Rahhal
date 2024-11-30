@@ -101,7 +101,6 @@ const ActivityDetailsPage: React.FC = () => {
 
     return `${key} - ${currency} ${displayPrice}`;
   });
-  console.log(tickets);
   return (
     <div>
       <TouristHomePageNavigation loggedIn={id ? id !== "undefined" : false} />

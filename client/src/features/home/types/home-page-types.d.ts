@@ -1,7 +1,6 @@
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
 
-
 export interface IOrder {
   _id: Types.ObjectId;
   userId: string;
@@ -17,13 +16,13 @@ export interface IOrder {
   shippingAddress: string;
 }
 export interface IItem {
-  name: string,
-  price: number,
-  quantity: number,
-  seller: string,
-  picture: string,
-  productId: string,
-  rating?:Partial<TRating>
+  name: string;
+  price: number;
+  quantity: number;
+  seller: string;
+  picture: string;
+  productId: string;
+  rating?: Partial<TRating>;
 }
 
 export type TOrder = {
@@ -39,8 +38,7 @@ export type TOrder = {
   discountAmount?: number;
   billingAddress?: string;
   shippingAddress: string;
-}
-
+};
 
 export interface IBooking {
   user: string;
@@ -76,6 +74,17 @@ export type TBookingType = {
   itineraryTourGuideRating?: number;
 };
 
+export interface IWishlist {
+  user: string;
+  product: string;
+}
+
+export type TPopulatedWishlist = {
+  _id: string;
+  user: string;
+  product: IProduct;
+};
+
 interface CancellationRule {
   ruleDescription: string;
 }
@@ -105,7 +114,7 @@ export interface TransportationData {
 export type TTaxiData = {
   id: string;
   vehicle: Vehicle;
-  start :{
+  start: {
     dateTime: string;
   };
   serviceProvider: ServiceProvider;
@@ -140,12 +149,12 @@ export interface IRating {
   review?: string;
 }
 
-export type TRating={
+export type TRating = {
   userId: string;
   userName: string;
   rating: number;
   review?: string;
-}
+};
 
 export interface Itinerary {
   _id: string;

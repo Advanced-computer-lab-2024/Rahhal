@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import * as orderService from "@/services/order-service";
+import * as orderService from "@/services/order-services/order-service";
 import { STATUS_CODES } from "@/utils/constants";
 import type { OrderDateRangeFilter, OrderQueryParams } from "@/utils/types";
 

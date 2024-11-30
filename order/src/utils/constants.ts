@@ -6,3 +6,11 @@ export const STATUS_CODES = {
   SERVER_ERROR: 500,
   UNPROCESSABLE_ENTITY: 422,
 };
+
+export const ERROR_MESSAGES = {
+  NOT_FOUND: "Not Found",
+  BAD_REQUEST: "Bad Request",
+  SERVER_ERROR: "Internal Server Error",
+  GATEWAY_TIMEOUT: "Gateway Timeout",
+  BAD_GATEWAY: "Bad Gateway",
+};
