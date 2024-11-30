@@ -83,7 +83,6 @@ function GeneralGridView() {
     queryFn: fetchHistoricalPlaces,
     select: (data) => data as HistoricalPlace[],
   });
-  console.log("historicalPlaces", combined);
   const {
     data: preferenceTags,
     isLoading: isPreferenceTags,

@@ -36,3 +36,9 @@ export enum OrderStatus {
   cancelled = "cancelled",
 }
 
+
+export enum PaymentMethod {
+  wallet = "wallet",
+  creditCard = "creditCard",
+  cash = "cash",
+}
