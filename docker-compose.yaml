@@ -146,6 +146,29 @@ services:
       - "27023:27017"
     volumes:
       - "order-data:/data/db"
+  notification:
+    build: ./notification
+    ports:
+      - "3008:3000"
+    volumes:
+      - ./notification:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=${CHOKIDAR_USEPOLLING:-false}
+    depends_on:
+      - rabbitmq
+      - notification_database
+  notification_database:
+    image: mongo:latest
+    ports:
+      - "27024:27017"
+    volumes:
+      - "notification-data:/data/db"
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
 volumes:
   authentication-data:
@@ -155,3 +178,4 @@ volumes:
   user-data:
   product-data:
   order-data:
+  notification-data:
