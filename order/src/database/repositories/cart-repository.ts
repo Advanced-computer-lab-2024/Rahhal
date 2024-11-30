@@ -2,7 +2,7 @@ import Cart from "../models/Cart";
 import { ICart } from "../../utils/types";
 
 export async function getCart(userId: string) {
-    return await Cart.findById(userId);
+    return await Cart.findOne({user:userId});
 }
 
 export async function createCart(userId: string) {
@@ -11,10 +11,10 @@ export async function createCart(userId: string) {
 }
 
 export async function deleteCart(userId: string) {
-    return await Cart.findByIdAndDelete(userId);
+    return await Cart.findOneAndDelete({user:userId});
 }
 
 export async function updateCart(userId: string, cartData: Partial<ICart>) {
-    return await Cart.findByIdAndUpdate(userId, cartData, { new: true });
+    return await Cart.findOneAndUpdate({user:userId}, cartData, { new: true });
 }
 
