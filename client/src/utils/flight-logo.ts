@@ -7,7 +7,7 @@ const airlineLogos: { [key: string]: string } = {
     "EMIRATES": "https://1000logos.net/wp-content/uploads/2023/05/Emirates-Logo.png",
     "QATAR AIRWAYS": "https://1000logos.net/wp-content/uploads/2020/03/Qatar-Airways-Logo.png",
     "LUFTHANSA": "https://1000logos.net/wp-content/uploads/2017/03/Logo-Lufthansa.png",
-    "AIR FRANCE": "https://1000logos.net/wp-content/uploads/2023/05/Air-France-Logo.png",
+    "AIR FRANCE": "https://1000logos.net/wp-content/uploads/2020/03/Air-France-Logo.png",
     "KUWAIT AIRWAYS": "https://1000logos.net/wp-content/uploads/2021/04/Kuwait-Airways-logo.png",
     "GULF AIR":"https://1000logos.net/wp-content/uploads/2021/04/Gulf-Air-logo.png",
     "ROYAL JORDANIAN":"https://1000logos.net/wp-content/uploads/2021/02/Royal-Jordanian-logo.png",
@@ -24,14 +24,16 @@ const airlineLogos: { [key: string]: string } = {
     "JETBLUE AIRWAYS":"https://1000logos.net/wp-content/uploads/2019/12/JetBlue-Airways-Logo.png",
     "ITA AIRWAYS":"https://1000logos.net/wp-content/uploads/2023/06/ITA-Airways-Logo.png",
     "SAUDI ARABIAN AIRLINES":"https://1000logos.net/wp-content/uploads/2021/04/Saudi-Arabian-Airlines-logo.png",
+    "SWISS INTERNATIONAL AIR LINES":"https://1000logos.net/wp-content/uploads/2021/04/Swiss-International-Air-Lines-logo.png",
+    "AUSTRIAN AIRLINES":"https://1000logos.net/wp-content/uploads/2020/04/Austrian-Airlines-Logo.png",
   };
   
   // Function to retrieve the airline logo path by name
   export const getAirlineLogo = (airlineName: string) => {
     return (
-      airlineLogos[airlineName] || "NA" // Return default logo if airline name is not found
+      airlineLogos[airlineName] || "NA" 
     );
   };
   
-  // Exporting the mapping for other uses
+ 
   export default airlineLogos;
