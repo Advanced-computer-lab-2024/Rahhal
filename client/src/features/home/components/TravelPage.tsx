@@ -16,6 +16,7 @@ import { useFlightSearchBarStore } from "@/stores/flight-searchbar-slice";
 import FlightsLandingComponent from "./flights-placeholder/FlightsLandingComponent";
 import EmptyFlightResultsPage from "./flights-placeholder/EmptyFlightResultsPage";
 import TaxiLandingPage from "./taxi-placeholder/TaxiLandingPage";
+import bus from "@/assets/bus.png";
 
 interface TravelPageProps {
   loggedIn: boolean;
@@ -272,6 +273,22 @@ function TravelPage({ loggedIn }: TravelPageProps) {
         onIconClickTaxis={onIconClickTaxis}
         onIconClickFlights={onIconClickFlights}
       />
+
+      {transferType === "buses" && (
+        <div className="flex flex-col items-center justify-center bg-white">
+          <img
+            src={bus}
+            alt="Bus illustration"
+            className="w-[20rem] h-auto object-contain mb-6"
+          />
+          <p className="text-lg text-gray-700 text-center mb-2">
+            Plan your next trip with ease. <br />
+            Bus booking with flexible timings and destinations is
+          </p>
+          <p className="text-2xl font-bold text-center text-black">coming soon!</p>
+        </div>
+      )}
+
       {taxiSkeleton && transferType === "taxis" && (
         <div className="space-y-2 ml-10">
           <Skeleton className="h-4 w-[400px]" />
