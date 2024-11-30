@@ -2,7 +2,7 @@ import { OverviewCard } from "../overview-card/OverViewCard";
 import { TPopulatedBooking } from "../../types/home-page-types";
 import { addLoyalityPoints, getUserById, refundMoney } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
-import { createBooking, updateBookingRequest } from "@/api-calls/booking-api-calls";
+import { createBooking, fetchBookingById, updateBookingRequest } from "@/api-calls/booking-api-calls";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import { useEffect, useRef, useState } from "react";
@@ -77,6 +77,24 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
     });
   }, [selectedDate]);
 
+  //to make sure that itinerary remains canceled if user used browser navigation to go back
+  useEffect(() => {
+    const checkBookingStatus = async () => {
+      try {
+        if (booking && booking._id) {
+          const latestBooking = await fetchBookingById(booking._id);
+          if (latestBooking.status === bookingStatus.Cancelled) {
+            setIsButtonDisabled(true);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    checkBookingStatus();
+  }, []);
+
   const handleButtonClick = () => {
     if (booking && booking?.status === bookingStatus.Completed) {
       // redirect to review page
@@ -92,6 +110,12 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
           updateBookingRequest(booking._id, { status: bookingStatus.Cancelled });
           refundMoney(userId, booking.selectedPrice);
           setBooking({ ...booking, status: bookingStatus.Cancelled });
+          setIsButtonDisabled(true);
+          toast({
+            title: "Success",
+            description: `You have successfully cancelled the itinerary, your wallet has been refunded by ${currency} ${booking.selectedPrice}`,
+            duration: 5000,
+          });
         } else {
           toast({
             title: "Error",

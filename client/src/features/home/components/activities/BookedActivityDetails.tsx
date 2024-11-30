@@ -4,7 +4,7 @@ import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { TPopulatedBooking } from "../../types/home-page-types";
 import { getUserById, refundMoney } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
-import { updateBookingRequest } from "@/api-calls/booking-api-calls";
+import { fetchBookingById, updateBookingRequest } from "@/api-calls/booking-api-calls";
 import { toast } from "@/hooks/use-toast";
 import { RatingFormDialog } from "../RatingFormDialog";
 import { formatDate, formatTime } from "../../utils/filter-lists/overview-card";
@@ -83,6 +83,7 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
 
   React.useEffect(() => {
     // check if booking is already rated
+    
     if (booking && booking?.rating !== 0) {
       setIsButtonDisabled(true);
     }
@@ -113,6 +114,25 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
     }
   }, []);
 
+  //to make sure that activity remains canceled if user used browser navigation to go back
+  React.useEffect(() => {
+    const checkBookingStatus = async () => {
+      try {
+        if (booking && booking._id) {
+          const latestBooking = await fetchBookingById(booking._id);
+          if (latestBooking.status === bookingStatus.Cancelled) {
+            setIsButtonDisabled(true);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    checkBookingStatus();
+  }, []);
+
+
   const handleButtonClick = () => {
     if (booking && booking?.status === bookingStatus.Completed) {
       // redirect to review page
@@ -129,6 +149,12 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
           refundMoney(userId, booking.selectedPrice);
           setBooking({ ...booking, status: bookingStatus.Cancelled });
           booking.status = bookingStatus.Cancelled;
+          setIsButtonDisabled(true);
+          toast({
+            title: "Success",
+            description: `You have successfully cancelled the Activity, your wallet has been refunded by ${currency} ${booking.selectedPrice}`,
+            duration: 5000,
+          });
         } else {
           toast({
             title: "Error",
