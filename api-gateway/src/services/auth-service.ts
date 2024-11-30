@@ -23,6 +23,6 @@ export async function approveUser(body: string) {
     return await authAxiosInstance.patch("/auth/", body);
 }
 
-export async function authenticate() {
-    return await authAxiosInstance.get("/auth/authenticate");
+export async function verify(token: string) {
+    return await authAxiosInstance.get(`/auth/verify/${token}`);
 }

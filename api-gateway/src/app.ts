@@ -19,6 +19,8 @@ import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./api/swagger/swagger-output.json";
 import authRoutes from "@/api/routes/auth-routes";
 import generalRoutes from "@/api/routes/general-routes";
+import { authStateMiddleware } from "@/api/controllers/auth-controller";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -27,6 +29,8 @@ app.use(cors());
 app.use(fileUpload({ preservePath: true }));
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(cookieParser());
+app.use(authStateMiddleware);
 
 // Setup Swagger UI
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
