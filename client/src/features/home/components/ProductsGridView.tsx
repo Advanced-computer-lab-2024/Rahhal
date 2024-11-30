@@ -12,6 +12,8 @@ import MinMaxRangeSlider from "@/features/home/components/filter-sidebar/MinMaxR
 import FilterStarRating from "@/features/home/components/filter-sidebar/FilterStarRating";
 import { getPriceValue } from "../utils/price-calculator";
 import ProductCard from "@/features/home/components/product-card/ProductCard";
+import { addToWishlist } from "@/api-calls/wishlist-api-calls";
+import { useParams } from "react-router-dom";
 
 // Fetching logic from the database
 const ProductGridView = () => {
@@ -21,6 +23,9 @@ const ProductGridView = () => {
   const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>([0, 1000]);
   const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
   const [sortOption, setSortOption] = useState<SortOption | null>(null);
+
+  const {id} = useParams();
+
 
   // useQueries
   const { data: products, isLoading: isLoadingProducts } = useQuery({
@@ -43,6 +48,19 @@ const ProductGridView = () => {
     setSelectedPriceRange([0, 10000]);
     setSelectedRatings([]);
   };
+
+const handleWishListClick = async (productId: string) => {
+  if (id) {
+    try {
+      await addToWishlist(id, productId);
+      console.log("Added to wishlist");
+    } catch (error) {
+      console.error("Failed to add to wishlist", error);
+    }
+  } else {
+    console.error("User ID is undefined");
+  }
+}
 
   useEffect(() => {
     // Combine all data into one array initially
@@ -144,12 +162,13 @@ const ProductGridView = () => {
               sortedProducts?.map((products: Product) => (
                 <>
                   <ProductCard
-                    key={products._id}
+                    id={products._id}
                     imageUrl={products.picture}
                     name={products.name}
                     price={products.price}
                     seller={products.seller}
                     rating={getAverageRating(products.ratings)}
+                    handleWishlistClick={() => handleWishListClick(products._id)}
                   />
                 </>
               ))}

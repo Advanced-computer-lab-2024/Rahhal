@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { STATUS_CODES } from "@/utils/constants";
 import * as productService from "@/services/product-service";
-import { IProductQueryParamsFilter } from "@/utils/types";
+import type { IProductQueryParamsFilter } from "@/utils/types";
 
 export async function getAllProducts(req: Request, res: Response) {
   try {

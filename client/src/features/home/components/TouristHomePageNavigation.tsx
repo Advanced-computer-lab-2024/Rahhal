@@ -6,6 +6,7 @@ import { ProfileAvatar } from "./ProfileAvatar";
 import CurrencyDropdown from "./CurrencyDropdown";
 import SecondaryLogo from "../../logos/SecondaryLogo";
 import { CartIcon } from "@/features/checkout/components/CartIcon";
+import WishlistIcon from "./wishlist/WishListIcon";
 
 interface ButtonProps {
   navigation: number;
@@ -39,7 +40,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
     <div className="w-full h-16 flex items-center justify-between z-10 relative px-[16px]">
       {/* Left placeholder to balance layout */}
       <div className="flex-1">
-        <SecondaryLogo/>
+        <SecondaryLogo />
       </div>
 
       {/* Centered Navigation Buttons */}
@@ -73,7 +74,10 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
           </div>
         ) : (
           <>
-            <div className="flex space-x-4 items-center">
+            <div className="flex space-x-6 items-center">
+              <Link to={`/my-wishlist/${id}`}>
+                <WishlistIcon />
+              </Link>
               <CartIcon />
               <CurrencyDropdown />
               <ProfileAvatar />

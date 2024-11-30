@@ -70,7 +70,6 @@ export default function SearchBar({
   const [focusIndex, setFocusIndex] = useState(0);
   const [hoverIndex, setHoverIndex] = useState(0);
   const index = 1;
-  console.log(focusIndex, hoverIndex);
   return (
     <div
       className={cn(

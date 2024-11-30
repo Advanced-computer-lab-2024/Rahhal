@@ -6,3 +6,8 @@ export interface OrderQueryParams {
   seller?: string;
   productId?: string;
 }
+
+export interface IWishlist {
+  user: string;
+  product: string;
+}
