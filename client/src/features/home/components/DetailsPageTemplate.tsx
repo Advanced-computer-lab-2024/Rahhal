@@ -9,9 +9,11 @@ import {
 } from "@/features/admin/utils/columns-definitions/activities-columns";
 import { fetchLocationDetails } from "@/api-calls/google-maps-api-calls";
 import ImageGallery from "./ImageGallery";
-import Bookmark from "./Bookmark";
+import Bookmark from "./bookmarks/Bookmark";
+import { bookmarkType } from "@/utils/enums";
 
 interface DetailsPageTemplateProps {
+  _id: string;
   name: string;
   ownerName: string;
   images: string[];
@@ -23,6 +25,7 @@ interface DetailsPageTemplateProps {
 }
 
 export default function DetailsPageTemplate({
+  _id,
   name,
   ownerName,
   images,
@@ -65,7 +68,7 @@ export default function DetailsPageTemplate({
         </div>
         <div className="flex">
           <SharePopover link={window.location.href} size={18} shareText={true} />
-          <Bookmark />
+          <Bookmark id={_id} bookmarkType={bookmarkType.Activity} />
         </div>
       </div>
 

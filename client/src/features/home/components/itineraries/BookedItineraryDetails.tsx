@@ -26,6 +26,7 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
   ratingFormRef: itineraryRatingFormRef,
 }) => {
   const {
+    _id,
     name,
     images,
     description,
@@ -34,7 +35,6 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
     price,
     pickUpLocation,
     dropOffLocation,
-    availableDatesTime,
     ratings,
     preferenceTags,
     accessibility,
@@ -113,6 +113,7 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
   return (
     <div>
       <ItinerariesPageTemplate
+        _id={_id ?? ""}
         name={name}
         ownerName={ownerName}
         images={images}

@@ -15,6 +15,7 @@ const ItineraryDetailsPage: React.FC = () => {
   const loc = useLocation();
   const itinerary = loc.state?.item;
   const {
+    _id,
     name,
     images,
     description,
@@ -37,7 +38,6 @@ const ItineraryDetailsPage: React.FC = () => {
 
   const { id } = useParams();
   const { currency } = useCurrencyStore();
-
   React.useEffect(() => {
     if (id) {
       if (id !== "undefined")
@@ -90,6 +90,7 @@ const ItineraryDetailsPage: React.FC = () => {
     <div>
       <TouristHomePageNavigation loggedIn={id ? id !== "undefined" : false} />
       <ItinerariesPageTemplate
+        _id={_id}
         name={name}
         ownerName={ownerName}
         images={images}

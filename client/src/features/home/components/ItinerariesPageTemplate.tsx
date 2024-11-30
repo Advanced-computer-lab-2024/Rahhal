@@ -9,13 +9,15 @@ import {
 } from "@/features/admin/utils/columns-definitions/activities-columns";
 import { fetchLocationDetails } from "@/api-calls/google-maps-api-calls";
 import ImageGallery from "./ImageGallery";
-import Bookmark from "./Bookmark";
+import Bookmark from "./bookmarks/Bookmark";
 import LocationToggle from "./locationToggle";
 import Timeline from "./ItineraryTimeline";
 import type { TimelineItem } from "./ItineraryTimeline";
 import { TbWorld } from "react-icons/tb";
+import { bookmarkType } from "@/utils/enums";
 
 interface ItinerariesPageTemplateProps {
+  _id: string;
   name: string;
   ownerName: string;
   images: string[];
@@ -36,6 +38,7 @@ function capitalizeFirstLetter(string: string) {
 }
 
 export default function ItinerariesPageTemplate({
+  _id,
   name,
   ownerName,
   images,
@@ -93,7 +96,7 @@ export default function ItinerariesPageTemplate({
         </div>
         <div className="flex">
           <SharePopover link={window.location.href} size={18} shareText={true} />
-          <Bookmark />
+          <Bookmark id={_id} bookmarkType={bookmarkType.Itinerary} />
         </div>
       </div>
 

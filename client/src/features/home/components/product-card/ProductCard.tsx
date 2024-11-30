@@ -23,8 +23,7 @@ interface ProductCardProps {
   price: number;
   imageUrl: string;
   rating: number | undefined;
-  seller: string;
-  handleAddToCart?: () => void;
+  sellername: string;
 }
 
 export default function ProductCard({
@@ -33,7 +32,7 @@ export default function ProductCard({
   price,
   imageUrl,
   rating,
-  seller,
+  sellername,
 }: ProductCardProps) {
   const userId = useParams().id;
   const { incrementCount, decrementCount } = useWishlistStore();
@@ -114,7 +113,15 @@ export default function ProductCard({
         <div className="relative aspect-square">
           <img src={imageUrl} alt={name} className="w-full h-full object-cover rounded-[12px]" />
           <motion.button
-            className="absolute top-2 right-2 z-10"
+            className={cn(
+              "absolute top-2 right-2 z-10",
+              "transition-all duration-200",
+              "stroke-[1.5]",
+              "stroke-gray-600",
+              isWishlisted
+                ? "fill-[var(--primary-color)] stroke-[var(--primary-color)]"
+                : " fill-foreground/20",
+            )}
             onClick={handleWishlistClick}
             whileTap={{ scale: 0.9 }}
           >
@@ -134,7 +141,7 @@ export default function ProductCard({
           <h3 className="font-semibold text-lg mb-0">{name}</h3>
         </div>
         <div className="text-sm text-gray-600 p-1">
-          <span className="font-medium">Seller:</span> {seller}
+          <span className="font-medium">Seller:</span> {sellername}
         </div>
         <AnimatePresence>
           {isHovered && !isInCart && (
