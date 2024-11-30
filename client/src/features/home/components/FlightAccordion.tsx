@@ -16,6 +16,7 @@ import { bookingType } from "@/utils/enums";
 import { addLoyalityPoints } from "@/api-calls/users-api-calls";
 
 import { getAirlineLogo } from "@/utils/flight-logo";
+import { useState } from "react";
 
 interface FlightAccordionProps {
   isAdult: boolean;
@@ -30,6 +31,7 @@ export default function FlightAccordion({
   isAdult,
   loggedIn,
 }: FlightAccordionProps) {
+  const [isImageLoaded, setIsImageLoaded] = useState(true);
   const { currency } = useCurrencyStore();
   const convertedPrice = currencyExchange(offer.price.currency, offer.price.amount);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
@@ -54,6 +56,7 @@ export default function FlightAccordion({
     }
   };
 
+  const logoPath = getAirlineLogo(offer.airline);
   return (
     <div className="w-full max-w-5xl mx-auto space-y-4">
       <Accordion type="single" collapsible key={offer.id}>
@@ -62,12 +65,16 @@ export default function FlightAccordion({
             <div className="flex items-center justify-between w-full px-6 py-4 transition-colors">
               <div className="flex items-center gap-10">
                 <div className="min-w-28 flex flex-col items-center">
-                  <img
-                    src={getAirlineLogo(offer.airline)}
-                    alt={offer.airline}
-                    className="h-[5.5rem] w-[5.5rem] object-contain" 
-                  />
-                  
+                  {logoPath !== "NA" && isImageLoaded ? (
+                    <img
+                      src={logoPath}
+                      alt={offer.airline}
+                      className="h-[5.5rem] w-[5.5rem] object-contain"
+                      onError={() => setIsImageLoaded(false)} 
+                    />
+                  ) : (
+                    <span className="text-center font-semibold text-gray-600">{offer.airline}</span>
+                  )}
                 </div>
                 <div className="flex items-center">
                   <FlightCardRoute
