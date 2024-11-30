@@ -4,6 +4,7 @@ import { fetchUserWishlist } from "@/api-calls/wishlist-api-calls";
 import { useQuery } from "@tanstack/react-query";
 import ProductCard from "../product-card/ProductCard";
 import { IRating } from "../../types/home-page-types";
+import NoWishlist from "@/assets/NoWishListIcon.png";
 
 function BookmarksPage() {
   const { id } = useParams();
@@ -35,6 +36,17 @@ function BookmarksPage() {
           <div className="space-y-2">
             <Skeleton className="h-4 w-[250px]" />
             <Skeleton className="h-4 w-[200px]" />
+          </div>
+        )}
+
+        {wishlistData?.length === 0 && (
+          <div className="flex flex-col justify-center items-center h-[50vh] w-full">
+            <img
+              src={NoWishlist}
+              className="w-[10.5rem] max-w-xs h-auto mb-4"
+              alt="No Wishlist Items"
+            />
+            <p className="text-[1.5rem] font-medium text-black ">No items in your wishlist</p>
           </div>
         )}
 
