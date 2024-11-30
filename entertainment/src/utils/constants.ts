@@ -29,3 +29,10 @@ export enum bookingStatus {
   Completed = "completed",
   Cancelled = "cancelled",
 }
+
+export const RABBITMQ = {
+  QUEUE: {
+    NOTIFICATION: "notification_queue",
+    EVENT_REMINDER: "event_reminder_queue",
+  },
+};

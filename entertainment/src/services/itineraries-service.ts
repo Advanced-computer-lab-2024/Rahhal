@@ -3,6 +3,7 @@ import type { IRating } from "@/database/shared";
 import * as itinerariesRepository from "../database/repositories/itineraries-repository";
 import { hasBookings } from "@/utils/booking-axios-instance";
 import { bookingType } from "@/utils/constants";
+import { publishNotification } from "@/publishers/notification-publisher";
 
 // Get all itineraries
 export async function getAllItineraries(filter: Partial<IItinerary> = {}) {
@@ -26,6 +27,9 @@ export async function createItinerary(itineraryData: IItinerary) {
 
 // Update an existing itinerary
 export async function updateItinerary(id: string, itineraryData: IItinerary) {
+  if (itineraryData.appropriate === false) {
+    await sendMarkedInappropriateNotification(id);
+  }
   return itinerariesRepository.updateItinerary(id, itineraryData);
 }
 
@@ -41,4 +45,18 @@ export async function deleteItinerary(id: string) {
 
 export async function addRating(userRating: IRating, itineraryId: string) {
   return itinerariesRepository.addRating(userRating, itineraryId);
+}
+
+export async function sendMarkedInappropriateNotification(itineraryId: string) {
+  const Itinerary = await itinerariesRepository.getItineraryById(itineraryId);
+  if (Itinerary) {
+    const data = {
+      userId: Itinerary.owner,
+      message: `Hello Dear User, \nYour Itinerary : \n Name: ${Itinerary.name} with ID ${Itinerary._id} \nhas been marked inappropriate \nPlease review and take necessary action \n\nRegards, \nRahhal Team`,
+    };
+
+    await publishNotification(data);
+  } else {
+    throw new Error("Itinerary not found");
+  }
 }
