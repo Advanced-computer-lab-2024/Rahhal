@@ -48,3 +48,9 @@ export enum Role {
   seller = "seller",
   tourismGovernor = "tourismGovernor",
 }
+
+export const RABBITMQ = {
+  QUEUE: {
+    NOTIFICATION: "notification_queue",
+  },
+};
