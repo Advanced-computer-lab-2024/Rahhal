@@ -7,7 +7,7 @@
 }
 
 .empty-state-placeholder img {
-    width: 20%;
+    width: 17%;
     height: auto;
 }
 
@@ -18,7 +18,7 @@
     margin: 0;
 }
 .empty-state-placeholder button {
-    background-color: var(--secondary-color);
+    background-color: var(--primary-color);
     color: white;
     border: none;
     border-radius: 5px;
@@ -35,7 +35,7 @@
     line-height: normal;
 }
   .empty-state-placeholder button:hover {
-    background-color: var(--secondary-color-dark);
+    background-color: var(--primary-color-hover);
 
   }
   

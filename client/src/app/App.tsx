@@ -33,7 +33,7 @@ import { TripDetails } from "@/features/home/components/TripDetails";
 import { getCurrencyExchangeRates } from "@/api-calls/currency-exchange-api-calls";
 import { useEffect } from "react";
 import { useRatesStore } from "@/stores/currency-exchange-store";
-import { MyOrdersPage } from "@/features/home/components/MyOrdersPage";
+import  MyOrdersPage  from "@/features/home/components/my-orders-section/MyOrdersPage";
 import ProductReport from "@/features/seller/components/ProductReport";
 import HotelsPage from "@/features/home/components/HotelsPage";
 import HotelDetails from "@/features/home/components/HotelDetails";
