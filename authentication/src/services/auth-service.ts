@@ -8,24 +8,24 @@ import type { IPayload } from "@/type";
 dotenv.config();
 
 export async function login(username: string, password: string) {
-    const user = await authRepository.getUser({username: username});
+    const user = await authRepository.getUser({ username: username });
     if (user) {
         const correctPassword = await bcrypt.compare(password, user.password);
         if (correctPassword) {
-            if(!user.approved){
+            if (!user.approved) {
                 throw new Error("Pending Approval By Admin!");
             }
-              
-            const payload:IPayload = {
+
+            const payload: IPayload = {
                 id: user.id,
                 username: user.username,
-                role:user.role,
+                role: user.role,
             }
-            if(user.dob){
+            if (user.dob) {
                 payload.dob = user.dob;
             }
-            const token = jwt.sign(payload,process.env.SECRETKEY!,{
-                expiresIn : MAXAGE
+            const token = jwt.sign(payload, process.env.SECRETKEY!, {
+                expiresIn: MAXAGE
             })
             return token;
         }
@@ -42,38 +42,37 @@ export async function login(username: string, password: string) {
 
 export async function signup(userData: IAuthentication) {
     const salt = 10;
-    
     const pass = userData.password;
     const hashedPassword = await bcrypt.hash(userData.password, salt);
     userData.password = hashedPassword;
-    const user =  await authRepository.createUser(userData);
-    if(user.role === Role.tourist){
-        return login(user.username , pass);
+    const user = await authRepository.createUser(userData);
+    if (user.role === Role.tourist) {
+        return login(user.username, pass);
     }
 }
 
-export async function changePassword(userId:string , oldPassword:string , newPassword:string){
+export async function changePassword(userId: string, oldPassword: string, newPassword: string) {
     const user = await authRepository.getUserById(userId);
-    if(user){
+    if (user) {
         const correctPassword = await bcrypt.compare(oldPassword, user.password);
-        if(correctPassword){
+        if (correctPassword) {
             const salt = 10;
             const hashedPassword = await bcrypt.hash(newPassword, salt);
-            return await authRepository.updateUser(userId , {password : hashedPassword});
+            return await authRepository.updateUser(userId, { password: hashedPassword });
         }
-        else{
+        else {
             throw new Error("Incorrect Old Password");
         }
     }
-    else{
+    else {
         throw new Error("User Not Found");
     }
 }
 
-export async function approveUser(userId:string , approved:boolean){
-    return await authRepository.updateUser(userId , {approved });
+export async function approveUser(userId: string, approved: boolean) {
+    return await authRepository.updateUser(userId, { approved });
 }
 
-export async function deleteUser(userId:string){
+export async function deleteUser(userId: string) {
     return await authRepository.deleteUser(userId);
 }
