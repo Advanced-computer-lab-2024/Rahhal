@@ -77,7 +77,7 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
     });
   }, [selectedDate]);
 
-  //to make sure that itinerary remains canceled if user used browser navigation to go back
+  // to make sure that itinerary remains canceled if user used browser navigation to go back
   useEffect(() => {
     const checkBookingStatus = async () => {
       try {
@@ -85,13 +85,14 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
           const latestBooking = await fetchBookingById(booking._id);
           if (latestBooking.status === bookingStatus.Cancelled) {
             setIsButtonDisabled(true);
+            setBooking({ ...booking, status: bookingStatus.Cancelled });
           }
         }
       } catch (error) {
         console.log(error);
       }
     };
-  
+
     checkBookingStatus();
   }, []);
 

@@ -114,7 +114,7 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
     }
   }, []);
 
-  //to make sure that activity remains canceled if user used browser navigation to go back
+  // to make sure that activity remains canceled if user used browser navigation to go back
   React.useEffect(() => {
     const checkBookingStatus = async () => {
       try {
@@ -122,13 +122,14 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
           const latestBooking = await fetchBookingById(booking._id);
           if (latestBooking.status === bookingStatus.Cancelled) {
             setIsButtonDisabled(true);
+            setBooking({ ...booking, status: bookingStatus.Cancelled });
           }
         }
       } catch (error) {
         console.log(error);
       }
     };
-  
+
     checkBookingStatus();
   }, []);
 
