@@ -4,7 +4,7 @@ const airlineLogos: { [key: string]: string } = {
     "EGYPTAIR":"https://1000logos.net/wp-content/uploads/2023/05/EgyptAir-Logo.png",
     "AMERICAN AIRLINES": "https://1000logos.net/wp-content/uploads/2023/05/American-Airlines-Logo.png",
     "BRITISH AIRWAYS": "https://1000logos.net/wp-content/uploads/2023/05/British-Airways-Logo.png",
-    "EMIRATES": "https://1000logos.net/wp-content/uploads/2023/05/Emirates-Logo.png",
+    "EMIRATES": "https://1000logos.net/wp-content/uploads/2020/03/Emirates-Logo.png",
     "QATAR AIRWAYS": "https://1000logos.net/wp-content/uploads/2020/03/Qatar-Airways-Logo.png",
     "LUFTHANSA": "https://1000logos.net/wp-content/uploads/2017/03/Logo-Lufthansa.png",
     "AIR FRANCE": "https://1000logos.net/wp-content/uploads/2020/03/Air-France-Logo.png",
@@ -26,6 +26,8 @@ const airlineLogos: { [key: string]: string } = {
     "SAUDI ARABIAN AIRLINES":"https://1000logos.net/wp-content/uploads/2021/04/Saudi-Arabian-Airlines-logo.png",
     "SWISS INTERNATIONAL AIR LINES":"https://1000logos.net/wp-content/uploads/2021/04/Swiss-International-Air-Lines-logo.png",
     "AUSTRIAN AIRLINES":"https://1000logos.net/wp-content/uploads/2020/04/Austrian-Airlines-Logo.png",
+    "ETIHAD AIRWAYS":"https://1000logos.net/wp-content/uploads/2020/04/Etihad-Airways-Logo.png",
+    "AIR EUROPA":"https://1000logos.net/wp-content/uploads/2020/10/Air-Europa-Logo.png",
   };
   
   // Function to retrieve the airline logo path by name
