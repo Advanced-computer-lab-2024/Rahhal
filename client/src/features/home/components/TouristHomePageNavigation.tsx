@@ -7,6 +7,7 @@ import CurrencyDropdown from "./CurrencyDropdown";
 import SecondaryLogo from "../../logos/SecondaryLogo";
 import { CartIcon } from "@/features/checkout/components/CartIcon";
 import WishlistIcon from "./wishlist/WishListIcon";
+import BookmarkNavIcon from "./bookmarks/BookmarkNavIcon";
 
 interface ButtonProps {
   navigation: number;
@@ -79,6 +80,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
                 <WishlistIcon />
               </Link>
               <CartIcon />
+              <BookmarkNavIcon />
               <CurrencyDropdown />
               <ProfileAvatar />
             </div>

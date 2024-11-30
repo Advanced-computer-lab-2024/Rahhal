@@ -166,7 +166,7 @@ const handleWishListClick = async (productId: string) => {
                     imageUrl={products.picture}
                     name={products.name}
                     price={products.price}
-                    seller={products.seller}
+                    sellername={products.sellerName}
                     rating={getAverageRating(products.ratings)}
                     handleWishlistClick={() => handleWishListClick(products._id)}
                   />

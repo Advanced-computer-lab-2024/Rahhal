@@ -15,6 +15,7 @@ const ActivityDetailsPage: React.FC = () => {
   const loc = useLocation();
   const activity = loc.state?.item;
   const {
+    _id,
     name,
     images,
     description,
@@ -105,6 +106,7 @@ const ActivityDetailsPage: React.FC = () => {
     <div>
       <TouristHomePageNavigation loggedIn={id ? id !== "undefined" : false} />
       <DetailsPageTemplateProps
+        _id={_id}
         name={name}
         ownerName={ownerName}
         images={images}
