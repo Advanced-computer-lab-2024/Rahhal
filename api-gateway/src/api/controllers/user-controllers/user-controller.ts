@@ -21,7 +21,8 @@ export async function getUsersPendingRequests(req: Request, res: Response) {
 }
 
 export async function getUserById(req: Request, res: Response) {
-  const userId = req.params.id;
+  //const userId = req.params.id;
+  const userId = res.locals.id;
   try {
     const user = await userService.getUserById(userId);
     res.status(user.status).json(user.data);
@@ -31,7 +32,8 @@ export async function getUserById(req: Request, res: Response) {
 }
 
 export async function getUserActivities(req: Request, res: Response) {
-  const userId = req.params.id;
+  // userId = req.params.id;
+  const userId = res.locals.id;
   try {
     const activities = await userService.getUserActivities(userId);
     res.status(activities.status).json(activities.data);
@@ -41,7 +43,8 @@ export async function getUserActivities(req: Request, res: Response) {
 }
 
 export async function getUserHistoricalPlaces(req: Request, res: Response) {
-  const userId = req.params.id;
+  //const userId = req.params.id;
+  const userId = res.locals.id;
   try {
     const historicalPlaces = await userService.getUserHistoricalPlaces(userId);
     res.status(historicalPlaces.status).json(historicalPlaces.data);
@@ -51,7 +54,8 @@ export async function getUserHistoricalPlaces(req: Request, res: Response) {
 }
 
 export async function getUserProducts(req: Request, res: Response) {
-  const userId = req.params.id;
+  // const userId = req.params.id;
+  const userId = res.locals.id;
   try {
     const products = await userService.getUserProducts(userId);
     res.status(products.status).json(products.data);
