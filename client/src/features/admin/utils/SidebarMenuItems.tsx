@@ -15,7 +15,7 @@ export const SidebarMenuItems = [
       {
         icon: Home,
         label: "Home",
-        url: "/",
+        url: "/home",
         component: <h1>Home</h1>,
       },
     ],

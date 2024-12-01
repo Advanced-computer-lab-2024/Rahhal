@@ -24,9 +24,11 @@ export default function AdminHomepage() {
   return (
     <SidebarProvider>
       <AdminSidebar id={id} />
-      <EditContextAdmin.Provider value={{ user }}>
-      <Outlet /> 
-      </EditContextAdmin.Provider>
+      <div className="flex-1 p-4">
+        <EditContextAdmin.Provider value={{ user }}>
+          <Outlet />
+        </EditContextAdmin.Provider>
+      </div>
     </SidebarProvider>
   );
 }
