@@ -99,20 +99,21 @@ export async function markNotificationAsSeen(req: Request, res: Response) {
   }
 }
 
-// export async function sseStream(req: Request<{}, any, any, NotificationStreamQuery>, res: Response) {
-//   const userId = req.query.userId as string;
-  
-//   if (!userId) {
-//     return res.status(STATUS_CODES.BAD_REQUEST).send('User ID is required');
-//   }
+export async function sseStream(req: Request, res: Response) {
+  try {
+    const userId = req.query.userId as string;
+    if (!userId) {
+      res.status(STATUS_CODES.BAD_REQUEST).send('User ID is required');
+      return;
+    }
+    SSEService.registerClient(userId, res);
 
-//   SSEService.registerClient(userId, res);
-
-//   req.on('close', () => {
-//     SSEService.removeClient(userId);
-//   });
-// }
-
-// interface NotificationStreamQuery {
-//   userId?: string;
-// }
+    req.on('close', () => {
+      SSEService.removeClient(userId);
+    });
+  } catch (error: unknown) {
+    res.status(STATUS_CODES.SERVER_ERROR).json({
+      message: error instanceof Error ? error.message : MESSAGES.UNKNOWN_ERROR,
+    });
+  }
+}
