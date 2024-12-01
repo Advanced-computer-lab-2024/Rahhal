@@ -18,7 +18,7 @@ function AdminProductsView() {
   }, []);
 
   return (
-    <>
+    <div className="container m-auto">
       <DataTable
         data={products}
         columns={productsColumns}
@@ -32,7 +32,7 @@ function AdminProductsView() {
           />
         }
       />
-    </>
+    </div>
   );
 }
 

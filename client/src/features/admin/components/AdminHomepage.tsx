@@ -1,61 +1,34 @@
 import { useParams } from "react-router-dom";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { AdminSidebar } from "@/features/admin/components/AdminSidebar";
+import { createContext, useEffect, useState } from "react";
+import { TUser } from "@/types/user";
+import { DEFAULTS } from "@/lib/constants";
+import { getUserById } from "@/api-calls/users-api-calls";
+import { Outlet } from "react-router-dom";
 
-function AdminHomepage() {
+export const EditContextAdmin = createContext<{ user: TUser }>({ user: DEFAULTS.ADMIN_DATA });
+
+export default function AdminHomepage() {
   const { id } = useParams<{ id: string }>();
+  const [user, setUser] = useState<TUser>(DEFAULTS.ADMIN_DATA);
+
+  useEffect(() => {
+    if (id) {
+      getUserById(id).then((data) => {
+        setUser(data);
+      });
+    }
+  }, [id]);
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <a
-        className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded my-5"
-        href="/admin/users"
-      >
-        View/Add Users
-      </a>
-      <a
-        className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded my-5"
-        href="/admin/activities"
-      >
-        View Activities
-      </a>
-      <a
-        className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded my-5"
-        href="/admin/itineraries"
-      >
-        View Itineraries
-      </a>
-      <a
-        className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded my-5"
-        href="/admin/products"
-      >
-        View/Add Products
-      </a>
-      <a
-        className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded my-5"
-        href="/admin/preference-tags"
-      >
-        View/Add Preference Tags
-      </a>
-      <a
-        className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded my-5"
-        href="/admin/categories"
-      >
-        View/Add Activity Categories
-      </a>
-      <a
-        className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded my-5"
-        href="/admin/complaints"
-      >
-        View Complaints
-      </a>
-      {id && (
-        <a
-          className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded my-5"
-          href={`/user-settings/${id}`}
-        >
-          Profile Settings
-        </a>
-      )}
-    </div>
+    <SidebarProvider>
+      <AdminSidebar id={id} />
+      <div className="flex-1 p-4">
+        <EditContextAdmin.Provider value={{ user }}>
+          <Outlet />
+        </EditContextAdmin.Provider>
+      </div>
+    </SidebarProvider>
   );
 }
-
-export default AdminHomepage;

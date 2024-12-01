@@ -15,7 +15,7 @@ function AdminPreferenceTagView() {
   }, []);
 
   return (
-    <>
+    <div className="container m-auto">
       <DataTable
         data={preferenceTags}
         columns={preferenceTagsColumns}
@@ -26,7 +26,7 @@ function AdminPreferenceTagView() {
           />
         }
       />
-    </>
+    </div>
   );
 }
 
