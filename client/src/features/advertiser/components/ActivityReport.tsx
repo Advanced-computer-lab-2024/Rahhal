@@ -3,7 +3,7 @@ import GenericSalesReport, {
   ReportFilters,
   SalesItem,
 } from "../../../components/GenericSalesReport";
-import { useParams } from "react-router-dom";
+
 
 import { TPopulatedBooking } from "@/features/home/types/home-page-types";
 import { fetchBookingsByDateRange, getBookingsWithFilters } from "@/api-calls/booking-api-calls";
@@ -12,13 +12,13 @@ export default function ActivityReport() {
   const [salesData, setSalesData] = useState<SalesItem[]>([]);
   const [filters, setFilters] = useState<ReportFilters | null>(null);
 
-  const { id: activityId } = useParams<{ id: string }>();
+  
 
   useEffect(() => {
-    if (!activityId) return;
+    
 
     const apiFilters = {
-      entity: activityId,
+      
       type: "activity",
       status: "completed",
     };
@@ -66,7 +66,7 @@ export default function ActivityReport() {
       
 
     }
-  }, [activityId, filters]);
+  }, [filters]);
 
   return (
     <GenericSalesReport

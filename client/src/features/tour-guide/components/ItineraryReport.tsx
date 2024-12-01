@@ -3,8 +3,6 @@ import GenericSalesReport, {
   ReportFilters,
   SalesItem,
 } from "../../../components/GenericSalesReport";
-import { useParams } from "react-router-dom";
-
 import { fetchBookingsByDateRange, getBookingsWithFilters } from "@/api-calls/booking-api-calls";
 import { TPopulatedBooking } from "@/features/home/types/home-page-types";
 
@@ -12,12 +10,10 @@ export default function ItineraryReport() {
   const [salesData, setSalesData] = useState<SalesItem[]>([]);
   const [filters, setFilters] = useState<ReportFilters | null>(null);
 
-  const { id: itineraryId } = useParams<{ id: string }>();
+  
 
   useEffect(() => {
-    if (!itineraryId) return;
     const apiFilters = {
-      entity: itineraryId,
       type: "itinerary",
       status: "completed",
     };
@@ -64,7 +60,7 @@ export default function ItineraryReport() {
       });
 
     }
-  }, [filters, itineraryId]);
+  }, [filters]);
 
   return (
     <GenericSalesReport
