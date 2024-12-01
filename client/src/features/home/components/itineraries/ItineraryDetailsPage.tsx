@@ -10,6 +10,7 @@ import ItinerariesPageTemplate from "../ItinerariesPageTemplate";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import { bookingType } from "@/utils/enums";
 import { format } from "date-fns";
+import SignUpModal from "../SignupModal";
 
 const ItineraryDetailsPage: React.FC = () => {
   const loc = useLocation();
@@ -35,6 +36,7 @@ const ItineraryDetailsPage: React.FC = () => {
   const [preferenceTagNames, setPreferenceTagNames] = useState<string[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [isGuestAction, setIsGuestAction] = useState(false);
 
   const { id } = useParams();
   const { currency } = useCurrencyStore();
@@ -74,7 +76,7 @@ const ItineraryDetailsPage: React.FC = () => {
         addLoyalityPoints(id, booking.selectedPrice);
       });
     } else {
-      alert("You must login");
+      setIsGuestAction(true);
     }
   };
 
@@ -88,6 +90,14 @@ const ItineraryDetailsPage: React.FC = () => {
     }));
   return (
     <div>
+      {isGuestAction && (
+        <SignUpModal
+          onClose={() => {
+            setIsGuestAction(false);
+          }}
+          text={"Excited to book? Sign in or create an account to secure your spot now!"}
+        />
+      )}
       <TouristHomePageNavigation loggedIn={id ? id !== "undefined" : false} />
       <ItinerariesPageTemplate
         _id={_id}
