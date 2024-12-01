@@ -17,6 +17,7 @@ import FlightsLandingComponent from "./flights-placeholder/FlightsLandingCompone
 import EmptyFlightResultsPage from "./flights-placeholder/EmptyFlightResultsPage";
 import TaxiLandingPage from "./taxi-placeholder/TaxiLandingPage";
 import bus from "@/assets/bus.png";
+import { toast } from "@/hooks/use-toast";
 
 interface TravelPageProps {
   loggedIn: boolean;
@@ -57,7 +58,6 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     setSelectedPickupLocation,
     setSelectedDropOffLocation,
   } = useSearchBarStore();
-
   const {
     data: taxiData,
     isSuccess: isTaxisSuccess,
@@ -104,6 +104,38 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   };
 
   const onIconClickTaxis = async () => {
+    if (!pickupLocation.length) {
+      toast({
+        title: "Please specify the pickup location",
+        variant: "destructive",
+        duration: 3500,
+      });
+      return;
+    }
+    if (!dropOffLocation.length) {
+      toast({
+        title: "Please specify the drop-off location",
+        variant: "destructive",
+        duration: 3500,
+      });
+      return;
+    }
+    if (!departureTime.length) {
+      toast({
+        title: "Please specify the departure time",
+        variant: "destructive",
+        duration: 3500,
+      });
+      return;
+    }
+    if (passengers === 0) {
+      toast({
+        title: "Please specify the number of passengers",
+        variant: "destructive",
+        duration: 3500,
+      });
+      return;
+    }
     setTaxiSkeleton(true);
     const transferRequest = await prepareTransferRequest();
     if (transferRequest) {
@@ -114,6 +146,31 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   };
 
   const onIconClickFlights = async () => {
+    if (!departureLocation.length) {
+      toast({
+        title: "Please specify the departure location",
+        variant: "destructive",
+        duration: 3500,
+      });
+      return;
+    }
+    if (!flightDepartureTime.length) {
+      toast({
+        title: "Please specify the departure time",
+        variant: "destructive",
+        duration: 3500,
+      });
+      return;
+    }
+    if (adults[0] + children[0] + infants[0] === 0) {
+      toast({
+        title: "Please specify the number of passengers",
+        variant: "destructive",
+        duration: 3500,
+      });
+      return;
+    }
+
     setFlightSkeleton(true);
     const flightRequest = await prepareFlightRequest();
     if (flightRequest) {
@@ -154,6 +211,7 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     const pickUpSelectedIndex = pickupSuggestions.indexOf(pickupLocation[0]);
     const pickUpPlaceId = pickupSuggestionsPlaceId[pickUpSelectedIndex];
     const pickUpDetails = await fetchPlaceDetails(pickUpPlaceId);
+
     if (pickUpDetails) {
       pickUpGeocode = pickUpDetails.location;
       pickUpCountryCode = pickUpDetails.countryCode;
@@ -276,11 +334,7 @@ function TravelPage({ loggedIn }: TravelPageProps) {
 
       {transferType === "buses" && (
         <div className="flex flex-col items-center justify-center bg-white">
-          <img
-            src={bus}
-            alt="Bus illustration"
-            className="w-[20rem] h-auto object-contain mb-6"
-          />
+          <img src={bus} alt="Bus illustration" className="w-[20rem] h-auto object-contain mb-6" />
           <p className="text-lg text-gray-700 text-center mb-2">
             Plan your next trip with ease. <br />
             Bus booking with flexible timings and destinations is
