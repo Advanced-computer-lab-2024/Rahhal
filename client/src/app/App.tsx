@@ -102,7 +102,7 @@ export default function App() {
               <Route path="account" element={<AccountForm />} />
             </Route>
             <Route path="/advertiser/:id" element={<AdvertiserView />} />
-            <Route path="/advertiser/activity/:id" element={<ActivityReport />} />
+            <Route path="/advertiser/report" element={<ActivityReport />} />
             <Route path="/tourism-governor/:id" element={<TouristGovernerHomepage />} />
             <Route
               path="/tourism-governor/historical-places/:id"
@@ -111,10 +111,10 @@ export default function App() {
             <Route path="/tourism-governor/historical-tags/:id" element={<HistoricalTagsView />} />
 
             <Route path="/seller/:id" element={<SellerView />} />
-            <Route path="/seller/product/:id" element={<ProductReport />} />
+            <Route path="/seller/report" element={<ProductReport />} />
 
             <Route path="/tour-guide/:id" element={<TourGuideView />} />
-            <Route path="/tour-guide/itinerary/:id" element={<ItineraryReport />} />
+            <Route path="/tour-guide/report" element={<ItineraryReport />} />
 
             <Route element={<AdminHomepage />}>
               <Route path="/admin/:id?/home" element={<h1>Home</h1>} />
