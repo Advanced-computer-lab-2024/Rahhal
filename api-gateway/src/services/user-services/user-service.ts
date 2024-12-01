@@ -63,3 +63,7 @@ export async function addUserRating(ratedUserId: string, rating: TRating) {
 export async function redeemPoints(userId: string) {
   return await userAxiosInstance.patch(`/users/${userId}/redeem`);
 }
+
+export async function getNumberOfUsers(startDate?: string, endDate?: string) {
+  return await userAxiosInstance.get(`/users/number-of-users`, { params: { startDate, endDate } });
+}
