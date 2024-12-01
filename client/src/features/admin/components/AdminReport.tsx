@@ -3,15 +3,17 @@ import GenericSalesReport, {
   ReportFilters,
   SalesItem,
 } from "../../../components/GenericSalesReport";
-import { useParams } from "react-router-dom";
 
 import { fetchBookingsByDateRange, getBookingsWithFilters } from "@/api-calls/booking-api-calls";
-import { TBookingType, TOrder, TPopulatedBooking } from "@/features/home/types/home-page-types";
+import { TOrder, TPopulatedBooking } from "@/features/home/types/home-page-types";
 import { fetchAllOrders, fetchOrdersByDateRange } from "@/api-calls/order-api-calls";
+import { getAdmins } from "@/api-calls/users-api-calls";
+import { TUser } from "@/types/user";
 
 export default function AdminReport() {
   const [salesData, setSalesData] = useState<SalesItem[]>([]);
   const [filters, setFilters] = useState<ReportFilters | null>(null);
+  const [adminIds, setAdminIds] = useState<string[]>([]);
 
   useEffect(() => {
     // fetch itineraries
@@ -33,7 +35,7 @@ export default function AdminReport() {
             id: booking.entity._id!,
             name: booking.entity.name,
             type: "itinerary",
-            price: booking.selectedPrice,
+            price: booking.selectedPrice * 0.1,
             date: new Date(booking.selectedDate).toISOString(),
             quantity: 1,
             status: booking.status,
@@ -51,7 +53,7 @@ export default function AdminReport() {
           id: booking.entity._id!,
           name: booking.entity.name,
           type: "activity",
-          price: booking.selectedPrice,
+          price: booking.selectedPrice * 0.1,
           date: new Date(booking.selectedDate).toISOString(),
           quantity: 1,
           status: booking.status,
@@ -64,17 +66,22 @@ export default function AdminReport() {
       fetchAllOrders().then((value) => {
         const orders = value as TOrder[];
 
+        // for each product in order, create a sales item
         const salesItems: SalesItem[] = orders
-          .filter((order) => order._id)
-          .map((order) => ({
-            id: order.items[0].productId,
-            name: order.items[0].name,
-            type: "gift_shop",
-            price: order.totalPrice,
-            date: new Date(order.createdAt ?? "").toISOString(),
-            quantity: order.totalQuantity,
-            status: order.orderStatus,
-          }));
+          .map((order) =>
+            order.items.map((product) => ({
+              id: product.productId,
+              name: product.name,
+              type: "gift_shop",
+              price: adminIds.includes(product.seller) ? product.price : product.price * 0.1,
+              date: order.createdAt,
+              quantity: product.quantity,
+              status: order.orderStatus,
+              tourists: 1,
+            })),
+          )
+          .flat();
+
         setSalesData((prev) => [...prev, ...salesItems]);
       });
     } else {
@@ -84,17 +91,22 @@ export default function AdminReport() {
       fetchOrdersByDateRange(startDate, endDate).then((value) => {
         const orders = value as TOrder[];
 
+        // for each product in order, create a sales item
         const salesItems: SalesItem[] = orders
-          .filter((order) => order._id)
-          .map((order) => ({
-          id: order.items[0].productId,
-          name: order.items[0].name,
-          type: "gift_shop",
-          price: order.totalPrice,
-          date: new Date(order.createdAt ?? "").toISOString(),
-          quantity: order.totalQuantity,
-          status: order.orderStatus,
-        }));
+          .map((order) =>
+            order.items.map((product) => ({
+              id: product.productId,
+              name: product.name,
+              type: "gift_shop",
+              price: adminIds.includes(product.seller) ? product.price : product.price * 0.1,
+              date: order.createdAt,
+              quantity: product.quantity,
+              status: order.orderStatus,
+              tourists: 1,
+            })),
+          )
+          .flat();
+
         setSalesData(salesItems);
       });
 
@@ -107,7 +119,7 @@ export default function AdminReport() {
             id: booking.entity._id!,
             name: booking.entity.name,
             type: "itinerary",
-            price: booking.selectedPrice,
+            price: booking.selectedPrice * 0.1,
             date: new Date(booking.selectedDate).toISOString(),
             quantity: 1,
             status: booking.status,
@@ -125,7 +137,7 @@ export default function AdminReport() {
             id: booking.entity._id!,
             name: booking.entity.name,
             type: "activity",
-            price: booking.selectedPrice,
+            price: booking.selectedPrice * 0.1,
             date: new Date(booking.selectedDate).toISOString(),
             quantity: 1,
             status: booking.status,
@@ -135,6 +147,14 @@ export default function AdminReport() {
       });
     }
   }, [filters]);
+
+  useEffect(() => {
+    // fetch all admins
+    getAdmins().then((value) => {
+      const admins = value as TUser[];
+      setAdminIds(admins.map((admin) => admin._id));
+    });
+  }, []);
 
   return (
     <GenericSalesReport
