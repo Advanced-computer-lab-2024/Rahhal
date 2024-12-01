@@ -200,7 +200,6 @@ const GenericSalesReport: React.FC<SalesReportProps> = ({ data, type = "all", on
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="event">Events</SelectItem>
                 <SelectItem value="itinerary">Itineraries</SelectItem>
                 <SelectItem value="activity">Activities</SelectItem>
                 <SelectItem value="gift_shop">Gift Shop</SelectItem>
