@@ -85,7 +85,7 @@ export default function AdminReport() {
               date: order.createdAt,
               quantity: product.quantity,
               status: order.orderStatus,
-              tourists: 1,
+              tourists: 0,
             }))
           ),
       ];
