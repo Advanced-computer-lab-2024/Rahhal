@@ -15,6 +15,8 @@ export const SERVICES_URLS = {
   FLIGHTS: "http://localhost:3000/api/flights-search",
   EXTERNALAPI: "http://localhost:3000/api/external-api",
   NOTIFICATION: "http://localhost:3008",
+  GENERAL : "http://localhost:3000/api",
+  AUTHENTICATION : "http://localhost:3000/api/auth"
 };
 
 export const STATUS_CODES = {
