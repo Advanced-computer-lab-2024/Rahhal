@@ -57,7 +57,7 @@ export async function submitUser(user: TUser | undefined, isNewUser: boolean) {
 }
 
 export async function createUser(newUser: any) {
-  const response = await axios.post(SERVICES_URLS.USER + "/users", newUser, {
+  const response = await axios.post(SERVICES_URLS.GENERAL + "/signup", newUser, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -100,3 +100,12 @@ export async function getNumberOfUsers(startDate?: Date, endDate?: Date) {
   });
   return response.data;
 }
+export async function loginUser(credentials: any) {
+  const response = await axios.post(SERVICES_URLS.AUTHENTICATION + "/login", credentials, {
+    headers: {
+        "Content-Type": "application/json",
+    },
+  });
+  
+  return response.data;
+};

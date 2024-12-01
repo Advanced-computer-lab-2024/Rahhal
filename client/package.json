@@ -55,6 +55,7 @@
     "lucide-react": "^0.446.0",
     "react": "^18.3.1",
     "react-calendar": "^5.1.0",
+    "react-cookie": "^7.2.2",
     "react-day-picker": "^8.10.1",
     "react-day-picker-v9": "npm:react-day-picker@^9.4.1",
     "react-dom": "^18.3.1",

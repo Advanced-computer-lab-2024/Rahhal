@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { loginUser } from "@/api-calls/users-api-calls";
 
 interface LoginPageProps {
     redirectLink?: string;
@@ -20,14 +21,7 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
     const [disabled, setDisabled] = useState(false);
     const [errors, setErrors] = useState({ username: "", password: "" });
 
-    const userLogin: any = async (credentials: any) => {
-        const response = await axios.post("http://localhost:3000/api/user/users/login", credentials, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        return response.data;
-    };
+    
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -48,7 +42,7 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
             newErrors.password = "";
             setErrors(newErrors);
             const reqBody = { username: username, password: password };
-            const response = await userLogin(reqBody);
+            const response :any = await loginUser(reqBody);
             console.log(response);
             setDisabled(true);
             toast({
@@ -62,24 +56,25 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
             });
             await new Promise((resolve) => setTimeout(resolve, 3000));
             setDisabled(false);
-            if (response.role === "admin") {
-                navigate(`/admin/${response._id}`);
-            } else if (response.role === "tourGuide") {
-                navigate(`/tour-guide/${response._id}`);
-            } else if (response.role === "tourist") {
-                if (redirectLink) {
-                    navigate(redirectLink+'/'+response._id);
-                }
-                else {
-                    navigate(`/entertainment/${response._id}`);
-                }
-            } else if (response.role === "advertiser") {
-                navigate(`/advertiser/${response._id}`);
-            } else if (response.role === "tourismGovernor") {
-                navigate(`/tourism-governor/${response._id}/historical-places`);
-            } else if (response.role === "seller") {
-                navigate(`/seller/${response._id}`);
-            }
+            // console.log(response.locals);
+            // if (response.locals.role === "admin") {
+            //     navigate(`/admin/${response._id}`);
+            // } else if (response.locals.role === "tourGuide") {
+            //     navigate(`/tour-guide/${response._id}`);
+            // } else if (response.locals.role === "tourist") {
+                // if (redirectLink) {
+                //     navigate(redirectLink+'/'+response._id);
+                // }
+                // else {
+                    navigate(`/entertainment/undefined`);
+                // }
+            // } else if (response.locals.role === "advertiser") {
+            //     navigate(`/advertiser/${response._id}`);
+            // } else if (response.locals.role === "tourismGovernor") {
+            //     navigate(`/tourism-governor/${response._id}`);
+            // } else if (response.locals.role === "seller") {
+            //     navigate(`/seller/${response._id}`);
+            // }
         } catch (error) {
             if (isAxiosError(error)) {
                 const axiosError = error as AxiosError;
