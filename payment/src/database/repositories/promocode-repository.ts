@@ -5,6 +5,10 @@ export async function getAllPromocodes() {
     return Promocode.find();
 }
 
+export async function getAllfilteredPromocodes(filter: Partial<IPromocode>) {
+    return Promocode.find(filter);
+}
+
 export async function createPromocode(promocode: IPromocode) {
     const newPromocode = new Promocode(promocode);
     return newPromocode.save();
@@ -25,7 +29,7 @@ export async function findPromocode(filter: Partial<IPromocode>) {
 }
 
 export async function findPromocodeUsage(filter: Partial<IPromoCodeUsage>) {
-    return PromocodeUsage.findOne(filter);
+    return PromocodeUsage.find(filter);
 }
 
 export async function createPromocodeUsage(promocode: string, usedBy: string) {

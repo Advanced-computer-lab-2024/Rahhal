@@ -31,6 +31,10 @@ const promocodeSchema = new mongoose.Schema({
         required: true,
         default: 0,
     },
+    uses: {
+        type: Number,
+        default: 1,
+    }
 });
 
 const promocodeUsageSchema = new mongoose.Schema({
