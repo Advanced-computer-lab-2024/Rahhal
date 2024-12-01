@@ -5,7 +5,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { TimePicker12HSearchBar } from "./time-picker-12hour-search-bar";
 import { IoCloseOutline } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface DateTimePickerProps {
@@ -20,7 +20,7 @@ interface DateTimePickerProps {
   corner?: number;
 }
 
-export function DateTimePickerSearchBar({
+export function DualDatePickerSearchBar({
   date,
   placeholder,
   onDateChange,
@@ -32,6 +32,8 @@ export function DateTimePickerSearchBar({
   corner,
 }: DateTimePickerProps) {
   const [open, setOpen] = useState(false);
+  const leftIndex = index || 0;
+  const rightIndex = leftIndex + 1;
   /**
    * carry over the current time when a user clicks a new day
    * instead of resetting to 00:00
@@ -47,17 +49,20 @@ export function DateTimePickerSearchBar({
     const newDateFull = add(date, { days: Math.ceil(diffInDays) });
     onDateChange(newDateFull);
   };
-  if (!open && focusIndex === index && setFocusIndex) {
-    setFocusIndex(0); // Reset focus when the popover closes
-  } else if (open && focusIndex !== index && setFocusIndex) {
-    setFocusIndex(index ? index : 0); // Set focus when the popover opens
-  }
 
+  //   if (!open && focusIndex === index && setFocusIndex) {
+  //     setFocusIndex(0); // Reset focus when the popover closes
+  //   } else if (open && focusIndex !== index! + 1 && setFocusIndex) {
+  //     setFocusIndex(index ? index + 1 : 0); // Set focus when the popover opens
+  //   }
+
+  useEffect(() => {
+    console.log(open);
+  }, [open]);
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
     onDateChange(undefined);
   };
-
   return (
     <>
       <div
@@ -96,25 +101,25 @@ export function DateTimePickerSearchBar({
                   : "",
         )}
       >
-        <div
-          className={cn(
-            "rounded-full focus-within:bg-background focus-within:shadow-sm h-[66px] flex items-center relative",
-            focusIndex != index
-              ? hoverIndex == index && (index == focusIndex! - 1 || index == focusIndex! + 1)
-                ? ""
-                : "hover:bg-gray-300/65 z-0"
-              : focusIndex === index
-                ? "bg-background shadow-[0_0_12px_0_rgba(0,0,0,0.16)]"
-                : "",
-          )}
+        <Popover
+          open={open}
+          onOpenChange={(isOpen) => {
+            setOpen(isOpen);
+          }}
         >
-          <Popover
-            open={open}
-            onOpenChange={(isOpen) => {
-              setOpen(isOpen); // Let the Popover handle its open/close state
-            }}
-          >
-            <PopoverTrigger asChild>
+          <div className="flex">
+            <div
+              className={cn(
+                "rounded-full focus-within:bg-background focus-within:shadow-sm h-[66px] flex items-center",
+                focusIndex != index
+                  ? hoverIndex == index && (index == focusIndex! - 1 || index == focusIndex! + 1)
+                    ? ""
+                    : "hover:bg-gray-300/65"
+                  : focusIndex === index
+                    ? "bg-background shadow-[0_0_12px_0_rgba(0,0,0,0.16)]"
+                    : "",
+              )}
+            >
               <Button
                 variant="outline"
                 className={cn(
@@ -123,6 +128,17 @@ export function DateTimePickerSearchBar({
                 )}
                 onMouseEnter={() => setHoverIndex && setHoverIndex(index || 0)}
                 onMouseLeave={() => setHoverIndex && setHoverIndex(0)}
+                onClick={() => {
+                  if (focusIndex !== leftIndex && focusIndex !== rightIndex) {
+                    setOpen(true);
+                    setFocusIndex && setFocusIndex(leftIndex!);
+                  } else if (focusIndex === leftIndex) {
+                    setOpen(!open);
+                    setFocusIndex && setFocusIndex(leftIndex!);
+                  } else if (focusIndex === rightIndex) {
+                    setFocusIndex && setFocusIndex(leftIndex!);
+                  }
+                }}
               >
                 <CalendarIcon className="mr-2 h-4 w-4 color: black" />
                 <div className="flex flex-col">
@@ -143,20 +159,61 @@ export function DateTimePickerSearchBar({
                   </Button>
                 )}
               </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 rounded-[4%]">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={(d) => handleSelect(d)}
-                initialFocus
-              />
-              <div className="p-3 border-t border-border flex justify-center items-center">
-                <TimePicker12HSearchBar setDate={onDateChange} date={date} />
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
+            </div>
+            <div
+              className={cn(
+                "rounded-full focus-within:bg-background focus-within:shadow-sm h-[66px] flex items-center",
+                focusIndex != index
+                  ? hoverIndex == index && (index == focusIndex! - 1 || index == focusIndex! + 1)
+                    ? ""
+                    : "hover:bg-gray-300/65"
+                  : focusIndex === index! + 1
+                    ? "bg-background shadow-[0_0_12px_0_rgba(0,0,0,0.16)]"
+                    : "",
+              )}
+            >
+              <Button
+                variant="outline"
+                className={cn(
+                  "border-0 focus-visible:outline-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent bg-transparent hover:bg-transparent flex justify-start items-center px-2 w-40 py-0 relative",
+                  "w-[200px] h-[66px] justify-start text-left font-normal rounded-full border-none ",
+                )}
+                onMouseEnter={() => setHoverIndex && setHoverIndex((index || 0) + 1)}
+                onMouseLeave={() => setHoverIndex && setHoverIndex(0)}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4 color: black" />
+                <div className="flex flex-col">
+                  <span className="text-black text-sm">{"JUSTTTT"}</span>
+                  <span className={date ? "text-black text-xs" : "text-gray-500 text-xs"}>
+                    {date ? format(date, "MMM d, hh:mm aa") : "Add dates"}
+                  </span>
+                </div>
+                {date && open && (
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-black rounded-md hover:rounded-full text-lg transition-all duration-300 hover:bg-gray-300 w-6 h-6 flex items-center justify-center"
+                    onClick={handleClear}
+                    aria-label="Clear date"
+                  >
+                    <IoCloseOutline />
+                  </Button>
+                )}
+              </Button>
+            </div>
+          </div>
+          <PopoverContent className="w-auto p-0 rounded-[4%]">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={(d) => handleSelect(d)}
+              initialFocus
+            />
+            <div className="p-3 border-t border-border flex justify-center items-center">
+              <TimePicker12HSearchBar setDate={onDateChange} date={date} />
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
     </>
   );

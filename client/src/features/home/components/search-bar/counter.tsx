@@ -120,7 +120,7 @@ function GuestSelector({
                 ? ""
                 : "hover:bg-gray-300/65 z-0"
               : focusIndex === index
-                ? "bg-background z-10 shadow-[rgba(0,_0,_0,_0.15)_0px_0px_6px]"
+                ? "bg-background shadow-[0_0_12px_0_rgba(0,0,0,0.16)]"
                 : "",
           )}
         >
