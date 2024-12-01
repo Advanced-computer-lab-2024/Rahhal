@@ -18,7 +18,7 @@ export type TUser = {
   lastName?: string;
   username: string;
   email: string;
-  // password: string;
+  password?: string;
   role: Role;
   approved: boolean;
   dob?: Date;

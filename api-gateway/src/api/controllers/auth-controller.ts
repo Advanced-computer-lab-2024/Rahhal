@@ -7,8 +7,9 @@ export async function login(req: Request, res: Response) {
     try {
         const authbody = req.body;
         const cookie = await authService.login(authbody);
+        console.log(cookie);
         if (cookie.status === STATUS_CODES.STATUS_OK) {
-            res.cookie("jwt", cookie.data, { httpOnly: true, maxAge: CONSTANTS.MAXAGE });
+            res.cookie("jwt", cookie.data, { httpOnly: true,sameSite:'strict' , path: '/' ,  maxAge: CONSTANTS.MAXAGE });
             res.status(STATUS_CODES.STATUS_OK).json();
         }
         else {
