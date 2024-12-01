@@ -89,7 +89,7 @@ const GenericSalesReport: React.FC<SalesReportProps> = ({ data, type = "all", on
       type: item.type,
     }));
 
-  console.log(items);
+  
 
   useEffect(() => {
     // Apply filters
