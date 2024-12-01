@@ -112,3 +112,14 @@ export async function redeemPoints(req: Request, res: Response) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
   }
 }
+
+export async function getNumberOfUsers(req: Request, res: Response) {
+  const startDate = req.query.startDate as string;
+  const endDate = req.query.endDate as string;
+  try {
+    const users = await userService.getNumberOfUsers(startDate, endDate);
+    res.status(users.status).json(users.data);
+  } catch (error) {
+    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
+  }
+}

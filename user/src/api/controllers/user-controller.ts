@@ -25,7 +25,7 @@ export async function getAllUsers(req: Request, res: Response) {
 
   try {
     // If approved is not provided (== undefined), it will get all users
-    const users = await userService.getAllUsers({approved : approved});
+    const users = await userService.getAllUsers({ approved: approved });
     if (!users) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "No users found" });
     } else {
@@ -39,7 +39,7 @@ export async function getAllUsers(req: Request, res: Response) {
 export async function getUser(req: Request, res: Response) {
   try {
     const userId = req.params.id;
-    const user = await userService.getUser({_id: new ObjectId(userId)});
+    const user = await userService.getUser({ _id: new ObjectId(userId) });
     if (!user) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
     } else {
@@ -57,7 +57,7 @@ export async function updateUser(req: Request, res: Response) {
     const userId = req.params.id;
     let updatedUser = req.body;
     if (updatedUser.email) {
-      const email = await userService.getUser({email : updatedUser.email});
+      const email = await userService.getUser({ email: updatedUser.email });
       if (email && !email.deleted && email.email !== "" && !email._id.equals(userId)) {
         res
           .status(STATUS_CODES.CONFLICT)
@@ -65,7 +65,7 @@ export async function updateUser(req: Request, res: Response) {
         return;
       }
     }
-    const user = await userService.getUser({_id : new ObjectId(userId)});
+    const user = await userService.getUser({ _id: new ObjectId(userId) });
     if (!user) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
       return;
@@ -102,9 +102,9 @@ export async function createUser(req: Request, res: Response) {
     if (userData.username && userData.password) {
       const shouldCheckEmail =
         userData.role !== Role.admin && userData.role !== Role.tourismGovernor;
-      const userUsername = await userService.getUser({username :userData.username});
+      const userUsername = await userService.getUser({ username: userData.username });
       const userEmail = userData.email
-        ? await userService.getUser({email : userData.email})
+        ? await userService.getUser({ email: userData.email })
         : undefined;
 
       if (
@@ -194,7 +194,7 @@ export async function addRating(req: Request, res: Response) {
 export async function redeemPoints(req: Request, res: Response) {
   try {
     const userId = req.params.id;
-    const user = await userService.getUser({_id : new ObjectId(userId)});
+    const user = await userService.getUser({ _id: new ObjectId(userId) });
     if (!user) {
       res.status(STATUS_CODES.NOT_FOUND).json({ error: "User not found" });
       return;
@@ -212,6 +212,44 @@ export async function redeemPoints(req: Request, res: Response) {
         res.status(STATUS_CODES.STATUS_OK).json(newUser);
       }
     }
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
+    }
+  }
+}
+
+export async function getNumberOfUsers(req: Request, res: Response) {
+  try {
+    const queryParametersSchema = z.object({
+      startDate: z.string().optional(),
+      endDate: z.string().optional(),
+    });
+
+    const validationResult = queryParametersSchema.safeParse(req.query);
+
+    if (!validationResult.success) {
+      res.status(STATUS_CODES.BAD_REQUEST).json({ error: validationResult.error });
+      return;
+    }
+
+    const { startDate, endDate } = validationResult.data;
+
+    const startDateObj = startDate ? new Date(startDate) : undefined;
+    const endDateObj = endDate ? new Date(endDate) : undefined;
+
+    if (startDateObj && isNaN(startDateObj.getTime())) {
+      res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Invalid startDate format" });
+      return;
+    }
+
+    if (endDateObj && isNaN(endDateObj.getTime())) {
+      res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Invalid endDate format" });
+      return;
+    }
+
+    const numberOfUsers = await userService.getNumberOfUsers(startDateObj, endDateObj);
+    res.status(STATUS_CODES.STATUS_OK).json({ numberOfUsers });
   } catch (error) {
     if (error instanceof Error) {
       res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
