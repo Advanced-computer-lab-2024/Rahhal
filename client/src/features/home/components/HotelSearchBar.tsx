@@ -8,7 +8,6 @@ interface HotelSearchBarProps {
 }
 
 function HotelSearchBar({ onIconClick }: HotelSearchBarProps) {
-
   const {
     adults,
     destinationLocation,
@@ -54,17 +53,17 @@ function HotelSearchBar({ onIconClick }: HotelSearchBarProps) {
 
   const handleAdultsChange = (value: number) => {
     setAdults(value);
-    setGuests(adults + children + infants);
+    setGuests(value + children + infants);
   };
 
   const handleChildrenChange = (value: number) => {
     setChildren(value);
-    setGuests(adults + children + infants);
+    setGuests(adults + value + infants);
   };
 
   const handleInfantsChange = (value: number) => {
     setInfants(value);
-    setGuests(adults + children + infants);
+    setGuests(adults + children + value);
   };
 
   const searchParts = ["Where", "Check-in", "Check-out", "guests"];
