@@ -583,9 +583,10 @@ const SidebarMenuButton = React.forwardRef<
         <TooltipContent
           side="right"
           align="center"
+          sideOffset={4}
           hidden={state !== "collapsed" || isMobile}
           {...tooltip}
-          style={{ color: "var(--sidebar-accent-foreground)", backgroundColor: "#1d3c51" }}
+          style={{ color: "var(--sidebar-accent-foreground)", backgroundColor: "#1d3c51", marginLeft: "0.5rem" }}
         />
       </Tooltip>
     )
