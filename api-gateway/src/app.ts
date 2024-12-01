@@ -14,6 +14,7 @@ import transportationRoutes from "@/api/routes/trasportation-routes";
 import ratingRoutes from "@/api/routes/rating-routes";
 import orderRoutes from "@/api/routes/order-routes";
 import externalApiRoutes from "@/api/routes/external-api-routes";
+import paymentRoutes from "@/api/routes/payment-routes";
 
 const app = express();
 
@@ -36,5 +37,6 @@ app.use("/api/transportation", transportationRoutes);
 app.use("/api/rating", ratingRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/external-api", externalApiRoutes);
+app.use("/api/payment", paymentRoutes);
 
 export default app;
