@@ -16,7 +16,7 @@ function CategoryView() {
   }, []);
 
   return (
-    <>
+    <div className="container m-auto">
       <DataTable
         data={categories}
         columns={categoriesColumns}
@@ -24,7 +24,7 @@ function CategoryView() {
           <CategoryModal categoryData={undefined} dialogTrigger={<DataTableAddButton />} />
         }
       />
-    </>
+    </div>
   );
 }
 

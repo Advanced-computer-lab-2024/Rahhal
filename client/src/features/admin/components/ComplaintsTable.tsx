@@ -18,7 +18,7 @@ function AdminComplaintsView() {
   }, []);
 
   return (
-    <div className="p-4">
+    <div className="container m-auto">
       <DataTable
         data={complaints}
         columns={complaintsColumns}

@@ -15,7 +15,7 @@ function AdminActivitiesView() {
   }, []);
 
   return (
-    <div className="p-4">
+    <div className="container m-auto">
       <DataTable
         data={activities}
         columns={activitiesColumns}
