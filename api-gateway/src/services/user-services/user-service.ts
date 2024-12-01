@@ -65,6 +65,5 @@ export async function redeemPoints(userId: string) {
 }
 
 export async function getNumberOfUsers(startDate?: string, endDate?: string) {
-  const queryParams = startDate && endDate ? `?startDate=${startDate}&endDate=${endDate}` : "";
-  return await userAxiosInstance.get(`/users/number-of-users${queryParams}`);
+  return await userAxiosInstance.get(`/users/number-of-users`, { params: { startDate, endDate } });
 }
