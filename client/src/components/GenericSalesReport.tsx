@@ -251,7 +251,6 @@ const GenericSalesReport: React.FC<SalesReportProps> = ({ data, type = "all", on
             title={type === "gift_shop" ? "Daily Sales Quantity" : "Daily Tourist Count"}
             data={dailyData}
             dataKey="date"
-            // barDataKey={type === "gift_shop" ? "quantity" : "tourists"}
           />
 
           {/* Status Distribution */}

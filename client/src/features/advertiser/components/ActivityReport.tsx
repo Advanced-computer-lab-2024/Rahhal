@@ -4,7 +4,6 @@ import GenericSalesReport, {
   SalesItem,
 } from "../../../components/GenericSalesReport";
 
-
 import { TPopulatedBooking } from "@/features/home/types/home-page-types";
 import { fetchBookingsByDateRange, getBookingsWithFilters } from "@/api-calls/booking-api-calls";
 
@@ -12,18 +11,13 @@ export default function ActivityReport() {
   const [salesData, setSalesData] = useState<SalesItem[]>([]);
   const [filters, setFilters] = useState<ReportFilters | null>(null);
 
-  
-
   useEffect(() => {
-    
-
     const apiFilters = {
-      
       type: "activity",
       status: "completed",
     };
 
-    if(!filters) {
+    if (!filters) {
       getBookingsWithFilters(apiFilters).then((value) => {
         const bookings = value as TPopulatedBooking[];
 
@@ -42,7 +36,6 @@ export default function ActivityReport() {
         setSalesData(salesItems);
       });
     } else {
-
       const startDate = filters.dateRange[0];
       const endDate = filters.dateRange[1];
 
@@ -63,8 +56,6 @@ export default function ActivityReport() {
           }));
         setSalesData(salesItems);
       });
-      
-
     }
   }, [filters]);
 

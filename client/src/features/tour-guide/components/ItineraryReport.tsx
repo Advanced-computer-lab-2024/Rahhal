@@ -10,8 +10,6 @@ export default function ItineraryReport() {
   const [salesData, setSalesData] = useState<SalesItem[]>([]);
   const [filters, setFilters] = useState<ReportFilters | null>(null);
 
-  
-
   useEffect(() => {
     const apiFilters = {
       type: "itinerary",
@@ -37,7 +35,6 @@ export default function ItineraryReport() {
         setSalesData(salesItems);
       });
     } else {
-
       const startDate = filters.dateRange[0];
       const endDate = filters.dateRange[1];
 
@@ -58,7 +55,6 @@ export default function ItineraryReport() {
           }));
         setSalesData(salesItems);
       });
-
     }
   }, [filters]);
 
