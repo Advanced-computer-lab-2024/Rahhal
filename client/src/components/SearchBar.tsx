@@ -50,7 +50,7 @@ export default function SearchBar(props: SearchBar) {
         "relative overflow-hidden flex items-center w-auto rounded-full border-2 bg-background transition-all",
         focusIndex !== 0 ? "bg-gray-200/65" : "",
       )}
-      onBlur={() => setFocusIndex(0)}
+      // onBlur={() => setFocusIndex(0)}
     >
       <div
         className={cn(
@@ -78,7 +78,7 @@ export default function SearchBar(props: SearchBar) {
               setFocusIndex(1);
             }}
             placeholder={props.searchPlaceHolder}
-            onBlur={() => setFocusIndex(0)}
+            // onBlur={() => setFocusIndex(0)}
             onMouseEnter={() => setHoverIndex(1)}
             onMouseLeave={() => setHoverIndex(0)}
             onChange={(e) => props.onSearch(e.target.value)}

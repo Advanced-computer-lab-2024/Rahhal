@@ -5,7 +5,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { TimePicker12HSearchBar } from "./time-picker-12hour-search-bar";
 import { IoCloseOutline } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 interface DateTimePickerProps {
@@ -18,6 +18,7 @@ interface DateTimePickerProps {
   setHoverIndex?: (hoverIndex: number) => void;
   hoverIndex?: number;
   corner?: number;
+  popoverRef: React.RefObject<HTMLDivElement>;
 }
 
 export function DualDatePickerSearchBar({
@@ -30,6 +31,7 @@ export function DualDatePickerSearchBar({
   setHoverIndex,
   hoverIndex,
   corner,
+  popoverRef
 }: DateTimePickerProps) {
   const [open, setOpen] = useState(false);
   const leftIndex = index || 0;
@@ -49,12 +51,7 @@ export function DualDatePickerSearchBar({
     const newDateFull = add(date, { days: Math.ceil(diffInDays) });
     onDateChange(newDateFull);
   };
-
-  //   if (!open && focusIndex === index && setFocusIndex) {
-  //     setFocusIndex(0); // Reset focus when the popover closes
-  //   } else if (open && focusIndex !== index! + 1 && setFocusIndex) {
-  //     setFocusIndex(index ? index + 1 : 0); // Set focus when the popover opens
-  //   }
+  
 
   useEffect(() => {
     console.log(open);
@@ -63,11 +60,24 @@ export function DualDatePickerSearchBar({
     e.stopPropagation();
     onDateChange(undefined);
   };
+
+  useEffect(() => {
+    if ((focusIndex === leftIndex || focusIndex === rightIndex) && open === false)
+      setOpen(true);
+    if(focusIndex != leftIndex && focusIndex != rightIndex && open === true)
+      setOpen(false);
+
+  }, [focusIndex]);
+
+  const handleBlur = () => {
+    if(focusIndex != leftIndex && focusIndex != rightIndex)
+      setOpen(false);
+  };
   return (
     <>
       <div
         className={cn(
-          " flex items-center px-0 relative",
+          " flex items-center px-0",
           focusIndex === 1 && hoverIndex === 2
             ? index === 1
               ? "bg-gray-300/65"
@@ -101,21 +111,16 @@ export function DualDatePickerSearchBar({
                   : "",
         )}
       >
-        <Popover
-          open={open}
-          onOpenChange={(isOpen) => {
-            setOpen(isOpen);
-          }}
-        >
+       
           <div className="flex">
             <div
               className={cn(
                 "rounded-full focus-within:bg-background focus-within:shadow-sm h-[66px] flex items-center",
-                focusIndex != index
-                  ? hoverIndex == index && (index == focusIndex! - 1 || index == focusIndex! + 1)
+                focusIndex != leftIndex
+                  ? hoverIndex == leftIndex && (leftIndex == focusIndex! - 1 || leftIndex == focusIndex! + 1)
                     ? ""
                     : "hover:bg-gray-300/65"
-                  : focusIndex === index
+                  : focusIndex === leftIndex
                     ? "bg-background shadow-[0_0_12px_0_rgba(0,0,0,0.16)]"
                     : "",
               )}
@@ -129,13 +134,7 @@ export function DualDatePickerSearchBar({
                 onMouseEnter={() => setHoverIndex && setHoverIndex(index || 0)}
                 onMouseLeave={() => setHoverIndex && setHoverIndex(0)}
                 onClick={() => {
-                  if (focusIndex !== leftIndex && focusIndex !== rightIndex) {
-                    setOpen(true);
-                    setFocusIndex && setFocusIndex(leftIndex!);
-                  } else if (focusIndex === leftIndex) {
-                    setOpen(!open);
-                    setFocusIndex && setFocusIndex(leftIndex!);
-                  } else if (focusIndex === rightIndex) {
+                  if (focusIndex !== leftIndex) {
                     setFocusIndex && setFocusIndex(leftIndex!);
                   }
                 }}
@@ -163,11 +162,11 @@ export function DualDatePickerSearchBar({
             <div
               className={cn(
                 "rounded-full focus-within:bg-background focus-within:shadow-sm h-[66px] flex items-center",
-                focusIndex != index
-                  ? hoverIndex == index && (index == focusIndex! - 1 || index == focusIndex! + 1)
+                focusIndex != rightIndex
+                  ? hoverIndex == rightIndex && (rightIndex == focusIndex! - 1 || rightIndex == focusIndex! + 1)
                     ? ""
                     : "hover:bg-gray-300/65"
-                  : focusIndex === index! + 1
+                  : focusIndex === rightIndex! + 1
                     ? "bg-background shadow-[0_0_12px_0_rgba(0,0,0,0.16)]"
                     : "",
               )}
@@ -180,6 +179,11 @@ export function DualDatePickerSearchBar({
                 )}
                 onMouseEnter={() => setHoverIndex && setHoverIndex((index || 0) + 1)}
                 onMouseLeave={() => setHoverIndex && setHoverIndex(0)}
+                onClick={() => {
+                  if (focusIndex !== rightIndex) {
+                    setFocusIndex && setFocusIndex(rightIndex!);
+                  }
+                }}
               >
                 <CalendarIcon className="mr-2 h-4 w-4 color: black" />
                 <div className="flex flex-col">
@@ -201,19 +205,12 @@ export function DualDatePickerSearchBar({
                 )}
               </Button>
             </div>
+          
           </div>
-          <PopoverContent className="w-auto p-0 rounded-[4%]">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={(d) => handleSelect(d)}
-              initialFocus
-            />
-            <div className="p-3 border-t border-border flex justify-center items-center">
-              <TimePicker12HSearchBar setDate={onDateChange} date={date} />
+          {open &&
+            <div className="absolute w-5/12 h-3/6 rounded-2xl bg-red-900 top-40 z-20 left-1/2 transform -translate-x-1/2" ref={popoverRef} tabIndex={0} onFocus={() => console.log("GainedFocus")} onBlur={handleBlur}>
             </div>
-          </PopoverContent>
-        </Popover>
+          }
       </div>
     </>
   );

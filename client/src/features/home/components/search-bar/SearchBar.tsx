@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import {
   Command,
@@ -73,15 +73,36 @@ export default function SearchBar({
 
   const index = 1;
   console.log(focusIndex, hoverIndex);
-
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const searchBarRef = useRef<HTMLDivElement>(null);
   let dualDatePickerFound = false;
+
+useEffect(() => {
+  const handleClickOutside = (e: MouseEvent) => {
+    if (popoverRef.current && searchBarRef.current && (!searchBarRef.current.contains(e.target as Node) && !popoverRef.current.contains(e.target as Node))) {
+      setFocusIndex(0);
+      console.log("Popover Visible & I Pressed Outside");
+    } else if (!popoverRef.current && searchBarRef.current && !searchBarRef.current.contains(e.target as Node)) {
+      setFocusIndex(0);
+      console.log("Popover Not Visible & I Pressed Outside");
+    }
+    console.log("I Clicked a Button");
+  };
+
+  document.addEventListener('click', handleClickOutside);
+
+  return () => {
+    document.removeEventListener('click', handleClickOutside);
+  };
+}, []);
+    
   return (
     <div
       className={cn(
-        "relative overflow-hidden flex items-center w-auto rounded-full border-2 bg-background transition-all h-[66px]",
+        "overflow-hidden flex items-center w-auto rounded-full border-2 bg-background transition-all h-[66px]",
         focusIndex !== 0 ? "bg-gray-300/65" : "",
       )}
-      onBlur={() => setFocusIndex(0)}
+      ref={searchBarRef}
     >
       <div
         className={cn(
@@ -97,7 +118,7 @@ export default function SearchBar({
       >
         <div
           className={cn(
-            "rounded-full focus-within:bg-background focus-within:shadow-sm flex items-center h-[66px]",
+            "relative rounded-full focus-within:bg-background focus-within:shadow-sm flex items-center h-[66px]",
             focusIndex != index ? "hover:bg-gray-200/65" : "",
           )}
           onMouseEnter={() => setHoverIndex(1)}
@@ -114,13 +135,13 @@ export default function SearchBar({
                 setFocusIndex(1);
               }}
               placeholder={searchPlaceHolder}
-              onBlur={() => setFocusIndex(0)}
+              //onBlur={() => setFocusIndex(0)}
               onChange={(e) => onSearch(e.target.value)}
             />
           )}
         </div>
       </div>
-      {focusIndex == 0 && <div className="border-l border-gray-300 h-8" />}
+      {focusIndex == 0 && <div className="relative"><div className="border-l border-gray-300 h-8" /> </div>}
       {searchParts?.map((value, index) => (
         <>
           {searchPartsValues &&
@@ -173,6 +194,7 @@ export default function SearchBar({
                   onDateChange={
                     searchPartsHandlers[index].setState as (date: Date | undefined) => void
                   }
+                  popoverRef={popoverRef}
                 />
               ))
             ) : searchPartsTypes[index] === "stepper" ? (
@@ -194,10 +216,11 @@ export default function SearchBar({
             ) : (
               ""
             ))}
-          {focusIndex == 0 && <div className="border-l border-gray-300 h-8" />}
+          {focusIndex == 0 && <div className="relative"><div className="border-l border-gray-300 h-8" /> </div>}
         </>
       ))}
       {focusIndex == 0 && (
+        <div className="relative flex justify-center items-center h-full">
         <Button
           variant="default"
           size="default"
@@ -207,6 +230,7 @@ export default function SearchBar({
         >
           <SearchIcon className="w-7 h-7" />
         </Button>
+        </div>
       )}
     </div>
   );

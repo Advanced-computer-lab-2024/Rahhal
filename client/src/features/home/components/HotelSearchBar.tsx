@@ -98,7 +98,7 @@ function HotelSearchBar({ onIconClick }: HotelSearchBarProps) {
         { state: [children], setState: handleChildrenChange },
         { state: [infants], setState: handleInfantsChange },
       ]}
-      searchPartsTypes={["dropdown", "dualDate", "stepper"]}
+      searchPartsTypes={["dropdown", "dualDate","stepper"]}
       searchPartsPlaceholders={searchPartsPlaceholders}
       searchPartsOnValueChange={[handlePickUpChange]}
       onIconClick={onIconClick}
