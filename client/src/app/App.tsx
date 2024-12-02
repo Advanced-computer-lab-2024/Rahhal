@@ -43,6 +43,8 @@ import CheckoutPage from "@/features/home/components/CheckoutPage";
 import HistoricalDetailsPage from "@/features/home/components/historical-place-details-page/HistoricalDetailsPage";
 import WishListPage from "@/features/home/components/wishlist/WishListPage";
 import BookmarksPage from "@/features/home/components/bookmarks/BookmarksPage";
+import AuroraHero from "@/features/hero/components/AuroraHero";
+
 import ItineraryReport from "@/features/tour-guide/components/ItineraryReport";
 import ActivityReport from "@/features/advertiser/components/ActivityReport";
 import AdminReport from "@/features/admin/components/AdminReport";
@@ -64,8 +66,10 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         <Router>
           <Routes>
-            <Route path="/" element={<Navigate to="/entertainment" replace />} />
+            {/* <Route path="/" element={<Navigate to="/entertainment" replace />} /> */}
+            <Route path="/" element={<Navigate to="/hero" replace />} />
             <Route element={<TouristHomePage loggedIn={false} />}>
+              <Route path="/hero" element={<AuroraHero />} />
               <Route path="/entertainment" element={<GeneralGridView />} />
               <Route path="/shop" element={<ProductGridView />} />
               <Route path="/travel" element={<TravelPage loggedIn={false} />} />

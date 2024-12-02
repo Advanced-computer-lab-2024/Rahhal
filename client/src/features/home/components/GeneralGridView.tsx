@@ -37,6 +37,8 @@ import { getUserById } from "@/api-calls/users-api-calls";
 import FilterButton from "./FilterButton";
 import SortButton from "./SortButton";
 import { bookmarkType } from "@/utils/enums";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 
 function GeneralGridView() {
   const [activeFilter, setActiveFilter] = useState<string[]>([]);
@@ -119,6 +121,16 @@ function GeneralGridView() {
 
   const navigate = useNavigate();
 
+  const driverObj = driver({
+    showProgress: true,
+    steps: [
+      { element: "#Test", popover: { title: 'Trips and Activities', description: 'This is where you book an activity!' }},
+     
+    ]
+  });
+  
+  driverObj.drive();
+
   const handleCardClick = (item: Itinerary | Activity | HistoricalPlace) => {
     // Navigate to detail page, pass the item data via state
     const type =
@@ -145,11 +157,11 @@ function GeneralGridView() {
   useEffect(() => {
     setFinishedLoading(
       !isLoadingActivities &&
-        !isLoadingItineraries &&
-        !isPreferenceTags &&
-        !isLoadingCategories &&
-        !isHistoricalPlaces &&
-        !isHistoricalTags,
+      !isLoadingItineraries &&
+      !isPreferenceTags &&
+      !isLoadingCategories &&
+      !isHistoricalPlaces &&
+      !isHistoricalTags,
     );
   }, [
     isLoadingActivities,
@@ -478,7 +490,7 @@ function GeneralGridView() {
         handleSort={handleSort}
       ></FilterSortSearchHeader>
       <hr className="border-t bg-[var(--gray-scale)] " />
-      <div className="flex w-[100vw]">
+      <div id="Test" className="flex w-[100vw]">
         <FilterSideBar sideBarItems={combinedSideBarFilters} />
         <div className={GeneralGridStyle["scrollable"]}>
           <div className={GeneralGridStyle["general-grid-view__header"]}>
