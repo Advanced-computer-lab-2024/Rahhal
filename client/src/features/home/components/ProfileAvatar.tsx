@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useTour } from '@/components/AppTour';
+import useUserStore,{ UserState } from "@/stores/user-state-store";
 
 function useIdFromParamsOrQuery() {
   const { id: paramId } = useParams<{ id?: string }>();
@@ -24,8 +25,13 @@ export const ProfileAvatar = () => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+  const handleLogoutUser = async () => {
+    await logoutUser();
+    UserState();
+  };
 
-  const id = useIdFromParamsOrQuery();
+  // const id = useIdFromParamsOrQuery();
+  const { id } = useUserStore();
   const navigate = useNavigate();
 
   const {
@@ -97,7 +103,7 @@ export const ProfileAvatar = () => {
           </Link>
           <Link to='' onClick={() => {
             toggleDropdown();
-            logoutUser();
+            handleLogoutUser();
             navigate('/entertainment');
           }}>
             <div className={AvatarStyles["logout"]}>Log Out</div>

@@ -57,6 +57,7 @@ import TourGuideHomePage from "@/features/tour-guide/components/TourGuideHomePag
 import ReviewDisplay from "@/components/Ratings";
 import AdvertiserHomePage from "@/features/advertiser/components/AdvertiserHomePage";
 
+
 export default function App() {
   // const navigate = useNavigate();
   // const driverObj = driver({
@@ -79,6 +80,8 @@ export default function App() {
     ApiCurrencyCall();
   }, []);
   const queryClient = new QueryClient();
+
+  
   return (
     <div style={{ overflowY: "scroll", height: "100vh" }}>
 
@@ -202,4 +205,6 @@ export default function App() {
       setRates(JSON.parse(storedRates));
     }
   }
+
 }
+
