@@ -96,3 +96,22 @@ export async function redeemLoyalityPoints(id: string) {
   const response = await axios.patch(`${SERVICES_URLS.USER}/users/${id}/redeem`);
   return response.data;
 }
+
+export async function getAdmins() {
+  const response = await axios.get<TUser[]>(SERVICES_URLS.USER + "/users", {
+    params: { role: "admin" },
+  });
+
+  // filter out the admins
+  return response.data.filter((user: TUser) => user.role === "admin");
+}
+
+export async function getNumberOfUsers(startDate?: Date, endDate?: Date) {
+  const response = await axios.get(SERVICES_URLS.USER + "/users/number-of-users", {
+    params: {
+      startDate: startDate,
+      endDate: endDate,
+    },
+  });
+  return response.data;
+}

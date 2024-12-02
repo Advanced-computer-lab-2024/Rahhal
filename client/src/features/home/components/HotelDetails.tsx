@@ -25,6 +25,7 @@ import { useToast } from "@/hooks/use-toast";
 import { bookingType } from "@/utils/enums";
 import type { TBookingType } from "../types/home-page-types";
 import { createBooking } from "@/api-calls/booking-api-calls";
+import SignUpModal from "./SignupModal";
 export default function HotelDetails({ hotels }: HotelDetailsProps) {
   const { index, id } = useParams();
   const [isAboveEighteen, setIsAboveEighteen] = useState(false);
@@ -68,12 +69,18 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
   const [showMoreProperty, setShowMoreProperty] = useState(false);
   const [showMoreFeat, setShowMoreFeat] = useState(false);
   const [showMoreType, setShowMoreType] = useState(false);
+  const [isGuestAction, setIsGuestAction] = useState(false);
 
   const propertyAmenities = chunkArray(hotel.features.propertyAmenities, 2);
   const roomFeatures = chunkArray(hotel.features.roomFeatures, 2);
   const roomTypes = chunkArray(hotel.features.roomTypes, 2);
 
   const handleHotelBooking = async (price : number) => {
+    if(!login){
+      setIsGuestAction(true)
+      return;
+    }
+
     const bookingRequest: TBookingType = {
       user: id!,
       entity: index!,
@@ -86,6 +93,17 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
   };
 
   return (
+    <>
+     {isGuestAction && (
+          <SignUpModal
+            onClose={(e) => {
+              e.stopPropagation();
+              setIsGuestAction(false);
+            }}
+            text={"Planning your stay? Sign in to book the perfect hotel effortlessly!"}
+          />
+        )}
+    
     <div className="py-8 px-[20%]">
       <div className="flex flex-col gap-2">
         <span className="text-4xl font-semibold">{hotel.name}</span>
@@ -147,11 +165,11 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
 
               <div className="flex justify-center">
                 {!login && (
-                  <Link to="/signup">
-                    <button className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12">
+                  
+                    <button onClick={() => handleHotelBooking(parseInt(newPrice!))} className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12">
                       Reserve Room
                     </button>
-                  </Link>
+                 
                 )}
 
                 {login && (
@@ -556,5 +574,6 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }

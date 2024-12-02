@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import DetailsPage from "@/features/home/components/DetailsPage";
 import TouristHomePage from "@/features/home/components/TouristHomePage";
 import SignupSelector from "@/features/signup/components/SignupSelector";
 import AdvertiserView from "@/features/advertiser/components/AdvertiserView";
@@ -8,7 +7,6 @@ import SettingsView from "@/features/user-settings/components/SettingsView";
 import ProfileForm from "@/features/user-settings/components/ProfileForm";
 import AccountForm from "@/features/user-settings/components/AccountForm";
 import WalletForm from "@/features/user-settings/components/WalletForm";
-import PreferenceTagsForm from "@/features/user-settings/components/PreferenceTagsForm";
 import AdminHomepage from "@/features/admin/components/AdminHomepage";
 import UserView from "@/features/admin/components/UserTable";
 import CategoryView from "@/features/admin/components/CategoriesTable";
@@ -45,6 +43,9 @@ import CheckoutPage from "@/features/home/components/CheckoutPage";
 import HistoricalDetailsPage from "@/features/home/components/historical-place-details-page/HistoricalDetailsPage";
 import WishListPage from "@/features/home/components/wishlist/WishListPage";
 import BookmarksPage from "@/features/home/components/bookmarks/BookmarksPage";
+import ItineraryReport from "@/features/tour-guide/components/ItineraryReport";
+import ActivityReport from "@/features/advertiser/components/ActivityReport";
+import AdminReport from "@/features/admin/components/AdminReport";
 
 export default function App() {
   const { setRates } = useRatesStore();
@@ -99,6 +100,7 @@ export default function App() {
               <Route path="account" element={<AccountForm />} />
             </Route>
             <Route path="/advertiser/:id" element={<AdvertiserView />} />
+            <Route path="/advertiser/report" element={<ActivityReport />} />
             <Route path="/tourism-governor/:id" element={<TouristGovernerHomepage />} />
             <Route
               path="/tourism-governor/historical-places/:id"
@@ -107,12 +109,13 @@ export default function App() {
             <Route path="/tourism-governor/historical-tags/:id" element={<HistoricalTagsView />} />
 
             <Route path="/seller/:id" element={<SellerView />} />
-            <Route path="/seller/product/:id" element={<ProductReport />} />
+            <Route path="/seller/report" element={<ProductReport />} />
 
             <Route path="/tour-guide/:id" element={<TourGuideView />} />
+            <Route path="/tour-guide/report" element={<ItineraryReport />} />
 
             <Route element={<AdminHomepage />}>
-              <Route path="/admin/:id?/home" element={<h1>Home</h1>} />
+              <Route path="/admin/:id?/home" element={<AdminReport />} />
               <Route path="/admin/:id?/categories" element={<CategoryView />} />
               <Route path="/admin/:id?/users" element={<UserView />} />
               <Route path="/admin/:id?/users/requests" element={<UsersPendingRequests />} />

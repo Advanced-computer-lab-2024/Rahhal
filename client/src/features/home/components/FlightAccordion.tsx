@@ -17,6 +17,7 @@ import { addLoyalityPoints } from "@/api-calls/users-api-calls";
 
 import { getAirlineLogo } from "@/utils/flight-logo";
 import { useState } from "react";
+import SignUpModal from "./SignupModal";
 
 interface FlightAccordionProps {
   isAdult: boolean;
@@ -32,6 +33,7 @@ export default function FlightAccordion({
   loggedIn,
 }: FlightAccordionProps) {
   const [isImageLoaded, setIsImageLoaded] = useState(true);
+  const [isGuestAction, setIsGuestAction] = useState(false);
   const { currency } = useCurrencyStore();
   const convertedPrice = currencyExchange(offer.price.currency, offer.price.amount);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
@@ -40,6 +42,10 @@ export default function FlightAccordion({
   const dbPrice = bookingPrice ? bookingPrice.toFixed(0) : "N/A";
 
   const onConfirmFlight = async () => {
+    if (!loggedIn) {
+      setIsGuestAction(true);
+      return;
+    }
     const bookingRequest: TBookingType = {
       user: userID,
       entity: offer.id,
@@ -59,6 +65,16 @@ export default function FlightAccordion({
   const logoPath = getAirlineLogo(offer.airline);
   return (
     <div className="w-full max-w-5xl mx-auto space-y-4">
+      {isGuestAction && (
+        <SignUpModal
+          onClose={(e) => {
+            e.stopPropagation();
+            setIsGuestAction(false);
+          }}
+          text={"Ready to fly? Sign in to book your next flight with ease!"}
+        />
+      )}
+
       <Accordion type="single" collapsible key={offer.id}>
         <AccordionItem value={offer.id} className="border rounded-lg overflow-hidden">
           <AccordionTrigger className="no-arrow hover:no-underline [&[data-state=open]>div]:bg-muted">
@@ -70,7 +86,7 @@ export default function FlightAccordion({
                       src={logoPath}
                       alt={offer.airline}
                       className="h-[5.5rem] w-[5.5rem] object-contain"
-                      onError={() => setIsImageLoaded(false)} 
+                      onError={() => setIsImageLoaded(false)}
                     />
                   ) : (
                     <span className="text-center font-semibold text-gray-600">{offer.airline}</span>
@@ -163,7 +179,7 @@ export default function FlightAccordion({
                 <div className="flex flex-col">
                   <Button
                     className="bg-[#E5B94E] hover:bg-[#d4aa45] text-black min-w-24"
-                    disabled={!loggedIn || !isAdult}
+                    disabled={!isAdult}
                     onClick={onConfirmFlight}
                   >
                     Confirm Flight

@@ -28,8 +28,8 @@ export async function sendNotification(notificationData: NotificationData) {
   };
 
   await notificationService.createNotification(notification);
+  SSEService.sendNotification(user._id, notification);
   mailService.sendEmailNotification(notification);
-  // SSEService.sendNotification(user._id, notification);
 }
 
 export async function sendBulkNotifications(entityId: string, message: string) {
