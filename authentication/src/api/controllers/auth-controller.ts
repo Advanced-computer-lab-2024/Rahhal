@@ -53,6 +53,7 @@ export async function authenticate(req: Request, res: Response) {
             if (err) {
                 res.status(STATUS_CODES.SERVER_ERROR).json({ error: 'Invalid token' });
             } else {
+                console.log(decodedToken);
                 res.status(STATUS_CODES.STATUS_OK).json(decodedToken);
             }
         });

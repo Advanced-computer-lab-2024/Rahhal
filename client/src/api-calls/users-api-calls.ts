@@ -101,11 +101,23 @@ export async function getNumberOfUsers(startDate?: Date, endDate?: Date) {
   return response.data;
 }
 export async function loginUser(credentials: any) {
-  const response = await axios.post(SERVICES_URLS.AUTHENTICATION + "/login", credentials, {
-    headers: {
+  const response = await axios.post(
+    SERVICES_URLS.AUTHENTICATION + "/login", 
+    credentials, 
+    {
+      headers: {
         "Content-Type": "application/json",
-    },
-  });
+      },
+      withCredentials: true 
+    }
+  );
   
-  return response.data;
+  return response;
+};
+
+export async function logoutUser() {
+  const response = await axios.post(SERVICES_URLS.GENERAL + "/logout", {
+    withCredentials: true,
+  });
+  return response;
 };
