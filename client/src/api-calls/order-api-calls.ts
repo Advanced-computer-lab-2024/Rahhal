@@ -51,10 +51,10 @@ export async function rateProduct(
   return response.data;
 }
 
-
 export async function cancelOrder(orderId:string,orderData:Partial<TOrder>){
   const response = await axios.patch(`${SERVICES_URLS.ORDER}/orders/${orderId}`,orderData);
   return response.data;
+}
 
 export async function fetchOrdersByDateRange(startDate: Date, endDate: Date) {
   const response = await axios.get(SERVICES_URLS.ORDER + `/orders/date/date-range`, {
