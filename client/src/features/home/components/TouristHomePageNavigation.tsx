@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { ProfileAvatar } from "./ProfileAvatar";
 import CurrencyDropdown from "./CurrencyDropdown";
@@ -9,6 +9,7 @@ import { CartIcon } from "@/features/checkout/components/CartIcon";
 import BookmarkNavIcon from "./bookmarks/BookmarkNavIcon";
 import WishlistIcon from "./wishlist/WishListIcon";
 import NotificaionPopover from "../../../components/NotificationPopover";
+import useUserStore from "@/stores/user-state-store";
 interface ButtonProps {
   navigation: number;
   setNavigation: (index: number) => void;
@@ -18,26 +19,30 @@ interface ButtonProps {
   path: string;
 }
 
-interface NavigationProps {
-  loggedIn: boolean;
-}
+// interface NavigationProps {
+//   loggedIn: boolean;
+// }
 
-export default function TouristHomePageNavigation(NavigationProps: NavigationProps) {
-  const { id: paramId } = useParams<{ id?: string }>();
-  const location = useLocation();
+export default function TouristHomePageNavigation() {
+  // const { id: paramId } = useParams<{ id?: string }>();
+  // const location = useLocation();
   const [navigation, setNavigation] = useState(1);
   const buttonNames = ["Experiences", "Stays", "Travel", "Shop"];
-  const paths = ["/entertainment", "/stays", "/travel", "/shop"];
-  const [activeIndex, setActiveIndex] = useState(0);
+  const paths = ["/entertainment", "/stays", "/travel", "/shop"];   
+  const { id } = useUserStore();
 
-  function useIdFromParamsOrQuery() {
-    const queryParams = new URLSearchParams(location.search);
-    const queryId = queryParams.get("userId");
 
-    return paramId || queryId;
-  }
+  
 
-  const [id, setId] = useState(useIdFromParamsOrQuery);
+  console.log("id",id)
+  // function useIdFromParamsOrQuery() {
+  //   const queryParams = new URLSearchParams(location.search);
+  //   const queryId = queryParams.get("userId");
+
+  //   return paramId || queryId;
+  // }
+
+
 
   const icons = [
     { component: <WishlistIcon />, route: `/my-wishlist/${id}` },
@@ -63,8 +68,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
             index={index + 1}
             navigation={navigation}
             setNavigation={setNavigation}
-            setActiveIndex={setActiveIndex}
-            path={paths[index] + (!NavigationProps.loggedIn ? "" : `/${id}`)}
+            path={paths[index] + (id ? "" : `/${id}`)}
             buttonName={buttonName}
           />
         ))}
@@ -72,7 +76,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
 
       {/* Right-Side Authentication Buttons or Avatar */}
       <div className="flex items-center">
-        {!NavigationProps.loggedIn ? (
+        {!id  ? (
           <div className="flex space-x-4 items-center">
             <Link to="/signin">
               <Button className="text-[var(--primary-color)] border border-[var(--primary-color)] bg-white rounded-xl hover:bg-[var(--secondary-color-hover)]  transition-all px-3 py-0">

@@ -60,3 +60,9 @@ export interface INotification {
   message: string;
   seen: boolean;
 }
+export interface IPayload{
+  id: string;
+  username: string;
+  role: string;
+  dob?: Date;
+}

@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { loginUser } from "@/api-calls/users-api-calls";
-
+import { UserState } from "@/stores/user-state-store";
 interface LoginPageProps {
     redirectLink?: string;
 }
@@ -43,6 +43,7 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
             setErrors(newErrors);
             const reqBody = { username: username, password: password };
             const response :any = await loginUser(reqBody);
+            UserState();
             console.log(response);
             setDisabled(true);
             toast({

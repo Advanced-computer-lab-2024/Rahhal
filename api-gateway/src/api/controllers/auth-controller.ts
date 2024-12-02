@@ -10,7 +10,6 @@ export async function login(req: Request, res: Response) {
         console.log(cookie.data);
         if (cookie.status === STATUS_CODES.STATUS_OK) {
             res.cookie("jwt", cookie.data, {
-                httpOnly: true , 
                 sameSite:'lax' , 
                  
                 maxAge: CONSTANTS.MAXAGE 
