@@ -1,9 +1,14 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { TUser } from "@/types/user";
-import { PaymentOptions } from "./PaymentOptions";
 
 export function DeliveryForm({
   user,
@@ -19,8 +24,6 @@ export function DeliveryForm({
   setPhone,
   saveInfo,
   setSaveInfo,
-  selectedPaymentMethod,
-  setSelectedPaymentMethod,
   errors,
   setErrors,
 }: {
@@ -77,7 +80,12 @@ export function DeliveryForm({
               setNewAddress(value);
               setCity("Cairo");
               setPostalCode("11735");
-              const newErrors: { address?: string; city?: string; postalCode?: string; phone?: string } = {};
+              const newErrors: {
+                address?: string;
+                city?: string;
+                postalCode?: string;
+                phone?: string;
+              } = {};
               newErrors.address = "";
               newErrors.city = "";
               newErrors.postalCode = "";
@@ -107,7 +115,6 @@ export function DeliveryForm({
           className={errors.address ? "border-red-500" : ""}
         />
         {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
-
 
         <div className="grid gap-4 sm:grid-cols-2">
           <Input
@@ -147,7 +154,6 @@ export function DeliveryForm({
             <Label htmlFor="save-info">Save this information for next time</Label>
           </div>
         )}
-        <PaymentOptions selectedPaymentMethod={selectedPaymentMethod} setSelectedPaymentMethod={setSelectedPaymentMethod} />
       </div>
     </div>
   );
