@@ -58,17 +58,17 @@ function TransportationSearchBar({ onIconClick }: TransportationSearchBarProps) 
 
   const handleAdultsChange = (value: number) => {
     setAdults([value]);
-    setPassengers(adults[0] + children[0] + infants[0]);
+    setPassengers(value + children[0] + infants[0]);
   };
 
   const handleChildrenChange = (value: number) => {
     setChildren([value]);
-    setPassengers(adults[0] + children[0] + infants[0]);
+    setPassengers(adults[0] + value + infants[0]);
   };
 
   const handleInfantsChange = (value: number) => {
     setInfants([value]);
-    setPassengers(adults[0] + children[0] + infants[0]);
+    setPassengers(adults[0] + children[0] + value);
   };
 
   const searchParts = ["From", "To", "Departure", "Passengers"];
