@@ -11,9 +11,8 @@ import { PaymentOptions } from "./PaymentOptions";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useCurrencyStore } from "@/stores/currency-exchange-store";
-import { toast } from "@/components/ui/use-toast";
 import { createOrderInstance } from "../utils/helpers";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
 
 function useIdFromParamsOrQuery() {
   const { id: paramId } = useParams<{ id?: string }>();
@@ -32,8 +31,8 @@ export default function Checkout() {
     queryFn: () => getUserById(id as string),
     enabled: !!id,
   });
-  const cart = CartExample;
 
+  const cart = CartExample;
   const { currency } = useCurrencyStore();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -150,10 +149,6 @@ export default function Checkout() {
   };
 
   const formattedWalletBalance = `${user?.balance ? user.balance.toFixed(2) : "0.00"} ${currency}`;
-
-  const handlePrev = () => {
-    setCurrentCheckoutStep(1);
-  };
 
   return (
     <>
