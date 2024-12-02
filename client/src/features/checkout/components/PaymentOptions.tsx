@@ -11,9 +11,10 @@ type PaymentMethod = {
 };
 
 type PaymentSelectorProps = {
+  walletBalance: string;
   selectedPaymentMethod: string;
-  setSelectedPaymentMethod: (value: string) => void;
   stripePaymentTrigger: boolean;
+  setSelectedPaymentMethod: (value: string) => void;
   setStripePaymentTrigger: (value: boolean) => void;
   setIsLoading: (value: boolean) => void;
   onPaymentCompletion: () => Promise<void>;
@@ -42,8 +43,9 @@ const paymentMethods: PaymentMethod[] = [
 
 export function PaymentOptions({
   selectedPaymentMethod,
-  setSelectedPaymentMethod,
   stripePaymentTrigger,
+  walletBalance,
+  setSelectedPaymentMethod,
   setIsLoading,
   setStripePaymentTrigger,
   onPaymentCompletion,
@@ -95,6 +97,7 @@ export function PaymentOptions({
                       <span className="text-sm text-gray-500">{method.additional}</span>
                     )}
                   </div> */}
+                  <span className="text-gray-500">{method.id === "wallet" && walletBalance}</span>
                 </div>
               </div>
               {method.expandable && selectedPaymentMethod === method.id && (

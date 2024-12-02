@@ -10,8 +10,9 @@ import { CompletionPopup } from "./CompletionPopup";
 import { PaymentOptions } from "./PaymentOptions";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { createOrderInstance } from "../utils/helpers";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
 
 function useIdFromParamsOrQuery() {
   const { id: paramId } = useParams<{ id?: string }>();
@@ -30,6 +31,10 @@ export default function Checkout() {
     queryFn: () => getUserById(id as string),
     enabled: !!id,
   });
+  const { currency } = useCurrencyStore();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
   const [selectedAddress, setSelectedAddress] = useState("");
   const [newAddress, setNewAddress] = useState("");
   const [city, setCity] = useState("");
@@ -45,12 +50,13 @@ export default function Checkout() {
   }>({});
   const [completed, setCompleted] = useState(false);
 
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [activePromotion, setActivePromotion] = useState<ActivePromotion | null>(null);
+  const [totalAmount, setTotalAmount] = useState(0);
+
   const [currentCheckoutStep, setCurrentCheckoutStep] = useState(2);
   const [stripePaymentTrigger, setStripePaymentTrigger] = useState(false);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
-  const [discountAmount, setDiscountAmount] = useState(0);
-  const [activePromotion, setActivePromotion] = useState<ActivePromotion | null>(null);
-  const navigate = useNavigate();
 
   const handleContinueToPayment = () => {
     const newErrors: { address?: string; city?: string; postalCode?: string; phone?: string } = {};
@@ -85,6 +91,19 @@ export default function Checkout() {
   const handleCompleteOrder = () => {
     if (selectedPaymentMethod === "creditCard") {
       setStripePaymentTrigger(true);
+    } else if (selectedPaymentMethod === "wallet") {
+      const walletBalance = user?.balance || 0;
+      if (walletBalance < totalAmount) {
+        toast({
+          title: "Insufficient balance",
+          description:
+            "Unfortunately, you do not have enough balance in your wallet to complete this order",
+          variant: "destructive",
+          duration: 3000,
+        });
+      } else {
+        handlePaymentCompletion();
+      }
     } else {
       handlePaymentCompletion();
     }
@@ -122,9 +141,11 @@ export default function Checkout() {
     }
   };
 
-  const handlePrev = () => {
+  const handleGoToPrevStep = () => {
     setCurrentCheckoutStep(1);
   };
+
+  const formattedWalletBalance = `${user?.balance ? user.balance.toFixed(2) : "0.00"} ${currency}`;
 
   return (
     <>
@@ -137,15 +158,16 @@ export default function Checkout() {
             {currentCheckoutStep === 2 ? (
               <>
                 <PaymentOptions
-                  onPaymentCompletion={handlePaymentCompletion}
+                  selectedPaymentMethod={selectedPaymentMethod}
                   stripePaymentTrigger={stripePaymentTrigger}
+                  walletBalance={formattedWalletBalance}
+                  onPaymentCompletion={handlePaymentCompletion}
                   setStripePaymentTrigger={setStripePaymentTrigger}
                   setIsLoading={setIsPaymentLoading}
-                  selectedPaymentMethod={selectedPaymentMethod}
                   setSelectedPaymentMethod={setSelectedPaymentMethod}
                 />
                 <div className="flex gap-4 mt-4">
-                  <Button variant="outline" onClick={handlePrev}>
+                  <Button variant="outline" onClick={handleGoToPrevStep}>
                     <ArrowLeft className="h-5 w-5 " />
                   </Button>
                 </div>
@@ -199,12 +221,14 @@ export default function Checkout() {
                   cart={CartExample}
                   discountAmount={discountAmount}
                   activePromotion={activePromotion}
+                  total={totalAmount}
                   setDiscountAmount={setDiscountAmount}
                   setActivePromotion={setActivePromotion}
+                  setTotal={setTotalAmount}
                   userId={id}
                 />
                 <Button
-                  className="mt-6 w-full bg-[--complimentary-color-dark] hover:bg-[--complimentary-color-fade] disabled:bg-[--complimentary-color-fade] text-white py-3 px-4 rounded-md font-medium transition-colors"
+                  className="mt-6 w-full bg-complimentary-color hover:bg-complementary-hover disabled:bg-[--complimentary-color-fade] text-white py-3 px-4 rounded-md font-medium transition-colors"
                   onClick={currentCheckoutStep == 2 ? handleCompleteOrder : handleContinueToPayment}
                   disabled={selectedPaymentMethod === ""}
                 >

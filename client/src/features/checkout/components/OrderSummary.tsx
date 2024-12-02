@@ -5,6 +5,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useEffect, useState } from "react";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import currencyExchange from "@/utils/currency-exchange";
+import { applyPromocode } from "@/api-calls/payment-api-calls";
 
 interface Product {
   _id: string;
@@ -28,14 +29,18 @@ export function OrderSummary({
   cart,
   activePromotion,
   discountAmount,
+  total,
+  setTotal,
   setDiscountAmount,
   setActivePromotion,
   userId,
 }: {
   cart: CartProps;
   activePromotion: ActivePromotion | null;
-  setActivePromotion: (value: ActivePromotion | null) => void;
   discountAmount: number;
+  total: number;
+  setTotal: (value: number) => void;
+  setActivePromotion: (value: ActivePromotion | null) => void;
   setDiscountAmount: (value: number) => void;
   userId: string;
 }) {
@@ -70,7 +75,6 @@ export function OrderSummary({
   const taxConverted = currencyExchange(baseCurrency, tax);
   const taxDisplayed = taxConverted ? taxConverted.toFixed(2) : "N/A";
 
-  const total = subtotalAfterDiscount + shippingCost + tax;
   const totalConverted = currencyExchange(baseCurrency, total);
   const totalDisplayed = totalConverted ? totalConverted.toFixed(2) : "N/A";
 
@@ -90,11 +94,11 @@ export function OrderSummary({
 
   useEffect(() => {
     const newDiscountAmount = calculateDiscount();
-    console.log(newDiscountAmount);
     setDiscountAmount(newDiscountAmount);
+    setTotal(subtotalAfterDiscount + shippingCost + tax);
   }, [activePromotion]);
 
-  const handleApplyPromoCode = () => {
+  const handleApplyPromoCode = async () => {
     setError(null);
     if (!promoCode.trim()) {
       setError("Please enter a promo code");
