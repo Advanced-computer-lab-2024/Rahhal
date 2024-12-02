@@ -1,18 +1,22 @@
-import { CartExample } from "./CartExample";
 import { TOrder } from "@/features/home/types/home-page-types";
 import { createOrder } from "@/api-calls/order-api-calls";
 
 export async function createOrderInstance(
+  cart: Cart,
   paymentMethod: string,
   discountAmount: number,
   promoCode: string,
   selectedAddress: string,
 ) {
+  const totalPriceWithoutTax = cart.products.reduce(
+    (acc, product) => acc + product.product.price * product.quantity,
+    0,
+  );
   const order: TOrder = {
-    userId: CartExample.userId,
+    userId: cart.userId,
     orderStatus: "processing",
     paymentMethod: paymentMethod,
-    items: CartExample.products.map((product) => ({
+    items: cart.products.map((product) => ({
       name: product.product.name,
       price: product.product.price,
       quantity: product.quantity,
@@ -20,11 +24,8 @@ export async function createOrderInstance(
       picture: product.product.picture,
       productId: product.product._id,
     })),
-    totalPrice: CartExample.products.reduce(
-      (acc, product) => acc + product.product.price * product.quantity,
-      0,
-    ),
-    totalQuantity: CartExample.products.reduce((acc, product) => acc + product.quantity, 0),
+    totalPrice: totalPriceWithoutTax + 0.12 * totalPriceWithoutTax,
+    totalQuantity: cart.products.reduce((acc, product) => acc + product.quantity, 0),
     discountAmount: discountAmount,
     promoCode: promoCode,
     shippingAddress: selectedAddress,

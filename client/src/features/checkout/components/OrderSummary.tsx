@@ -7,24 +7,6 @@ import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import currencyExchange from "@/utils/currency-exchange";
 import { applyPromocode } from "@/api-calls/payment-api-calls";
 
-interface Product {
-  _id: string;
-  name: string;
-  picture: string;
-  price: number;
-}
-
-interface CartItem {
-  product: Product;
-  quantity: number;
-}
-
-interface CartProps {
-  _id: string;
-  userId: string;
-  products: CartItem[];
-}
-
 export function OrderSummary({
   cart,
   activePromotion,
@@ -35,7 +17,7 @@ export function OrderSummary({
   setActivePromotion,
   userId,
 }: {
-  cart: CartProps;
+  cart: Cart;
   activePromotion: ActivePromotion | null;
   discountAmount: number;
   total: number;

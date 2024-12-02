@@ -31,6 +31,8 @@ export default function Checkout() {
     queryFn: () => getUserById(id as string),
     enabled: !!id,
   });
+  const cart = CartExample;
+
   const { currency } = useCurrencyStore();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -42,13 +44,13 @@ export default function Checkout() {
   const [phone, setPhone] = useState("");
   const [saveInfo, setSaveInfo] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
+  const [completed, setCompleted] = useState(false);
   const [errors, setErrors] = useState<{
     address?: string;
     city?: string;
     postalCode?: string;
     phone?: string;
   }>({});
-  const [completed, setCompleted] = useState(false);
 
   const [discountAmount, setDiscountAmount] = useState(0);
   const [activePromotion, setActivePromotion] = useState<ActivePromotion | null>(null);
@@ -114,6 +116,7 @@ export default function Checkout() {
       if (user) {
         const fullAddress = `${newAddress}, ${city}`;
         await createOrderInstance(
+          cart,
           selectedPaymentMethod,
           discountAmount,
           activePromotion?.code || "",
