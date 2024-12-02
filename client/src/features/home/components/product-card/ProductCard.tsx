@@ -1,7 +1,7 @@
 "use client";
-
+import { Product } from "@/features/home/types/home-page-types";
 import { useEffect, useState } from "react";
-import { Heart, ShoppingCart, Plus, Minus, Star } from "lucide-react";
+import { Heart, ShoppingCart, Plus, Minus, Star, XIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -17,6 +17,8 @@ import useWishlistStore from "@/stores/wishlist-count-store";
 import { toast } from "@/hooks/use-toast";
 import SignUpModal from "@/features/home/components/SignupModal"; // Adjust the import path as necessary
 import { cn } from "@/lib/utils";
+import { fetchProductById } from "@/api-calls/products-api-calls";
+import { useQuery } from "@tanstack/react-query";
 
 interface ProductCardProps {
   id: string;
@@ -25,6 +27,7 @@ interface ProductCardProps {
   imageUrl: string;
   rating: number | undefined;
   sellername: string;
+  discount: number;
 }
 
 export default function ProductCard({
@@ -34,6 +37,7 @@ export default function ProductCard({
   imageUrl,
   rating,
   sellername,
+  discount,
 }: ProductCardProps) {
   const userId = useParams().id;
   const { incrementCount, decrementCount } = useWishlistStore();
@@ -42,6 +46,7 @@ export default function ProductCard({
   const [isHovered, setIsHovered] = useState(false);
   const [isWishlisted, setWishlisted] = useState(false);
   const [isGuestAction, setIsGuestAction] = useState(false);
+  const [isRatingHovered, setIsRatingHovered] = useState(false);
 
   useEffect(() => {
     if (!userId) {
@@ -49,6 +54,13 @@ export default function ProductCard({
     }
     isProductWishlisted(userId, id).then(setWishlisted);
   }, [userId, id]);
+
+  const { data: product, isLoading } = useQuery({
+    queryKey: ["Product", id],
+    queryFn: () => fetchProductById(id),
+    enabled: !!id,
+    select: (data) => data as Product,
+  });
 
   const handleWishlistClick = async () => {
     if (!id) return; // Ensure the product has a valid ID
@@ -58,7 +70,6 @@ export default function ProductCard({
 
       return;
     }
-
     if (isWishlisted) {
       try {
         await removeFromWishlist(userId, id);
@@ -153,9 +164,61 @@ export default function ProductCard({
             />
           </motion.button>
         </div>
-        <div className="p-1">
+        <div className="p-1 flex flex-row justify-between">
           <h3 className="font-semibold text-lg mb-0">{name}</h3>
+
+          {/* Hoverable Rating Section */}
+          <div
+            className="flex items-center cursor-pointer"
+            onMouseEnter={() => setIsRatingHovered(true)}
+            onMouseLeave={() => setIsRatingHovered(false)}
+          >
+            <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 mr-1" />
+            <span className="text-sm font-medium">{formattedRating}</span>
+          </div>
+
+          {/* Modal Section */}
+          <AnimatePresence>
+            {isRatingHovered && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-white border border-gray-300 shadow-lg rounded-md p-4 z-[1050] overflow-y-auto text-sm text-gray-700"
+                onMouseEnter={() => setIsRatingHovered(true)}
+                onMouseLeave={() => setIsRatingHovered(false)}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <p className="font-semibold text-center flex-1">Ratings & Reviews</p>
+                  <XIcon
+                    className="cursor-pointer ml-4 w-5 h-5"
+                    onClick={() => setIsRatingHovered(false)}
+                  />
+                </div>
+
+                <ul className="space-y-2">
+                  {product?.ratings && product.ratings.length > 0 ? (
+                    product.ratings.map((rating, index) => (
+                      <li key={index}>
+                        <div className="flex items-center space-x-2">
+                          <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                          <span className="text-sm font-medium">{rating.rating}</span>
+
+                          <span className="text-sm text-gray-500">- {rating.userName}</span>
+                        </div>
+
+                        <div className="text-xs text-gray-500 ml-6">{rating.review}</div>
+                      </li>
+                    ))
+                  ) : (
+                    <li>No ratings yet.</li>
+                  )}
+                </ul>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
+
         <div className="text-sm text-gray-600 p-1">
           <span className="font-medium">Seller:</span> {sellername}
         </div>
@@ -195,10 +258,6 @@ export default function ProductCard({
           <span className="text-lg font-bold text-primary">
             {currency} {displayPrice}
           </span>
-          <div className="flex items-center">
-            <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 mr-1" />
-            <span className="text-sm font-medium">{formattedRating}</span>
-          </div>
         </div>
       </CardFooter>
     </Card>
