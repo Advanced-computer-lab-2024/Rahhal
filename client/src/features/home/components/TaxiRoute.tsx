@@ -10,7 +10,9 @@ import { createBooking } from "@/api-calls/booking-api-calls";
 import type { TBookingType, TTaxiData } from "../types/home-page-types";
 import { bookingType } from "@/utils/enums";
 import { addLoyalityPoints } from "@/api-calls/users-api-calls";
-import { currencyExchangeDefaultSpec} from "@/utils/currency-exchange";
+import { currencyExchangeDefaultSpec } from "@/utils/currency-exchange";
+import { useState } from "react";
+import SignUpModal from "./SignupModal";
 
 interface RouteCardProps {
   departure: string;
@@ -43,14 +45,21 @@ function TaxiRoute({
   const { rates } = useRatesStore();
   const convertedPrice = currencyExchange(originalCurrency, amount);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
+  const [isGuestAction, setIsGuestAction] = useState(false);
 
   const onConfirmTrip = async () => {
-
-    const convertedPrice = (userID && selectedTaxi !== null) ? currencyExchangeDefaultSpec(
-      selectedTaxi.quotation.currencyCode,
-      parseFloat(selectedTaxi.quotation.monetaryAmount),
-      rates
-    ): undefined;
+    if (!userID) {
+      setIsGuestAction(true);
+      return;
+    }
+    const convertedPrice =
+      userID && selectedTaxi !== null
+        ? currencyExchangeDefaultSpec(
+            selectedTaxi.quotation.currencyCode,
+            parseFloat(selectedTaxi.quotation.monetaryAmount),
+            rates,
+          )
+        : undefined;
 
     const bookingRequest: TBookingType = {
       user: userID || "",
@@ -72,6 +81,18 @@ function TaxiRoute({
   };
 
   return (
+
+    <>
+     {isGuestAction && (
+          <SignUpModal
+            onClose={(e) => {
+              e.stopPropagation();
+              setIsGuestAction(false);
+            }}
+            text={"Need a ride? Sign in to book your airport taxi effortlessly!"}
+          />
+        )}
+   
     <Card
       className={`w-full max-w-md mx-auto transition-all duration-500 ease-in-out scale-95 opacity-0"}`}
     >
@@ -85,6 +106,8 @@ function TaxiRoute({
         </div>
       </CardHeader>
       <CardContent className="grid gap-4">
+       
+
         <div className="relative flex items-center">
           <svg
             className="absolute left-4 sm:left-6 w-[calc(100%-32px)] sm:w-[calc(100%-48px)] h-16 sm:h-20"
@@ -137,13 +160,11 @@ function TaxiRoute({
         <Button
           size="sm"
           className={cn(
-            "px-4 sm:px-8 py-2 sm:py-3 text-black text-sm sm:text-base",
-            loggedIn
-              ? "bg-[#E1BC6D] hover:bg-[#c9a75f]"
-              : "bg-[#E1BC6D] opacity-50 cursor-not-allowed pointer-events-none",
+            "px-4 sm:px-8 py-2 sm:py-3 text-black text-sm sm:text-base bg-[#E1BC6D] hover:bg-[#c9a75f]"
+            
           )}
           onClick={onConfirmTrip}
-          disabled={!loggedIn || !isAdult}
+           disabled={!isAdult}
         >
           <ArrowRight className="mr-2 h-4 w-4" /> Confirm Trip
         </Button>
@@ -157,6 +178,7 @@ function TaxiRoute({
         )}
       </CardFooter>
     </Card>
+    </>
   );
 }
 export default TaxiRoute;

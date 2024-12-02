@@ -15,6 +15,7 @@ import {
 } from "@/api-calls/wishlist-api-calls";
 import useWishlistStore from "@/stores/wishlist-count-store";
 import { toast } from "@/hooks/use-toast";
+import SignUpModal from "@/features/home/components/SignupModal"; // Adjust the import path as necessary
 import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
@@ -40,9 +41,12 @@ export default function ProductCard({
   const [quantity, setQuantity] = useState(1);
   const [isHovered, setIsHovered] = useState(false);
   const [isWishlisted, setWishlisted] = useState(false);
+  const [isGuestAction, setIsGuestAction] = useState(false);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId) {
+      return;
+    }
     isProductWishlisted(userId, id).then(setWishlisted);
   }, [userId, id]);
 
@@ -50,7 +54,8 @@ export default function ProductCard({
     if (!id) return; // Ensure the product has a valid ID
 
     if (!userId) {
-      alert("You must login");
+      setIsGuestAction(true);
+
       return;
     }
 
@@ -112,6 +117,17 @@ export default function ProductCard({
       <CardContent className="p-0 flex-grow">
         <div className="relative aspect-square">
           <img src={imageUrl} alt={name} className="w-full h-full object-cover rounded-[12px]" />
+          
+          {isGuestAction && (
+            <SignUpModal
+              onClose={(e) => {
+                e.stopPropagation();
+                setIsGuestAction(false);
+              }}
+              text={"Making a list? Sign in to wishlist your favourite products"}
+            />
+          )}
+
           <motion.button
             className={cn(
               "absolute top-2 right-2 z-10",

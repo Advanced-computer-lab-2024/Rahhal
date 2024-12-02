@@ -2,6 +2,8 @@ import PrimaryLogo from "@/features/logos/PrimaryLogo";
 import { XIcon } from "lucide-react";
 import CountdownRedirect from "./RedirectionState";
 import { useNavigate } from "react-router-dom";
+import LoginCard from "@/features/Login/components/LoginCard";
+import LoginCardModals from "@/features/Login/components/LoginCardModals";
 
 interface SignUpModalProps {
   text: string;
@@ -11,31 +13,23 @@ interface SignUpModalProps {
 function SignUpModal({ text, onClose }: SignUpModalProps) {
   const navigate = useNavigate();
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white rounded-lg shadow-md w-[30%] p-10">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" onClick={onClose}>
+      <div
+        className="bg-white rounded-lg shadow-md w-fill p-10 w-[35%]"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex justify-between h-full mb-4">
           <PrimaryLogo width={50} height={50} />
           <XIcon className="cursor-pointer" onClick={onClose} />
         </div>
-        <h3 className="text-lg w-[70%] font-medium">{text}</h3>
-        <CountdownRedirect />
-        <div className="flex justify-center gap-4">
-          <button
-            className="btn bg-white p-2 rounded-lg border border-[var(--primary-color)] text-[var(--primary-color)]"
-            onClick={onClose}
-          >
-            Cancel
-          </button>
-          <button
-            className="btn bg-[var(--primary-color)] p-2 rounded-lg text-white"
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate("/signin");
-            }}
-          >
-            Sign Up
-          </button>
+
+        <div className="flex justify-left">
+          <h3 className="text-lg w-[70%] font-medium ">{text}</h3>
         </div>
+        <div className="flex items-center justify-center my-6 ">
+        <LoginCardModals onLogin={(e) => onClose(e)} />
+        </div>
+
         <footer className=" text-gray-400 mt-12">
           <div className="container mx-auto text-center">
             <p className="text-sm">
