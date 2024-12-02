@@ -3,9 +3,9 @@ import * as cartService from "@/services/cart-service";
 import { STATUS_CODES } from "@/utils/constants";
 
 export async function getCart(req: Request, res: Response) {
-    const userId = req.params.userId;
+    const userId = req.query.userId as string;
     try {
-      const cart = await cartService.getCart({userId: userId});
+      const cart = await cartService.getCart(userId);
       res.status(STATUS_CODES.STATUS_OK).json(cart);
     } catch (error) {
       res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);

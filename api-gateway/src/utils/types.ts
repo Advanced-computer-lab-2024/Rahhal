@@ -236,6 +236,11 @@ export interface ICart{
 
 export interface PopulatedCart {
   _id: string;
-  user: string;
-  products: IProduct[];
+  userId: string;
+  products: IPopulatedCartItem[];
+}
+
+interface IPopulatedCartItem {
+  productId: IProduct;
+  quantity: number;
 }

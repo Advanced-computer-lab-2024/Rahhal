@@ -2,9 +2,9 @@ import { orderAxiosInstance } from "@/utils/axios-instances";
 import { populateCart } from "@/utils/cart-populator";
 import type { ICart } from "@/utils/types";
 
-export async function getCart(filter: Partial<ICart>) {
+export async function getCart(userId: string) {
   try {
-    const cart = await orderAxiosInstance.get("/carts", { params: filter });
+    const cart = await orderAxiosInstance.get("/carts?userId=" + userId);
     return populateCart(cart.data);
   }
   catch (error) {
@@ -18,7 +18,7 @@ export async function createCart(body: string) {
 
 export async function updateCart(userId: string, updatedCart: Partial<ICart>) {
   try {
-    const updatedCartResponse = await orderAxiosInstance.patch(`/carts/${userId}`, updatedCart);
+    const updatedCartResponse = await orderAxiosInstance.patch(`/carts?userId=${userId}`, updatedCart);
     const populatedCart = await populateCart(updatedCartResponse.data);
     
     return populatedCart;
@@ -27,5 +27,5 @@ export async function updateCart(userId: string, updatedCart: Partial<ICart>) {
   }
 }
 export async function deleteCart(id: string) {
-  return orderAxiosInstance.delete(`/carts/${id}`);
+  return orderAxiosInstance.delete(`/carts?userId=${id}`);
 }

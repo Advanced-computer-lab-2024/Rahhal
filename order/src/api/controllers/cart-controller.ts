@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type { ICart, CartItem ,CartUpdates} from "@/utils/types";
+import { ICart, CartItem, CartUpdates } from "@/utils/types";
 import * as cartService from "@/services/cart-service";
 import { STATUS_CODES } from "@/utils/constants";
 
@@ -58,22 +58,16 @@ export async function updateCart(req: Request, res: Response) {
     try {
         const { userId } = req.query;
         if (!userId) {
-             res.status(STATUS_CODES.BAD_REQUEST).json({ message: "userId is required" });
+            res.status(STATUS_CODES.BAD_REQUEST).json({ message: "userId is required" });
         }
 
-        const { operation, productId, quantity } = req.body;
-
-        if (!Object.values(CartUpdates).includes(operation)) {
-             res.status(STATUS_CODES.BAD_REQUEST).json({ message: "Invalid operation" });
-        }
-
+        const { operation, productId } = req.body;
         const cart = await cartService.getCart(userId as string);
         if (!cart) {
-             res.status(STATUS_CODES.NOT_FOUND).json({ message: "Cart not found" });
+            res.status(STATUS_CODES.NOT_FOUND).json({ message: "Cart not found" });
         }
 
         let updatedProducts = cart.products;
-
         switch (operation) {
             case CartUpdates.EmptyCart:
                 updatedProducts = [];
@@ -109,9 +103,6 @@ export async function updateCart(req: Request, res: Response) {
                     })
                     .filter((item) => item !== null) as CartItem[];
                 break;
-
-            default:
-                return res.status(STATUS_CODES.BAD_REQUEST).json({ message: "Invalid operation" });
         }
 
         const updatedCart = await cartService.updateCart(userId as string, { products: updatedProducts });
