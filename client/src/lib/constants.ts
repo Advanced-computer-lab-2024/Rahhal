@@ -13,6 +13,7 @@ export const SERVICES_URLS = {
   RATING: "http://localhost:3000/api/rating",
   FLIGHTS: "http://localhost:3000/api/flights-search",
   EXTERNALAPI: "http://localhost:3000/api/external-api",
+  NOTIFICATION: "http://localhost:3008",
 };
 
 export const STATUS_CODES = {
