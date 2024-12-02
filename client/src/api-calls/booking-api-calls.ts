@@ -37,3 +37,24 @@ export async function updateBookingRequest(id: string, bookingData: Partial<TBoo
   const response = await axios.patch(`${SERVICES_URLS.BOOKING}/bookings/${id}`, bookingData);
   return response.data;
 }
+
+
+
+
+export async function getBookingsWithFilters(filters: Record<string, any>) {
+  const response = await axios.get(SERVICES_URLS.BOOKING + `/bookings`, {
+    params: filters,
+  });
+  return response.data;
+}
+
+export async function fetchBookingsByDateRange(startDate: Date, endDate: Date, filters?: Record<string, any>) {
+  const response = await axios.get(SERVICES_URLS.BOOKING + `/bookings/date/date-range`, {
+    params: {
+      startDate,
+      endDate,
+      ...filters,
+    },
+  });
+  return response.data;
+}
