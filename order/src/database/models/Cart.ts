@@ -1,4 +1,5 @@
 import mongoose, { Types } from "mongoose";
+import cartValidators from "@/validators/cart-validators"; 
 
 const CartSchema = new mongoose.Schema({
     user: {
@@ -16,6 +17,7 @@ const CartSchema = new mongoose.Schema({
             quantity: {
                 type: Number,
                 required: true,
+                validate : cartValidators.validateQuantity
             }
         }
     ]

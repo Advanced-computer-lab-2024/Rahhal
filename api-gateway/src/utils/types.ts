@@ -226,17 +226,17 @@ export interface PopulatedWishlist {
 export interface CartItem {
   productId: string;
   quantity: number;
-};
+}
 
-export interface ICart{
-  _id:string;
-  userId: string;
+export interface ICart {
+  _id: string;
+  user: string;
   products: CartItem[];
 }
 
 export interface PopulatedCart {
   _id: string;
-  userId: string;
+  user: string;
   products: IPopulatedCartItem[];
 }
 

@@ -14,3 +14,5 @@ export const ERROR_MESSAGES = {
   GATEWAY_TIMEOUT: "Gateway Timeout",
   BAD_GATEWAY: "Bad Gateway",
 };
+export const MIN_QUANTITY = 1;
+export const EMPTYPRODUCT = 0;
