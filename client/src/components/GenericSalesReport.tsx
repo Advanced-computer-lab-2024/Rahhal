@@ -46,6 +46,10 @@ interface SalesReportProps {
   data: SalesItem[];
   type?: "event" | "itinerary" | "activity" | "gift_shop" | "all";
   onFilterChange?: (filters: ReportFilters) => void;
+  numberOfUsers?: number;
+  numberOfUsersPerMonth?: number;
+  onSelectedMonthChange?: (month: string) => void;
+  title?: string;
 }
 
 export interface ReportFilters {
@@ -54,7 +58,15 @@ export interface ReportFilters {
   itemId: string | null;
 }
 
-const GenericSalesReport: React.FC<SalesReportProps> = ({ data, type = "all", onFilterChange }) => {
+const GenericSalesReport: React.FC<SalesReportProps> = ({
+  data,
+  type = "all",
+  onFilterChange,
+  numberOfUsers,
+  numberOfUsersPerMonth,
+  onSelectedMonthChange,
+  title = "Sales Report",
+}) => {
   const [filteredData, setFilteredData] = useState<SalesItem[]>([]);
   const [stats, setStats] = useState<ReportStats>({
     totalRevenue: 0,
@@ -88,8 +100,6 @@ const GenericSalesReport: React.FC<SalesReportProps> = ({ data, type = "all", on
       name: item.name,
       type: item.type,
     }));
-
-  
 
   useEffect(() => {
     // Apply filters
@@ -176,7 +186,7 @@ const GenericSalesReport: React.FC<SalesReportProps> = ({ data, type = "all", on
   return (
     <div className="container mx-auto p-4">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Sales Report</h1>
+        <h1 className="text-3xl font-bold mb-2">{title}</h1>
 
         {/* Filters */}
         <div className="flex flex-wrap gap-4 mb-6">
@@ -229,11 +239,22 @@ const GenericSalesReport: React.FC<SalesReportProps> = ({ data, type = "all", on
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <StatCard title="Total Revenue" value={`$${stats.totalRevenue.toFixed(2)}`} />
+          <StatCard title="Total Revenue" value={`EGP ${stats.totalRevenue.toFixed(2)}`} />
           <StatCard title="Total Sales" value={stats.totalQuantity.toString()} />
-          <StatCard title="Average Price" value={`$${stats.averagePrice.toFixed(2)}`} />
+          <StatCard title="Average Price" value={`EGP ${stats.averagePrice.toFixed(2)}`} />
           {(type === "event" || type === "itinerary" || type === "activity" || type === "all") && (
             <StatCard title="Total Tourists" value={stats.totalTourists.toString()} />
+          )}
+          {numberOfUsers && (
+            <>
+              <StatCard title="Total Users" value={numberOfUsers.toString()} />
+              <StatCard
+                title="Users By Month"
+                value={numberOfUsersPerMonth ? numberOfUsersPerMonth.toString() : "0"}
+                haveSelect
+                onSelectedMonthChange={onSelectedMonthChange}
+              />
+            </>
           )}
         </div>
 
