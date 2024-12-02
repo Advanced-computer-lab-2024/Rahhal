@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import DetailsPage from "@/features/home/components/DetailsPage";
 import TouristHomePage from "@/features/home/components/TouristHomePage";
 import SignupSelector from "@/features/signup/components/SignupSelector";
 import AdvertiserView from "@/features/advertiser/components/AdvertiserView";
@@ -8,7 +7,6 @@ import SettingsView from "@/features/user-settings/components/SettingsView";
 import ProfileForm from "@/features/user-settings/components/ProfileForm";
 import AccountForm from "@/features/user-settings/components/AccountForm";
 import WalletForm from "@/features/user-settings/components/WalletForm";
-import PreferenceTagsForm from "@/features/user-settings/components/PreferenceTagsForm";
 import AdminHomepage from "@/features/admin/components/AdminHomepage";
 import UserView from "@/features/admin/components/UserTable";
 import CategoryView from "@/features/admin/components/CategoriesTable";
@@ -117,7 +115,7 @@ export default function App() {
             <Route path="/tour-guide/report" element={<ItineraryReport />} />
 
             <Route element={<AdminHomepage />}>
-              <Route path="/admin/:id?/home" element={<h1>Home</h1>} />
+              <Route path="/admin/:id?/home" element={<AdminReport />} />
               <Route path="/admin/:id?/categories" element={<CategoryView />} />
               <Route path="/admin/:id?/users" element={<UserView />} />
               <Route path="/admin/:id?/users/requests" element={<UsersPendingRequests />} />

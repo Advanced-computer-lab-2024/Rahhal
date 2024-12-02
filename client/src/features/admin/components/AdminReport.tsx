@@ -7,14 +7,18 @@ import GenericSalesReport, {
 import { fetchBookingsByDateRange, getBookingsWithFilters } from "@/api-calls/booking-api-calls";
 import { TOrder, TPopulatedBooking } from "@/features/home/types/home-page-types";
 import { fetchAllOrders, fetchOrdersByDateRange } from "@/api-calls/order-api-calls";
-import { getAdmins } from "@/api-calls/users-api-calls";
+import { getAdmins, getNumberOfUsers } from "@/api-calls/users-api-calls";
 import { TUser } from "@/types/user";
 import { fetchProducts } from "@/api-calls/products-api-calls";
 import { TProduct } from "@/features/seller/utils/seller-columns";
+import { dateRangeCalculator } from "@/utils/date-range-calculator";
 
 export default function AdminReport() {
   const [salesData, setSalesData] = useState<SalesItem[]>([]);
   const [filters, setFilters] = useState<ReportFilters | null>(null);
+  const [numberOfUsers, setNumberOfUsers] = useState<number>(0);
+  const [numberOfUsersPerMonth, setNumberOfUsersPerMonth] = useState<number>(0);
+  const [selectedMonth, setSelectedMonth] = useState<string>("January");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,6 +40,12 @@ export default function AdminReport() {
           : fetchAllOrders(),
         fetchProducts(),
       ]);
+
+      const numberOfUsers = (await getNumberOfUsers()) as { numberOfUsers: number };
+      const [startDate, endDate] = dateRangeCalculator(selectedMonth, new Date().getFullYear());
+      const numberOfUsersPerMonth = (await getNumberOfUsers(startDate, endDate)) as {
+        numberOfUsers: number;
+      };
 
       const bookings = bookingsResult as TPopulatedBooking[];
       const activities = activitiesResult as TPopulatedBooking[];
@@ -93,16 +103,34 @@ export default function AdminReport() {
       ];
 
       setSalesData(salesItems);
+      setNumberOfUsers(numberOfUsers.numberOfUsers);
+      setNumberOfUsersPerMonth(numberOfUsersPerMonth.numberOfUsers);
     };
 
     fetchData();
   }, [filters]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [startDate, endDate] = dateRangeCalculator(selectedMonth, new Date().getFullYear());
+      const numberOfUsersPerMonth = (await getNumberOfUsers(startDate, endDate)) as {
+        numberOfUsers: number;
+      };
+      setNumberOfUsersPerMonth(numberOfUsersPerMonth.numberOfUsers);
+    };
+
+    fetchData();
+  }, [selectedMonth]);
 
   return (
     <GenericSalesReport
       data={salesData}
       type="all"
       onFilterChange={(filters: ReportFilters) => setFilters(filters)}
+      numberOfUsers={numberOfUsers}
+      numberOfUsersPerMonth={numberOfUsersPerMonth}
+      onSelectedMonthChange={(month: string) => setSelectedMonth(month)}
+      title="Admin Report"
     />
   );
 }
