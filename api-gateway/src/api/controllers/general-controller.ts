@@ -21,7 +21,8 @@ export async function signup(req: Request, res: Response) {
 export async function logout(req:Request , res: Response){
     try{
         res.cookie("jwt" , ' ' , {
-            httpOnly:true ,
+            httpOnly: true , 
+            sameSite:'lax' , 
             maxAge:1
         });
         res.status(STATUS_CODES.STATUS_OK).json();

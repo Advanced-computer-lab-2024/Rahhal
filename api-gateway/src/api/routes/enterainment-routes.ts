@@ -19,7 +19,7 @@ router.delete("/activities/:id", activitiesController.deleteActivity);
 //itineraries routes
 router.get("/itineraries", itinerariesController.getAllItineraries);
 router.get(
-  "/itineraries/active-appropriate",grantAccess([Role.TOURIST]),
+  "/itineraries/active-appropriate",grantAccess([Role.GUEST , Role.TOURIST]),
   itinerariesController.getActiveAppropriateItineraries,
 );
 router.get("/itineraries/:id", itinerariesController.getAItineraryById);
