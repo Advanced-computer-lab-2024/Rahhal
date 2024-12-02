@@ -1,5 +1,5 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import PaymentMain from "@/features/payment/PaymentMain";
+import StripeForm from "@/components/payment/StripeForm";
 import { Label } from "@/components/ui/label";
 
 type PaymentMethod = {
@@ -100,7 +100,7 @@ export function PaymentOptions({
               {method.expandable && selectedPaymentMethod === method.id && (
                 <div className="p-4 border-t bg-white">
                   {method.id === "creditCard" && (
-                    <PaymentMain
+                    <StripeForm
                       onPaymentCompletion={onPaymentCompletion}
                       stripePaymentTrigger={stripePaymentTrigger}
                       setStripePaymentTrigger={setStripePaymentTrigger}
