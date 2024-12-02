@@ -56,7 +56,6 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
             });
             await new Promise((resolve) => setTimeout(resolve, 3000));
             setDisabled(false);
-            // console.log(response.locals);
             // if (response.locals.role === "admin") {
             //     navigate(`/admin/${response._id}`);
             // } else if (response.locals.role === "tourGuide") {
@@ -66,7 +65,7 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
                 //     navigate(redirectLink+'/'+response._id);
                 // }
                 // else {
-                    navigate(`/entertainment/undefined`);
+                    navigate(`/entertainment/${response.id}`);
                 // }
             // } else if (response.locals.role === "advertiser") {
             //     navigate(`/advertiser/${response._id}`);
