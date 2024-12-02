@@ -1,6 +1,7 @@
 import axios from "axios";
 import { SERVICES_URLS } from "@/lib/constants";
 import type { TUser } from "@/types/user";
+import { UserState } from "@/stores/user-state-store";
 
 // fetch data from the server
 export async function fetchUsers() {
@@ -57,11 +58,7 @@ export async function submitUser(user: TUser | undefined, isNewUser: boolean) {
 }
 
 export async function createUser(newUser: any) {
-  const response = await axios.post(SERVICES_URLS.GENERAL + "/signup", newUser, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await axios.post(SERVICES_URLS.GENERAL + "/signup", newUser);
   return response.data;
 }
 
@@ -103,15 +100,11 @@ export async function getNumberOfUsers(startDate?: Date, endDate?: Date) {
 export async function loginUser(credentials: any) {
   const response = await axios.post(
     SERVICES_URLS.AUTHENTICATION + "/login", 
-    credentials, 
+    credentials,
     {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      withCredentials: true 
+      withCredentials: true,
     }
   );
-  
   return response;
 };
 

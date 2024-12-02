@@ -8,7 +8,7 @@ interface TouristHomePageProps {
 export default function TouristHomePage(TouristHomePageProps: TouristHomePageProps) {
   return (
     <>
-      <TouristHomePageNavigation loggedIn={TouristHomePageProps.loggedIn} />
+      <TouristHomePageNavigation />
       <Outlet />
     </>
   );
