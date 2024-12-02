@@ -1,7 +1,6 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-
 import promocodeRoutes from "./api/routes/promocode-routes";
 import stripeRoutes from "./api/routes/stripe-routes";
 
