@@ -56,7 +56,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
       </div>
 
       {/* Centered Navigation Buttons */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 flex space-x-12 items-center">
+      <div className="absolute left-1/2 transform -translate-x-1/2 flex space-x-12 items-center" id="nav-bar-tour">
         {buttonNames.map((buttonName, index) => (
           <NavigationButton
             key={index}

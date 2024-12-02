@@ -8,11 +8,12 @@ import {
 } from "framer-motion";
 import { FlipWords } from "@/components/ui/flip-words";
 import GithubGlobe from "@/features/hero/components/GithubGlobe";
-import PrimaryLogo from "@/features/logos/PrimaryLogo";
-
+import { useNavigate } from "react-router-dom";
 const COLORS_TOP = ["#F3DBA2", "#6D91E1"];
 
 export default function AuroraHero() {
+  const navigate = useNavigate();
+
   const color = useMotionValue(COLORS_TOP[0]);
   const words = ["Itineraries", "Activities", "Stays", "Transportations"];
 
@@ -59,6 +60,9 @@ export default function AuroraHero() {
                 }}
                 whileTap={{
                   scale: 0.985,
+                }}
+                onClick={() => {
+                    navigate("/entertainment");
                 }}
                 className="group relative font-bold flex w-fit items-center justify-center gap-1.5 rounded-full bg-[var(--primary-color)] px-4 py-2 text-gray-50 transition-colors"
                 >

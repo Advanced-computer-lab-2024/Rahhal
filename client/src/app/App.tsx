@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import TouristHomePage from "@/features/home/components/TouristHomePage";
 import SignupSelector from "@/features/signup/components/SignupSelector";
 import AdvertiserView from "@/features/advertiser/components/AdvertiserView";
@@ -45,6 +45,9 @@ import WishListPage from "@/features/home/components/wishlist/WishListPage";
 import BookmarksPage from "@/features/home/components/bookmarks/BookmarksPage";
 import AuroraHero from "@/features/hero/components/AuroraHero";
 
+import "driver.js/dist/driver.css";
+import { driver } from "driver.js";
+import AppTour from "@/components/AppTour";
 import ItineraryReport from "@/features/tour-guide/components/ItineraryReport";
 import ActivityReport from "@/features/advertiser/components/ActivityReport";
 import AdminReport from "@/features/admin/components/AdminReport";
@@ -55,6 +58,21 @@ import ReviewDisplay from "@/components/Ratings";
 import AdvertiserHomePage from "@/features/advertiser/components/AdvertiserHomePage";
 
 export default function App() {
+  // const navigate = useNavigate();
+  // const driverObj = driver({
+  //   showProgress: true,
+  //   steps: [
+  //     {
+  //       element: "#nav-bar-tour", popover: {
+  //         title: 'Navigation', description: 'This is where you book you start your vacation!', onNextClick: () => {
+  //           navigate("/entertainment");
+  //         },
+  //       }
+  //     },
+  //     { element: "#experiences-tour", popover: { title: 'Navigation', description: 'This is where you book you start your vacation!' } },
+  //   ]
+  // });
+  // driverObj.drive();
   const { setRates } = useRatesStore();
   const { hotels } = useHotelStore();
   useEffect(() => {
@@ -65,9 +83,11 @@ export default function App() {
     <div style={{ overflowY: "scroll", height: "100vh" }}>
       <QueryClientProvider client={queryClient}>
         <Router>
+          <AppTour />
           <Routes>
             {/* <Route path="/" element={<Navigate to="/entertainment" replace />} /> */}
             <Route path="/" element={<Navigate to="/hero" replace />} />
+
             <Route element={<TouristHomePage loggedIn={false} />}>
               <Route path="/hero" element={<AuroraHero />} />
               <Route path="/entertainment" element={<GeneralGridView />} />
