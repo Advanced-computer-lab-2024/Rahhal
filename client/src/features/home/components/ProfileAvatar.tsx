@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { getUserById } from "@/api-calls/users-api-calls";
+import { getUserById, logoutUser } from "@/api-calls/users-api-calls";
 import AvatarStyles from "../styles/ProfileAvatar.module.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 function useIdFromParamsOrQuery() {
   const { id: paramId } = useParams<{ id?: string }>();
@@ -24,6 +25,7 @@ export const ProfileAvatar = () => {
   };
 
   const id = useIdFromParamsOrQuery();
+  const navigate = useNavigate();
 
   const {
     data: user,
@@ -86,7 +88,11 @@ export const ProfileAvatar = () => {
           <Link to={`/help-center/${id}`} onClick={toggleDropdown}>
             <div className={AvatarStyles["menuItem"]}>Help Center</div>
           </Link>
-          <Link to="/entertainment" onClick={toggleDropdown}>
+          <Link to='' onClick={() => {
+            toggleDropdown();
+            logoutUser();
+            navigate('/entertainment');
+          }}>
             <div className={AvatarStyles["logout"]}>Log Out</div>
           </Link>
         </div>
