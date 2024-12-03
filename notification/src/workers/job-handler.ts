@@ -4,7 +4,7 @@ import * as entertainmentService from '@/utils/entertainment-api-calls';
 import * as bookingService from '@/utils/booking-api-calls';
 import * as mailService from '@/services/mail-service';
 import * as userService from '@/utils/user-api-calls';
-import { IBooking, INotification, IUser } from '@/utils/types';
+import { IBooking, INotification, INotifyRequest, IUser } from '@/utils/types';
 
 interface NotificationData {
   userId: string;
@@ -35,7 +35,6 @@ export async function sendNotification(notificationData: NotificationData) {
 
 export async function sendBulkNotifications(entityId: string, message: string) {
   const bookings = await bookingService.getBookings(entityId) as IBooking[];
-  console.log(bookings);
   for (const booking of bookings) {
     const notificationData: NotificationData = {
       userId: booking.user,
@@ -61,6 +60,17 @@ export async function sendAdminAlert(message: string) {
     const notificationData: NotificationData = {
       userId: admin._id,
       message,
+    };
+    await sendNotification(notificationData);
+  }
+}
+
+export async function openEvent(entityId: string, message: string) {
+  const notifyRequests = await bookingService.getNotifyRequests(entityId) as INotifyRequest[];
+  for (const notifyRequest of notifyRequests) {
+    const notificationData: NotificationData = {
+      userId: notifyRequest.user,
+      message: message,
     };
     await sendNotification(notificationData);
   }

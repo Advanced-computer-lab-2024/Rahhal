@@ -1,6 +1,6 @@
 import axios from "axios";
 import { STATUS_CODES } from "@/utils/constants";
-import { IBooking } from "./types";
+import { IBooking, INotifyRequest } from "./types";
 
 const bookingAxiosInstance = axios.create({
   baseURL: "http://booking:3000",
@@ -12,4 +12,9 @@ const bookingAxiosInstance = axios.create({
 export async function getBookings(entityId: string): Promise<IBooking[]> {
   const bookings = await bookingAxiosInstance.get("/bookings", { params: {entity: entityId} });
   return bookings.data;
+}
+
+export async function getNotifyRequests(entityId: string): Promise<INotifyRequest[]> {
+  const notifyRequests = await bookingAxiosInstance.get("/notify-requests", { params: {entity: entityId} });
+  return notifyRequests.data;
 }
