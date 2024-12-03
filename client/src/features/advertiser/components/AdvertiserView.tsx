@@ -7,10 +7,12 @@ import { useParams } from "react-router-dom";
 import { fetchUserActivities } from "@/api-calls/activities-api-calls";
 import { TUser } from "@/types/user";
 import { getUserById } from "@/api-calls/users-api-calls";
+import useUserStore from "@/stores/user-state-store";
 
 function AdvertiserView() {
   const [activities, setActivities] = useState<TActivity[]>([]);
-  const { id } = useParams();
+  //const { id } = useParams();
+  const { id } = useUserStore();
   const [user, setUser] = useState<TUser>();
 
   useEffect(() => {

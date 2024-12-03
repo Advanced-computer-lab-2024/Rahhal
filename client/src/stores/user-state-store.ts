@@ -23,7 +23,7 @@ const useUserStore = create<UserState>((set) => ({
     setId: (id) => set({ id }),
     username: decoded?.username || null,
     setUsername: (username) => set({ username }),
-    role: "guest",
+    role: decoded?.role || "guest",
     setRole: (role) => set({ role }),
     dob: decoded? decoded.dob? decoded.dob : null : null,
     setDob: (dob) => set({ dob }),

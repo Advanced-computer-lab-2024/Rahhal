@@ -11,10 +11,12 @@ import { toast } from "@/hooks/use-toast";
 import { STATUS_CODES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
+import useUserStore from "@/stores/user-state-store";
 function SellerView() {
   const [products, setProducts] = useState<TProduct[]>([]);
   const [username, setUsername] = useState<string>("");
-  const { id } = useParams();
+  //const { id } = useParams();
+  const { id } = useUserStore();
 
   useEffect(() => {
     const init = async () => {
