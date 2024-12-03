@@ -23,8 +23,6 @@ export interface IBooking {
   itineraryTourGuideRating?: number;
 }
 
-
-
 export enum bookmarkType {
   Activity = "activity",
   Itinerary = "itinerary",
@@ -35,4 +33,9 @@ export interface IBookmark {
   user: string;
   entity: string;
   type: bookmarkType;
+}
+
+export interface INotifyRequest {
+  user: string;
+  entity: string;
 }
