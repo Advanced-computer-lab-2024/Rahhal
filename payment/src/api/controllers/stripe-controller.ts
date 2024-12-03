@@ -8,9 +8,7 @@ export async function createPaymentIntent(req: Request, res: Response) {
     console.log(items);
     const paymentIntent = await stripeService.createPaymentIntent(items);
     res.send({
-      clientSecret: paymentIntent.client_secret,
-      // [DEV]: For demo purposes only, you should avoid exposing the PaymentIntent ID in the client-side code.
-      dpmCheckerLink: `https://dashboard.stripe.com/settings/payment_methods/review?transaction_id=${paymentIntent.id}`,
+      client_secret: paymentIntent.client_secret,
     });
   } catch (error: unknown) {
     res.status(STATUS_CODES.SERVER_ERROR).json({

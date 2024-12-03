@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
-import { Appearance, loadStripe, StripePaymentElementOptions } from "@stripe/stripe-js";
+import {
+  Appearance,
+  loadStripe,
+  PaymentIntent,
+  StripePaymentElementOptions,
+} from "@stripe/stripe-js";
 import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { toast } from "@/hooks/use-toast";
+import { createPaymentIntent } from "@/api-calls/payment-api-calls";
 
 const appearance: Appearance = {
   theme: "stripe",
@@ -28,16 +34,17 @@ export default function StripeForm(props: PaymentProps) {
   const [clientSecret, setClientSecret] = useState("");
 
   useEffect(() => {
-    // Create PaymentIntent as soon as the page loads
-    fetch("http://localhost:3004/create-payment-intent", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: [{ id: "xl-tshirt", amount: 1000 }] }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setClientSecret(data.clientSecret);
-      });
+    const create = async () => {
+      // TODO - Disable complete order button untill payment intent is loaded successfully
+      const paymentIntent = (await createPaymentIntent([
+        { id: "1", amount: 100 },
+      ])) as PaymentIntent;
+      if (paymentIntent.client_secret) {
+        setClientSecret(paymentIntent.client_secret);
+      }
+    };
+
+    create();
   }, []);
 
   return (
