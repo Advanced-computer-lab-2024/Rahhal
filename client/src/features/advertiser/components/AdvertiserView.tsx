@@ -10,10 +10,12 @@ import { getUserById } from "@/api-calls/users-api-calls";
 import { toast } from "@/hooks/use-toast";
 import { STATUS_CODES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import useUserStore from "@/stores/user-state-store";
 
 function AdvertiserView() {
   const [activities, setActivities] = useState<TActivity[]>([]);
-  const { id } = useParams();
+  //const { id } = useParams();
+  const { id } = useUserStore();
   const [user, setUser] = useState<TUser>();
 
   useEffect(() => {
