@@ -2,7 +2,7 @@ import Notification from "@/database/models/Notification";
 import type { INotification } from "@/utils/types";
 
 export async function getAllNotifications(filter: Partial<INotification>) {
-  return Notification.find(filter);
+  return Notification.find(filter).sort({ seen: 1, createdAt: -1 });
 }
 
 export async function getNotificationById(id: string) {
@@ -28,4 +28,8 @@ export async function deleteNotifications(filter: Partial<INotification>) {
 
 export async function markNotificationAsSeen(id: string) {
   return await Notification.findByIdAndUpdate(id, { seen: true });
+}
+
+export async function markAllNotificationsAsSeen(filter: Partial<INotification>) {
+  return await Notification.updateMany(filter, { seen: true });
 }
