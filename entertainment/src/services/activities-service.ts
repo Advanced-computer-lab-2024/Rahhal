@@ -52,7 +52,7 @@ export async function sendMarkedInappropriateNotification(activityId: string) {
   if (activity) {
     const data = {
       userId: activity.owner,
-      message: `Hello Dear User, \nYour Activity : \n Name: ${activity.name} with ID ${activity._id} \nhas been marked inappropriate \nPlease review and take necessary action \n\nRegards, \nRahhal Team`,
+      message: `Your Activity : \n Name: ${activity.name} with Date ${activity.date} \nhas been marked inappropriate \nPlease review and take necessary action.`,
     };
 
     await publishNotification(data);

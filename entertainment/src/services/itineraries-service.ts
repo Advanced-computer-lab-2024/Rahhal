@@ -52,7 +52,7 @@ export async function sendMarkedInappropriateNotification(itineraryId: string) {
   if (Itinerary) {
     const data = {
       userId: Itinerary.owner,
-      message: `Hello Dear User, \nYour Itinerary : \n Name: ${Itinerary.name} with ID ${Itinerary._id} \nhas been marked inappropriate \nPlease review and take necessary action \n\nRegards, \nRahhal Team`,
+      message: `Your Itinerary : \n Name: ${Itinerary.name} \nhas been marked inappropriate \nPlease review and take necessary action.`,
     };
 
     await publishNotification(data);
