@@ -57,6 +57,8 @@ import TourGuideHomePage from "@/features/tour-guide/components/TourGuideHomePag
 import ReviewDisplay from "@/components/Ratings";
 import AdvertiserHomePage from "@/features/advertiser/components/AdvertiserHomePage";
 
+import useUserStore from "@/stores/user-state-store";
+import { Roles } from "@/types/enums";
 
 export default function App() {
   // const navigate = useNavigate();
@@ -79,25 +81,63 @@ export default function App() {
   useEffect(() => {
     ApiCurrencyCall();
   }, []);
+  const { role } = useUserStore();
+  console.log(role);
   const queryClient = new QueryClient();
 
-  
   return (
     <div style={{ overflowY: "scroll", height: "100vh" }}>
 
       <QueryClientProvider client={queryClient}>
         <Router>
-          <TourProvider>
-            <Routes>
-              {/* <Route path="/" element={<Navigate to="/entertainment" replace />} /> */}
-              <Route path="/" element={<Navigate to="/home" replace />} />
-
+          <Routes>
+            <Route
+              path="/"
+              element={
+                role === Roles.GUEST || role === Roles.TOURIST ? (
+                  <Navigate to="/entertainment" replace />
+                ) : role === Roles.ADMIN ? (
+                  <AdminHomepage />
+                ) : role === Roles.ADVERTISER ? (
+                  <AdvertiserView />
+                ) : role === Roles.SELLER ? (
+                  <SellerView />
+                ) : role === Roles.TOURGUIDE ? (
+                  <TourGuideView />
+                ) : role === Roles.TOURISMGOVERNOR ? (
+                  <TouristGovernerHomepage />
+                ) : null
+              }
+            />
             <Route element={<TouristHomePage loggedIn={false} />}>
-              <Route path="/home" element={<AuroraHero />} />
-              <Route path="/entertainment" element={<GeneralGridView />} />
-              <Route path="/shop" element={<ProductGridView />} />
-              <Route path="/travel" element={<TravelPage loggedIn={false} />} />
-              <Route path="/stays" element={<HotelsPage loggedIn={false} />} />
+              <Route
+                path="/entertainment"
+                element={
+                  role === Roles.GUEST || role === Roles.TOURIST ? <GeneralGridView /> : null
+                }
+              />
+              <Route
+                path="/shop"
+                element={
+                  role === Roles.GUEST || role === Roles.TOURIST ? <ProductGridView /> : null
+                }
+              />
+              <Route
+                path="/travel"
+                element={
+                  role === Roles.GUEST || role === Roles.TOURIST ? (
+                    <TravelPage loggedIn={false} />
+                  ) : null
+                }
+              />
+              <Route
+                path="/stays"
+                element={
+                  role === Roles.GUEST || role === Roles.TOURIST ? (
+                    <HotelsPage loggedIn={false} />
+                  ) : null
+                }
+              />
               <Route path="/stays/hotel/:index" element={<HotelDetails hotels={hotels} />} />
             </Route>
             <Route element={<TouristHomePage loggedIn={true} />}>
@@ -205,6 +245,4 @@ export default function App() {
       setRates(JSON.parse(storedRates));
     }
   }
-
 }
-
