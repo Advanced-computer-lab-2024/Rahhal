@@ -99,6 +99,18 @@ export async function markNotificationAsSeen(req: Request, res: Response) {
   }
 }
 
+export async function markAllNotificationsAsSeen(req: Request, res: Response) {
+  try {
+    const filter = req.query;
+    const result = await notificationService.markAllNotificationsAsSeen(filter);
+    res.status(STATUS_CODES.STATUS_OK).json(result);
+  } catch (error: unknown) {
+    res.status(STATUS_CODES.SERVER_ERROR).json({
+      message: error instanceof Error ? error.message : MESSAGES.UNKNOWN_ERROR,
+    });
+  }
+}
+
 export async function sseStream(req: Request, res: Response) {
   try {
     const userId = req.query.userId as string;

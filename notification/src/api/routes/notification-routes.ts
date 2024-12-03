@@ -4,6 +4,7 @@ import * as notificationController from "@/api/controllers/notification-controll
 const router = express.Router();
 
 // Notification routes
+router.patch("/seen", notificationController.markAllNotificationsAsSeen);
 router.get("/", notificationController.getAllNotifications);
 router.get("/stream", notificationController.sseStream);
 router.get("/:id", notificationController.getNotificationById);

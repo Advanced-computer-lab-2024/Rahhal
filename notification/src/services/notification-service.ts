@@ -28,3 +28,7 @@ export async function deleteNotifications(filter: Partial<INotification>) {
 export async function markNotificationAsSeen(id: string) {
   return notificationsRepository.markNotificationAsSeen(id);
 }
+
+export async function markAllNotificationsAsSeen(filter: Partial<INotification>) {
+  return notificationsRepository.markAllNotificationsAsSeen(filter);
+}
