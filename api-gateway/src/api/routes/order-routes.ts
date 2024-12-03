@@ -1,5 +1,6 @@
 import express from "express";
 import * as orderController from "@/api/controllers/order-controllers/order-controller";
+import * as cartController from "@/api/controllers/cart-controller";
 import * as wishlistController from "@/api/controllers/order-controllers/wishlist-controller";
 const router = express.Router();
 
@@ -19,5 +20,11 @@ router.post("/wishlists", wishlistController.createWishlist);
 router.patch("/wishlists/:id", wishlistController.updateWishlist);
 router.delete("/wishlists", wishlistController.deleteWishlistItem);
 router.delete("/wishlists/:id", wishlistController.deleteWishlist);
+
+// cart routes
+router.get("/carts", cartController.getCart);
+router.post("/carts", cartController.createCart);
+router.patch("/carts", cartController.updateCart);
+router.delete("/carts", cartController.deleteCart);
 
 export default router;
