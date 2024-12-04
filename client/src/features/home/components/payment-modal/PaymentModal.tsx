@@ -13,6 +13,7 @@ import { createBooking } from "@/api-calls/booking-api-calls";
 import { addLoyalityPoints, getUserById } from "@/api-calls/users-api-calls";
 import { bookingType } from "@/utils/enums";
 import { TPopulatedBooking } from "../../types/home-page-types";
+import currencyExchange from "@/utils/currency-exchange";
 
 // Replace with your Stripe publishable key
 
@@ -23,7 +24,7 @@ interface BookingModalProps {
   name: string;
   type: string;
   currency: string;
-  discountPerc: number;
+  discountPerc?: number;
   parentBookingFunc:()=>void;
 }
 interface BookingFormProps {
@@ -31,7 +32,7 @@ interface BookingFormProps {
   name: string;
   type: string;
   currency: string;
-  discountPerc: number;
+  discountPerc?: number;
   onClose: () => void;
   parentBookingFunc:()=>void;
 }
@@ -43,20 +44,21 @@ function BookingForm({ price, name, type, currency, discountPerc, onClose,parent
   const [promoStatus, setPromoStatus] = useState<"idle" | "success" | "error">("idle");
   const [isLoading, setIsLoading] = useState(false);
 
- 
 
-  const basePrice = price;
+  const convertedPrice = currencyExchange("EGP", price);
+  const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : 0;
+
+  const basePrice = Number(displayPrice);
 
   // Apply both discounts
-  const totalPrice = basePrice * (1 - discountPerc / 100) * (1 - promoDiscountPerc / 100);
+  const totalPrice = basePrice * (1 - (discountPerc ?? 0) / 100) * (1 - promoDiscountPerc / 100);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
     
-    
 
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
     parentBookingFunc();
     setIsLoading(false);
     onClose();
@@ -97,15 +99,15 @@ function BookingForm({ price, name, type, currency, discountPerc, onClose,parent
         <p>
           Price: {currency} {basePrice.toFixed(2)}
         </p>
-        {discountPerc > 0 && (
+        {(discountPerc ?? 0) > 0 && (
           <p className="text-blue-600">
-            Discount ({discountPerc}%): -{currency} {(basePrice * (discountPerc / 100)).toFixed(2)}
+            Discount ({discountPerc ?? 0}%): -{currency} {(basePrice * ((discountPerc ?? 0) / 100)).toFixed(2)}
           </p>
         )}
         {promoDiscountPerc > 0 && (
           <p className="text-green-600">
             Promo Code Discount ({promoDiscountPerc}%): -{currency}{" "}
-            {(basePrice * (1 - discountPerc / 100) * (promoDiscountPerc / 100)).toFixed(2)}
+            {(basePrice * (1 - (discountPerc ?? 0) / 100) * (promoDiscountPerc / 100)).toFixed(2)}
           </p>
         )}
         <p className="font-bold">
@@ -153,7 +155,7 @@ function BookingForm({ price, name, type, currency, discountPerc, onClose,parent
         <div className="mt-1 border rounded-md p-3"></div>
       </div>
       <div className="flex justify-center">
-        <Button type="submit" className="w-full max-w-md py-6 text-lg">
+        <Button type="submit" className="w-full max-w-md py-6 text-lg bg-[var(--primary-color)]">
 
           {isLoading ? (
             <>
