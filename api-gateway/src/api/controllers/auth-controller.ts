@@ -7,14 +7,14 @@ export async function login(req: Request, res: Response) {
     try {
         const authbody = req.body;
         const cookie = await authService.login(authbody);
-        console.log(cookie.data);
+        // console.log(cookie.data);
         if (cookie.status === STATUS_CODES.STATUS_OK) {
             res.cookie("jwt", cookie.data, {
                 sameSite:'lax' , 
                  
                 maxAge: CONSTANTS.MAXAGE 
             });
-            const token = cookie.data;
+            // const token = cookie.data;
             res.status(STATUS_CODES.STATUS_OK).json();
         }
         else {

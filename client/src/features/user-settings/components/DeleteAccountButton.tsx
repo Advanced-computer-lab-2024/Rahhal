@@ -40,6 +40,7 @@ export default function DeleteAccountButton({ user }: { user: TUser }) {
               try {
                 await deleteUserNoReload(user);
                 navigate("/");
+                window.location.reload();
               } catch (error) {
                 if (error instanceof AxiosError) {
                   setOpen(false);

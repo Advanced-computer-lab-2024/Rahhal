@@ -7,7 +7,7 @@ router.post("/login", authController.login);
 router.patch("/changePassword", authController.changePassword);
 router.get("/verify/:token", authController.authenticate);
 router.patch("/", authController.approveUser);
-router.delete("/", authController.deleteUser);
+router.delete("/:id", authController.deleteUser);
 
 
 
