@@ -106,15 +106,17 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
       // cancel itinerary if there is still 48 hours left
       if (booking && booking?._id && booking.selectedDate) {
         // If the text field is not empty, this means that the user has passed the 48 hours limit
-        if (!text) updateBookingRequest(booking._id, { status: bookingStatus.Cancelled });
-        refundMoney(userId, booking.selectedPrice);
-        setBooking({ ...booking, status: bookingStatus.Cancelled });
-        setIsButtonDisabled(true);
-        toast({
-          title: "Success",
-          description: `You have successfully cancelled the itinerary, your wallet has been refunded by ${currency} ${booking.selectedPrice}`,
-          duration: 5000,
-        });
+        if (!text) {
+          updateBookingRequest(booking._id, { status: bookingStatus.Cancelled });
+          refundMoney(userId, booking.selectedPrice);
+          setBooking({ ...booking, status: bookingStatus.Cancelled });
+          setIsButtonDisabled(true);
+          toast({
+            title: "Success",
+            description: `You have successfully cancelled the itinerary, your wallet has been refunded by ${currency} ${booking.selectedPrice}`,
+            duration: 5000,
+          });
+        }
       }
     }
   };
