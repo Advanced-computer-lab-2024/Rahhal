@@ -44,6 +44,7 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
   const [selectedTicket, setSelectedTicket] = React.useState<string | null>(null);
   const [booking, setBooking] = React.useState<TPopulatedBooking | null>(initialBooking);
+  const [text, setText] = React.useState<string>();
   const { currency } = useCurrencyStore();
   const { rates } = useRatesStore();
 
@@ -84,7 +85,7 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
 
   React.useEffect(() => {
     // check if booking is already rated
-    
+
     if (booking && booking?.rating !== 0) {
       setIsButtonDisabled(true);
     }
@@ -134,6 +135,18 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
     checkBookingStatus();
   }, []);
 
+  React.useEffect(() => {
+    if (booking && booking?._id && booking.selectedDate) {
+      const currentDate = new Date();
+      const itineraryDate = new Date(booking.selectedDate);
+      const difference = Math.abs(itineraryDate.getTime() - currentDate.getTime());
+      const hours = difference / (1000 * 60 * 60);
+      if (hours < 48) {
+        setIsButtonDisabled(true);
+        setText("You can't cancel this activity anymore as it is less than 48 hours away");
+      }
+    }
+  }, [booking]);
 
   const handleButtonClick = () => {
     if (booking && booking?.status === bookingStatus.Completed) {
@@ -142,11 +155,7 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
     } else {
       // cancel activity if there is still 48 hours left
       if (booking && booking?._id && booking.selectedDate) {
-        const currentDate = new Date();
-        const activityDate = new Date(booking.selectedDate);
-        const difference = Math.abs(activityDate.getTime() - currentDate.getTime());
-        const hours = difference / (1000 * 60 * 60);
-        if (hours > 48) {
+        if (!text) {
           updateBookingRequest(booking._id, { status: bookingStatus.Cancelled });
           refundMoney(userId, booking.selectedPrice);
           setBooking({ ...booking, status: bookingStatus.Cancelled });
@@ -155,12 +164,6 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
           toast({
             title: "Success",
             description: `You have successfully cancelled the Activity, your wallet has been refunded by ${currency} ${booking.selectedPrice}`,
-            duration: 5000,
-          });
-        } else {
-          toast({
-            title: "Error",
-            description: "You can't cancel this activity anymore as it is less than 48 hours away",
             duration: 5000,
           });
         }
@@ -226,6 +229,7 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
           onButtonClick={handleButtonClick}
           discount={specialDiscount}
           tickets={selectedTicket ? [selectedTicket] : []}
+          footerText={text}
         />
       </DetailsPageTemplateProps>
     </div>
