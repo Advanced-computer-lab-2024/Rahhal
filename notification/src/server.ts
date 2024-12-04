@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import NotificationWorker from "@/workers/notification-worker";
 import EventReminderWorker from "@/workers/event-reminder-worker";
 import AdminAlertWorker from "@/workers/admin-alert-worker";
+import EventOpenWorker from "@/workers/event-open-worker";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ await connectToDB();
 NotificationWorker.start();
 EventReminderWorker.start();
 AdminAlertWorker.start();
+EventOpenWorker.start();
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

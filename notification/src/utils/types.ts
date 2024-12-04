@@ -52,3 +52,7 @@ export interface IItinerary {
   _id: string;
   name: string;
 }
+export interface INotifyRequest {
+  user: string;
+  entity: string;
+};
