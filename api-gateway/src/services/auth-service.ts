@@ -30,3 +30,15 @@ export async function verify(token: string) {
 export async function deleteAccount(userId: string) {
     return await authAxiosInstance.delete(`/auth/${userId}`);
 } 
+
+export async function forgotPassword(body: Partial<IPayload>) {
+    return await authAxiosInstance.post("/auth/forgotpassword", body);
+}
+
+export async function resetPassword(body: Partial<IPayload>) {
+    return await authAxiosInstance.patch("/auth/resetpassword", body);
+}
+
+export async function verifyOTP(body: Partial<IPayload>) {
+    return await authAxiosInstance.patch("/auth/verifyOTP", body);
+}

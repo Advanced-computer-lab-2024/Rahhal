@@ -21,6 +21,7 @@ export async function signup(body: any) {
         };
         // const { data: cookie } = await authService.signup(payload);
         await authService.signup(payload);
+        console.log(user);
         return user;
     }
     else {
