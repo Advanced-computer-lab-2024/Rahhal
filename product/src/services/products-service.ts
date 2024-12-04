@@ -30,11 +30,12 @@ export async function addRating(userRating: IRating, productId: string) {
 
 // Update an existing product
 export async function updateProduct(id: string, product: IProduct) {
+  const newProduct = await productsRepository.getProductById(id);
   if (product.quantity === 0) {
-    const outOfStockmessage = `Product ${product.name} is out of stock\n\nRegards, \nRahhal Team`;
+    const outOfStockmessage = `Product ${newProduct.name} is out of stock`;
 
     publishNotification({
-      userId: product.seller,
+      userId: newProduct.seller,
       message: outOfStockmessage
     });
 
@@ -42,7 +43,7 @@ export async function updateProduct(id: string, product: IProduct) {
       message: outOfStockmessage
     });
   }
-  return await productsRepository.updateProduct(id, product);
+  return newProduct;
 }
 
 // Delete a product
