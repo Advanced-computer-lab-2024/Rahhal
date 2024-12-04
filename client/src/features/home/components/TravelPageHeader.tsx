@@ -20,7 +20,7 @@ function TravelPageHeader({
 }: TravelPageHeaderProps) {
   return (
     <>
-      <div className="flex justify-between py-10 px-[16px] items-center w-[100%] ">
+      <div className="flex justify-center py-[10px] px-[16px] items-center w-[100%] ">
         {transferType === "taxis" ? (
           <TransportationSearchBar onIconClick={onIconClickTaxis} />
         ) : transferType === "flights" ? (
@@ -28,30 +28,9 @@ function TravelPageHeader({
         ) : (
           <TransportationSearchBar onIconClick={onIconClickTaxis} />
         )}
-        <div className="flex justify-center">
-          <Button
-            className={`ml-2 rounded-full bg-transparent text-black hover:bg-gray-200 px-6 py-3 text-md ${transferType === "taxis" && "bg-gray-200"} `}
-            onClick={() => setTransferType("taxis")}
-          >
-            <PiTaxi className="mr-2" size={20} />
-            Airport taxis
-          </Button>
-          <Button
-            className={`ml-2 rounded-full bg-transparent text-black hover:bg-gray-200 px-6 py-3 text-md ${transferType === "flights" && "bg-gray-200"} `}
-            onClick={() => setTransferType("flights")}
-          >
-            <img src={flightIcon} className="mr-2 w-7 h-7" />
-            Flights
-          </Button>
-          <Button
-            className={`ml-2 rounded-full bg-transparent text-black  hover:bg-gray-200 px-6 py-3 text-md  ${transferType === "buses" && "bg-gray-200"} `}
-            onClick={() => setTransferType("buses")}
-          >
-            <img src={busIcon} className="mr-2 w-7 h-7" />
-            Buses
-          </Button>
-        </div>
+       
       </div>
+      <hr className="border-t bg-[var(--gray-scale)] " />
     </>
   );
 }
