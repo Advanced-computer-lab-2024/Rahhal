@@ -8,6 +8,7 @@ export async function signup(req: Request, res: Response) {
   try {
     const userData = req.body;
     const { username, password } = req.body;
+    console.log(userData);
     // const cookie = await generalService.signup(userData);
     const user = await generalService.signup(userData);
     // if(cookie){

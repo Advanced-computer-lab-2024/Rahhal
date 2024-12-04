@@ -16,7 +16,7 @@ export async function createUser(userData : IAuthentication) {
 };
 
 export async function updateUser(userId : string , field: Partial<IAuthentication>){
-    return await Authentication.findByIdAndUpdate(userId , field);
+    return await Authentication.findByIdAndUpdate(userId , field , {new : true});
 };
 
 export async function deleteUser(userId : string){
