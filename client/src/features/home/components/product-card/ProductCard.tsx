@@ -26,7 +26,7 @@ import {
 } from "@/api-calls/cart-api-calls";
 import useCartStore from "@/stores/nav-bar-icon-stores/cart-count-store";
 import useProductRefreshStore from "@/stores/refresh-product-store";
-import { useUserStore } from "@/stores/user-state-store";
+import useUserStore from "@/stores/user-state-store";
 
 interface ProductCardProps {
   id: string;
