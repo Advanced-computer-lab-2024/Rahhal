@@ -27,9 +27,11 @@ import { uploadToFirebaseReady } from "@/utils/firebase";
 import UserDocuments from "@/components/UserDocuments";
 import { UserRoleEnum } from "@/utils/enums";
 import { updateUser } from "@/api-calls/users-api-calls";
+import useUserStore from "@/stores/user-state-store";
 export default function ProfileForm() {
   const { toast } = useToast();
-  const { id } = useParams();
+  // const { id } = useParams();
+  const { id } = useUserStore();
   const [editForm, setEditForm] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 

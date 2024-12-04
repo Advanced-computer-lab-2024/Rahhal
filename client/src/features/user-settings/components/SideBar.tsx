@@ -1,10 +1,12 @@
 import { useState, useEffect, useContext } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { EditContext } from "./SettingsView";
+import useUserStore from "@/stores/user-state-store";
 export default function SideBar() {
   const location = useLocation();
   const [currentPath, setCurrentPath] = useState("");
-  const { id } = useParams();
+  // const { id } = useParams();
+  const { id } = useUserStore();
   const { user } = useContext(EditContext);
   useEffect(() => {
     setCurrentPath(location.pathname);

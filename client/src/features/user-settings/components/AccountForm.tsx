@@ -26,6 +26,7 @@ import { updateUser } from "@/api-calls/users-api-calls";
 import DeleteAccountButton from "./DeleteAccountButton";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { Checkbox } from "@/components/ui/checkbox";
+import useUserStore from "@/stores/user-state-store";
 export default function AccountForm() {
   const [preferenceTags, setPreferenceTags] = useState<{ _id: string; name: string }[]>([]);
   const { toast } = useToast();
@@ -44,8 +45,9 @@ export default function AccountForm() {
             ? EditContextAdvertiser
             : EditContext;
 
-  const { user } = useContext(context);
-  const { id } = useParams();
+  const { user } = useContext(EditContext);
+  // const { id } = useParams();
+  const { id } = useUserStore();
 
   const passwordValidator = z.object({
     oldPassword: z

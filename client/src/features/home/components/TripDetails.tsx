@@ -12,6 +12,7 @@ import { toast } from "@/hooks/use-toast";
 import TouristHomePageNavigation from "./TouristHomePageNavigation";
 import BookedActivityDetailsPage from "./activities/BookedActivityDetails";
 import BookedItineraryDetailsPage from "./itineraries/BookedItineraryDetails";
+import useUserStore from "@/stores/user-state-store";
 
 export const handleTripRatingSubmit = async (
   values: Record<string, any>,
@@ -68,13 +69,14 @@ export const tripRatingEntity: Record<string, TRatingEntity> = {
 };
 
 export function TripDetails() {
-  const userId = useParams().id;
+  // const userId = useParams().id;
+  const {id:userId} = useUserStore();
   const { booking } = useLocation().state;
   const ratingFormRef = React.useRef<HTMLButtonElement>(null);
 
   return (
     <>
-      <TouristHomePageNavigation loggedIn={true} />
+      <TouristHomePageNavigation /*loggedIn={true}*/ />
       {booking.type === bookingType.Activity && (
         <BookedActivityDetailsPage
           activity={booking.entity as TActivity}

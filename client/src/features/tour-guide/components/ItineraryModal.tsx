@@ -24,6 +24,7 @@ import { deleteItinerary } from "@/api-calls/itineraries-api-calls";
 import { Label } from "@/components/ui/label";
 import { FaTrash } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
+import useUserStore from "@/stores/user-state-store";
 
 interface ItinerariesModalProps {
   itineraryData?: TItinerary;
@@ -36,10 +37,9 @@ export function ItinerariesModal({
   itineraryData,
   dialogTrigger,
   username,
-}: 
-  ItinerariesModalProps
-) {
-  const { id } = useParams();
+}: ItinerariesModalProps) {
+  // const { id } = useParams();
+  const { id } = useUserStore();
   const isNewItinerary: boolean = itineraryData === undefined;
   const [step, setStep] = useState(1); 
   const modalContentRef = useRef<HTMLDivElement | null>(null); // Ref so i always return to the top of the modal

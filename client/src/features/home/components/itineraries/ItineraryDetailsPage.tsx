@@ -18,6 +18,7 @@ import { DEFAULT_ITINERARY } from "../../utils/constants";
 import { fetchItineraryById } from "@/api-calls/itineraries-api-calls";
 import { toast } from "@/hooks/use-toast";
 import { createNotifyRequest } from "@/api-calls/notify-requests-api-calls";
+import useUserStore from "@/stores/user-state-store";
 
 const ItineraryDetailsPage: React.FC = () => {
   const loc = useLocation();
@@ -71,7 +72,8 @@ const ItineraryDetailsPage: React.FC = () => {
 
   const closeModal = () => setIsModalOpen(false);
 
-  const { id } = useParams();
+  // const { id } = useParams();
+  const { id } = useUserStore();  
   const { currency } = useCurrencyStore();
 
   const convertedPrice = currencyExchange("EGP", price);
@@ -199,6 +201,34 @@ const ItineraryDetailsPage: React.FC = () => {
           </ItinerariesPageTemplate>
         </>
       )}
+      <TouristHomePageNavigation /*loggedIn={id ? id !== "undefined" : false}*/ />
+      <ItinerariesPageTemplate
+        _id={_id}
+        name={name}
+        ownerName={ownerName}
+        images={images}
+        dropOffLocation={dropOffLocation}
+        pickUpLocation={pickUpLocation}
+        preferenceTagNames={preferenceTagNames}
+        description={description}
+        ratings={ratings}
+        activities={activities}
+        durationOfActivities={durationOfActivities}
+        languages={languages}
+        accessibility={accessibility}
+      >
+        <OverviewCard
+          currency={currency}
+          originalPrice={price}
+          buttonText={cardButtonText}
+          buttonColor={"gold"}
+          dropdownOptions={cardDropdownOptions}
+          dateOptions={true}
+          disabled={isButtonDisabled && !selectedDate}
+          onButtonClick={handleButtonClick}
+          onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
+        />
+      </ItinerariesPageTemplate>
     </div>
   );
 };

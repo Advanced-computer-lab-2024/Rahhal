@@ -11,7 +11,6 @@ import { createRating } from "@/api-calls/rating-api-calls";
 import { cancelOrder, rateProduct } from "@/api-calls/order-api-calls";
 import { useEffect, useState } from "react";
 import { toast } from "@/hooks/use-toast";
-import { useParams } from "react-router-dom";
 import { getUserById, refundMoney } from "@/api-calls/users-api-calls";
 import { RateableEntityType, OrderStatus } from "@/utils/enums";
 import { useQuery } from "@tanstack/react-query";
@@ -22,6 +21,7 @@ import { currencyExchangeSpec } from "@/utils/currency-exchange";
 import { fetchProductById, updateProductStock } from "@/api-calls/products-api-calls";
 import { TProduct } from "@/features/seller/utils/seller-columns";
 import currencyExchange from "@/utils/currency-exchange";
+import useUserStore from "@/stores/user-state-store";
 interface OrderDetailsProps {
   order: TOrder; // Use the TOrder type
   onClose: () => void;
@@ -35,7 +35,7 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
   const [isRated, setIsRated] = useState(false);
   const [currentOrder, setCurrentOrder] = useState(order);
 
-  const { id } = useParams<{ id: string }>();
+  const { id } =useUserStore();
 
   useEffect(() => {
     setCurrentOrder(order);

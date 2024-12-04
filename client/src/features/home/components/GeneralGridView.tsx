@@ -37,6 +37,7 @@ import { getUserById } from "@/api-calls/users-api-calls";
 import FilterButton from "./FilterButton";
 import SortButton from "./SortButton";
 import { bookmarkType } from "@/utils/enums";
+import useUserStore from "@/stores/user-state-store";
 
 function GeneralGridView() {
   const [activeFilter, setActiveFilter] = useState<string[]>([]);
@@ -55,7 +56,8 @@ function GeneralGridView() {
   const [sortOption, setSortOption] = useState<SortOption | null>(null);
   const [loaded, setLoaded] = useState(false);
 
-  const { id } = useParams<{ id: string }>();
+  // const { id } = useParams<{ id: string }>();
+  const { id } = useUserStore();
   // useQueries
   const {
     data: activities,

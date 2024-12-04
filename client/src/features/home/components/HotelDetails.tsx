@@ -26,8 +26,11 @@ import { bookingType } from "@/utils/enums";
 import type { TBookingType } from "../types/home-page-types";
 import { createBooking } from "@/api-calls/booking-api-calls";
 import SignUpModal from "./SignupModal";
+import useUserStore from "@/stores/user-state-store";
 export default function HotelDetails({ hotels }: HotelDetailsProps) {
-  const { index, id } = useParams();
+  
+  const { index/*, id*/ } = useParams();
+  const { id } = useUserStore();
   const [isAboveEighteen, setIsAboveEighteen] = useState(false);
   const [login, setLogin] = useState(false);
   useEffect(() => {

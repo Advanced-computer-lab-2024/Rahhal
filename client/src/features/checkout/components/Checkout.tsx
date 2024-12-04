@@ -16,20 +16,15 @@ import { usePromocode } from "@/api-calls/promocode-api-calls";
 import { sendReceipt } from "@/api-calls/payment-api-calls";
 import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
 import { currencyExchangeSpec } from "@/utils/currency-exchange";
+import useUserStore from "@/stores/user-state-store";
 
-function useIdFromParamsOrQuery() {
-  const { id: paramId } = useParams<{ id?: string }>();
-  const location = useLocation();
-
-  const queryParams = new URLSearchParams(location.search);
-  const queryId = queryParams.get("userId");
-
-  return paramId || queryId;
-}
 
 export default function Checkout() {
-  const id = useIdFromParamsOrQuery();
-  const { data: user } = useQuery({
+
+  const { id } = useUserStore();
+  const {
+    data: user,
+  } = useQuery({
     queryKey: ["user", id],
     queryFn: () => getUserById(id as string),
     enabled: !!id,

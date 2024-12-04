@@ -8,9 +8,11 @@ import { touristComplaintsColumns } from "@/features/user-settings/utils/tourist
 import { TComplaint } from "@/features/user-settings/utils/tourist-complaints-columns";
 import NoComplaints from "@/assets/NoComplaints.png";
 import { toast } from "@/hooks/use-toast";
+import useUserStore from "@/stores/user-state-store";
 
 function ComplaintsTable() {
-  const { id } = useParams();
+  // const { id } = useParams();
+  const { id } = useUserStore();
   const [complaints, setComplaints] = useState<TComplaint[]>([]);
 
   useEffect(() => {

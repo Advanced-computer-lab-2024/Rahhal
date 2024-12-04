@@ -23,6 +23,8 @@ import flightIcon from "@/assets/flight-Icon.png";
 import busIcon from "@/assets/Bus Icon.png";
 import { toast } from "@/hooks/use-toast";
 
+import useUserStore from "@/stores/user-state-store";
+
 interface TravelPageProps {
   loggedIn: boolean;
 }
@@ -34,7 +36,8 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   const [taxiSkeleton, setTaxiSkeleton] = useState<boolean>(false);
   const [flightSkeleton, setFlightSkeleton] = useState<boolean>(false);
 
-  const { id } = useParams<{ id: string }>();
+  // const { id } = useParams<{ id: string }>();
+  const { id } = useUserStore();
   const userId = id ? id : "";
   const { data: userData } = useQuery({
     queryKey: ["fetchUser"],

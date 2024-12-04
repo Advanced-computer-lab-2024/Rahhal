@@ -5,9 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 import ProductCard from "../product-card/ProductCard";
 import { IRating } from "../../types/home-page-types";
 import NoWishlist from "@/assets/NoWishListIcon.png";
+import useUserStore from "@/stores/user-state-store";
 
 function BookmarksPage() {
-  const { id } = useParams();
+  // const { id } = useParams();
+  const { id } = useUserStore();
 
   const {
     data: wishlistData,

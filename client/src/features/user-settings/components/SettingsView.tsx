@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { SERVICES_URLS } from "@/lib/constants";
 import { TUser } from "@/types/user";
 import { HomeIcon } from "lucide-react";
+import useUserStore from "@/stores/user-state-store";
 export enum Role {
   admin = "admin",
   tourist = "tourist",
@@ -31,7 +32,8 @@ export const EditContext = createContext<{
 });
 export default function SettingsView() {
   const { toast } = useToast();
-  const { id } = useParams();
+  // const { id } = useParams();
+  const { id } = useUserStore();
 
   const USER_SERVICE_URL = SERVICES_URLS.USER + "/users/" + `${id}`;
   const [user, setUser] = useState<TUser>({
