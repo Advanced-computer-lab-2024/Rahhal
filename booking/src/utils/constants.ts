@@ -13,3 +13,9 @@ export const ERROR_MESSAGES = {
   GATEWAY_TIMEOUT: "Gateway Timeout",
   BAD_GATEWAY: "Bad Gateway",
 };
+
+export const RABBITMQ = {
+  QUEUE: {
+    EVENT_REMINDER: "event_reminder_queue",
+  },
+};
