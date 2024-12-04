@@ -42,3 +42,13 @@ export enum bookingStatus {
   Completed = "completed",
   Cancelled = "cancelled",
 };
+
+export interface IActivity {
+  _id: string;
+  name: string; 
+}
+
+export interface IItinerary {
+  _id: string;
+  name: string;
+}
