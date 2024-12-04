@@ -19,11 +19,17 @@ export async function signup(body: any) {
         if (user!.role === "tourist") {
             payload.dob = user!.dob;
         };
-        const { data: cookie } = await authService.signup(payload);
-        return cookie;
+        // const { data: cookie } = await authService.signup(payload);
+        await authService.signup(payload);
+        return user;
     }
     else {
         throw new Error(user.error);
     }
+}
+
+export async function deleteAccount(userId: string) {
+    await userService.deleteUser(userId);
+    await authService.deleteAccount(userId);
 }
 

@@ -19,11 +19,13 @@ export async function login(req: Request, res: Response) {
 export async function signup(req: Request, res: Response) {
     try {
         const userData = req.body;
-        const token = await authService.signup(userData);
-        if (token) {
-            res.status(STATUS_CODES.STATUS_OK).json(token);
-        }
-        res.status(STATUS_CODES.STATUS_OK).json();
+        // const token = await authService.signup(userData);
+        const user = await authService.signup(userData);
+        delete user.password;
+        // if (token) {
+        //     res.status(STATUS_CODES.STATUS_OK).json(token);
+        // }
+        res.status(STATUS_CODES.STATUS_OK).json(user);
     } catch (error) {
         if (error instanceof Error) {
             res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
@@ -34,7 +36,9 @@ export async function signup(req: Request, res: Response) {
 export async function changePassword(req: Request, res: Response) {
     try {
         const { id, oldPassword, newPassword } = req.body;
+        // const { id, newPassword } = req.body;
         const changePassword = await authService.changePassword(id, oldPassword, newPassword);
+        // const changePassword = await authService.changePassword(id, newPassword);
         res.status(STATUS_CODES.STATUS_OK).json(changePassword);
     } catch (error) {
         if (error instanceof Error) {
@@ -79,7 +83,7 @@ export async function approveUser(req: Request, res: Response) {
 
 export async function deleteUser(req: Request, res: Response) {
     try {
-        const { id } = req.body;
+        const id = req.params.id;
         await authService.deleteUser(id);
         res.status(STATUS_CODES.STATUS_OK).json();
     } catch (error) {
