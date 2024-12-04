@@ -26,6 +26,7 @@ import {
 } from "@/api-calls/cart-api-calls";
 import useCartStore from "@/stores/nav-bar-icon-stores/cart-count-store";
 import useProductRefreshStore from "@/stores/refresh-product-store";
+import { useUserStore } from "@/stores/user-state-store";
 
 interface ProductCardProps {
   id: string;
@@ -44,7 +45,8 @@ export default function ProductCard({
   rating,
   sellername,
 }: ProductCardProps) {
-  const userId = useParams().id;
+  // const userId = useParams().id;
+  const { id: userId } = useUserStore();
   const [isInCart, setIsInCart] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [isHovered, setIsHovered] = useState(false);

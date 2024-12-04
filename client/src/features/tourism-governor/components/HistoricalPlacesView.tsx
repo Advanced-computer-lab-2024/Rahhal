@@ -8,10 +8,12 @@ import { fetchUserHistoricalPlaces } from "@/api-calls/historical-places-api-cal
 import { HistoricalPlacesModal } from "./HistoricalPlacesModal";
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { useParams } from "react-router-dom";
+import useUserStore from "@/stores/user-state-store";
 
 function HistoricalPlacesView() {
   const [historicalPlaces, setHistoricalPlaces] = useState<THistoricalPlace[]>([]);
-  const { id } = useParams();
+  // const { id } = useParams();
+  const { id } = useUserStore();
 
   useEffect(() => {
     const init = async () => {
