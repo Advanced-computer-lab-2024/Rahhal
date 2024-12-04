@@ -12,6 +12,7 @@ import { bookingType } from "@/utils/enums";
 import { format } from "date-fns";
 import SignUpModal from "../SignupModal";
 import { calculateAge } from "@/utils/age-calculator";
+import BookingModal from "@/features/home/components/payment-modal/PaymentModal";
 
 const ItineraryDetailsPage: React.FC = () => {
   const loc = useLocation();
@@ -46,8 +47,13 @@ const ItineraryDetailsPage: React.FC = () => {
   const [isGuestAction, setIsGuestAction] = useState(false);
   const [text, setText] = useState<string>();
   const cardButtonText = "Book Itinerary";
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  const closeModal = () => setIsModalOpen(false);
+
   const { id } = useParams();
   const { currency } = useCurrencyStore();
+
   React.useEffect(() => {
     if (id) {
       if (id !== "undefined")
@@ -58,7 +64,6 @@ const ItineraryDetailsPage: React.FC = () => {
             setText("You must be 18 years or older to book this itinerary");
           }
         });
-      setIsButtonDisabled(false);
     }
   }, []);
 
@@ -71,6 +76,11 @@ const ItineraryDetailsPage: React.FC = () => {
   }, [preferenceTags]);
 
   const handleButtonClick = () => {
+    if (!isModalOpen) {
+      setIsModalOpen(true);
+      return;
+    }
+
     if (id && id !== "undefined") {
       createBooking({
         user: id,
@@ -97,6 +107,19 @@ const ItineraryDetailsPage: React.FC = () => {
           text={"Excited to book? Sign in or create an account to secure your spot now!"}
         />
       )}
+
+      {isModalOpen && (
+        <BookingModal
+          parentBookingFunc={handleButtonClick}
+          currency={currency}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          price={price}
+          name={name}
+          type={"Itinerary"}
+        />
+      )}
+
       <TouristHomePageNavigation loggedIn={id ? id !== "undefined" : false} />
       <ItinerariesPageTemplate
         _id={_id}
