@@ -13,9 +13,9 @@ import FilterStarRating from "@/features/home/components/filter-sidebar/FilterSt
 import { getPriceValue } from "../utils/price-calculator";
 import ProductCard from "@/features/home/components/product-card/ProductCard";
 import { addToWishlist } from "@/api-calls/wishlist-api-calls";
-import { useParams } from "react-router-dom";
 import FilterButton from "./FilterButton";
 import SortButton from "./SortButton";
+import useUserStore from "@/stores/user-state-store";
 
 // Fetching logic from the database
 const ProductGridView = () => {
@@ -26,7 +26,8 @@ const ProductGridView = () => {
   const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
   const [sortOption, setSortOption] = useState<SortOption | null>(null);
 
-  const { id } = useParams();
+  const { id } = useUserStore();
+
 
   // useQueries
   const { data: products, isLoading: isLoadingProducts } = useQuery({

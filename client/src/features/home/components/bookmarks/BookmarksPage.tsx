@@ -12,9 +12,11 @@ import type {
 import EntertainmentCard from "../EntertainmentCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { bookmarkType } from "@/utils/enums";
+import useUserStore from "@/stores/user-state-store";
 
 function BookmarksPage() {
-  const { id } = useParams();
+  // const { id } = useParams();
+  const { id } =  useUserStore();
   const navigate = useNavigate();
 
   const handleCardClick = (item: Itinerary | Activity | HistoricalPlace) => {

@@ -39,6 +39,7 @@ import SortButton from "./SortButton";
 import { bookmarkType } from "@/utils/enums";
 import { useTour } from "@/components/AppTour";
 
+import useUserStore from "@/stores/user-state-store";
 
 function GeneralGridView() {
   const [activeFilter, setActiveFilter] = useState<string[]>([]);
@@ -59,7 +60,8 @@ function GeneralGridView() {
   const { toggleLoading, isLoadingTour, setIsLoading } = useTour();
 
 
-  const { id } = useParams<{ id: string }>();
+  // const { id } = useParams<{ id: string }>();
+  const { id } = useUserStore();
   // useQueries
   const {
     data: activities,

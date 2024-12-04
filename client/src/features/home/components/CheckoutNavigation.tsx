@@ -3,9 +3,11 @@ import CurrencyDropdown from "./CurrencyDropdown";
 import { ProfileAvatar } from "./ProfileAvatar";
 import Submark from "@/features/logos/Submark";
 import { useParams } from "react-router-dom";
+import useUserStore from "@/stores/user-state-store";
 
 export default function CheckoutNavigation() {
-    const { id: paramId } = useParams<{ id?: string }>();
+    // const { id: paramId } = useParams<{ id?: string }>();
+    const {id: paramId} = useUserStore();
 
     return (
         <>

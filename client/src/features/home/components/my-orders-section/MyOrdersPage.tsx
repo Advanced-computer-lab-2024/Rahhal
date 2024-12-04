@@ -16,6 +16,7 @@ import EmptyStatePlaceholder from "../EmptyStatePlaceholder";
 import OrdersPageStyles from "@/features/home/styles/MyOrdersPage.module.css";
 import cart from "@/assets/cart.png";
 import OrderStatusFilter from "./OrderStatusFilter";
+import useUserStore from "@/stores/user-state-store";
 
 export const formatOrderDate = (dateString: string | undefined) => {
   if (!dateString) return "Invalid Date";
@@ -31,7 +32,8 @@ export const formatOrderDate = (dateString: string | undefined) => {
 };
 
 export default function OrdersPage() {
-  const { id } = useParams<{ id: string }>();
+  // const { id } = useParams<{ id: string }>();
+  const { id } = useUserStore();
   const [selectedOrderId, setSelectedOrderId] = useState<TOrder | null>(null);
   const [orders, setOrders] = useState<TOrder[]>([]); // Use `orders` for rendering
 

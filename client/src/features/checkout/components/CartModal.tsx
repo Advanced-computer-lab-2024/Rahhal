@@ -15,7 +15,7 @@ import useCartStore from "@/stores/nav-bar-icon-stores/cart-count-store";
 import useProductRefreshStore from "@/stores/refresh-product-store";
 import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
 import { currencyExchangeSpec } from "@/utils/currency-exchange";
-
+import useUserStore from "@/stores/user-state-store"
 interface CartModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -26,12 +26,13 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [prices, setPrices] = useState<Record<string, number>>([]);
   const navigate = useNavigate();
-  const { id: paramId } = useParams<{ id?: string }>();
   const { incrementCount, decrementCount, setCount } = useCartStore();
   const { setRefresh } = useProductRefreshStore();
   const { currency } = useCurrencyStore();
   const { rates } = useRatesStore();
   const baseCurrency = "EGP";
+  // const { id: paramId } = useParams<{ id?: string }>();
+  const { id: paramId } = useUserStore();
 
   const { data: cartData, isSuccess } = useQuery({
     queryKey: ["cart", "products"],

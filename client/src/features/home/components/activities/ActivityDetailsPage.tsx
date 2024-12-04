@@ -7,7 +7,7 @@ import { createBooking } from "@/api-calls/booking-api-calls";
 import { formatDate, formatTime } from "../../utils/filter-lists/overview-card";
 import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
 import DetailsPageTemplateProps from "../DetailsPageTemplate";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import TouristHomePageNavigation from "../TouristHomePageNavigation";
 import { bookingType } from "@/utils/enums";
 import SignUpModal from "../SignupModal";
@@ -18,6 +18,7 @@ import { DEFAULT_ACTIVITY } from "../../utils/constants";
 import { toast } from "@/hooks/use-toast";
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { createNotifyRequest } from "@/api-calls/notify-requests-api-calls";
+import useUserStore from "@/stores/user-state-store";
 
 const ActivityDetailsPage: React.FC = () => {
   const loc = useLocation();
@@ -65,7 +66,8 @@ const ActivityDetailsPage: React.FC = () => {
 
   const { currency } = useCurrencyStore();
   const { rates } = useRatesStore();
-  const { id } = useParams();
+
+  const { id } = useUserStore();
 
   const closeModal = () => setIsModalOpen(false);
 
@@ -229,6 +231,31 @@ const ActivityDetailsPage: React.FC = () => {
           </DetailsPageTemplateProps>
         </>
       )}
+      <TouristHomePageNavigation /*loggedIn={id ? id !== "undefined" : false}*/ />
+      <DetailsPageTemplateProps
+        _id={_id}
+        name={name}
+        ownerName={ownerName}
+        images={images}
+        location={location}
+        preferenceTagNames={preferenceTagNames}
+        description={description}
+        ratings={ratings}
+      >
+        <OverviewCard
+          currency={currency}
+          originalPrice={selectedPrice}
+          buttonText={cardButtonText}
+          buttonColor={isBookingOpen ? "gold" : "blue"}
+          date={formattedDate}
+          time={formattedTime}
+          disabled={isButtonDisabled && isBookingOpen}
+          onButtonClick={handleButtonClick}
+          discount={specialDiscount}
+          onTicketSelect={onTicketSelect}
+          tickets={tickets}
+        />
+      </DetailsPageTemplateProps>
     </div>
   );
 };

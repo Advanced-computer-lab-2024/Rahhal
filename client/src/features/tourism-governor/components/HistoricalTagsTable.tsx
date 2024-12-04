@@ -9,11 +9,13 @@ import {
 import { HistoricalTagsModal } from "./HistoricalTagsModal";
 import { useParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import useUserStore from "@/stores/user-state-store";
 
 function HistoricalTagsView() {
   const [historicalTags, setHistoricalTags] = useState<THistoricalTag[]>([]);
 
-  const { id } = useParams();
+  // const { id } = useParams();
+  const { id } = useUserStore();
 
   useEffect(() => {
     fetchUserHistoricalTags(id!).then((data) => setHistoricalTags(data));

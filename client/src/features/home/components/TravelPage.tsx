@@ -24,6 +24,8 @@ import busIcon from "@/assets/Bus Icon.png";
 import { toast } from "@/hooks/use-toast";
 import { useTour } from "@/components/AppTour";
 
+import useUserStore from "@/stores/user-state-store";
+
 interface TravelPageProps {
   loggedIn: boolean;
 }
@@ -36,7 +38,9 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   const [flightSkeleton, setFlightSkeleton] = useState<boolean>(false);
   const [autoSearchTour, setAutoSearchTour] = useState<boolean>(false);
   const { toggleLoading, isLoadingTour, setIsLoading } = useTour();
-  const { id } = useParams<{ id: string }>();
+
+  // const { id } = useParams<{ id: string }>();
+  const { id } = useUserStore();
   const userId = id ? id : "";
   const { data: userData } = useQuery({
     queryKey: ["fetchUser"],

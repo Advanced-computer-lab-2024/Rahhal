@@ -9,6 +9,7 @@ import { IHotelDetails } from "@/features/home/types/home-page-types"
 import { currencyExchangeSpec } from "@/utils/currency-exchange"
 import { useRatesStore, useCurrencyStore } from "@/stores/currency-exchange-store"
 import { Link, useParams } from "react-router-dom"
+import useUserStore from "@/stores/user-state-store"
 
 interface HotelCardProps {
   hotel: IHotelDetails
@@ -18,7 +19,8 @@ interface HotelCardProps {
 export default function HotelCard({ hotel, index }: HotelCardProps) {
   const { rates } = useRatesStore()
   const { currency } = useCurrencyStore()
-  const { id } = useParams()
+  // const { id } = useParams()
+  const {id} = useUserStore();
 
   return (
     <div className="rounded-md border w-full h-[27rem] flex justify-between flex-col p-1 border-gray-300">

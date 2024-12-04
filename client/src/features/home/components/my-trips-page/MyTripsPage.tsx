@@ -9,6 +9,7 @@ import { toast } from "@/hooks/use-toast";
 import luggage from "@/assets/luggage.svg";
 import EmptyStatePlaceholder from "../EmptyStatePlaceholder";
 import { AiOutlineThunderbolt } from "react-icons/ai";
+import useUserStore from "@/stores/user-state-store";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -76,7 +77,8 @@ export const MyTripsPage = () => {
     return dateTimestamp < currentTimestamp && status === "upcoming";
   }
 
-  const { id: userId } = useParams<{ id: string }>();
+  // const { id: userId } = useParams<{ id: string }>();
+  const { id: userId} = useUserStore();
 
   const {
     data: booking,

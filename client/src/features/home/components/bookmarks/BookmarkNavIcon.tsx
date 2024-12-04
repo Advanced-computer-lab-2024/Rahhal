@@ -6,10 +6,12 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchUserBookmarks } from "@/api-calls/bookmark-api-calls";
 import { useNavigate, useParams } from "react-router-dom";
 import { TPopulatedBookmark } from "../../types/home-page-types";
-import useBookmarkStore from "@/stores/nav-bar-icon-stores/bookmark-count-store";
+import useBookmarkStore from "@/stores/bookmark-count-store";
+import useUserStore from "@/stores/user-state-store";
 
 function BookmarkNavIcon() {
-  const { id } = useParams();
+  // const { id } = useParams();
+  const { id} = useUserStore();
   const { count, setCount } = useBookmarkStore();
   const navigate = useNavigate();
 
