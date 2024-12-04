@@ -24,7 +24,7 @@ class EventReminderWorker {
       if (msg) {
         try {
           const reminderData = JSON.parse(msg.content.toString());
-          await jobHnadler.sendBulkNotifications(reminderData.entityId, reminderData.message);
+          await jobHnadler.sendEventReminder(reminderData.entityId, reminderData.userId, reminderData.type);
 
           // Acknowledge message
           channel.ack(msg);
