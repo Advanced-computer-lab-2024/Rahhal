@@ -1,5 +1,6 @@
 import * as notificationService from '@/services/notification-service';
 import SSEService from '@/services/server-sent-events-service';
+import * as entertainmentService from '@/utils/entertainment-api-calls';
 import * as bookingService from '@/utils/booking-api-calls';
 import * as mailService from '@/services/mail-service';
 import * as userService from '@/utils/user-api-calls';
@@ -42,6 +43,16 @@ export async function sendBulkNotifications(entityId: string, message: string) {
     };
     await sendNotification(notificationData);
   }
+}
+
+export async function sendEventReminder(entityId: string, userId: string, type: string) {
+  const event = type == 'activity' ? await entertainmentService.getActivity(entityId) : await entertainmentService.getItinerary(entityId);
+  const message = `This is a reminder,\nDon't forget to attend ${event.name} today!`;
+  const notificationData: NotificationData = {
+    userId,
+    message,
+  };
+  await sendNotification(notificationData);
 }
 
 export async function sendAdminAlert(message: string) {
