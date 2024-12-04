@@ -12,8 +12,7 @@ import TouristHomePageNavigation from "../TouristHomePageNavigation";
 import { bookingType } from "@/utils/enums";
 import SignUpModal from "../SignupModal";
 import { calculateAge } from "@/utils/age-calculator";
-import BookingModal from "../payment-modal/PaymentModal";
-
+import BookingModal from "@/features/home/components/payment-modal/PaymentModal";
 
 const ActivityDetailsPage: React.FC = () => {
   const loc = useLocation();
@@ -46,7 +45,7 @@ const ActivityDetailsPage: React.FC = () => {
   const { rates } = useRatesStore();
   const { id } = useParams();
 
-  const openModal = () => setIsModalOpen(true);
+ 
   const closeModal = () => setIsModalOpen(false);
 
   React.useEffect(() => {
@@ -71,9 +70,9 @@ const ActivityDetailsPage: React.FC = () => {
   }, [preferenceTags]);
 
   const handleButtonClick = () => {
-    if(!isModalOpen){
+    if (!isModalOpen) {
       setIsModalOpen(true);
-      return
+      return;
     }
 
     if (id && id !== "undefined") {
@@ -104,7 +103,7 @@ const ActivityDetailsPage: React.FC = () => {
   let convertedSelectedPrice = 0;
   const tickets = Object.keys(price).map((key) => {
     let convertedTicketPrice = price[key];
-  
+
     if (rates.rates) {
       const rateOfEURToOld = rates.rates["EGP"];
       const rateOfEURToNew = rates.rates[currency];
@@ -128,9 +127,19 @@ const ActivityDetailsPage: React.FC = () => {
       )}
 
       {isModalOpen && (
-        <BookingModal parentBookingFunc={handleButtonClick} discountPerc={specialDiscount} currency={currency} isOpen={isModalOpen} onClose={closeModal} price={parseFloat(convertedSelectedPrice.toFixed(0)) ?? 0} name={name} type={"Activity"} />) }
+        <BookingModal
+          parentBookingFunc={handleButtonClick}
+          discountPerc={specialDiscount}
+          currency={currency}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          price={selectedPrice ?? 0}
+          name={name}
+          type={"Activity"}
+        />
+      )}
 
-        <TouristHomePageNavigation loggedIn={id ? id !== "undefined" : false} />
+      <TouristHomePageNavigation loggedIn={id ? id !== "undefined" : false} />
       <DetailsPageTemplateProps
         _id={_id}
         name={name}
