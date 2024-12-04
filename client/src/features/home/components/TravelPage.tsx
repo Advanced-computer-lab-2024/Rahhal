@@ -17,7 +17,12 @@ import FlightsLandingComponent from "./flights-placeholder/FlightsLandingCompone
 import EmptyFlightResultsPage from "./flights-placeholder/EmptyFlightResultsPage";
 import TaxiLandingPage from "./taxi-placeholder/TaxiLandingPage";
 import bus from "@/assets/bus.png";
+import { Button } from "@/components/ui/button";
+import { PiTaxi } from "react-icons/pi";
+import flightIcon from "@/assets/flight-Icon.png";
+import busIcon from "@/assets/Bus Icon.png";
 import { toast } from "@/hooks/use-toast";
+
 
 interface TravelPageProps {
   loggedIn: boolean;
@@ -331,6 +336,29 @@ function TravelPage({ loggedIn }: TravelPageProps) {
         onIconClickTaxis={onIconClickTaxis}
         onIconClickFlights={onIconClickFlights}
       />
+       <div className="flex justify-end px-16 py-[1%]">
+          <Button
+            className={`ml-2 rounded-full bg-transparent text-black hover:bg-gray-200 px-6 py-3 text-md ${transferType === "taxis" && "bg-gray-200"} `}
+            onClick={() => setTransferType("taxis")}
+          >
+            <PiTaxi className="mr-2" size={20} />
+            Airport taxis
+          </Button>
+          <Button
+            className={`ml-2 rounded-full bg-transparent text-black hover:bg-gray-200 px-6 py-3 text-md ${transferType === "flights" && "bg-gray-200"} `}
+            onClick={() => setTransferType("flights")}
+          >
+            <img src={flightIcon} className="mr-2 w-7 h-7" />
+            Flights
+          </Button>
+          <Button
+            className={`ml-2 rounded-full bg-transparent text-black  hover:bg-gray-200 px-6 py-3 text-md  ${transferType === "buses" && "bg-gray-200"} `}
+            onClick={() => setTransferType("buses")}
+          >
+            <img src={busIcon} className="mr-2 w-7 h-7" />
+            Buses
+          </Button>
+        </div>
 
       {transferType === "buses" && (
         <div className="flex flex-col items-center justify-center bg-white">
