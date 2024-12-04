@@ -213,6 +213,12 @@ export interface IBookmark {
   type: bookmarkType;
 }
 
+export interface INotifyRequest {
+  _id: string;
+  user: string;
+  entity: string;
+}
+
 export interface IWishlist {
   _id: string;
   user: string;
@@ -223,6 +229,8 @@ export interface PopulatedWishlist {
   _id: string;
   user: string;
   product: IProduct;
+}
+
 export interface CartItem {
   productId: string;
   quantity: number;
