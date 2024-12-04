@@ -14,5 +14,5 @@ export async function getUserById(id: string): Promise<IUser> {
 }
 
 export async function getAdmins(): Promise<IUser[]> {
-  return (await userAxiosInstance.get('/users')).data.filter((user: IUser) => user.role === 'admin');
+  return (await userAxiosInstance.get('/users?approved=true')).data.filter((user: IUser) => user.role === 'admin');
 }
