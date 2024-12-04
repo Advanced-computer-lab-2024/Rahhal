@@ -26,6 +26,7 @@ class RabbitMQConnection {
       await this.channel.assertQueue(RABBITMQ.QUEUE.NOTIFICATION, { durable: true });
       await this.channel.assertQueue(RABBITMQ.QUEUE.EVENT_REMINDER, { durable: true });
       await this.channel.assertQueue(RABBITMQ.QUEUE.ADMIN_ALERT, { durable: true });
+      await this.channel.assertQueue(RABBITMQ.QUEUE.EVENT_OPEN, { durable: true });
 
       return this.connection;
     } catch (error) {
