@@ -20,3 +20,12 @@ export const STATUS_CODES = {
 
 
 export const MAXAGE = 86400000;
+
+export const OTP_LENGTH = 6;
+export const TEN = 10;
+
+export const RABBITMQ = {
+  QUEUE: {
+    NOTIFICATION: "notification_queue",
+  },
+};

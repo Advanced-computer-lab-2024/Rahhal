@@ -6,6 +6,7 @@ export interface IPayload{
   id:ObjectId,
   username:string,
   password:string,
+  otp?:string,
   role:string,
   dob?:Date
 }

@@ -3,8 +3,9 @@ import type { IAuthentication } from "@/database/models/Authentication";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { MAXAGE /*, Role*/ } from "@/utils/constants";
+import { MAXAGE , OTP_LENGTH, Role, TEN } from "@/utils/constants";
 import type { IPayload } from "@/type";
+import { publishNotification } from "@/publishers/notification-publisher";
 dotenv.config();
 
 export async function login(username: string, password: string) {
@@ -38,14 +39,14 @@ export async function login(username: string, password: string) {
 
 export async function signup(userData: IAuthentication) {
   const salt = 10;
-  // const pass = userData.password;
+  const pass = userData.password;
   const hashedPassword = await bcrypt.hash(userData.password, salt);
   userData.password = hashedPassword;
-  // const user = await authRepository.createUser(userData);
-  return await authRepository.createUser(userData);
-  // if (user.role === Role.tourist) {
-  //     return login(user.username, pass);
-  // }
+  const user = await authRepository.createUser(userData);
+  // return await authRepository.createUser(userData);
+  if (user.role === Role.tourist) {
+      return login(user.username, pass);
+  }
 }
 
 export async function changePassword(userId: string, oldPassword: string, newPassword: string) {
@@ -72,4 +73,56 @@ export async function approveUser(userId: string, approved: boolean) {
 
 export async function deleteUser(userId: string) {
   return await authRepository.deleteUser(userId);
+}
+
+function generateOTP():string{
+  let otp = '';
+  for(let i = 0 ; i< OTP_LENGTH ; i++){
+    otp += Math.floor(Math.random() * TEN);
+  }
+  return otp;
+}
+
+export async function sendOTP(username: string){
+  const user = await authRepository.getUser({ username });
+  if(user){
+    const otp = generateOTP();
+    await authRepository.updateUser(user.id, { otp });
+    const message = {
+      userId: user.id,
+      message: `Your OTP is ${otp}`,
+    }
+    await publishNotification(message);
+  }
+  else{
+    throw new Error("User Not Found");
+  }
+}
+
+export async function verifyOTP(username: string, otp: string){
+  const user = await authRepository.getUser({ username });
+  if(user){
+    if(user.otp === otp){
+      await authRepository.updateUser(user.id, { otp: "" });
+      return true;
+    }
+    else{
+      throw new Error("Invalid OTP");
+    }
+  }
+  else{
+    throw new Error("User Not Found");
+  }
+}
+
+export async function resetPassword(username: string, newPassword: string){
+  const user = await authRepository.getUser({ username });
+  if(user){
+    const salt = 10;
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    return await authRepository.updateUser(user.id, { password: hashedPassword });
+  }
+  else{
+    throw new Error("User Not Found");
+  }
 }

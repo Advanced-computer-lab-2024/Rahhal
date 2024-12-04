@@ -20,12 +20,12 @@ export async function signup(req: Request, res: Response) {
     try {
         const userData = req.body;
         // const token = await authService.signup(userData);
-        const user = await authService.signup(userData);
-        delete user.password;
+        await authService.signup(userData);
+        // delete user!.password;
         // if (token) {
         //     res.status(STATUS_CODES.STATUS_OK).json(token);
         // }
-        res.status(STATUS_CODES.STATUS_OK).json(user);
+        res.status(STATUS_CODES.STATUS_OK).json();
     } catch (error) {
         if (error instanceof Error) {
             res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
@@ -89,6 +89,45 @@ export async function deleteUser(req: Request, res: Response) {
     } catch (error) {
         if (error instanceof Error) {
             res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
+        }
+    }
+}
+
+export async function forgotPassword(req: Request, res:Response){
+    try{
+        const {username} = req.body;
+        await authService.sendOTP(username);
+        res.status(STATUS_CODES.STATUS_OK).json();
+    }
+    catch(error){
+        if(error instanceof Error){
+            res.status(STATUS_CODES.SERVER_ERROR).json({error: error.message});
+        }
+    }
+}
+
+export async function verifyOTP(req: Request, res: Response){
+    try{
+        const {username, otp} = req.body;
+        await authService.verifyOTP(username, otp);
+        res.status(STATUS_CODES.STATUS_OK).json();
+    }
+    catch(error){
+        if(error instanceof Error){
+            res.status(STATUS_CODES.SERVER_ERROR).json({error: error.message});
+        }
+    }
+}
+
+export async function resetPassword(req: Request, res: Response){
+    try{
+        const {username, password} = req.body;
+        await authService.resetPassword(username, password);
+        res.status(STATUS_CODES.STATUS_OK).json();
+    }
+    catch(error){
+        if(error instanceof Error){
+            res.status(STATUS_CODES.SERVER_ERROR).json({error: error.message});
         }
     }
 }

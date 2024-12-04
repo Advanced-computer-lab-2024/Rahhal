@@ -75,3 +75,37 @@ export async function authStateMiddleware(req: Request, res: Response, next: Nex
     }
 
 }
+
+export async function forgotPassword(req: Request, res: Response) {
+    try{
+        const {username} = req.body;
+        await authService.forgotPassword({username});
+        res.status(STATUS_CODES.STATUS_OK).json();
+
+    }
+    catch (error) {
+        res.status(STATUS_CODES.BAD_GATEWAY).json(error);
+    }
+}
+
+export async function resetPassword(req: Request, res: Response) {
+    try{
+        const {username, password} = req.body;
+        await authService.resetPassword({username, password});
+        res.status(STATUS_CODES.STATUS_OK).json();
+    }
+    catch (error) {
+        res.status(STATUS_CODES.BAD_GATEWAY).json(error);
+    }
+}
+
+export async function verifyOTP(req: Request, res: Response) {
+    try{
+        const {username, otp} = req.body;
+        await authService.verifyOTP({username, otp});
+        res.status(STATUS_CODES.STATUS_OK).json();
+    }
+    catch (error) {
+        res.status(STATUS_CODES.BAD_GATEWAY).json(error);
+    }
+}
