@@ -2,7 +2,7 @@ import app from "./app";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cron from "node-cron";
-import hourlyUpdate from "./utils/cronjobs";
+import { hourlyUpdate, eventReminder } from "./utils/cronjobs";
 // Load environment variables
 dotenv.config();
 
@@ -24,7 +24,9 @@ const connected = await connectToDB();
 
 if (connected) {
   hourlyUpdate();
+  eventReminder();
   cron.schedule("0 * * * *", hourlyUpdate);
+  cron.schedule("0 0 * * *", eventReminder);
 }
 
 app.listen(PORT, () => {

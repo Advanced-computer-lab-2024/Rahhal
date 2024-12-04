@@ -1,7 +1,8 @@
 import { getBookings, updateBooking } from "@/database/repositories/booking-repository";
+import { publishEventReminder } from "@/publishers/event-reminder-publisher";
 import { bookingStatus } from "@/utils/types";
 
-export default async function hourlyUpdate() {
+export async function hourlyUpdate() {
     let currentDate = new Date();
     currentDate.setHours(currentDate.getHours() + 2);
     await getBookings({ status: bookingStatus.Upcoming }).then((bookings) => {
@@ -12,3 +13,21 @@ export default async function hourlyUpdate() {
         });
     });
 }
+
+export async function eventReminder() {
+  const currentDate = new Date();
+  currentDate.setHours(currentDate.getHours() + 2);
+  await getBookings({ status: bookingStatus.Upcoming, selectedDate: currentDate }).then((bookings) => {
+      bookings.forEach((booking) => {
+        if(booking.type == 'activity' || booking.type == 'itinerary') {
+          const data = {
+            entityId: booking.entity,
+            userId: booking.user,
+            type: booking.type,
+          };
+          publishEventReminder(data);
+        }
+      });
+  });
+}
+    
