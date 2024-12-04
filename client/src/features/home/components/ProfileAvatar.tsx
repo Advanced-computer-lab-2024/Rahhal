@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useState } from "react";
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
-import useUserStore,{ UserState } from "@/stores/user-state-store";
+import useUserStore, { UserState } from "@/stores/user-state-store";
 
 function useIdFromParamsOrQuery() {
   const { id: paramId } = useParams<{ id?: string }>();
@@ -30,7 +30,7 @@ export const ProfileAvatar = () => {
 
   // const id = useIdFromParamsOrQuery();
   const { id } = useUserStore();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const {
     data: user,
@@ -93,11 +93,13 @@ export const ProfileAvatar = () => {
           <Link to={`/help-center/${id}`} onClick={toggleDropdown}>
             <div className={AvatarStyles["menuItem"]}>Help Center</div>
           </Link>
-          <Link to='' onClick={() => {
-            toggleDropdown();
-            handleLogoutUser();
-            navigate('/entertainment');
-          }}>
+          <Link
+            to="/"
+            onClick={() => {
+              toggleDropdown();
+              handleLogoutUser();
+            }}
+          >
             <div className={AvatarStyles["logout"]}>Log Out</div>
           </Link>
         </div>
