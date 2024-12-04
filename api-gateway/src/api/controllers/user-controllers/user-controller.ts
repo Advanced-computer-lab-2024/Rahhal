@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { STATUS_CODES } from "@/utils/constants";
 import * as userService from "@/services/user-services/user-service";
+import * as authService from "@/services/auth-service";
 
 export async function getApprovedUsers(req: Request, res: Response) {
   try {
@@ -71,17 +72,22 @@ export async function updateUser(req: Request, res: Response) {
   const amountRetrieved = req.query.amountRetrieved as string | undefined;
   const userData = req.body;
   try {
+    if (userData.hasOwnProperty('approved') ) {
+      const payload = {
+      id: userId,
+      approved: userData.approved
+      };
+      await authService.approveUser(payload);
+    }
+    // if(userData.password){
+    //   const payload = {
+    //     id: userId,
+    //     newPassword: userData.password
+    //   }
+    //   await authService.changePassword(payload);
+    //   delete userData.password;
+    // }
     const user = await userService.updateUser(userId, userData, amountPaid, amountRetrieved);
-    res.status(user.status).json(user.data);
-  } catch (error) {
-    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
-  }
-}
-
-export async function deleteUser(req: Request, res: Response) {
-  const userId = req.params.id;
-  try {
-    const user = await userService.deleteUser(userId);
     res.status(user.status).json(user.data);
   } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);

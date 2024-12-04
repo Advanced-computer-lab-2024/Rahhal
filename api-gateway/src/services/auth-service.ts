@@ -26,3 +26,7 @@ export async function approveUser(body: string) {
 export async function verify(token: string) {
     return await authAxiosInstance.get(`/auth/verify/${token}`);
 }
+
+export async function deleteAccount(userId: string) {
+    return await authAxiosInstance.delete(`/auth/${userId}`);
+} 

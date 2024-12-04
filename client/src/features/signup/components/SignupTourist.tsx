@@ -94,7 +94,8 @@ export default function SignupTourist({ isSubmitting, setIsSubmitting }: SignupP
         duration: 3000,
       });
       setTimeout(() => {
-        navigate("/entertainment/" + response._id);
+        navigate("/");
+        window.location.reload();
       }, 3000);
     } catch (error: any) {
       if (axios.isAxiosError(error) && error.response) {
