@@ -34,7 +34,7 @@ export default function TouristHomePageNavigation() {
 
   
 
-  console.log("id",id)
+  // console.log("id",id)
   // function useIdFromParamsOrQuery() {
   //   const queryParams = new URLSearchParams(location.search);
   //   const queryId = queryParams.get("userId");

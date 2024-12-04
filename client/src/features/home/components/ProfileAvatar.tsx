@@ -32,7 +32,7 @@ export const ProfileAvatar = () => {
 
   // const id = useIdFromParamsOrQuery();
   const { id } = useUserStore();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const {
     data: user,
@@ -101,11 +101,13 @@ export const ProfileAvatar = () => {
           <Link to={`/complaints/${id}`} onClick={toggleDropdown}>
             <div className={AvatarStyles["menuItem"]}>Help Center</div>
           </Link>
-          <Link to='' onClick={() => {
-            toggleDropdown();
-            handleLogoutUser();
-            navigate('/entertainment');
-          }}>
+          <Link
+            to="/"
+            onClick={() => {
+              toggleDropdown();
+              handleLogoutUser();
+            }}
+          >
             <div className={AvatarStyles["logout"]}>Log Out</div>
           </Link>
         </div>
