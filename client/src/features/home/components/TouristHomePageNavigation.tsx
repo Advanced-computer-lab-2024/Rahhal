@@ -96,19 +96,27 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
 function NavigationButton(ButtonProps: ButtonProps) {
   return (
     <Link to={ButtonProps.path}>
-      <div className="rounded-full hover:bg-gray-300/60 flex justify-center">
-        <Button
-          className={cn(
-            "rounded-none rounded-t-md relative w-20 text-foreground bg-transparent hover:bg-transparent",
-            ButtonProps.navigation === ButtonProps.index
-              ? "font-semibold"
-              : "text-muted-foreground",
-          )}
-          onClick={() => ButtonProps.setNavigation(ButtonProps.index)}
-        >
-          {ButtonProps.buttonName}
-        </Button>
-      </div>
-    </Link>
+  <div
+    className={cn(
+      "rounded-full flex justify-center transition-all duration-300",
+      ButtonProps.navigation === ButtonProps.index ? "bg-gray-300" : "hover:bg-gray-300/60"
+    )}
+    style={{
+      padding: ButtonProps.navigation === ButtonProps.index ? "0.5rem" : "0.25rem",
+    }}
+  >
+    <Button
+      className={cn(
+        "rounded-none rounded-t-md relative w-20 text-foreground bg-transparent hover:bg-transparent",
+        ButtonProps.navigation === ButtonProps.index
+          ? "font-semibold"
+          : "text-muted-foreground"
+      )}
+      onClick={() => ButtonProps.setNavigation(ButtonProps.index)}
+    >
+      {ButtonProps.buttonName}
+    </Button>
+  </div>
+</Link>
   );
 }
