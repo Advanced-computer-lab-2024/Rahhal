@@ -40,5 +40,7 @@ export async function resetPassword(body: Partial<IPayload>) {
 }
 
 export async function verifyOTP(body: Partial<IPayload>) {
-    return await authAxiosInstance.patch("/auth/verifyOTP", body);
+    const response =  await authAxiosInstance.patch("/auth/verifyOTP", body);   
+    console.log(response);
+    return response;
 }

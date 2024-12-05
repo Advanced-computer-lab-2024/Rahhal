@@ -21,6 +21,7 @@ import { createNotifyRequest } from "@/api-calls/notify-requests-api-calls";
 import { useTour } from "@/components/AppTour";
 import useUserStore from "@/stores/user-state-store";
 
+
 const ItineraryDetailsPage: React.FC = () => {
   const loc = useLocation();
   const [searchParams] = useSearchParams();
@@ -42,6 +43,8 @@ const ItineraryDetailsPage: React.FC = () => {
     setIsLoading(false);
   },[]);
 
+  const itinerary = loc.state?.item;
+  // const itinerary = await fetchItineraryById(us)
   const {
     _id,
     name,

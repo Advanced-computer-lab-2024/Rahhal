@@ -74,12 +74,7 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
   };
 
   const handleForgotPassword = () => {
-    // alert('Please check your email for password reset instructions.');
-    toast({
-      title: "Password Reset",
-      description: "Please check your email for password reset instructions.",
-      duration: 3000,
-    });
+    navigate("/forgot-password");
   };
 
   return (
