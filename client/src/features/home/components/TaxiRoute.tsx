@@ -58,7 +58,7 @@ function TaxiRoute({
       setIsGuestAction(true);
       return;
     }
-    if (!isModalOpen) {
+    if (!isModalOpen && userID ) {
       setIsModalOpen(true);
       return;
     }
@@ -112,6 +112,7 @@ function TaxiRoute({
           price={Number(convertedPrice)}
           name={serviceProvider}
           type={"Airport Taxi"}
+          userId={userID}
         />
       )}
 
