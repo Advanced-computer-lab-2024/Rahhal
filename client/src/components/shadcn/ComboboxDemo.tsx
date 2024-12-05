@@ -25,9 +25,8 @@ interface ComboboxDemoProps {
 }
 
 export function ComboboxDemo({ data = [], onSelect }: ComboboxDemoProps) {
-  // Default data to an empty array
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(data[0]?.value);
 
   const handleSelect = (selectedValue: string) => {
     setValue(selectedValue);

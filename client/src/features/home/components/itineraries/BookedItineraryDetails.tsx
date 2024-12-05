@@ -2,7 +2,7 @@ import { OverviewCard } from "../overview-card/OverViewCard";
 import { TPopulatedBooking } from "../../types/home-page-types";
 import { addLoyalityPoints, getUserById, refundMoney } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
-import { createBooking, fetchBookingById, updateBookingRequest } from "@/api-calls/booking-api-calls";
+import { fetchBookingById, updateBookingRequest } from "@/api-calls/booking-api-calls";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import { useEffect, useRef, useState } from "react";
@@ -10,7 +10,6 @@ import { bookingStatus, bookingType } from "@/utils/enums";
 import { toast } from "@/hooks/use-toast";
 import { formatDate, formatTime } from "../../utils/filter-lists/overview-card";
 import ItinerariesPageTemplate from "../ItinerariesPageTemplate";
-import { format } from "date-fns";
 
 interface BookedItineraryDetailsProps {
   itinerary: TItinerary;
@@ -45,6 +44,7 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [booking, setBooking] = useState<TPopulatedBooking | null>(initialBooking);
+  const [text, setText] = useState<string>();
   const tourGuideRatingFormRef = useRef<HTMLButtonElement>(null);
 
   const { currency } = useCurrencyStore();
@@ -59,17 +59,6 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
 
   useEffect(() => {
     getUserById(userId).then((user) => {
-      // check if user is not approved or is under 18 years old
-      if (
-        (booking &&
-          booking?.status === bookingStatus.Cancelled &&
-          booking?.selectedDate &&
-          selectedDate &&
-          new Date(selectedDate) < new Date()) ||
-        (booking && booking?.rating !== 0)
-      ) {
-        setIsButtonDisabled(true);
-      }
       // check if the itinerary is cancelled
       if (booking && booking?.status === bookingStatus.Cancelled) {
         setIsButtonDisabled(true);
@@ -96,6 +85,19 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
     checkBookingStatus();
   }, []);
 
+  useEffect(() => {
+    if (booking && booking?._id && booking.selectedDate) {
+      const currentDate = new Date();
+      const itineraryDate = new Date(booking.selectedDate);
+      const difference = Math.abs(itineraryDate.getTime() - currentDate.getTime());
+      const hours = difference / (1000 * 60 * 60);
+      if (hours < 48) {
+        setIsButtonDisabled(true);
+        setText("You can't cancel this itinerary anymore as it is less than 48 hours away");
+      }
+    }
+  }, [booking]);
+
   const handleButtonClick = () => {
     if (booking && booking?.status === bookingStatus.Completed) {
       // redirect to review page
@@ -103,11 +105,8 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
     } else {
       // cancel itinerary if there is still 48 hours left
       if (booking && booking?._id && booking.selectedDate) {
-        const currentDate = new Date();
-        const itineraryDate = new Date(booking.selectedDate);
-        const difference = Math.abs(itineraryDate.getTime() - currentDate.getTime());
-        const hours = difference / (1000 * 60 * 60);
-        if (hours > 48) {
+        // If the text field is not empty, this means that the user has passed the 48 hours limit
+        if (!text) {
           updateBookingRequest(booking._id, { status: bookingStatus.Cancelled });
           refundMoney(userId, booking.selectedPrice);
           setBooking({ ...booking, status: bookingStatus.Cancelled });
@@ -115,12 +114,6 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
           toast({
             title: "Success",
             description: `You have successfully cancelled the itinerary, your wallet has been refunded by ${currency} ${booking.selectedPrice}`,
-            duration: 5000,
-          });
-        } else {
-          toast({
-            title: "Error",
-            description: "You can't cancel this itinerary anymore as it is less than 48 hours away",
             duration: 5000,
           });
         }
@@ -166,10 +159,11 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
           button2Color="gold"
           date={booking ? formatDate(new Date(booking.selectedDate)) : undefined}
           time={booking ? formatTime(new Date(booking.selectedDate)) : undefined}
-          disabled={isButtonDisabled && !selectedDate}
+          disabled={isButtonDisabled}
           disabled2={booking ? booking.itineraryTourGuideRating !== 0 : false}
           onButtonClick={handleButtonClick}
           onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
+          footerText={text}
         />
       </ItinerariesPageTemplate>
     </div>

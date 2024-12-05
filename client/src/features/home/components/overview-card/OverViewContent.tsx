@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ComboboxDemo } from "@/components/shadcn/ComboboxDemo";
 import styles from "../../styles/Overview-card-styles/OverViewContent.module.css";
 import { OverViewButton } from "./OverViewButton";
+import { Info } from "lucide-react";
 
 const frameworks = [
   { value: "next.js", label: "Next.js" },
@@ -26,6 +27,7 @@ interface ContentProps {
   dropdownOptions?: { value: string; label: string }[];
   onDateChange?: (selectedDate: string) => void; // Handler for dropdown selection
   onTicketSelect?: (index: number) => void; // Handler for ticket selection
+  footerText?: string;
 }
 
 export const OverViewContent: React.FC<ContentProps> = ({
@@ -44,9 +46,12 @@ export const OverViewContent: React.FC<ContentProps> = ({
   dropdownOptions,
   onDateChange,
   onTicketSelect,
+  footerText,
 }) => {
   const [selectedTicket, setSelectedTicket] = useState<number>(0);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string>(
+    dropdownOptions ? dropdownOptions[0].value : "",
+  );
 
   const handleTicketClick = (index: number) => {
     onTicketSelect && onTicketSelect(index);
@@ -112,6 +117,14 @@ export const OverViewContent: React.FC<ContentProps> = ({
           color={button2Color}
           disabled={isButtonDisabled || disabled2}
         />
+      )}
+      {footerText && (
+        <div className=" flex items-center gap-2 rounded p-2 text-sm">
+          <div className="flex items-center justify-center w-5 h-5 text-red rounded-full">
+            <Info className="h-4 w-4" />
+          </div>
+          <span>{footerText}</span>
+        </div>
       )}
     </div>
   );

@@ -75,7 +75,6 @@ export default function ItinerariesPageTemplate({
     setRating(calculateAverageRating(ratings));
   }, [ratings]);
 
-  console.log("activities", activities);
   const timelineData: TimelineItem[] = activities.map((activity, index) => {
     return {
       location: activity,
