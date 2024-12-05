@@ -1,18 +1,12 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
+import { Loader2, Check } from "lucide-react";
 
-import { Check } from "lucide-react";
-
-
-import currencyExchange from "@/utils/currency-exchange";
-
-// Replace with your Stripe publishable key
+import { applyPromocode } from "@/api-calls/payment-api-calls";
+import { Promotion } from "@/features/home/types/home-page-types";
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -24,6 +18,7 @@ interface BookingModalProps {
   discountPerc?: number;
   taxiPrice?: number;
   parentBookingFunc: () => void;
+  userId: string;
 }
 interface BookingFormProps {
   price: number;
@@ -31,6 +26,7 @@ interface BookingFormProps {
   type: string;
   currency: string;
   discountPerc?: number;
+  userId: string;
 
   onClose: () => void;
   parentBookingFunc: () => void;
@@ -44,13 +40,15 @@ function BookingForm({
   discountPerc,
   onClose,
   parentBookingFunc,
+  userId,
 }: BookingFormProps) {
   const [promoCode, setPromoCode] = useState("");
   const [promoDiscountPerc, setPromoDiscountPerc] = useState(0); // Promo code discount percentage
   const [isRedeeming, setIsRedeeming] = useState(false);
   const [promoStatus, setPromoStatus] = useState<"idle" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  console.log("user is ", userId);
   // Apply both discounts
   const totalPrice = price * (1 - (discountPerc ?? 0) / 100) * (1 - promoDiscountPerc / 100);
 
@@ -66,21 +64,26 @@ function BookingForm({
 
   const handleRedeemPromo = async () => {
     setIsRedeeming(true);
-    // Simulate API call to validate promo code
-    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    // Simulate promo code validation (50% chance of success)
-    const isSuccess = Math.random() < 0.5;
+    const promoCodeResponse = (await applyPromocode(promoCode, userId)) as Promotion;
 
-    if (isSuccess) {
-      setPromoDiscountPerc(15);
-      setPromoStatus("success");
-    } else {
-      setPromoStatus("error");
-      setTimeout(() => setPromoStatus("idle"), 2000);
+    if (promoCodeResponse.message) {
+      setTimeout(() => {
+        setPromoStatus("error");
+        setErrorMessage(promoCodeResponse.message ?? "");
+        setTimeout(() => setPromoStatus("idle"), 1500);
+        setIsRedeeming(false);
+        return;
+      },1500);
     }
 
-    setIsRedeeming(false);
+    if (promoCodeResponse.type == "percentage") {
+      setTimeout(() => {
+        setPromoStatus("success");
+        setPromoDiscountPerc(promoCodeResponse.value);
+        setIsRedeeming(false);
+      }, 2000);
+    }
   };
 
   const handleRemovePromo = () => {
@@ -147,9 +150,7 @@ function BookingForm({
             )}
           </div>
         </div>
-        {promoStatus === "error" && (
-          <p className="text-red-500 text-sm mt-1">Invalid promo code. Please try again.</p>
-        )}
+        {promoStatus === "error" && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
       </div>
       <div>
         <Label htmlFor="card-element">Credit or debit card</Label>
@@ -185,6 +186,7 @@ export default function BookingModal({
   onClose,
   discountPerc,
   parentBookingFunc,
+  userId,
 }: BookingModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -201,6 +203,7 @@ export default function BookingModal({
           discountPerc={discountPerc}
           onClose={onClose}
           parentBookingFunc={parentBookingFunc}
+          userId={userId}
         />
       </DialogContent>
     </Dialog>
