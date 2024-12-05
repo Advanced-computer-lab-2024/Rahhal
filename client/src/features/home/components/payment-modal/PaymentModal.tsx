@@ -7,12 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 
-import { Check, X } from "lucide-react";
+import { Check } from "lucide-react";
 
-import { createBooking } from "@/api-calls/booking-api-calls";
-import { addLoyalityPoints, getUserById } from "@/api-calls/users-api-calls";
-import { bookingType } from "@/utils/enums";
-import { TPopulatedBooking } from "../../types/home-page-types";
+
 import currencyExchange from "@/utils/currency-exchange";
 
 // Replace with your Stripe publishable key
@@ -25,7 +22,8 @@ interface BookingModalProps {
   type: string;
   currency: string;
   discountPerc?: number;
-  parentBookingFunc:()=>void;
+  taxiPrice?: number;
+  parentBookingFunc: () => void;
 }
 interface BookingFormProps {
   price: number;
@@ -33,30 +31,32 @@ interface BookingFormProps {
   type: string;
   currency: string;
   discountPerc?: number;
+
   onClose: () => void;
-  parentBookingFunc:()=>void;
+  parentBookingFunc: () => void;
 }
 
-function BookingForm({ price, name, type, currency, discountPerc, onClose,parentBookingFunc }: BookingFormProps) {
+function BookingForm({
+  price,
+  name,
+  type,
+  currency,
+  discountPerc,
+  onClose,
+  parentBookingFunc,
+}: BookingFormProps) {
   const [promoCode, setPromoCode] = useState("");
   const [promoDiscountPerc, setPromoDiscountPerc] = useState(0); // Promo code discount percentage
   const [isRedeeming, setIsRedeeming] = useState(false);
   const [promoStatus, setPromoStatus] = useState<"idle" | "success" | "error">("idle");
   const [isLoading, setIsLoading] = useState(false);
 
-
-  const convertedPrice = currencyExchange("EGP", price);
-  const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : 0;
-
-  const basePrice = Number(displayPrice);
-
   // Apply both discounts
-  const totalPrice = basePrice * (1 - (discountPerc ?? 0) / 100) * (1 - promoDiscountPerc / 100);
+  const totalPrice = price * (1 - (discountPerc ?? 0) / 100) * (1 - promoDiscountPerc / 100);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
-    
 
     await new Promise((resolve) => setTimeout(resolve, 3000));
     parentBookingFunc();
@@ -97,21 +97,22 @@ function BookingForm({ price, name, type, currency, discountPerc, onClose,parent
           {type}: {name}
         </p>
         <p>
-          Price: {currency} {basePrice.toFixed(2)}
+          Price: {currency} {price.toFixed(0)}
         </p>
         {(discountPerc ?? 0) > 0 && (
           <p className="text-blue-600">
-            Discount ({discountPerc ?? 0}%): -{currency} {(basePrice * ((discountPerc ?? 0) / 100)).toFixed(2)}
+            Discount ({discountPerc ?? 0}%): -{currency}{" "}
+            {(price * ((discountPerc ?? 0) / 100)).toFixed(0)}
           </p>
         )}
         {promoDiscountPerc > 0 && (
           <p className="text-green-600">
             Promo Code Discount ({promoDiscountPerc}%): -{currency}{" "}
-            {(basePrice * (1 - (discountPerc ?? 0) / 100) * (promoDiscountPerc / 100)).toFixed(2)}
+            {(price * (1 - (discountPerc ?? 0) / 100) * (promoDiscountPerc / 100)).toFixed(0)}
           </p>
         )}
         <p className="font-bold">
-          Total: {currency} {totalPrice.toFixed(2)}
+          Total: {currency} {totalPrice.toFixed(0)}
         </p>
       </div>
       <div>
@@ -155,8 +156,10 @@ function BookingForm({ price, name, type, currency, discountPerc, onClose,parent
         <div className="mt-1 border rounded-md p-3"></div>
       </div>
       <div className="flex justify-center">
-        <Button type="submit" className="w-full max-w-md py-6 text-lg bg-[var(--primary-color)]">
-
+        <Button
+          type="submit"
+          className="w-full max-w-md py-6 text-lg bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)]"
+        >
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -164,10 +167,9 @@ function BookingForm({ price, name, type, currency, discountPerc, onClose,parent
             </>
           ) : (
             <>
-             Pay {currency} {totalPrice.toFixed(2)} 
-             </>
+              Pay {currency} {totalPrice.toFixed(2)}
+            </>
           )}
-         
         </Button>
       </div>
     </form>
