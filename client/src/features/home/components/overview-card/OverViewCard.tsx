@@ -23,6 +23,7 @@ interface OverviewCardProps {
   dropdownOptions?: { value: string; label: string }[]; // Options for the dropdown
   onTicketSelect?: (index: number) => void; // Handler for ticket selection
   selectedTicketIndex?: number; // Index of the selected ticket
+  footerText?: string; // Optional for any extra text to be displayed
 }
 
 export const OverviewCard: React.FC<OverviewCardProps> = ({
@@ -44,6 +45,7 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({
   disabled,
   disabled2,
   onTicketSelect,
+  footerText,
 }) => {
   return (
     <div className={styles.card}>
@@ -67,6 +69,7 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({
         disabled={disabled}
         disabled2={disabled2}
         onTicketSelect={onTicketSelect}
+        footerText={footerText}
       />
     </div>
   );

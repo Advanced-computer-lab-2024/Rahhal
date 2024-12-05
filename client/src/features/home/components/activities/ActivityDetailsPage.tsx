@@ -11,6 +11,7 @@ import { useLocation, useParams } from "react-router-dom";
 import TouristHomePageNavigation from "../TouristHomePageNavigation";
 import { bookingType } from "@/utils/enums";
 import SignUpModal from "../SignupModal";
+import { calculateAge } from "@/utils/age-calculator";
 
 const ActivityDetailsPage: React.FC = () => {
   const loc = useLocation();
@@ -35,6 +36,7 @@ const ActivityDetailsPage: React.FC = () => {
     price[Object.keys(price)[0]],
   );
   const [isGuestAction, setIsGuestAction] = React.useState(false);
+  const [text, setText] = React.useState<string>();
   const { currency } = useCurrencyStore();
   const { rates } = useRatesStore();
   const { id } = useParams();
@@ -43,12 +45,11 @@ const ActivityDetailsPage: React.FC = () => {
     if (id) {
       if (id !== "undefined")
         getUserById(id).then((user) => {
-          // check if user is not approved or is under 18 years old
-          if (
-            !user.approved ||
-            (user.dob && user.dob > new Date(new Date().setFullYear(new Date().getFullYear() - 18)))
-          )
+          // check if user is under 18 years old
+          if (calculateAge(new Date(user.dob!)) < 18) {
             setIsButtonDisabled(true);
+            setText("You must be 18 years or older to book this activity");
+          }
         });
       setIsButtonDisabled(false);
     }
@@ -136,6 +137,7 @@ const ActivityDetailsPage: React.FC = () => {
           discount={specialDiscount}
           onTicketSelect={onTicketSelect}
           tickets={tickets}
+          footerText={text}
         />
       </DetailsPageTemplateProps>
     </div>

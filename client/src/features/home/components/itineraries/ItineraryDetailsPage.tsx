@@ -11,6 +11,7 @@ import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import { bookingType } from "@/utils/enums";
 import { format } from "date-fns";
 import SignUpModal from "../SignupModal";
+import { calculateAge } from "@/utils/age-calculator";
 
 const ItineraryDetailsPage: React.FC = () => {
   const loc = useLocation();
@@ -33,23 +34,29 @@ const ItineraryDetailsPage: React.FC = () => {
     ownerName,
   } = itinerary;
 
+  const cardDropdownOptions = availableDatesTime
+    .filter((date: { Date: string | Date }) => new Date(date.Date) > new Date())
+    .map((date: { Date: string | Date }) => ({
+      value: date.Date.toString(),
+      label: format(new Date(date.Date), "dd/MM/yyyy hh:mm a"),
+    }));
   const [preferenceTagNames, setPreferenceTagNames] = useState<string[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string>(cardDropdownOptions[0].value);
   const [isGuestAction, setIsGuestAction] = useState(false);
-
+  const [text, setText] = useState<string>();
+  const cardButtonText = "Book Itinerary";
   const { id } = useParams();
   const { currency } = useCurrencyStore();
   React.useEffect(() => {
     if (id) {
       if (id !== "undefined")
         getUserById(id).then((user) => {
-          // check if user is not approved or is under 18 years old
-          if (
-            !user.approved ||
-            (user.dob && user.dob > new Date(new Date().setFullYear(new Date().getFullYear() - 18)))
-          )
+          // check if user is under 18 years old
+          if (calculateAge(new Date(user.dob!)) < 18) {
             setIsButtonDisabled(true);
+            setText("You must be 18 years or older to book this itinerary");
+          }
         });
       setIsButtonDisabled(false);
     }
@@ -80,14 +87,6 @@ const ItineraryDetailsPage: React.FC = () => {
     }
   };
 
-  const cardButtonText = "Book Itinerary";
-
-  const cardDropdownOptions = availableDatesTime
-    .filter((date: { Date: string | Date }) => new Date(date.Date) > new Date())
-    .map((date: { Date: string | Date }) => ({
-      value: date.Date.toString(),
-      label: format(new Date(date.Date), "dd/MM/yyyy hh:mm a"),
-    }));
   return (
     <div>
       {isGuestAction && (
@@ -121,9 +120,10 @@ const ItineraryDetailsPage: React.FC = () => {
           buttonColor={"gold"}
           dropdownOptions={cardDropdownOptions}
           dateOptions={true}
-          disabled={isButtonDisabled && !selectedDate}
+          disabled={isButtonDisabled}
           onButtonClick={handleButtonClick}
           onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
+          footerText={text}
         />
       </ItinerariesPageTemplate>
     </div>
