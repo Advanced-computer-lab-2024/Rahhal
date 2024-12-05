@@ -1,7 +1,7 @@
 import axios from "axios";
 import { SERVICES_URLS } from "@/lib/constants";
 import type { TUser } from "@/types/user";
-import { UserState } from "@/stores/user-state-store";
+// import { UserState } from "@/stores/user-state-store";
 
 // fetch data from the server
 export async function fetchUsers() {
@@ -98,29 +98,47 @@ export async function getNumberOfUsers(startDate?: Date, endDate?: Date) {
   return response.data;
 }
 export async function loginUser(credentials: any) {
-  const response = await axios.post(
-    SERVICES_URLS.AUTHENTICATION + "/login", 
-    credentials,
-    {
-      withCredentials: true,
-    }
-  );
+  const response = await axios.post(SERVICES_URLS.AUTHENTICATION + "/login", credentials, {
+    withCredentials: true,
+  });
   return response;
-};
+}
 
 export async function logoutUser() {
   const response = await axios.post(SERVICES_URLS.GENERAL + "/logout", {
     withCredentials: true,
   });
   return response;
-};
+}
 
-export async function changePassword(userId:string , oldPassword:string, newPassword:string) {
-
+export async function changePassword(userId: string, oldPassword: string, newPassword: string) {
   const response = await axios.patch(`${SERVICES_URLS.AUTHENTICATION}/changePassword`, {
     id: userId,
     oldPassword,
-    newPassword
+    newPassword,
+  });
+  return response;
+}
+
+export async function forgotPassword(username:string){
+  const response = await axios.post(`${SERVICES_URLS.AUTHENTICATION}/forgotPassword`, {
+    username
+  });
+  return response;
+}
+
+export async function verifyOTP(username:string, otp:string){
+  const response = await axios.patch(`${SERVICES_URLS.AUTHENTICATION}/verifyOTP`, {
+    username,
+    otp
+  });
+  return response;
+}
+
+export async function resetPassword(username:string, password:string){
+  const response = await axios.patch(`${SERVICES_URLS.AUTHENTICATION}/resetPassword`, {
+    username,
+    password
   });
   return response;
 }

@@ -126,18 +126,15 @@ function GeneralGridView() {
     const type =
       "languages" in item ? "itinerary" : "isBookingOpen" in item ? "activity" : "historicalPlace";
     if (type === "historicalPlace") {
-      navigate(`/hplace/details/${item._id}/${id ? id : ""}`, { state: { item } });
+      navigate(`/hplace/details/${item._id}`, { state: { item } });
       return;
     }
-    if (type === "activity") {
-      let URL = "/activities" + (id ? `/${id}` : "") + `?eventId=${item._id}`;
-      navigate(URL, {
+    if (type === "activity")
+      navigate(`/activities`, {
         state: { item },
       });
-    }
-    if (type === "itinerary") {
-      let URL = "/itineraries" + (id ? `/${id}` : "") + `?eventId=${item._id}`;
-      navigate(URL, {
+    if (type === "itinerary")
+      navigate(`/itineraries`, {
         state: { item },
       });
     }

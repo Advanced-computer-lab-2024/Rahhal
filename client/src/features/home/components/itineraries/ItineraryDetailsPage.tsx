@@ -20,6 +20,7 @@ import { toast } from "@/hooks/use-toast";
 import { createNotifyRequest } from "@/api-calls/notify-requests-api-calls";
 import useUserStore from "@/stores/user-state-store";
 
+
 const ItineraryDetailsPage: React.FC = () => {
   const loc = useLocation();
   const [searchParams] = useSearchParams();
@@ -36,6 +37,8 @@ const ItineraryDetailsPage: React.FC = () => {
     }
   }, [loc.state?.item, eventId]);
 
+  const itinerary = loc.state?.item;
+  // const itinerary = await fetchItineraryById(us)
   const {
     _id,
     name,
