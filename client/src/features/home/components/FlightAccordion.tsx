@@ -52,7 +52,7 @@ export default function FlightAccordion({
       setIsGuestAction(true);
       return;
     }
-    if (!isModalOpen) {
+    if (!isModalOpen && userID) {
       setIsModalOpen(true);
       return;
     }
@@ -95,6 +95,7 @@ export default function FlightAccordion({
           price={Number(displayPrice)}
           name={offer.airline}
           type={"Flight"}
+          userId={userID}
         />
       )}
 
