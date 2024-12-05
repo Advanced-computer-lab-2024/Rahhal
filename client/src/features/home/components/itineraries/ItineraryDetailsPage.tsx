@@ -80,7 +80,7 @@ const ItineraryDetailsPage: React.FC = () => {
   }, [preferenceTags]);
 
   const handleButtonClick = () => {
-    if (!isModalOpen) {
+    if (!isModalOpen && id!=="undefined" && id) {
       setIsModalOpen(true);
       return;
     }
@@ -121,6 +121,7 @@ const ItineraryDetailsPage: React.FC = () => {
           price={Number(convertedDisplayPrice)}
           name={name}
           type={"Itinerary"}
+          userId={id?? ""}
         />
       )}
 
