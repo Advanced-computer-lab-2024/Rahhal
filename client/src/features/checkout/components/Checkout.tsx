@@ -93,7 +93,8 @@ export default function Checkout() {
               saveInfo={saveInfo}
               selectedPaymentMethod={selectedPaymentMethod}
               setErrors={setErrors}
-              setCompleted={setCompleted} />}
+              setCompleted={setCompleted}
+              id={id} />}
           </div>
         </div>
       </div>
