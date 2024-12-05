@@ -13,6 +13,7 @@ import { format } from "date-fns";
 import SignUpModal from "../SignupModal";
 import { calculateAge } from "@/utils/age-calculator";
 import BookingModal from "@/features/home/components/payment-modal/PaymentModal";
+import currencyExchange from "@/utils/currency-exchange";
 
 const ItineraryDetailsPage: React.FC = () => {
   const loc = useLocation();
@@ -53,6 +54,9 @@ const ItineraryDetailsPage: React.FC = () => {
 
   const { id } = useParams();
   const { currency } = useCurrencyStore();
+
+  const convertedPrice = currencyExchange("EGP", price);
+  const convertedDisplayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
 
   React.useEffect(() => {
     if (id) {
@@ -114,7 +118,7 @@ const ItineraryDetailsPage: React.FC = () => {
           currency={currency}
           isOpen={isModalOpen}
           onClose={closeModal}
-          price={price}
+          price={Number(convertedDisplayPrice)}
           name={name}
           type={"Itinerary"}
         />

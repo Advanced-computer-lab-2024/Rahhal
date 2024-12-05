@@ -133,7 +133,7 @@ const ActivityDetailsPage: React.FC = () => {
           currency={currency}
           isOpen={isModalOpen}
           onClose={closeModal}
-          price={selectedPrice ?? 0}
+          price={convertedSelectedPrice ?? 0}
           name={name}
           type={"Activity"}
         />
