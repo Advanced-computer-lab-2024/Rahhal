@@ -59,6 +59,7 @@ import AdvertiserHomePage from "@/features/advertiser/components/AdvertiserHomeP
 
 import useUserStore from "@/stores/user-state-store";
 import { Roles } from "@/types/enums";
+import ForgetPassword from "@/features/Login/components/ForgetPassword";
 
 export default function App() {
   // const navigate = useNavigate();
@@ -154,12 +155,13 @@ export default function App() {
             <Route element={<CheckoutPage />}>
               <Route path="/checkout/:id" element={<Checkout />} />
             </Route>
-            <Route path="/activities/:id?" element={<ActivityDetailsPage />} />
-            <Route path="/itineraries/:id?" element={<ItineraryDetailsPage />} />
+            <Route path="/activities" element={<ActivityDetailsPage />} />
+            <Route path="/itineraries" element={<ItineraryDetailsPage />} />
             <Route path="/my-trips-details/:id" element={<TripDetails />} />
 
             <Route path="/signup" element={<SignupSelector />} />
             <Route path="/signin" element={<LoginPage />} />
+            <Route path="/forgot-password" element={<ForgetPassword />} />
             <Route path="/:type/details/:placeid/:id" element={<HistoricalDetailsPage />} />
             <Route path="/:type/details/:placeid/" element={<HistoricalDetailsPage />} />
             <Route element={<SettingsView />}>

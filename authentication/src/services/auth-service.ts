@@ -90,7 +90,7 @@ export async function sendOTP(username: string){
     await authRepository.updateUser(user.id, { otp });
     const message = {
       userId: user.id,
-      message: `Your OTP is ${otp}`,
+      message: `Dear ${user.username}, Your OTP is ${otp} /n Please do not share this OTP with anyone`,
     }
     await publishNotification(message);
   }
@@ -104,7 +104,7 @@ export async function verifyOTP(username: string, otp: string){
   if(user){
     if(user.otp === otp){
       await authRepository.updateUser(user.id, { otp: "" });
-      return true;
+      return otp;
     }
     else{
       throw new Error("Invalid OTP");
