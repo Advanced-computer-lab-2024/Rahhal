@@ -32,7 +32,7 @@ const ActivityDetailsPage: React.FC = () => {
     isBookingOpen,
   } = activity;
   const [preferenceTagNames, setPreferenceTagNames] = React.useState<string[]>([]);
-  const [isButtonDisabled, setIsButtonDisabled] = React.useState(true);
+  const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
   const [selectedPrice, setSelectedPrice] = React.useState<number | undefined>(
     price[Object.keys(price)[0]],
   );
@@ -70,7 +70,7 @@ const ActivityDetailsPage: React.FC = () => {
   }, [preferenceTags]);
 
   const handleButtonClick = () => {
-    if (!isModalOpen) {
+    if (!isModalOpen && id!=="undefined" && id) {
       setIsModalOpen(true);
       return;
     }
@@ -136,6 +136,7 @@ const ActivityDetailsPage: React.FC = () => {
           price={convertedSelectedPrice ?? 0}
           name={name}
           type={"Activity"}
+          userId={id ?? ""}
         />
       )}
 
