@@ -24,7 +24,6 @@ export function CartIcon() {
   });
 
   useEffect(() => {
-    console.log("Cart data", cartData);
     if (isSuccess && cartData) {
       setCount(cartData.products.reduce((sum, item) => sum + item.quantity, 0));
     }
