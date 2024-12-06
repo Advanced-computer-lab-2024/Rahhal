@@ -1,5 +1,5 @@
 import { DEFAULTS } from "@/lib/constants";
-import { TPopulatedBooking } from "../types/home-page-types";
+import { PopulatedCart, TPopulatedBooking } from "../types/home-page-types";
 
 export const DEFAULT_ACTIVITY_IMAGE =
   "https://t3.ftcdn.net/jpg/08/15/01/32/360_F_815013230_hIwk7fuEsd3sw2HDOdkgYbD2Fn7gMURr.jpg";
@@ -69,4 +69,9 @@ export const DEFAULT_ITINERARY = {
   active: false,
   owner: "",
   ownerName: "",
+};
+export const DEFAULT_CART: PopulatedCart = {
+  _id: "",
+  user: "",
+  products: [],
 };
