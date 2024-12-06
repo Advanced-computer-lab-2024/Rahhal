@@ -1,4 +1,4 @@
-\import mongoose from "mongoose";
+import mongoose from "mongoose";
 import cartValidators from "@/validators/cart-validators";
 
 const CartSchema = new mongoose.Schema({
