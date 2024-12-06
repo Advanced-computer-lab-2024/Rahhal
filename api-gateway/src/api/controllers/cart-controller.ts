@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import * as cartService from "@/services/cart-service";
 import { STATUS_CODES } from "@/utils/constants";
-import { CartUpdates } from "@/utils/types";
+import type { CartUpdates } from "@/utils/types";
 
 export async function getCart(req: Request, res: Response) {
   const { user } = req.query;
