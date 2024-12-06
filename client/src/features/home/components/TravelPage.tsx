@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { FlightRequest, TransferRequest } from "@/features/home/types/home-page-types";
 import { getAirportCode, getTransportation } from "@/api-calls/transportation-api-calls";
 import { fetchPlaceDetails } from "@/api-calls/google-maps-api-calls";
-import { useSearchBarStore } from "@/stores/transportation-searchbar-slice";
+import { useSearchBarStore } from "@/stores/search-bar-stores/transportation-searchbar-slice";
 import { useQuery } from "@tanstack/react-query";
 import { getUserById } from "@/api-calls/users-api-calls";
 import { calculateAge } from "@/utils/age-calculator";
@@ -12,7 +12,7 @@ import TransportationPage from "./TransportationPage";
 import { useParams } from "react-router-dom";
 import FlightPage from "./FlightPage";
 import { getFlights } from "@/api-calls/flights-search-api-calls";
-import { useFlightSearchBarStore } from "@/stores/flight-searchbar-slice";
+import { useFlightSearchBarStore } from "@/stores/search-bar-stores/flight-searchbar-slice";
 import FlightsLandingComponent from "./flights-placeholder/FlightsLandingComponent";
 import EmptyFlightResultsPage from "./flights-placeholder/EmptyFlightResultsPage";
 import TaxiLandingPage from "./taxi-placeholder/TaxiLandingPage";
@@ -22,7 +22,6 @@ import { PiTaxi } from "react-icons/pi";
 import flightIcon from "@/assets/flight-Icon.png";
 import busIcon from "@/assets/Bus Icon.png";
 import { toast } from "@/hooks/use-toast";
-
 
 interface TravelPageProps {
   loggedIn: boolean;
@@ -336,29 +335,29 @@ function TravelPage({ loggedIn }: TravelPageProps) {
         onIconClickTaxis={onIconClickTaxis}
         onIconClickFlights={onIconClickFlights}
       />
-       <div className="flex justify-end px-16 py-[1%]">
-          <Button
-            className={`ml-2 rounded-full bg-transparent text-black hover:bg-gray-200 px-6 py-3 text-md ${transferType === "taxis" && "bg-gray-200"} `}
-            onClick={() => setTransferType("taxis")}
-          >
-            <PiTaxi className="mr-2" size={20} />
-            Airport taxis
-          </Button>
-          <Button
-            className={`ml-2 rounded-full bg-transparent text-black hover:bg-gray-200 px-6 py-3 text-md ${transferType === "flights" && "bg-gray-200"} `}
-            onClick={() => setTransferType("flights")}
-          >
-            <img src={flightIcon} className="mr-2 w-7 h-7" />
-            Flights
-          </Button>
-          <Button
-            className={`ml-2 rounded-full bg-transparent text-black  hover:bg-gray-200 px-6 py-3 text-md  ${transferType === "buses" && "bg-gray-200"} `}
-            onClick={() => setTransferType("buses")}
-          >
-            <img src={busIcon} className="mr-2 w-7 h-7" />
-            Buses
-          </Button>
-        </div>
+      <div className="flex justify-end px-16 py-[1%]">
+        <Button
+          className={`ml-2 rounded-full bg-transparent text-black hover:bg-gray-200 px-6 py-3 text-md ${transferType === "taxis" && "bg-gray-200"} `}
+          onClick={() => setTransferType("taxis")}
+        >
+          <PiTaxi className="mr-2" size={20} />
+          Airport taxis
+        </Button>
+        <Button
+          className={`ml-2 rounded-full bg-transparent text-black hover:bg-gray-200 px-6 py-3 text-md ${transferType === "flights" && "bg-gray-200"} `}
+          onClick={() => setTransferType("flights")}
+        >
+          <img src={flightIcon} className="mr-2 w-7 h-7" />
+          Flights
+        </Button>
+        <Button
+          className={`ml-2 rounded-full bg-transparent text-black  hover:bg-gray-200 px-6 py-3 text-md  ${transferType === "buses" && "bg-gray-200"} `}
+          onClick={() => setTransferType("buses")}
+        >
+          <img src={busIcon} className="mr-2 w-7 h-7" />
+          Buses
+        </Button>
+      </div>
 
       {transferType === "buses" && (
         <div className="flex flex-col items-center justify-center bg-white">

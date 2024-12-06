@@ -1,7 +1,7 @@
 import SearchBar from "@/features/home/components/search-bar/SearchBar";
 import { useState } from "react";
 import { fetchSuggestions } from "@/api-calls/google-maps-api-calls";
-import { useSearchBarStore } from "@/stores/transportation-searchbar-slice";
+import { useSearchBarStore } from "@/stores/search-bar-stores/transportation-searchbar-slice";
 
 interface TransportationSearchBarProps {
   onIconClick: () => void;
