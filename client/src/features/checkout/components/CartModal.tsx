@@ -1,10 +1,18 @@
-import { useState } from "react"
-import { Minus, Plus, ShoppingCart } from 'lucide-react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { Button } from "@/components/ui/button"
-import { CartExample } from "../utils/CartExample"
-import { useNavigate, useParams } from "react-router-dom"
-
+import { useEffect, useState } from "react";
+import { Minus, Plus, ShoppingCart } from "lucide-react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  decrementQuantity,
+  fetchUserCart,
+  incrementQuantity,
+  removeItemFromCart,
+} from "@/api-calls/cart-api-calls";
+import { useQuery } from "@tanstack/react-query";
+import type { PopulatedCart } from "@/features/home/types/home-page-types";
+import useCartStore from "@/stores/nav-bar-icon-stores/cart-count-store";
+import useProductRefreshStore from "@/stores/refresh-product-store";
 
 interface CartModalProps {
   open: boolean;
@@ -12,33 +20,55 @@ interface CartModalProps {
 }
 
 export function CartModal({ open, onOpenChange }: CartModalProps) {
+  const [cart, setCart] = useState<PopulatedCart | null>(null);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const navigate = useNavigate();
   const { id: paramId } = useParams<{ id?: string }>();
+  const { incrementCount, decrementCount, setCount } = useCartStore();
+  const { setRefresh } = useProductRefreshStore();
+
+  const { data: cartData, isSuccess } = useQuery({
+    queryKey: ["cart", "products"],
+    queryFn: () => fetchUserCart(paramId as string),
+    enabled: !!paramId && open,
+    select: (data) => data as PopulatedCart,
+  });
+
+  useEffect(() => {
+    console.log("Cart data", cartData);
+    if (isSuccess && cartData) {
+      setCart(cartData);
+    }
+  }, [cartData]);
 
   // Initialize quantities from CartExample
-  useState(() => {
-    const initialQuantities: Record<string, number> = {}
-    CartExample.products.forEach(item => {
-      initialQuantities[item.product._id] = item.quantity;
-    })
-    setQuantities(initialQuantities);
-  })
+  useEffect(() => {
+    if (cart) {
+      const initialQuantities: Record<string, number> = {};
+      cart.products.forEach((item) => {
+        initialQuantities[item.product._id] = item.quantity;
+      });
+      setQuantities(initialQuantities);
+    }
+  }, [cart]);
 
-  const updateQuantity = (productId: string, delta: number) => {
-    setQuantities(prev => {
-      const product = CartExample.products.find(p => p.product._id === productId)
-      if (!product) return prev;
+  const incrementProductInCart = async (productId: string) => {
+    setCart(await incrementQuantity(paramId!, productId));
+    incrementCount();
+  };
 
-      const newQuantity = (prev[productId] || 0) + delta
-      if (newQuantity < 0 || newQuantity > product.product.quantity) return prev;
+  const decrementProductInCart = async (productId: string) => {
+    setCart(await decrementQuantity(paramId!, productId));
+    decrementCount();
+  };
 
-      return { ...prev, [productId]: newQuantity };
-    })
-  }
+  const removeProductFromCart = async (productId: string) => {
+    setCart(await removeItemFromCart(paramId!, productId));
+    setCount(0);
+  };
 
-  const subtotal = CartExample.products.reduce((sum, item) => {
-    return sum + (item.product.price * (quantities[item.product._id] || item.quantity))
+  const subtotal = cart?.products.reduce((sum, item) => {
+    return sum + item.product.price * (quantities[item.product._id] || item.quantity);
   }, 0);
 
   return (
@@ -48,21 +78,26 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
           <SheetTitle className="text-xl">Shopping Cart</SheetTitle>
         </SheetHeader>
         <div className="flex flex-col h-[calc(100vh-8rem)]">
-          {CartExample.products.length === 0 ? (
+          {cart?.products.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full">
               <ShoppingCart className="w-24 h-24 text-gray-300 mb-4" />
               <p className="text-xl font-medium mb-4">Your cart is empty</p>
-              <Button className="w-full bg-[--complimentary-color-dark] hover:bg-[--complimentary-color-fade]" size="lg" onClick={() => {
-                onOpenChange(false)
-                navigate(`/shop/${paramId}`)
-              }}>
+              <Button
+                className="w-full bg-[--complimentary-color-dark] hover:bg-[--complimentary-color-fade]"
+                size="lg"
+                onClick={() => {
+                  onOpenChange(false);
+                  setRefresh(false);
+                  navigate(`/shop/${paramId}`);
+                }}
+              >
                 Explore Our Products
               </Button>
             </div>
           ) : (
             <>
               <div className="flex-1 overflow-auto -mx-6 px-6">
-                {CartExample.products.map((item) => (
+                {cart?.products.map((item) => (
                   <div key={item.product._id} className="flex gap-4 py-4 border-b">
                     <img
                       src={item.product.picture}
@@ -80,17 +115,19 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
                           variant="outline"
                           size="icon"
                           className="h-8 w-8"
-                          onClick={() => updateQuantity(item.product._id, -1)}
+                          onClick={() => decrementProductInCart(item.product._id)}
                           disabled={quantities[item.product._id] <= 1}
                         >
                           <Minus className="h-4 w-4" />
                         </Button>
-                        <span className="w-8 text-center">{quantities[item.product._id] || item.quantity}</span>
+                        <span className="w-8 text-center">
+                          {quantities[item.product._id] || item.quantity}
+                        </span>
                         <Button
                           variant="outline"
                           size="icon"
                           className="h-8 w-8"
-                          onClick={() => updateQuantity(item.product._id, 1)}
+                          onClick={() => incrementProductInCart(item.product._id)}
                           disabled={quantities[item.product._id] >= item.product.quantity}
                         >
                           <Plus className="h-4 w-4" />
@@ -98,13 +135,7 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
                         <Button
                           variant="link"
                           className="ml-auto text-sm"
-                          onClick={() => {
-                            setQuantities(prev => {
-                              const newQuantities = { ...prev }
-                              delete newQuantities[item.product._id]
-                              return newQuantities
-                            })
-                          }}
+                          onClick={() => removeProductFromCart(item.product._id)}
                         >
                           Remove
                         </Button>
@@ -117,9 +148,13 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
               <div className="mt-4 space-y-4">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span className="font-semibold">{subtotal.toFixed(2)} EGP</span>
+                  <span className="font-semibold">{subtotal?.toFixed(2)} EGP</span>
                 </div>
-                <Button className="w-full bg-[--primary-color-dark] hover:bg-[--primary-color-fade]" size="lg" onClick={() => navigate(`/checkout/${paramId}`)}>
+                <Button
+                  className="w-full bg-[--primary-color-dark] hover:bg-[--primary-color-fade]"
+                  size="lg"
+                  onClick={() => navigate(`/checkout/${paramId}`)}
+                >
                   Check out
                 </Button>
               </div>
@@ -128,6 +163,5 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
         </div>
       </SheetContent>
     </Sheet>
-  )
+  );
 }
-
