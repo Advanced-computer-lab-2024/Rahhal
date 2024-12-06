@@ -3,7 +3,7 @@ import StripeForm from "@/components/payment/StripeForm";
 import { Label } from "@/components/ui/label";
 import { CircleDollarSign, CreditCard, Wallet } from "lucide-react";
 
-type PaymentMethod = {
+export type TPaymentMethod = {
   id: string;
   label: string;
   icon: JSX.Element;
@@ -19,9 +19,10 @@ type PaymentSelectorProps = {
   setStripePaymentTrigger: (value: boolean) => void;
   setIsLoading: (value: boolean) => void;
   onPaymentCompletion: () => Promise<void>;
+  paymentMethods?: TPaymentMethod[];
 };
 
-const paymentMethods: PaymentMethod[] = [
+const defaultPaymentMethods: TPaymentMethod[] = [
   {
     id: "wallet",
     label: "Wallet",
@@ -50,9 +51,10 @@ export function PaymentOptions({
   setIsLoading,
   setStripePaymentTrigger,
   onPaymentCompletion,
+  paymentMethods = defaultPaymentMethods,
 }: PaymentSelectorProps) {
   return (
-    <div className="w-full  mt-10">
+    <div className="w-full">
       <div className="mb-4">
         <h2 className="text-xl font-medium">Payment</h2>
         <p className="text-sm text-gray-500">All transactions are secure and encrypted.</p>

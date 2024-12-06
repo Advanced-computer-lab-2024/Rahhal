@@ -8,9 +8,31 @@ import { Loader2, Check } from "lucide-react";
 import { applyPromocode } from "@/api-calls/payment-api-calls";
 import { Promotion } from "@/features/home/types/home-page-types";
 import StripeForm from "@/components/payment/StripeForm";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { PaymentOptions, TPaymentMethod } from "@/features/checkout/components/PaymentOptions";
+import { getUserById } from "@/api-calls/users-api-calls";
+import { useQuery } from "@tanstack/react-query";
 
+
+
+
+
+const paymentMethods: TPaymentMethod[] = [
+  {
+    id: "wallet",
+    label: "Wallet",
+    icons: [],
+    expandable: false,
+  },
+  {
+    id: "creditCard",
+    label: "Pay via ( Debit Cards / Credit cards / Paypal / Apple Pay )",
+    icons: [],
+    expandable: true,
+  },
+
+];
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -35,6 +57,16 @@ interface BookingFormProps {
   parentBookingFunc: () => void;
 }
 
+function useIdFromParamsOrQuery() {
+  const { id: paramId } = useParams<{ id?: string }>();
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const queryId = queryParams.get("userId");
+
+  return paramId || queryId;
+}
+
 function BookingForm({
   price,
   name,
@@ -45,6 +77,14 @@ function BookingForm({
   parentBookingFunc,
   userId,
 }: BookingFormProps) {
+
+  const id = useIdFromParamsOrQuery();
+
+  const { data: user } = useQuery({
+    queryKey: ["user", id],
+    queryFn: () => getUserById(id as string),
+    enabled: !!id,
+  });
   const [promoCode, setPromoCode] = useState("");
   const [promoDiscountPerc, setPromoDiscountPerc] = useState(0); // Promo code discount percentage
   const [isRedeeming, setIsRedeeming] = useState(false);
@@ -52,7 +92,8 @@ function BookingForm({
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [stripePaymentTrigger, setStripePaymentTrigger] = useState(false);
-  const navigate = useNavigate();
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const { toast } = useToast();
   console.log("user is ", userId);
   // Apply both discounts
@@ -60,8 +101,33 @@ function BookingForm({
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    handleCompleteOrder();
     setStripePaymentTrigger(true);
     
+  };
+
+  const handleCompleteOrder = () => {
+    
+    if (selectedPaymentMethod === "creditCard") {
+      setStripePaymentTrigger(true);
+    } else if (selectedPaymentMethod === "wallet") {
+      const walletBalance = user?.balance || 0;
+     
+      
+      if (walletBalance < totalPrice) {
+        toast({
+          title: "Insufficient balance",
+          description:
+            "Unfortunately, you do not have enough balance in your wallet to complete this order",
+          variant: "destructive",
+          duration: 3000,
+        });
+      } else {
+        handlePaymentCompletion();
+      }
+    } else {
+      handlePaymentCompletion();
+    }
   };
 
   const handlePaymentCompletion = async () => {
@@ -124,6 +190,8 @@ function BookingForm({
     setPromoStatus("idle");
   };
 
+  const formattedWalletBalance = `${user?.balance ? user.balance.toFixed(2) : "0.00"} ${currency}`;
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
@@ -185,13 +253,17 @@ function BookingForm({
         {promoStatus === "error" && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
       </div>
       <div>
-        <Label htmlFor="card-element">Credit or debit card</Label>
+        
         <div className="mt-1 border rounded-md p-3">
-          <StripeForm
-            onPaymentCompletion={handlePaymentCompletion}
+          <PaymentOptions
+            selectedPaymentMethod={selectedPaymentMethod}
             stripePaymentTrigger={stripePaymentTrigger}
+            walletBalance={formattedWalletBalance}
+            onPaymentCompletion={handlePaymentCompletion}
             setStripePaymentTrigger={setStripePaymentTrigger}
-            setIsLoading={setIsLoading}
+            setIsLoading={setIsPaymentLoading}
+            setSelectedPaymentMethod={setSelectedPaymentMethod}
+            paymentMethods={paymentMethods}
           />
         </div>
       </div>
