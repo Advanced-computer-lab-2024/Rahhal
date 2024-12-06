@@ -51,7 +51,7 @@ export async function applyPromocode(req: Request, res: Response) {
         const promocode = await promocodeService.applyPromocode(id, code);
         res.status(STATUS_CODES.STATUS_OK).json(promocode);
     } catch (error: any) {
-        res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
+        res.status(STATUS_CODES.STATUS_OK).json({ message: error.message });
     }
 }
 

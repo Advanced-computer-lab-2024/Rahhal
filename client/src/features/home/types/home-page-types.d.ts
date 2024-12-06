@@ -1,6 +1,15 @@
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
 
+
+export interface Promotion {
+  type: 'percentage' | 'fixed' | 'shipping';
+  value: number;
+  description: string;
+  message?: string;
+}
+
+
 export interface IOrder {
   _id: Types.ObjectId;
   userId: string;
