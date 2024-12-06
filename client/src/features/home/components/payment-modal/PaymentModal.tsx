@@ -7,6 +7,9 @@ import { Loader2, Check } from "lucide-react";
 
 import { applyPromocode } from "@/api-calls/payment-api-calls";
 import { Promotion } from "@/features/home/types/home-page-types";
+import StripeForm from "@/components/payment/StripeForm";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -48,18 +51,47 @@ function BookingForm({
   const [promoStatus, setPromoStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [stripePaymentTrigger, setStripePaymentTrigger] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
   console.log("user is ", userId);
   // Apply both discounts
   const totalPrice = price * (1 - (discountPerc ?? 0) / 100) * (1 - promoDiscountPerc / 100);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setIsLoading(true);
+    setStripePaymentTrigger(true);
+    
+  };
 
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    parentBookingFunc();
-    setIsLoading(false);
-    onClose();
+  const handlePaymentCompletion = async () => {
+    try {
+      
+      setIsLoading(true);
+
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      parentBookingFunc();
+      setIsLoading(false);
+      onClose();
+      
+
+      setStripePaymentTrigger(false);
+
+      toast({
+        title: "Success",
+        description: "Payment successful",
+        variant: "default",
+        duration: 3000,
+      });
+    } catch (e) {
+      toast({
+        title: "Error",
+        description: (e as any).response.data.error,
+        variant: "destructive",
+
+        duration: 3000,
+      });
+    }
   };
 
   const handleRedeemPromo = async () => {
@@ -74,7 +106,7 @@ function BookingForm({
         setTimeout(() => setPromoStatus("idle"), 1500);
         setIsRedeeming(false);
         return;
-      },1500);
+      }, 1500);
     }
 
     if (promoCodeResponse.type == "percentage") {
@@ -154,7 +186,14 @@ function BookingForm({
       </div>
       <div>
         <Label htmlFor="card-element">Credit or debit card</Label>
-        <div className="mt-1 border rounded-md p-3"></div>
+        <div className="mt-1 border rounded-md p-3">
+          <StripeForm
+            onPaymentCompletion={handlePaymentCompletion}
+            stripePaymentTrigger={stripePaymentTrigger}
+            setStripePaymentTrigger={setStripePaymentTrigger}
+            setIsLoading={setIsLoading}
+          />
+        </div>
       </div>
       <div className="flex justify-center">
         <Button
