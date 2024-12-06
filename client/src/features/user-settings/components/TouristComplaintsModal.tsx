@@ -43,7 +43,7 @@ export function TouristComplaintsModal({
   return (
     <GenericModal
       title={"Complaint Details"}
-      description="Complaint Details"
+     description=""
       dialogTrigger={dialogTrigger}
       onSubmit={handleSubmit}
     >
