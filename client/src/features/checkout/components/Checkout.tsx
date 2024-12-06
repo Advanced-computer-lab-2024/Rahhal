@@ -1,10 +1,10 @@
 import { OrderSummary } from "./OrderSummary";
-import { CartExample } from "../utils/CartExample";
 import { Input } from "@/components/ui/input";
 import { DeliveryForm } from "./DeliveryForm";
 import { getUserById, updateUser } from "@/api-calls/users-api-calls";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { CartExample } from "../utils/CartExample";
 import { useState } from "react";
 import { CompletionPopup } from "./CompletionPopup";
 import { PaymentOptions } from "./PaymentOptions";
@@ -221,7 +221,7 @@ export default function Checkout() {
             {user && (
               <div className="max-w-md mx-auto p-4">
                 <OrderSummary
-                  cart={CartExample}
+                  cart={cart}
                   discountAmount={discountAmount}
                   activePromotion={activePromotion}
                   total={totalAmount}
