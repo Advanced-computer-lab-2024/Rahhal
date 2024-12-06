@@ -12,6 +12,7 @@ import TouristHomePageNavigation from "../TouristHomePageNavigation";
 import { bookingType } from "@/utils/enums";
 import SignUpModal from "../SignupModal";
 import { calculateAge } from "@/utils/age-calculator";
+import BookingModal from "@/features/home/components/payment-modal/PaymentModal";
 
 const ActivityDetailsPage: React.FC = () => {
   const loc = useLocation();
@@ -31,15 +32,21 @@ const ActivityDetailsPage: React.FC = () => {
     isBookingOpen,
   } = activity;
   const [preferenceTagNames, setPreferenceTagNames] = React.useState<string[]>([]);
-  const [isButtonDisabled, setIsButtonDisabled] = React.useState(true);
+  const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
   const [selectedPrice, setSelectedPrice] = React.useState<number | undefined>(
     price[Object.keys(price)[0]],
   );
+
   const [isGuestAction, setIsGuestAction] = React.useState(false);
   const [text, setText] = React.useState<string>();
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
   const { currency } = useCurrencyStore();
   const { rates } = useRatesStore();
   const { id } = useParams();
+
+ 
+  const closeModal = () => setIsModalOpen(false);
 
   React.useEffect(() => {
     if (id) {
@@ -51,7 +58,6 @@ const ActivityDetailsPage: React.FC = () => {
             setText("You must be 18 years or older to book this activity");
           }
         });
-      setIsButtonDisabled(false);
     }
   }, []);
 
@@ -64,6 +70,11 @@ const ActivityDetailsPage: React.FC = () => {
   }, [preferenceTags]);
 
   const handleButtonClick = () => {
+    if (!isModalOpen && id!=="undefined" && id) {
+      setIsModalOpen(true);
+      return;
+    }
+
     if (id && id !== "undefined") {
       createBooking({
         user: id,
@@ -74,7 +85,6 @@ const ActivityDetailsPage: React.FC = () => {
       }).then((response) => {
         const booking = response as TPopulatedBooking;
         addLoyalityPoints(id, booking.selectedPrice);
-        alert("You have successfully booked");
       });
     } else {
       setIsGuestAction(true);
@@ -90,7 +100,7 @@ const ActivityDetailsPage: React.FC = () => {
   const formattedTime = formatTime(activityDate);
 
   const cardButtonText = isBookingOpen ? "Book Activity" : "Notify Me";
-
+  let convertedSelectedPrice = 0;
   const tickets = Object.keys(price).map((key) => {
     let convertedTicketPrice = price[key];
 
@@ -98,6 +108,7 @@ const ActivityDetailsPage: React.FC = () => {
       const rateOfEURToOld = rates.rates["EGP"];
       const rateOfEURToNew = rates.rates[currency];
       convertedTicketPrice = (price[key] * rateOfEURToNew) / rateOfEURToOld;
+      convertedSelectedPrice = ((selectedPrice ?? 0) * rateOfEURToNew) / rateOfEURToOld;
     }
 
     const displayPrice = convertedTicketPrice.toFixed(0);
@@ -114,6 +125,21 @@ const ActivityDetailsPage: React.FC = () => {
           text={"Excited to book? Sign in or create an account to secure your spot now!"}
         />
       )}
+
+      {isModalOpen && (
+        <BookingModal
+          parentBookingFunc={handleButtonClick}
+          discountPerc={specialDiscount}
+          currency={currency}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          price={convertedSelectedPrice ?? 0}
+          name={name}
+          type={"Activity"}
+          userId={id ?? ""}
+        />
+      )}
+
       <TouristHomePageNavigation loggedIn={id ? id !== "undefined" : false} />
       <DetailsPageTemplateProps
         _id={_id}

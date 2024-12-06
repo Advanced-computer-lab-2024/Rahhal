@@ -19,6 +19,8 @@ import { getAirlineLogo } from "@/utils/flight-logo";
 import { useState } from "react";
 import SignUpModal from "./SignupModal";
 
+import BookingModal from "@/features/home/components/payment-modal/PaymentModal";
+
 interface FlightAccordionProps {
   isAdult: boolean;
   loggedIn: boolean;
@@ -34,6 +36,10 @@ export default function FlightAccordion({
 }: FlightAccordionProps) {
   const [isImageLoaded, setIsImageLoaded] = useState(true);
   const [isGuestAction, setIsGuestAction] = useState(false);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => setIsModalOpen(false);
+
   const { currency } = useCurrencyStore();
   const convertedPrice = currencyExchange(offer.price.currency, offer.price.amount);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
@@ -46,6 +52,11 @@ export default function FlightAccordion({
       setIsGuestAction(true);
       return;
     }
+    if (!isModalOpen && userID) {
+      setIsModalOpen(true);
+      return;
+    }
+
     const bookingRequest: TBookingType = {
       user: userID,
       entity: offer.id,
@@ -72,6 +83,19 @@ export default function FlightAccordion({
             setIsGuestAction(false);
           }}
           text={"Ready to fly? Sign in to book your next flight with ease!"}
+        />
+      )}
+
+      {isModalOpen && (
+        <BookingModal
+          parentBookingFunc={onConfirmFlight}
+          currency={currency}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          price={Number(displayPrice)}
+          name={offer.airline}
+          type={"Flight"}
+          userId={userID}
         />
       )}
 
@@ -178,7 +202,7 @@ export default function FlightAccordion({
                 </div>
                 <div className="flex flex-col">
                   <Button
-                    className="bg-[#E5B94E] hover:bg-[#d4aa45] text-black min-w-24"
+                    className="bg-[var(--primary-color)] hover:bg-[var( --primary-color-hover)] text-black min-w-24"
                     disabled={!isAdult}
                     onClick={onConfirmFlight}
                   >
