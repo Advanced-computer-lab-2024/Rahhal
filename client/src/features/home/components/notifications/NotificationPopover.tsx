@@ -48,9 +48,9 @@ export default function NotificaionPopover({ userId }: NotificationPopoverProps)
       <PopoverTrigger asChild>
         <Button variant="clean" size="icon" className="relative group">
           <Bell className="h-6 w-6 transition-transform duration-200 ease-in-out group-hover:scale-110" />
-          {notifications.length >= 0 && (
+          {notifications.length > 0 && (
             <span className="absolute -top-0.5 -right-0.5 h-5 w-5 bg-red-500 rounded-full text-xs text-primary-foreground flex items-center justify-center transition-transform duration-200 ease-in-out group-hover:scale-110">
-              4
+              {notifications.length}
             </span>
           )}
         </Button>
