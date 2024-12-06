@@ -6,7 +6,7 @@ import { Bookmark } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { isEntityBookmarked, removeBookmark, addBookmark } from "@/api-calls/bookmark-api-calls";
 import { bookmarkType } from "@/utils/enums";
-import useBookmarkStore from "@/stores/bookmark-count-store";
+import useBookmarkStore from "@/stores/nav-bar-icon-stores/bookmark-count-store";
 import SignUpModal from "../SignupModal";
 import { toast } from "@/hooks/use-toast";
 
