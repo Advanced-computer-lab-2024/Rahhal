@@ -107,7 +107,7 @@ function NavigationButton(ButtonProps: ButtonProps) {
   >
     <Button
       className={cn(
-        "rounded-none rounded-t-md relative w-20 text-foreground bg-transparent hover:bg-transparent",
+        "rounded-none rounded-t-md relative w-20 h-8 text-foreground bg-transparent hover:bg-transparent",
         ButtonProps.navigation === ButtonProps.index
           ? "font-semibold"
           : "text-muted-foreground"
