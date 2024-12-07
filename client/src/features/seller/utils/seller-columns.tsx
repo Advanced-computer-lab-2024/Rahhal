@@ -1,9 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronRight } from "lucide-react";
-import { FaTrash } from "react-icons/fa6";
 import { ProductModal } from "@/features/seller/components/ProductsModal";
-import { deleteProduct } from "@/api-calls/products-api-calls";
 import type { TRating } from "@/types/shared";
 
 export type TProduct = {
@@ -20,10 +18,6 @@ export type TProduct = {
 };
 
 export type TNewProduct = Omit<TProduct, "_id">;
-
-function deleteRow(row: any) {
-  deleteProduct(row.original);
-}
 
 function calculateAverageRating(ratings: TRating[]) {
   const totalRating = ratings.reduce((acc, rating) => acc + rating.rating, 0);
@@ -97,10 +91,7 @@ export const productsColumns: ColumnDef<TProduct>[] = [
     cell: ({ row }) => {
       return (
         <div className="text-right">
-          <Button variant="destructive" className="h-8 w-8 p-0" onClick={() => deleteRow(row)}>
-            <span className="sr-only">Delete</span>
-            <FaTrash className="h-4 w-4" />
-          </Button>
+         
           <ProductModal
             productData={row.original}
             dialogTrigger={

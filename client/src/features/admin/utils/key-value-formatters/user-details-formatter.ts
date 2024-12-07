@@ -7,8 +7,9 @@ export function format(key: string, value: any) {
   let formattedValue = String(value);
 
   if (Array.isArray(value)) {
-    formattedValue = value.join("/n");
-    console.log(formattedValue);
+    formattedValue = value.map(address => `-${address}`).join(", ");
+  //  formattedValue = value.join("\n");
+  //  console.log(formattedValue);
   } else if (key === "dob" || key === "createdAt" || key === "updatedAt") {
     // Format the date to a more readable format which is DD/MM/YYYY
     formattedValue = new Date(value).toLocaleDateString("hi-IN");
