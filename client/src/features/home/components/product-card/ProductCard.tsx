@@ -157,7 +157,7 @@ export default function ProductCard({
 
           <motion.button
             className={cn(
-              "absolute top-2 right-2 z-10",
+              "absolute top-2 right-2 z-1",
               "transition-all duration-200",
               "stroke-[1.5]",
               "stroke-gray-600",
