@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { INotification } from "@/features/home/types/home-page-types";
+import type { INotification } from '@/types/shared.d.ts';
 
 const useSSE = (
   url: string, 

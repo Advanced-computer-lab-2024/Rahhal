@@ -9,7 +9,7 @@ import {
   fetchUserNotifications,
   markUserNotificationsAsSeen,
 } from "@/api-calls/notifications-api-calls";
-import { INotification } from "../../types/home-page-types";
+import type { INotification } from "@/types/shared.d.ts";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";

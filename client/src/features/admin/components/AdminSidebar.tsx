@@ -22,7 +22,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import NotificaionPopover from "@/features/home/components/notifications/NotificationPopover";
+import NotificaionPopover from "@/components/NotificationPopover";
 interface AdminSidebarProps {
   id?: string;
 }
