@@ -1,6 +1,6 @@
 import axios from "axios";
 import { SERVICES_URLS } from "@/lib/constants";
-import type { INotification } from "@/features/home/types/home-page-types";
+import type { INotification } from "@/types/shared.d.ts";
 
 export async function fetchUserNotifications(userId: string){
   const response = await axios.get(SERVICES_URLS.NOTIFICATION + `/notifications`, {
