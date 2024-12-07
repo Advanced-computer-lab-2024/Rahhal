@@ -11,6 +11,7 @@ import { handlePayment } from './Payment';
 import { updateUser } from '@/api-calls/users-api-calls';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import { applyPromocode } from '@/api-calls/payment-api-calls';
 
 interface Product {
   _id: string;
@@ -47,6 +48,7 @@ export function OrderSummary({
   selectedPaymentMethod,
   setErrors,
   setCompleted,
+  id
 }: {
   cart:CartProps;
   user:TUser;
@@ -58,6 +60,7 @@ export function OrderSummary({
   selectedPaymentMethod: string;
   setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
   setCompleted: React.Dispatch<React.SetStateAction<boolean>>;
+  id: string;
 })  {
   const {toast} = useToast();
   const navigate = useNavigate();
@@ -75,6 +78,7 @@ export function OrderSummary({
   
   const calculateDiscount = () => {
     if (!activePromotion) return 0;
+    console.log(activePromotion.promotion);
 
     switch (activePromotion.promotion.type) {
       case 'percentage':
@@ -109,22 +113,21 @@ export function OrderSummary({
   const totalConverted = currencyExchange(baseCurrency, total);
   const totalDisplayed = totalConverted ? totalConverted.toFixed(2) : 'N/A';
   
-  const  handleApplyPromoCode = () => {
+  const  handleApplyPromoCode = async () => {
     setError(null);
-
     if (!promoCode.trim()) {
       setError('Please enter a promo code');
       return;
     }
-
+    console.log(promoCode);
     const normalizedCode = promoCode.trim().toUpperCase();
-    const promotion = PROMO_CODES[normalizedCode];
-
-    if (!promotion) {
-      setError('Invalid promo code');
+    console.log(normalizedCode);
+    const promotion = await applyPromocode(normalizedCode,id);
+    if(promotion && promotion.message){
+      setError(promotion.message);
       return;
     }
-
+    console.log(promotion);
     setActivePromotion({ code: normalizedCode, promotion });
     setPromoCode('');
   };

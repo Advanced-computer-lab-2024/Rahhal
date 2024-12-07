@@ -53,10 +53,9 @@ export async function applyPromocode(id: string, code: string) {
     }
 
     return {
-       
-            type: promocode.type,
-            value: promocode.value,
-            description: promocode.type == "percentage" ? `${promocode.value}% off your order` : `Free shipping on your order`
+        type: promocode.type,
+        value: promocode.value,
+        description: promocode.type == "percentage" ? `${promocode.value}% off your order` : `Free shipping on your order`
     }
 }
 
