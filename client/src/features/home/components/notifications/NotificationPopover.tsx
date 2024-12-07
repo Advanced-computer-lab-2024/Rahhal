@@ -11,51 +11,81 @@ import {
 } from "@/api-calls/notifications-api-calls";
 import { INotification } from "../../types/home-page-types";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { SidebarMenuButton } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 
 interface NotificationPopoverProps {
   userId: string;
+  isAdmin?: boolean;
 }
 
-export default function NotificaionPopover({ userId }: NotificationPopoverProps) {
-  const [initialNotifications, setInitialNotifications] = useState<INotification[]>([]);
+export default function NotificaionPopover({ userId, isAdmin = false }: NotificationPopoverProps) {
+  const [notifications, setNotifications] = useState<INotification[]>([]);
 
   // Fetch initial notifications on mount
   useEffect(() => {
-    const fetchNotifications = async () => {
+    const fetchInitialNotifications = async () => {
       try {
         const initialNotifications = await fetchUserNotifications(userId);
-        setInitialNotifications(initialNotifications);
+        setNotifications(initialNotifications);
       } catch (error) {
         console.error("Failed to fetch notifications:", error);
       }
     };
 
-    fetchNotifications();
-  }, []);
+    fetchInitialNotifications();
+  }, [userId]);
 
-  let notifications = useSSE(
+  async function markAllAsRead() {
+    await markUserNotificationsAsSeen(userId);
+    setNotifications((prev) => prev.map((notification) => ({ ...notification, seen: true })));
+  }
+
+  useSSE(
     SERVICES_URLS.NOTIFICATION + "/notifications/stream",
     userId,
-    initialNotifications,
+    (newNotification: INotification) => {
+      setNotifications((prev) => {
+        const exists = prev.some((n) => n._id === newNotification._id);
+        if (exists) return prev;
+        return [newNotification, ...prev];
+      });
+    },
   );
-
-  function markAllAsRead() {
-    markUserNotificationsAsSeen(userId);
-  }
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="clean" size="icon" className="relative group">
-          <Bell className="h-6 w-6 transition-transform duration-200 ease-in-out group-hover:scale-110" />
-          {notifications.length > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 h-5 w-5 bg-red-500 rounded-full text-xs text-primary-foreground flex items-center justify-center transition-transform duration-200 ease-in-out group-hover:scale-110">
-              {notifications.length}
+        {isAdmin ? (
+          <div className="pt-1">
+            <SidebarMenuButton asChild tooltip="Notifications">
+              <a>
+                <Bell />
+                <span>Notifications</span>
+              </a>
+            </SidebarMenuButton>
+          </div>
+        ) : (
+          <Button variant="clean" size="icon" className="relative group">
+            <Bell className="h-6 w-6 transition-transform duration-200 ease-in-out group-hover:scale-110" />
+            {notifications.filter((notification) => !notification.seen).length > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 h-5 w-5 bg-red-500 rounded-full text-xs text-primary-foreground flex items-center justify-center transition-transform duration-200 ease-in-out group-hover:scale-110">
+                {notifications.filter((notification) => !notification.seen).length}
+              </span>
+            )}
+          </Button>
+        )}
+      </PopoverTrigger>
+      {isAdmin && (
+        <>
+          {notifications.filter((notification) => !notification.seen).length > 0 && (
+            <span className="absolute bottom-16 left-5 h-4 w-4 bg-red-500 rounded-full text-xs text-primary-foreground flex items-center justify-center transition-transform duration-200 ease-in-out group-hover:scale-110">
+              {notifications.filter((notification) => !notification.seen).length}
             </span>
           )}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="p-0 w-[400px]">
+        </>
+      )}
+      <PopoverContent className={cn("p-0 w-[400px]", isAdmin && "ml-10")}>
         <Card className="shadow-none border-0">
           <CardHeader className="border-b px-6 py-4">
             <div className="flex items-center justify-between">

@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import NotificaionPopover from "@/features/home/components/notifications/NotificationPopover";
 interface AdminSidebarProps {
   id?: string;
 }
@@ -84,6 +85,7 @@ export function AdminSidebar({ id }: AdminSidebarProps) {
       {id && (
         <SidebarFooter>
           <SidebarMenu>
+            <NotificaionPopover userId={id} isAdmin={true} />
             <SidebarMenuItem>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
