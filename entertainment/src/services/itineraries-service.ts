@@ -4,6 +4,7 @@ import * as itinerariesRepository from "../database/repositories/itineraries-rep
 import { hasBookings } from "@/utils/booking-axios-instance";
 import { bookingType } from "@/utils/constants";
 import { publishNotification } from "@/publishers/notification-publisher";
+import { publishEventOpen } from "@/publishers/event-open-publisher";
 
 // Get all itineraries
 export async function getAllItineraries(filter: Partial<IItinerary> = {}) {
@@ -29,6 +30,10 @@ export async function createItinerary(itineraryData: IItinerary) {
 export async function updateItinerary(id: string, itineraryData: IItinerary) {
   if (itineraryData.appropriate === false) {
     await sendMarkedInappropriateNotification(id);
+  }
+
+  if (itineraryData.active === true) {
+    await sendItineraryOpenNotification(id);
   }
   return itinerariesRepository.updateItinerary(id, itineraryData);
 }
@@ -56,6 +61,20 @@ export async function sendMarkedInappropriateNotification(itineraryId: string) {
     };
 
     await publishNotification(data);
+  } else {
+    throw new Error("Itinerary not found");
+  }
+}
+
+export async function sendItineraryOpenNotification(itineraryId: string) {
+  const Itinerary = await itinerariesRepository.getItineraryById(itineraryId);
+  if (Itinerary) {
+    const data = {
+      entityId: itineraryId,
+      message: `Itinerary : \n Name: ${Itinerary.name} \nhas been opened for booking.`,
+    };
+
+    await publishEventOpen(data);
   } else {
     throw new Error("Itinerary not found");
   }
