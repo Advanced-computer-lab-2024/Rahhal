@@ -127,14 +127,18 @@ function GeneralGridView() {
       navigate(`/hplace/details/${item._id}/${id ? id : ""}`, { state: { item } });
       return;
     }
-    if (type === "activity")
-      navigate(`/activities/${id}`, {
+    if (type === "activity") {
+      let URL = "/activities" + (id ? `/${id}` : "") + `?eventId=${item._id}`;
+      navigate(URL, {
         state: { item },
       });
-    if (type === "itinerary")
-      navigate(`/itineraries/${id}`, {
+    }
+    if (type === "itinerary") {
+      let URL = "/itineraries" + (id ? `/${id}` : "") + `?eventId=${item._id}`;
+      navigate(URL, {
         state: { item },
       });
+    }
   };
 
   //fetching data

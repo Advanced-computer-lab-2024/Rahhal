@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { OverviewCard } from "../overview-card/OverViewCard";
 import { TPopulatedBooking } from "../../types/home-page-types";
 import { addLoyalityPoints, getUserById } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
 import { createBooking } from "@/api-calls/booking-api-calls";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import TouristHomePageNavigation from "../TouristHomePageNavigation";
 import ItinerariesPageTemplate from "../ItinerariesPageTemplate";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
@@ -14,10 +14,25 @@ import SignUpModal from "../SignupModal";
 import { calculateAge } from "@/utils/age-calculator";
 import BookingModal from "@/features/home/components/payment-modal/PaymentModal";
 import currencyExchange from "@/utils/currency-exchange";
+import { DEFAULT_ITINERARY } from "../../utils/constants";
+import { fetchItineraryById } from "@/api-calls/itineraries-api-calls";
 
 const ItineraryDetailsPage: React.FC = () => {
   const loc = useLocation();
-  const itinerary = loc.state?.item;
+  const [searchParams] = useSearchParams();
+  const eventId = searchParams.get("eventId");
+  const [itinerary, setItinerary] = useState(loc.state?.item || DEFAULT_ITINERARY);
+
+  const empty = itinerary === DEFAULT_ITINERARY;
+
+  useEffect(() => {
+    if (!loc.state?.item && eventId) {
+      fetchItineraryById(eventId).then((data) => {
+        setItinerary(data);
+      });
+    }
+  }, [loc.state?.item, eventId]);
+
   const {
     _id,
     name,
@@ -60,14 +75,13 @@ const ItineraryDetailsPage: React.FC = () => {
 
   React.useEffect(() => {
     if (id) {
-      if (id !== "undefined")
-        getUserById(id).then((user) => {
-          // check if user is under 18 years old
-          if (calculateAge(new Date(user.dob!)) < 18) {
-            setIsButtonDisabled(true);
-            setText("You must be 18 years or older to book this itinerary");
-          }
-        });
+      getUserById(id).then((user) => {
+        // check if user is under 18 years old
+        if (calculateAge(new Date(user.dob!)) < 18) {
+          setIsButtonDisabled(true);
+          setText("You must be 18 years or older to book this itinerary");
+        }
+      });
     }
   }, []);
 
@@ -80,12 +94,12 @@ const ItineraryDetailsPage: React.FC = () => {
   }, [preferenceTags]);
 
   const handleButtonClick = () => {
-    if (!isModalOpen && id!=="undefined" && id) {
+    if (!isModalOpen && id) {
       setIsModalOpen(true);
       return;
     }
 
-    if (id && id !== "undefined") {
+    if (id) {
       createBooking({
         user: id,
         entity: itinerary._id ?? "",
@@ -103,57 +117,61 @@ const ItineraryDetailsPage: React.FC = () => {
 
   return (
     <div>
-      {isGuestAction && (
-        <SignUpModal
-          onClose={() => {
-            setIsGuestAction(false);
-          }}
-          text={"Excited to book? Sign in or create an account to secure your spot now!"}
-        />
-      )}
+      {!empty && (
+        <>
+          {isGuestAction && (
+            <SignUpModal
+              onClose={() => {
+                setIsGuestAction(false);
+              }}
+              text={"Excited to book? Sign in or create an account to secure your spot now!"}
+            />
+          )}
 
-      {isModalOpen && (
-        <BookingModal
-          parentBookingFunc={handleButtonClick}
-          currency={currency}
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          price={Number(convertedDisplayPrice)}
-          name={name}
-          type={"Itinerary"}
-          userId={id?? ""}
-        />
-      )}
+          {isModalOpen && (
+            <BookingModal
+              parentBookingFunc={handleButtonClick}
+              currency={currency}
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              price={Number(convertedDisplayPrice)}
+              name={name}
+              type={"Itinerary"}
+              userId={id ?? ""}
+            />
+          )}
 
-      <TouristHomePageNavigation loggedIn={id ? id !== "undefined" : false} />
-      <ItinerariesPageTemplate
-        _id={_id}
-        name={name}
-        ownerName={ownerName}
-        images={images}
-        dropOffLocation={dropOffLocation}
-        pickUpLocation={pickUpLocation}
-        preferenceTagNames={preferenceTagNames}
-        description={description}
-        ratings={ratings}
-        activities={activities}
-        durationOfActivities={durationOfActivities}
-        languages={languages}
-        accessibility={accessibility}
-      >
-        <OverviewCard
-          currency={currency}
-          originalPrice={price}
-          buttonText={cardButtonText}
-          buttonColor={"gold"}
-          dropdownOptions={cardDropdownOptions}
-          dateOptions={true}
-          disabled={isButtonDisabled}
-          onButtonClick={handleButtonClick}
-          onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
-          footerText={text}
-        />
-      </ItinerariesPageTemplate>
+          <TouristHomePageNavigation loggedIn={id ? true : false} />
+          <ItinerariesPageTemplate
+            _id={_id}
+            name={name}
+            ownerName={ownerName}
+            images={images}
+            dropOffLocation={dropOffLocation}
+            pickUpLocation={pickUpLocation}
+            preferenceTagNames={preferenceTagNames}
+            description={description}
+            ratings={ratings}
+            activities={activities}
+            durationOfActivities={durationOfActivities}
+            languages={languages}
+            accessibility={accessibility}
+          >
+            <OverviewCard
+              currency={currency}
+              originalPrice={price}
+              buttonText={cardButtonText}
+              buttonColor={"gold"}
+              dropdownOptions={cardDropdownOptions}
+              dateOptions={true}
+              disabled={isButtonDisabled}
+              onButtonClick={handleButtonClick}
+              onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
+              footerText={text}
+            />
+          </ItinerariesPageTemplate>
+        </>
+      )}
     </div>
   );
 };

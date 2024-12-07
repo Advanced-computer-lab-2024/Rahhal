@@ -94,7 +94,11 @@ export default function ItinerariesPageTemplate({
           <h6 className="ml-1 mt-1">({ratings.length})</h6>
         </div>
         <div className="flex">
-          <SharePopover link={window.location.href} size={18} shareText={true} />
+          <SharePopover
+            link={`http://localhost:5173/itineraries?eventId=${_id}`}
+            size={18}
+            shareText={true}
+          />
           <Bookmark id={_id} bookmarkType={bookmarkType.Itinerary} />
         </div>
       </div>
