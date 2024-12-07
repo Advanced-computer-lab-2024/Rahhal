@@ -4,6 +4,7 @@ import * as activitiesRepository from "../database/repositories/activities-repos
 import { hasBookings } from "@/utils/booking-axios-instance";
 import { bookingType } from "@/utils/constants";
 import { publishNotification } from "@/publishers/notification-publisher";
+import { publishEventOpen } from "@/publishers/event-open-publisher";
 
 // Get all activities
 export async function getAllActivities(filter: Partial<IActivity>) {
@@ -34,6 +35,11 @@ export async function updateActivity(id: string, activitiesData: IActivity) {
   if (activitiesData.isAppropriate === false) {
     await sendMarkedInappropriateNotification(id);
   }
+
+  if(activitiesData.isBookingOpen === true) {
+    await sendActivityOpenNotification(id);
+  }
+
   return activitiesRepository.updateActivity(id, activitiesData);
 }
 
@@ -56,6 +62,20 @@ export async function sendMarkedInappropriateNotification(activityId: string) {
     };
 
     await publishNotification(data);
+  } else {
+    throw new Error("Activity not found");
+  }
+}
+
+export async function sendActivityOpenNotification(activityId: string) {
+  const activity = await activitiesRepository.getActivityById(activityId);
+  if (activity) {
+    const data = {
+      entityId: activityId,
+      message: `Booking for Activity with: \n Name: ${activity.name} and Date ${activity.date} \nis now open. \nBook your slots now!`,
+    };
+
+    await publishEventOpen(data);
   } else {
     throw new Error("Activity not found");
   }
