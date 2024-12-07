@@ -31,8 +31,8 @@ export default function Checkout() {
     queryFn: () => getUserById(id as string),
     enabled: !!id,
   });
-  const cart = CartExample;
 
+  const cart = CartExample;
   const { currency } = useCurrencyStore();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -159,7 +159,7 @@ export default function Checkout() {
               <h1 className="text-5xl font-semibold">Checkout</h1>
             </div>
             {currentCheckoutStep === 2 ? (
-              <>
+              <div className="mt-10">
                 <PaymentOptions
                   selectedPaymentMethod={selectedPaymentMethod}
                   stripePaymentTrigger={stripePaymentTrigger}
@@ -174,7 +174,7 @@ export default function Checkout() {
                     <ArrowLeft className="h-5 w-5 " />
                   </Button>
                 </div>
-              </>
+              </div>
             ) : (
               <div className="space-y-6">
                 <div>

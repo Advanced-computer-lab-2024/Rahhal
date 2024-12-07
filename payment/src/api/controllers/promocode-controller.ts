@@ -44,12 +44,12 @@ export async function deletePromocode(req: Request, res: Response) {
 }
 
 export async function applyPromocode(req: Request, res: Response) {
-    try {
-        const id = req.params.id;
-        const code = req.body.code;
-        const promocode = await promocodeService.applyPromocode(id, code);
-        res.status(STATUS_CODES.STATUS_OK).json(promocode);
-    } catch (error: any) {
-        res.status(STATUS_CODES.STATUS_OK).json({ message: error.message });
-    }
+  try {
+    const id = req.params.id;
+    const code = req.body.code;
+    const promocode = await promocodeService.applyPromocode(id, code);
+    res.status(STATUS_CODES.STATUS_OK).json(promocode);
+  } catch (error: any) {
+    res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
+  }
 }
