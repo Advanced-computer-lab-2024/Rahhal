@@ -1,4 +1,3 @@
-import { useState } from "react";
 import ButtonStyles from "../../styles/Overview-card-styles/OverViewButton.module.css";
 import AnimatedNotificationBell from "../NotificationBell";
 interface ButtonProps {
@@ -6,29 +5,18 @@ interface ButtonProps {
   onClick?: () => void;
   color: "gold" | "red" | "blue";
   disabled?: boolean;
-  notify?: boolean;
+  isNotifyAnimating: boolean;
 }
 
-export const OverViewButton: React.FC<ButtonProps> = ({
-  label,
-  onClick,
-  color,
-  disabled,
-  notify,
-}) => {
-  const [isAnimating, setIsAnimating] = useState(false);
-  const handleButtonClick = () => {
-    setIsAnimating(true);
-    setTimeout(() => setIsAnimating(false), 1000);
-    onClick && onClick();
-  };
+export const OverViewButton: React.FC<ButtonProps> = ({ label, onClick, color, disabled, isNotifyAnimating }) => {
+
   return (
     <button
       className={`${ButtonStyles.button} ${ButtonStyles[color]} ${disabled ? ButtonStyles.disabled : ""}`}
-      onClick={notify ? handleButtonClick : onClick}
+      onClick={onClick}
       disabled={disabled}
     >
-      {color === "blue" && <AnimatedNotificationBell color={"white"} animate={isAnimating} />}
+      {color === "blue" && <AnimatedNotificationBell color={"white"} animate={isNotifyAnimating} />}
       {label}
     </button>
   );

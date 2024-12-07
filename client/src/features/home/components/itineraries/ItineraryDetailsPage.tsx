@@ -16,6 +16,8 @@ import BookingModal from "@/features/home/components/payment-modal/PaymentModal"
 import currencyExchange from "@/utils/currency-exchange";
 import { DEFAULT_ITINERARY } from "../../utils/constants";
 import { fetchItineraryById } from "@/api-calls/itineraries-api-calls";
+import { toast } from "@/hooks/use-toast";
+import { createNotifyRequest } from "@/api-calls/notify-requests-api-calls";
 
 const ItineraryDetailsPage: React.FC = () => {
   const loc = useLocation();
@@ -49,6 +51,7 @@ const ItineraryDetailsPage: React.FC = () => {
     languages,
     preferenceTags,
     ownerName,
+    active,
   } = itinerary;
 
   const cardDropdownOptions = availableDatesTime
@@ -64,6 +67,7 @@ const ItineraryDetailsPage: React.FC = () => {
   const [text, setText] = useState<string>();
   const cardButtonText = "Book Itinerary";
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isNotifyAnimating, setIsNotifyAnimating] = React.useState(false);
 
   const closeModal = () => setIsModalOpen(false);
 
@@ -93,7 +97,7 @@ const ItineraryDetailsPage: React.FC = () => {
     }
   }, [preferenceTags]);
 
-  const handleButtonClick = () => {
+  const handleBookButtonClick = () => {
     if (!isModalOpen && id) {
       setIsModalOpen(true);
       return;
@@ -115,6 +119,28 @@ const ItineraryDetailsPage: React.FC = () => {
     }
   };
 
+  const handleNotifyButtonClick = () => {
+    setIsNotifyAnimating(true);
+    setTimeout(() => setIsNotifyAnimating(false), 1000);
+
+    if (id){
+      createNotifyRequest({
+        user: id,
+        entity: _id,
+      });
+
+      toast({
+        title: `You will be notified when activity is available`,
+        duration: 3500,
+      });
+    } else {
+      toast({
+        title: `You Must be logged in`,
+        duration: 3500,
+      });
+    } 
+  };
+
   return (
     <div>
       {!empty && (
@@ -130,7 +156,7 @@ const ItineraryDetailsPage: React.FC = () => {
 
           {isModalOpen && (
             <BookingModal
-              parentBookingFunc={handleButtonClick}
+              parentBookingFunc={handleBookButtonClick}
               currency={currency}
               isOpen={isModalOpen}
               onClose={closeModal}
@@ -165,9 +191,10 @@ const ItineraryDetailsPage: React.FC = () => {
               dropdownOptions={cardDropdownOptions}
               dateOptions={true}
               disabled={isButtonDisabled}
-              onButtonClick={handleButtonClick}
+              onButtonClick={(active && !isButtonDisabled && !isGuestAction) ? handleBookButtonClick : handleNotifyButtonClick}
               onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
               footerText={text}
+              isNotifyAnimating={isNotifyAnimating}
             />
           </ItinerariesPageTemplate>
         </>

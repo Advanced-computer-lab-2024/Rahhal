@@ -448,3 +448,8 @@ export interface INotification {
   message: string;
   seen: boolean;
 }
+
+export interface INotifyRequest {
+  user: string;
+  entity: string;
+}

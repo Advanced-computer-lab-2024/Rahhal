@@ -17,6 +17,7 @@ import { fetchActivityById } from "@/api-calls/activities-api-calls";
 import { DEFAULT_ACTIVITY } from "../../utils/constants";
 import { toast } from "@/hooks/use-toast";
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
+import { createNotifyRequest } from "@/api-calls/notify-requests-api-calls";
 
 const ActivityDetailsPage: React.FC = () => {
   const loc = useLocation();
@@ -59,6 +60,7 @@ const ActivityDetailsPage: React.FC = () => {
   const [isGuestAction, setIsGuestAction] = React.useState(false);
   const [text, setText] = React.useState<string>();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isNotifyAnimating, setIsNotifyAnimating] = React.useState(false);
 
   const { currency } = useCurrencyStore();
   const { rates } = useRatesStore();
@@ -86,7 +88,7 @@ const ActivityDetailsPage: React.FC = () => {
     }
   }, [preferenceTags]);
 
-  const handleButtonClick = () => {
+  const handleBookButtonClick = () => {
     if (!isModalOpen && id) {
       setIsModalOpen(true);
       return;
@@ -114,6 +116,28 @@ const ActivityDetailsPage: React.FC = () => {
     } else {
       setIsGuestAction(true);
     }
+  };
+
+  const handleNotifyButtonClick = () => {
+    setIsNotifyAnimating(true);
+    setTimeout(() => setIsNotifyAnimating(false), 1000);
+
+    if (id){
+      createNotifyRequest({
+        user: id,
+        entity: _id,
+      });
+
+      toast({
+        title: `You will be notified when activity is available`,
+        duration: 3500,
+      });
+    } else {
+      toast({
+        title: `You Must be logged in`,
+        duration: 3500,
+      });
+    } 
   };
 
   const onTicketSelect = (index: number) => {
@@ -155,7 +179,7 @@ const ActivityDetailsPage: React.FC = () => {
 
           {isModalOpen && (
             <BookingModal
-              parentBookingFunc={handleButtonClick}
+              parentBookingFunc={handleBookButtonClick}
               discountPerc={specialDiscount}
               currency={currency}
               isOpen={isModalOpen}
@@ -186,11 +210,11 @@ const ActivityDetailsPage: React.FC = () => {
               date={formattedDate}
               time={formattedTime}
               disabled={isButtonDisabled && isBookingOpen}
-              onButtonClick={handleButtonClick}
+              onButtonClick={(isBookingOpen && !isButtonDisabled && !isGuestAction) ? handleBookButtonClick : handleNotifyButtonClick}
               discount={specialDiscount}
               onTicketSelect={onTicketSelect}
               tickets={tickets}
-              notify={isBookingOpen && !isButtonDisabled && !isGuestAction}
+              isNotifyAnimating={isNotifyAnimating}
               footerText={text}
             />
           </DetailsPageTemplateProps>
