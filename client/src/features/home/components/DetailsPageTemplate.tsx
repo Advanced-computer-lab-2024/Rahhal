@@ -39,16 +39,18 @@ export default function DetailsPageTemplate({
   const [locationName, setLocationName] = React.useState("");
 
   useEffect(() => {
-    const updateLocation = async () => {
-      const locationDetails = await fetchLocationDetails({
-        lat: location.latitude,
-        lng: location.longitude,
-      });
-      const locationDescription = (locationDetails as { description?: string })?.description;
+    if (location.latitude && location.longitude) {
+      const updateLocation = async () => {
+        const locationDetails = await fetchLocationDetails({
+          lat: location.latitude,
+          lng: location.longitude,
+        });
+        const locationDescription = (locationDetails as { description?: string })?.description;
 
-      setLocationName(locationDescription ?? "Undefined");
-    };
-    updateLocation();
+        setLocationName(locationDescription ?? "Undefined");
+      };
+      updateLocation();
+    }
   }, [locationName]);
 
   useEffect(() => {
@@ -67,7 +69,11 @@ export default function DetailsPageTemplate({
           <h6 className="ml-1 mt-1">({ratings.length})</h6>
         </div>
         <div className="flex">
-          <SharePopover link={window.location.href} size={18} shareText={true} />
+          <SharePopover
+            link={`http://localhost:5173/activities?eventId=${_id}`}
+            size={18}
+            shareText={true}
+          />
           <Bookmark id={_id} bookmarkType={bookmarkType.Activity} />
         </div>
       </div>

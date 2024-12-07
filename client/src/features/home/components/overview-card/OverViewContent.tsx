@@ -27,6 +27,7 @@ interface ContentProps {
   dropdownOptions?: { value: string; label: string }[];
   onDateChange?: (selectedDate: string) => void; // Handler for dropdown selection
   onTicketSelect?: (index: number) => void; // Handler for ticket selection
+  notify?: boolean;
   footerText?: string;
 }
 
@@ -46,6 +47,7 @@ export const OverViewContent: React.FC<ContentProps> = ({
   dropdownOptions,
   onDateChange,
   onTicketSelect,
+  notify,
   footerText,
 }) => {
   const [selectedTicket, setSelectedTicket] = useState<number>(0);
@@ -108,6 +110,7 @@ export const OverViewContent: React.FC<ContentProps> = ({
         onClick={onButtonClick}
         color={buttonColor}
         disabled={disabled}
+        notify={notify}
       />
 
       {button2Text && onButton2Click && button2Color && (

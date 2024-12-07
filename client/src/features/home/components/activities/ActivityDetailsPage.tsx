@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { OverviewCard } from "../overview-card/OverViewCard";
 import { TPopulatedBooking } from "../../types/home-page-types";
 import { addLoyalityPoints, getUserById } from "@/api-calls/users-api-calls";
@@ -7,16 +7,35 @@ import { createBooking } from "@/api-calls/booking-api-calls";
 import { formatDate, formatTime } from "../../utils/filter-lists/overview-card";
 import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
 import DetailsPageTemplateProps from "../DetailsPageTemplate";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import TouristHomePageNavigation from "../TouristHomePageNavigation";
 import { bookingType } from "@/utils/enums";
 import SignUpModal from "../SignupModal";
 import { calculateAge } from "@/utils/age-calculator";
 import BookingModal from "@/features/home/components/payment-modal/PaymentModal";
+import { fetchActivityById } from "@/api-calls/activities-api-calls";
+import { DEFAULT_ACTIVITY } from "../../utils/constants";
+import { toast } from "@/hooks/use-toast";
+import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 
 const ActivityDetailsPage: React.FC = () => {
   const loc = useLocation();
-  const activity = loc.state?.item;
+  const [searchParams] = useSearchParams();
+  const eventId = searchParams.get("eventId");
+  const [activity, setActivity] = useState(loc.state?.item || DEFAULT_ACTIVITY);
+
+  const empty = activity === DEFAULT_ACTIVITY;
+
+  useEffect(() => {
+    if (!loc.state?.item && eventId) {
+      fetchActivityById(eventId).then((data) => {
+        setActivity(data);
+        const activityData = data as TActivity;
+        setSelectedPrice(activityData.price[Object.keys(activityData.price)[0]]);
+      });
+    }
+  }, [loc.state?.item, eventId]);
+
   const {
     _id,
     name,
@@ -45,19 +64,17 @@ const ActivityDetailsPage: React.FC = () => {
   const { rates } = useRatesStore();
   const { id } = useParams();
 
- 
   const closeModal = () => setIsModalOpen(false);
 
   React.useEffect(() => {
     if (id) {
-      if (id !== "undefined")
-        getUserById(id).then((user) => {
-          // check if user is under 18 years old
-          if (calculateAge(new Date(user.dob!)) < 18) {
-            setIsButtonDisabled(true);
-            setText("You must be 18 years or older to book this activity");
-          }
-        });
+      getUserById(id).then((user) => {
+        // check if user is under 18 years old
+        if (calculateAge(new Date(user.dob!)) < 18) {
+          setIsButtonDisabled(true);
+          setText("You must be 18 years or older to book this activity");
+        }
+      });
     }
   }, []);
 
@@ -70,22 +87,30 @@ const ActivityDetailsPage: React.FC = () => {
   }, [preferenceTags]);
 
   const handleButtonClick = () => {
-    if (!isModalOpen && id!=="undefined" && id) {
+    if (!isModalOpen && id) {
       setIsModalOpen(true);
       return;
     }
 
-    if (id && id !== "undefined") {
-      createBooking({
-        user: id,
-        entity: activity._id ?? "",
-        type: bookingType.Activity,
-        selectedPrice: selectedPrice!,
-        selectedDate: activity.date,
-      }).then((response) => {
-        const booking = response as TPopulatedBooking;
-        addLoyalityPoints(id, booking.selectedPrice);
-      });
+    if (id) {
+      if (isBookingOpen) {
+        createBooking({
+          user: id,
+          entity: activity._id ?? "",
+          type: bookingType.Activity,
+          selectedPrice: selectedPrice!,
+          selectedDate: activity.date,
+        }).then((response) => {
+          const booking = response as TPopulatedBooking;
+          addLoyalityPoints(id, booking.selectedPrice);
+        });
+      } else {
+        // add notify logic here
+        toast({
+          title: `You will be notified when activity is available`,
+          duration: 3500,
+        });
+      }
     } else {
       setIsGuestAction(true);
     }
@@ -117,55 +142,60 @@ const ActivityDetailsPage: React.FC = () => {
   });
   return (
     <div>
-      {isGuestAction && (
-        <SignUpModal
-          onClose={() => {
-            setIsGuestAction(false);
-          }}
-          text={"Excited to book? Sign in or create an account to secure your spot now!"}
-        />
-      )}
+      {!empty && (
+        <>
+          {isGuestAction && (
+            <SignUpModal
+              onClose={() => {
+                setIsGuestAction(false);
+              }}
+              text={"Excited to book? Sign in or create an account to secure your spot now!"}
+            />
+          )}
 
-      {isModalOpen && (
-        <BookingModal
-          parentBookingFunc={handleButtonClick}
-          discountPerc={specialDiscount}
-          currency={currency}
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          price={convertedSelectedPrice ?? 0}
-          name={name}
-          type={"Activity"}
-          userId={id ?? ""}
-        />
-      )}
+          {isModalOpen && (
+            <BookingModal
+              parentBookingFunc={handleButtonClick}
+              discountPerc={specialDiscount}
+              currency={currency}
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              price={convertedSelectedPrice ?? 0}
+              name={name}
+              type={"Activity"}
+              userId={id ?? ""}
+            />
+          )}
 
-      <TouristHomePageNavigation loggedIn={id ? id !== "undefined" : false} />
-      <DetailsPageTemplateProps
-        _id={_id}
-        name={name}
-        ownerName={ownerName}
-        images={images}
-        location={location}
-        preferenceTagNames={preferenceTagNames}
-        description={description}
-        ratings={ratings}
-      >
-        <OverviewCard
-          currency={currency}
-          originalPrice={selectedPrice}
-          buttonText={cardButtonText}
-          buttonColor={isBookingOpen ? "gold" : "blue"}
-          date={formattedDate}
-          time={formattedTime}
-          disabled={isButtonDisabled && isBookingOpen}
-          onButtonClick={handleButtonClick}
-          discount={specialDiscount}
-          onTicketSelect={onTicketSelect}
-          tickets={tickets}
-          footerText={text}
-        />
-      </DetailsPageTemplateProps>
+          <TouristHomePageNavigation loggedIn={id ? true : false} />
+          <DetailsPageTemplateProps
+            _id={_id}
+            name={name}
+            ownerName={ownerName}
+            images={images}
+            location={location}
+            preferenceTagNames={preferenceTagNames}
+            description={description}
+            ratings={ratings}
+          >
+            <OverviewCard
+              currency={currency}
+              originalPrice={selectedPrice}
+              buttonText={cardButtonText}
+              buttonColor={isBookingOpen ? "gold" : "blue"}
+              date={formattedDate}
+              time={formattedTime}
+              disabled={isButtonDisabled && isBookingOpen}
+              onButtonClick={handleButtonClick}
+              discount={specialDiscount}
+              onTicketSelect={onTicketSelect}
+              tickets={tickets}
+              notify={isBookingOpen && !isButtonDisabled && !isGuestAction}
+              footerText={text}
+            />
+          </DetailsPageTemplateProps>
+        </>
+      )}
     </div>
   );
 };

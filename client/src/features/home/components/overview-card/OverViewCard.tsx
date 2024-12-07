@@ -23,6 +23,7 @@ interface OverviewCardProps {
   dropdownOptions?: { value: string; label: string }[]; // Options for the dropdown
   onTicketSelect?: (index: number) => void; // Handler for ticket selection
   selectedTicketIndex?: number; // Index of the selected ticket
+  notify?: boolean; // Optional for the notification bell
   footerText?: string; // Optional for any extra text to be displayed
 }
 
@@ -45,6 +46,7 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({
   disabled,
   disabled2,
   onTicketSelect,
+  notify,
   footerText,
 }) => {
   return (
@@ -69,6 +71,7 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({
         disabled={disabled}
         disabled2={disabled2}
         onTicketSelect={onTicketSelect}
+        notify={notify}
         footerText={footerText}
       />
     </div>
