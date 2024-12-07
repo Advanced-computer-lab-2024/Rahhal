@@ -101,7 +101,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
                   </div>
                 </>
               ) : null}
-
+              <CurrencyDropdown />
               <ProfileAvatar />
             </div>
           </>
