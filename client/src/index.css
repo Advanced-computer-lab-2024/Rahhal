@@ -32,20 +32,19 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
 
-    
-    --primary-color: #E1BC6D;
-    --primary-color-hover: #C8A259;
-    --primary-color-dark: #C8A259;
-    --primary-color-fade: #E0D1A5;
+    --primary-color: #e1bc6d;
+    --primary-color-hover: #c8a259;
+    --primary-color-dark: #c8a259;
+    --primary-color-fade: #e0d1a5;
 
     --secondary-color: #f3dba2;
     --secondary-color-hover: #f0e3c0;
 
-    --complimentary-color: #6D91E1;
-    --complimentary-color-dark: #5875B7;
-    --complimentary-color-fade: #A4BCE1;
+    --complimentary-color: #6d91e1;
+    --complimentary-color-dark: #5875b7;
+    --complimentary-color-fade: #a4bce1;
 
-    --grey-scale:#E6E6E6;
+    --grey-scale: #e6e6e6;
 
     --sidebar-background: 204 47% 21%;
     --sidebar-foreground: 43 65% 66%;
@@ -90,6 +89,7 @@
     --sidebar-accent-foreground: 204 47% 21%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --grey-scale: #e6e6e6;
   }
 }
 
@@ -99,8 +99,8 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Poppins';
-    
+    font-family: "Poppins";
+
     /* padding: 0 16px;  */
   }
 }
