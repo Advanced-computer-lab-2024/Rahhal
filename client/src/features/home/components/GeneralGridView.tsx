@@ -76,6 +76,8 @@ function GeneralGridView() {
     queryFn: fetchActiveAppropriateItineraries,
     select: (data) => data as Itinerary[],
   });
+  console.log("Itineraries2: ",itineraries);
+  
   const {
     data: historicalPlaces,
     isLoading: isHistoricalPlaces,

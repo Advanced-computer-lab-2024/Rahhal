@@ -33,7 +33,6 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   const [flightRequest, setFlightRequest] = useState<FlightRequest | null>(null);
   const [taxiSkeleton, setTaxiSkeleton] = useState<boolean>(false);
   const [flightSkeleton, setFlightSkeleton] = useState<boolean>(false);
-
   const { id } = useParams<{ id: string }>();
   const userId = id ? id : "";
   const { data: userData } = useQuery({
@@ -41,6 +40,8 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     queryFn: () => getUserById(userId ? userId : ""),
     enabled: !!userId,
   });
+
+
 
   useEffect(() => {
     if (userData) {
@@ -251,23 +252,23 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     return pickUpGeocode && dropOffGeocode
       ? start
         ? {
-            startLocationCode: airportCode,
-            endGeoCode: `${dropOffGeocode.lat},${dropOffGeocode.lng}`,
-            endAddressLine: dropOffLocation[0],
-            endCountryCode: dropOffCountryCode,
-            transferType: "PRIVATE",
-            startDateTime: departureTime[0].toISOString(),
-            passengers: passengers,
-          }
+          startLocationCode: airportCode,
+          endGeoCode: `${dropOffGeocode.lat},${dropOffGeocode.lng}`,
+          endAddressLine: dropOffLocation[0],
+          endCountryCode: dropOffCountryCode,
+          transferType: "PRIVATE",
+          startDateTime: departureTime[0].toISOString(),
+          passengers: passengers,
+        }
         : {
-            startGeoCode: `${pickUpGeocode.lat},${pickUpGeocode.lng}`,
-            startAddressLine: pickupLocation[0],
-            startCountryCode: pickUpCountryCode,
-            endLocationCode: airportCode,
-            transferType: "PRIVATE",
-            startDateTime: departureTime[0].toISOString(),
-            passengers: passengers,
-          }
+          startGeoCode: `${pickUpGeocode.lat},${pickUpGeocode.lng}`,
+          startAddressLine: pickupLocation[0],
+          startCountryCode: pickUpCountryCode,
+          endLocationCode: airportCode,
+          transferType: "PRIVATE",
+          startDateTime: departureTime[0].toISOString(),
+          passengers: passengers,
+        }
       : null;
   };
   const prepareFlightRequest = async () => {
@@ -329,12 +330,14 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   };
   return (
     <>
-      <TravelPageHeader
-        transferType={transferType}
-        setTransferType={setTransferType}
-        onIconClickTaxis={onIconClickTaxis}
-        onIconClickFlights={onIconClickFlights}
-      />
+      <div id="travel-searchBar-tour">
+        <TravelPageHeader
+          transferType={transferType}
+          setTransferType={setTransferType}
+          onIconClickTaxis={onIconClickTaxis}
+          onIconClickFlights={onIconClickFlights}
+        />
+      </div>
       <div className="flex justify-end px-16 py-[1%]">
         <Button
           className={`ml-2 rounded-full bg-transparent text-black hover:bg-gray-200 px-6 py-3 text-md ${transferType === "taxis" && "bg-gray-200"} `}

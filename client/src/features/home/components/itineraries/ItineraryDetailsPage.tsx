@@ -184,6 +184,7 @@ const ItineraryDetailsPage: React.FC = () => {
             languages={languages}
             accessibility={accessibility}
           >
+                        <div id="book-itinerary-tour">
             <OverviewCard
               currency={currency}
               originalPrice={price}
@@ -197,6 +198,7 @@ const ItineraryDetailsPage: React.FC = () => {
               footerText={text}
               isNotifyAnimating={isNotifyAnimating}
             />
+            </div>
           </ItinerariesPageTemplate>
         </>
       )}

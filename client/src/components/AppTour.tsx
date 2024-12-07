@@ -28,10 +28,16 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const fetchItineraries = async () => {
             try {
                 const itineraries = await fetchActiveAppropriateItineraries() as Itinerary[];
+                const today = new Date();
+                const filteredItineraries = itineraries.filter((item) => {
+                    const itemDates = item.availableDatesTime.map((date) => new Date(date.Date));
+                    return itemDates.some((date) => date >= today);
+                });
+                console.log("filteredItineraries: ", filteredItineraries);
 
-                if (itineraries && itineraries.length > 0) {
+                if (filteredItineraries && filteredItineraries.length > 0) {
                     // Get the first activity
-                    const firstItinerary = itineraries[0];
+                    const firstItinerary = filteredItineraries[0];
                     console.log("specificItinerary", firstItinerary);
 
                     // Set the specific itinerary in state
@@ -65,6 +71,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         description: "Start here!"
                     }
                 },
+                //Book An Experience
                 {
                     element: "#experiences-tour",
                     popover: {
@@ -73,7 +80,9 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         onNextClick: () => {
                             // Check if specific itinerary exists before navigating
                             if (specificItinerary) {
-                                navigate(`/itineraries/${specificItinerary._id}`, {
+                                console.log("Navigating to specific itinerary:", specificItinerary);
+
+                                navigate(`/itineraries?eventId=${specificItinerary._id}`, {
                                     state: { item: specificItinerary }
                                 });
 
@@ -100,9 +109,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                             }, 500);
                         },
                         onPrevClick: () => {
-
                             navigate("/entertainment");
-
                             setTimeout(() => {
                                 tourDriver.movePrevious();
                             }, 50);
@@ -116,6 +123,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         title: "Booking",
                         description: "This is the page where you book your experiences!",
                         onNextClick: () => {
+                            navigate("/stays")
                             setTimeout(() => {
                                 tourDriver.moveNext();
                             }, 500);
@@ -126,15 +134,40 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                             }, 50);
                         }
                     }
-                    
+
                 },
+                //Book A Stay
                 {
                     element: "#nav-bar-tour",
                     popover: {
                         title: "Navigation",
                         description: "Now We Look at stays!",
                         onNextClick: () => {
-                            navigate("/stays");
+                            setTimeout(() => {
+                                tourDriver.moveNext();
+                            }, 50);
+                        },
+                        onPrevClick: () => {
+                            if (specificItinerary) {
+                                console.log("Navigating to specific itinerary:", specificItinerary);
+
+                                navigate(`/itineraries?eventId=${specificItinerary._id}`, {
+                                    state: { item: specificItinerary }
+                                });
+                                // Move to the next tour step after navigation
+                                setTimeout(() => {
+                                    tourDriver.movePrevious();
+                                }, 500);
+                            }
+                        }
+                    }
+                },
+                {
+                    element: "#stays-searchBar-tour",
+                    popover: {
+                        title: "Search Bar",
+                        description: "Search For Your Perfect Stay!",
+                        onNextClick: () => {
                             setTimeout(() => {
                                 tourDriver.moveNext();
                             }, 50);
@@ -142,17 +175,18 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         onPrevClick: () => {
                             setTimeout(() => {
                                 tourDriver.movePrevious();
-                            }, 50);
+                            }, 500);
                         }
+
                     }
                 },
                 {
-                    element: "#nav-bar-tour",
+                    element: "#trending-stays-tour",
                     popover: {
-                        title: "Navigation",
-                        description: "Now We Look at stays!",
+                        title: "Trending Stays",
+                        description: "You can also reserve one of the trending stays!",
                         onNextClick: () => {
-                            navigate("/stays");
+                            navigate("stays/hotel/1");
                             setTimeout(() => {
                                 tourDriver.moveNext();
                             }, 50);
@@ -160,10 +194,84 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         onPrevClick: () => {
                             setTimeout(() => {
                                 tourDriver.movePrevious();
-                            }, 50);
-                        }
+                            }, 500);
+                        },
+                        side: "top",
+                        align: "center"
+
                     }
                 },
+                {
+                    element: "#stay-reservation-details-tour",
+                    popover: {
+                        title: "Reservation Details",
+                        description: "Reserve from here!",
+                        onNextClick: () => {
+                            setTimeout(() => {
+                                tourDriver.moveNext();
+                            }, 50);
+                        },
+                        onPrevClick: () => {
+                            navigate("/stays");
+                            setTimeout(() => {
+                                tourDriver.movePrevious();
+                            }, 500);
+                        },
+                        side: "top",
+                        align: "end"
+
+                    }
+                },
+                //Travel
+                {
+                    element: "#nav-bar-tour",
+                    popover: {
+                        title: "Navigation",
+                        description: "Now We Look at Travel!",
+                        onNextClick: () => {
+                            navigate("/travel");
+                            setTimeout(() => {
+                                tourDriver.moveNext();
+                            }, 50);
+                        },
+                        onPrevClick: () => {
+                            navigate("stays/hotel/1");
+                            setTimeout(() => {
+                                tourDriver.moveNext();
+                            }, 50);
+                        },
+                    }
+                },
+                {
+                    element: "#travel-searchBar-tour",
+                    popover: {
+                        title: "SearchBar",
+                        description: "Search For Your Perfect Travel!",
+                        onNextClick: () => {
+                            // Directly call the globally exposed function from TravelPage
+                            // This function was set up in the useEffect in TravelPage
+                            if ((window as any).tourTaxiSearch) {
+                              (window as any).tourTaxiSearch();
+                            }              
+                            setTimeout(() => {
+                              tourDriver.moveNext();
+                            }, 500);
+                          },
+                        onPrevClick: () => {
+                            navigate("stays/hotel/1");
+                            setTimeout(() => {
+                                tourDriver.moveNext();
+                            }, 50);
+                        },
+                    }
+                },
+                {
+                    element: "#transportation-reserve-tour",
+                    popover: {
+                        title: "Transportation",
+                        description: "Reserve from here!",
+                    }
+                }
             ]
         });
 

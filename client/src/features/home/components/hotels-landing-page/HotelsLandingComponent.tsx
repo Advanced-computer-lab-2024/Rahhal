@@ -90,21 +90,22 @@ export default function HotelsLandingComponent() {
         </div>
       </div>
 
-      {/* Carousel Section */}
-      <div className="px-4 sm:px-0 py-8">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">Trending destinations</h1>
-        <div className="relative">
-          <Carousel
-            opts={{
-              align: "start",
-              loop: true,
-            }}
-            className="w-full"
-            ref={emblaRef}
-          >
-            <CarouselContent className="flex gap-0">
-              {loading
-                ? Array.from({ length: slidesPerView }).map((_, index) => (
+      <div id="trending-stays-tour">
+        {/* Carousel Section */}
+        <div className="px-4 sm:px-0 py-8">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">Trending destinations</h1>
+          <div className="relative">
+            <Carousel
+              opts={{
+                align: "start",
+                loop: true,
+              }}
+              className="w-full"
+              ref={emblaRef}
+            >
+              <CarouselContent className="flex gap-0">
+                {loading
+                  ? Array.from({ length: slidesPerView }).map((_, index) => (
                     <CarouselItem
                       key={index}
                       className="pl-0 md:pl-4 cursor-pointer"
@@ -119,7 +120,7 @@ export default function HotelsLandingComponent() {
                       </div>
                     </CarouselItem>
                   ))
-                : hotels.map((hotel, index) => (
+                  : hotels.map((hotel, index) => (
                     <CarouselItem
                       key={index}
                       className="pl-0 md:pl-4 cursor-pointer"
@@ -128,10 +129,11 @@ export default function HotelsLandingComponent() {
                       <HotelCard hotel={hotel} index={index} />
                     </CarouselItem>
                   ))}
-            </CarouselContent>
-            <CarouselPrevious className="hidden sm:flex left-0 sm:-left-12" />
-            <CarouselNext className="hidden sm:flex right-0 sm:-right-12" />
-          </Carousel>
+              </CarouselContent>
+              <CarouselPrevious className="hidden sm:flex left-0 sm:-left-12" />
+              <CarouselNext className="hidden sm:flex right-0 sm:-right-12" />
+            </Carousel>
+          </div>
         </div>
       </div>
     </div>

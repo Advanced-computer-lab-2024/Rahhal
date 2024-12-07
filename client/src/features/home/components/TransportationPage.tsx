@@ -12,7 +12,7 @@ interface TransportationPageProps {
 }
 
 function TransportationPage({ data, loggedIn, id, isAdult }: TransportationPageProps) {
-  const [selectedTaxi, setSelectedTaxi] = useState<number | null>(null);
+  const [selectedTaxi, setSelectedTaxi] = useState<number | null>(0);
 
   const { selectedPickupLocation, selectedDropOffLocation } = useSearchBarStore();
 
@@ -36,22 +36,24 @@ function TransportationPage({ data, loggedIn, id, isAdult }: TransportationPageP
           );
         })}
       </div>
-      <div className="p-10">
-        {selectedTaxi !== null && (
-          <TaxiRoute
-            amount={parseFloat(data[selectedTaxi].quotation.monetaryAmount)}
-            originalCurrency={data[selectedTaxi].quotation.currencyCode}
-            departure={selectedPickupLocation}
-            destination={selectedDropOffLocation}
-            serviceProvider={data[selectedTaxi].serviceProvider.name}
-            cancellationRule={data[selectedTaxi].cancellationRules[0].ruleDescription}
-            carType={data[selectedTaxi].vehicle.description}
-            selectedTaxi={data[selectedTaxi]}
-            userID={id ? id : ""}
-            loggedIn={loggedIn}
-            isAdult={isAdult}
-          />
-        )}
+      <div id="transportation-reserve-tour">
+        <div className="p-10">
+          {selectedTaxi !== null && (
+            <TaxiRoute
+              amount={parseFloat(data[selectedTaxi].quotation.monetaryAmount)}
+              originalCurrency={data[selectedTaxi].quotation.currencyCode}
+              departure={selectedPickupLocation}
+              destination={selectedDropOffLocation}
+              serviceProvider={data[selectedTaxi].serviceProvider.name}
+              cancellationRule={data[selectedTaxi].cancellationRules[0].ruleDescription}
+              carType={data[selectedTaxi].vehicle.description}
+              selectedTaxi={data[selectedTaxi]}
+              userID={id ? id : ""}
+              loggedIn={loggedIn}
+              isAdult={isAdult}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

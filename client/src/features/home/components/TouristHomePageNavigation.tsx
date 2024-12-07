@@ -112,6 +112,8 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
 }
 
 function NavigationButton(ButtonProps: ButtonProps) {
+  const subPaths = ["/stays", "/travel","/shop"];
+
   return (
     <Link to={ButtonProps.path}>
       <div
@@ -125,8 +127,9 @@ function NavigationButton(ButtonProps: ButtonProps) {
       >
         <Button
           className={cn(
-            "rounded-none rounded-t-md relative w-20 h-6 text-foreground bg-transparent hover:bg-transparent",
-            ButtonProps.navigation === ButtonProps.index
+            "rounded-none rounded-t-md relative w-20 text-foreground bg-transparent hover:bg-transparent",
+            location.pathname.includes(ButtonProps.path) || 
+            (ButtonProps.path === "/entertainment" && !subPaths.some(subPath => location.pathname.includes(subPath)))
               ? "font-semibold"
               : "text-muted-foreground",
           )}
