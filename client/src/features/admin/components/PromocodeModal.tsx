@@ -3,19 +3,28 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { DEFAULTS } from "@/lib/constants";
 import { TPromocode } from "@/types/shared";
-import { submitPromocode } from "@/api-calls/promocode-api-calls";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { submitPromocode } from "@/api-calls/promocode-api-calls";
 import { ToggleableSwitchCard } from "@//components/ToggleableSwitchCard";
 import { FaCircleCheck } from "react-icons/fa6";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
+import { toast } from "@/hooks/use-toast";
+import { STATUS_CODES } from "@/lib/constants";
 
 interface PromocodeModalProps {
   promocodeData?: TPromocode;
   dialogTrigger?: React.ReactNode;
+  onDelete?: (id: string) => void;
+  onSubmit?: (promocode: TPromocode) => void;
 }
 
-export function PromocodeModal({ promocodeData, dialogTrigger }: PromocodeModalProps) {
+export function PromocodeModal({
+  promocodeData,
+  dialogTrigger,
+  onDelete,
+  onSubmit,
+}: PromocodeModalProps) {
   const isNewPromocode: boolean = promocodeData == undefined;
   const [modalPromocodeData, setModalPromocodeData] = useState<TPromocode | undefined>(
     promocodeData,
@@ -26,14 +35,50 @@ export function PromocodeModal({ promocodeData, dialogTrigger }: PromocodeModalP
     }
   }, []);
 
+  const handleDelete = () => {
+    console.log("Deleting promocode");
+    console.log(modalPromocodeData);
+    if (modalPromocodeData && onDelete) {
+      onDelete(modalPromocodeData._id);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!modalPromocodeData) return;
+    
+    try {
+      const response = await submitPromocode(modalPromocodeData, isNewPromocode);
+      console.log(response);
+      if (response?.status === STATUS_CODES.STATUS_OK || response?.status === STATUS_CODES.CREATED) {
+        toast({
+          title: "Success",
+          description: "Promocode saved successfully",
+          style: {
+            backgroundColor: "green",
+            color: "white",
+          }
+        });
+        if (onSubmit) {
+          onSubmit(modalPromocodeData);
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save promocode",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <GenericModal
       title={isNewPromocode ? "New Promocode" : "Edit Promocode"}
       description="Promocode Details"
       dialogTrigger={dialogTrigger}
-      onSubmit={() => {
-        submitPromocode(modalPromocodeData, isNewPromocode);
-      }}
+      onSubmit={handleSubmit}
+      showDeleteButton={!isNewPromocode}
+      onDelete={handleDelete}
     >
       <div className="flex flex-col gap-4 p-4">
         <div className="flex flex-col gap-2">
@@ -53,13 +98,12 @@ export function PromocodeModal({ promocodeData, dialogTrigger }: PromocodeModalP
           <Label>Type</Label>
           <RadioGroup
             onValueChange={(value) =>
-                setModalPromocodeData(
-                    modalPromocodeData ? { ...modalPromocodeData, type: value } : undefined,
-                )
+              setModalPromocodeData(
+                modalPromocodeData ? { ...modalPromocodeData, type: value } : undefined,
+              )
             }
             defaultValue={modalPromocodeData?.type ?? "percentage"}
             className="flex flex-col space-y-1"
-            disabled={!isNewPromocode}
           >
             <div className="flex items-center space-x-3 space-y-0">
               <RadioGroupItem value="percentage">Percentage</RadioGroupItem>
@@ -132,7 +176,6 @@ export function PromocodeModal({ promocodeData, dialogTrigger }: PromocodeModalP
           />
         </div>
       </div>
-
       <></>
     </GenericModal>
   );

@@ -4,7 +4,10 @@ import { ChevronRight } from "lucide-react";
 import { TPromocode } from "@/types/shared";
 import { PromocodeModal } from "@/features/admin/components/PromocodeModal";
 
-export const promoCodeColumns: ColumnDef<TPromocode>[] = [
+export const promoCodeColumns = (
+  onDelete: (id: string) => void,
+  onSubmit: (promocode: TPromocode) => void,
+): ColumnDef<TPromocode>[] => [
   {
     accessorKey: "code",
     header: "Code",
@@ -18,7 +21,9 @@ export const promoCodeColumns: ColumnDef<TPromocode>[] = [
   {
     accessorKey: "isActive",
     header: "Active",
-    cell: ({ row }) => <div className="capitalize">{row.original.isActive ? "Active" : "Inactive"}</div>,
+    cell: ({ row }) => (
+      <div className="capitalize">{row.original.isActive ? "Active" : "Inactive"}</div>
+    ),
   },
   {
     accessorKey: "expiresAt",
@@ -26,16 +31,16 @@ export const promoCodeColumns: ColumnDef<TPromocode>[] = [
     cell: ({ row }) => {
       const rawDate = row.original.expiresAt;
       let formattedDate;
-      
+
       try {
         const date = new Date(rawDate);
-        formattedDate = date.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
+        formattedDate = date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
         });
       } catch (error) {
-        formattedDate = 'Invalid Date';
+        formattedDate = "Invalid Date";
       }
 
       return <div className="capitalize">{formattedDate}</div>;
@@ -65,6 +70,8 @@ export const promoCodeColumns: ColumnDef<TPromocode>[] = [
                 <ChevronRight className="w-4 h-4" />
               </Button>
             }
+            onDelete={(id) => onDelete(id)}
+            onSubmit={(promocode) => onSubmit(promocode)}
           />
         </div>
       );
