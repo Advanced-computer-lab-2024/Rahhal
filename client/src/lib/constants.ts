@@ -86,6 +86,7 @@ export const DEFAULTS = {
     ratings: [],
   },
   USER: {
+    _id: "",
     firstName: "",
     lastName: "",
     username: "",
@@ -107,6 +108,12 @@ export const DEFAULTS = {
     description: "",
     createdAt: new Date(),
     updatedAt: new Date(),
+    balance: 0,
+    points: 0,
+    accumulativePoints: 0,
+    level: "",
+    ratings: [],
+    preferences: [],
   },
   PREFERENCE_TAG: {
     _id: "",
@@ -164,6 +171,15 @@ export const DEFAULTS = {
     password: "",
     role: undefined,
     approved: false,
+  },
+  PROMOCODE: {
+    _id: "",
+    code: "",
+    type: "",
+    isActive: true,
+    expiresAt: new Date(),
+    value: 0,
+    uses: 1,
   },
 };
 export const NATIONALITIES = [
