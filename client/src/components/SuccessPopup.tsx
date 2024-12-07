@@ -29,7 +29,7 @@ export function SuccessPopup({ show }: SuccessPopupProps) {
               Your password has been successfully reset.
             </p>
             <p className="text-sm text-muted-foreground">
-              Click below to log in magically.
+              Redirecting to login page...
             </p>
           </motion.div>
         </motion.div>

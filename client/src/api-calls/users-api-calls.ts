@@ -1,6 +1,7 @@
 import axios from "axios";
 import { SERVICES_URLS } from "@/lib/constants";
 import type { TUser } from "@/types/user";
+import { UserState } from "@/stores/user-state-store";
 // import { UserState } from "@/stores/user-state-store";
 
 // fetch data from the server
@@ -33,6 +34,7 @@ export async function deleteUser(id: string) {
 
 export async function deleteUserNoReload(user: TUser) {
   await axios.delete(`${SERVICES_URLS.GENERAL}/deleteAccount/${user._id}`);
+  // UserState();
 }
 
 // submit user to the users endpoint
