@@ -141,6 +141,7 @@ const ItineraryDetailsPage: React.FC = () => {
   };
 
   return (
+
     <div>
       {!empty && (
         <>
