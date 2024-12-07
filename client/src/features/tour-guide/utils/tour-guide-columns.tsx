@@ -3,11 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronRight } from "lucide-react";
 import { ItinerariesModal } from "@/features/tour-guide/components/ItineraryModal";
 import { Badge } from "@/components/ui/badge";
-import { FaTrash } from "react-icons/fa6";
-import { deleteItinerary } from "@/api-calls/itineraries-api-calls";
-import { STATUS_CODES } from "@/lib/constants";
 import type { TRating } from "@/types/shared";
-import { toast } from "@/hooks/use-toast";
 
 export type TCategory = {
   _id: string;
@@ -43,28 +39,6 @@ export type TNewItinerary = Omit<TItinerary, "preferenceTags" | "category" | "_i
   category: string;
 };
 
-async function deleteRow(row: any) {
-  try {
-    const response = await deleteItinerary(row.original);
-    if (response.status === STATUS_CODES.STATUS_OK) {
-      toast({
-        title: "Success",
-        description: "Itinerary deleted successfully",
-        variant: "default",
-      });
-
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    }
-  } catch (error) {
-    toast({
-      title: "Error",
-      description: (error as any).response?.data?.message || "Error deleting itinerary",
-      variant: "destructive",
-    });
-  }
-}
 
 function calculateAverageRating(ratings: TRating[]) {
   const totalRating = ratings.reduce((acc, rating) => acc + rating.rating, 0);
@@ -147,10 +121,8 @@ export const itinerariesColumns: ColumnDef<TItinerary>[] = [
     cell: ({ row }) => {
       return (
         <div className="text-right">
-          <Button variant="destructive" className="h-8 w-8 p-0" onClick={() => deleteRow(row)}>
-            <span className="sr-only">Delete</span>
-            <FaTrash className="h-4 w-4" />
-          </Button>
+          
+          
           <ItinerariesModal
             itineraryData={row.original}
             dialogTrigger={

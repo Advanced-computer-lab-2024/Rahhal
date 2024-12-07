@@ -6,7 +6,6 @@ interface DataTableAddButtonProps {
   className?: string;
 }
 
-
 const DataTableAddButton = React.forwardRef<HTMLButtonElement, DataTableAddButtonProps>(({ className, ...props }, ref) => {
   return (
     <>

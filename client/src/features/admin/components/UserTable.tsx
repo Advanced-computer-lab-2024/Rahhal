@@ -17,11 +17,11 @@ function UserView() {
       <DataTable
         data={users}
         columns={userColumns}
-        newRowModal={<UserModal dialogTrigger={<DataTableAddButton />} />}
+        newRowModal={<UserModal dialogTrigger={<DataTableAddButton className="bg-[#1d3c51] text-white rounded"/>} />}
       />
 
       <a href="/admin/users/requests" className="flex justify-center mt-10">
-        <Button>Show Users Requests</Button>
+        <Button className="bg-[#1d3c51]" >Show Users Requests</Button>
       </a>
     </div>
   );
