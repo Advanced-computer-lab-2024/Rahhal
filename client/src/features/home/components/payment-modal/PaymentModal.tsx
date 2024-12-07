@@ -3,35 +3,30 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Check } from "lucide-react";
+import { Loader2, Check, Wallet, CreditCard } from "lucide-react";
 
 import { applyPromocode } from "@/api-calls/payment-api-calls";
 import { Promotion } from "@/features/home/types/home-page-types";
-import StripeForm from "@/components/payment/StripeForm";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { PaymentOptions, TPaymentMethod } from "@/features/checkout/components/PaymentOptions";
 import { getUserById } from "@/api-calls/users-api-calls";
 import { useQuery } from "@tanstack/react-query";
-
-
-
-
+import { AxiosError } from "axios";
 
 const paymentMethods: TPaymentMethod[] = [
   {
     id: "wallet",
     label: "Wallet",
-    icons: [],
+    icon: <Wallet className="text-primary-color" />,
     expandable: false,
   },
   {
     id: "creditCard",
-    label: "Pay via ( Debit Cards / Credit cards / Paypal / Apple Pay )",
-    icons: [],
+    label: "Pay via card card",
+    icon: <CreditCard className="text-primary-color" />,
     expandable: true,
   },
-
 ];
 interface BookingModalProps {
   isOpen: boolean;
@@ -77,7 +72,6 @@ function BookingForm({
   parentBookingFunc,
   userId,
 }: BookingFormProps) {
-
   const id = useIdFromParamsOrQuery();
 
   const { data: user } = useQuery({
@@ -103,17 +97,14 @@ function BookingForm({
     event.preventDefault();
     handleCompleteOrder();
     setStripePaymentTrigger(true);
-    
   };
 
   const handleCompleteOrder = () => {
-    
     if (selectedPaymentMethod === "creditCard") {
       setStripePaymentTrigger(true);
     } else if (selectedPaymentMethod === "wallet") {
       const walletBalance = user?.balance || 0;
-     
-      
+
       if (walletBalance < totalPrice) {
         toast({
           title: "Insufficient balance",
@@ -132,14 +123,12 @@ function BookingForm({
 
   const handlePaymentCompletion = async () => {
     try {
-      
       setIsLoading(true);
 
       await new Promise((resolve) => setTimeout(resolve, 3000));
       parentBookingFunc();
       setIsLoading(false);
       onClose();
-      
 
       setStripePaymentTrigger(false);
 
@@ -163,24 +152,21 @@ function BookingForm({
   const handleRedeemPromo = async () => {
     setIsRedeeming(true);
 
-    const promoCodeResponse = (await applyPromocode(promoCode, userId)) as Promotion;
-
-    if (promoCodeResponse.message) {
-      setTimeout(() => {
-        setPromoStatus("error");
-        setErrorMessage(promoCodeResponse.message ?? "");
-        setTimeout(() => setPromoStatus("idle"), 1500);
-        setIsRedeeming(false);
-        return;
-      }, 1500);
-    }
-
-    if (promoCodeResponse.type == "percentage") {
-      setTimeout(() => {
+    try {
+      const promoCodeResponse = (await applyPromocode(promoCode, userId)) as Promotion;
+      if (promoCodeResponse.type == "percentage") {
         setPromoStatus("success");
         setPromoDiscountPerc(promoCodeResponse.value);
-        setIsRedeeming(false);
-      }, 2000);
+      }
+    } catch (error: unknown) {
+      setPromoStatus("error");
+      if (error instanceof AxiosError) {
+        setErrorMessage(error.response?.data.message || "An error occurred");
+      } else {
+        setErrorMessage("An error occurred");
+      }
+      setIsRedeeming(false);
+      setTimeout(() => setPromoStatus("idle"), 3000);
     }
   };
 
@@ -188,6 +174,7 @@ function BookingForm({
     setPromoCode("");
     setPromoDiscountPerc(0);
     setPromoStatus("idle");
+    setIsRedeeming(false);
   };
 
   const formattedWalletBalance = `${user?.balance ? user.balance.toFixed(2) : "0.00"} ${currency}`;
@@ -253,7 +240,6 @@ function BookingForm({
         {promoStatus === "error" && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
       </div>
       <div>
-        
         <div className="mt-1 border rounded-md p-3">
           <PaymentOptions
             selectedPaymentMethod={selectedPaymentMethod}
@@ -301,7 +287,7 @@ export default function BookingModal({
 }: BookingModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>Book {type}</DialogTitle>
         </DialogHeader>
