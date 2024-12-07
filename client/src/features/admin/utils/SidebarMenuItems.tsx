@@ -1,12 +1,4 @@
-import { Home, Inbox, UserRoundCheck, UserRoundPlus, TentTree, Laugh, Tags, ShoppingCart } from "lucide-react";
-import UserView from "@/features/admin/components/UserTable";
-import CategoryView from "@/features/admin/components/CategoriesTable";
-import PreferenceTagsAdminView from "@/features/admin/components/PreferenceTagsTable";
-import AdminComplaintsView from "@/features/admin/components/ComplaintsTable";
-import AdminProductsView from "@/features/admin/components/AdminProductsView";
-import UsersPendingRequests from "@/features/admin/components/UsersPendingRequests";
-import AdminItinerariesView from "@/features/admin/components/AdminItinerariesView";
-import AdminActivitiesView from "@/features/admin/components/AdminActivitiesView";
+import { Home, Inbox, UserRoundCheck, UserRoundPlus, TentTree, Laugh, Tags, ShoppingCart, Ticket } from "lucide-react";
 
 export const SidebarMenuItems = [
   {
@@ -16,7 +8,6 @@ export const SidebarMenuItems = [
         icon: Home,
         label: "Home",
         url: "/home",
-        component: <h1>Home</h1>,
       },
     ],
   },
@@ -27,19 +18,16 @@ export const SidebarMenuItems = [
         icon: UserRoundCheck,
         label: "Active Users",
         url: "/users",
-        component: <UserView />,
       },
       {
         icon: UserRoundPlus,
         label: "Pending Requests",
         url: "/users/requests",
-        component: <UsersPendingRequests />,
       },
       {
         icon: Inbox,
         label: "User Complaints",
         url: "/complaints",
-        component: <AdminComplaintsView />,
       },
     ],
   },
@@ -50,25 +38,21 @@ export const SidebarMenuItems = [
         icon: Laugh,
         label: "Activities",
         url: "/activities",
-        component: <AdminActivitiesView />,
       },
       {
         icon: TentTree,
         label: "Itineraries",
         url: "/itineraries",
-        component: <AdminItinerariesView />,
       },
       {
         icon: Tags,
         label: "Preference Tags",
         url: "/preference-tags",
-        component: <PreferenceTagsAdminView />,
       },
       {
         icon: Tags,
         label: "Categories",
         url: "/categories",
-        component: <CategoryView />,
       },
     ],
   },
@@ -79,8 +63,13 @@ export const SidebarMenuItems = [
         icon: ShoppingCart,
         label: "Products",
         url: "/products",
-        component: <AdminProductsView />,
       },
+      {
+        icon: Ticket,
+        label: "Promocodes",
+        url: "/promocodes",
+      }
+
     ],
   },
 ];
