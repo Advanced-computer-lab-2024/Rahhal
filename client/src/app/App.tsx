@@ -46,6 +46,7 @@ import BookmarksPage from "@/features/home/components/bookmarks/BookmarksPage";
 import ItineraryReport from "@/features/tour-guide/components/ItineraryReport";
 import ActivityReport from "@/features/advertiser/components/ActivityReport";
 import AdminReport from "@/features/admin/components/AdminReport";
+import PromocodeTable from "@/features/admin/components/PromocodeTable";
 
 export default function App() {
   const { setRates } = useRatesStore();
@@ -126,6 +127,7 @@ export default function App() {
               <Route path="/admin/:id?/activities" element={<AdminActivitiesView />} />
               <Route path="/admin/:id/user-settings" element={<ProfileForm />} />
               <Route path="/admin/:id/user-settings/account" element={<AccountForm />} />
+              <Route path="/admin/:id?/promocodes" element={<PromocodeTable />} />
             </Route>
           </Routes>
         </Router>
