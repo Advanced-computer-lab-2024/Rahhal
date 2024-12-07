@@ -28,7 +28,7 @@ function AdminProductsView() {
             userId={SUPER_ADMIN_ID}
             username={"Rahhal"}
             productData={undefined}
-            dialogTrigger={<DataTableAddButton />}
+            dialogTrigger={<DataTableAddButton className="bg-[#1d3c51]" />}
           />
         }
       />

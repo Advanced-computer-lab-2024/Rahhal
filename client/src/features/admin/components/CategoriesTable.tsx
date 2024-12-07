@@ -21,7 +21,7 @@ function CategoryView() {
         data={categories}
         columns={categoriesColumns}
         newRowModal={
-          <CategoryModal categoryData={undefined} dialogTrigger={<DataTableAddButton />} />
+          <CategoryModal categoryData={undefined} dialogTrigger={<DataTableAddButton className="bg-[#1d3c51]" />} />
         }
       />
     </div>

@@ -8,6 +8,9 @@ import { DEFAULTS } from "@/lib/constants";
 import LongText from "@/components/LongText";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TNewProduct, TProduct } from "@/features/seller/utils/seller-columns";
+import { deleteProduct } from "@/api-calls/products-api-calls";
+import { Button } from "@/components/ui/button";
+import { FaTrash } from "react-icons/fa";
 import { createProduct, updateProduct } from "@/api-calls/products-api-calls";
 
 interface ProductModalProps {
@@ -36,6 +39,13 @@ export function ProductModal({ productData, dialogTrigger, userId, username }: P
     } else await updateProduct(modalProductData!, productImages);
   };
 
+  const handleDeleteProduct = async () => {
+    if (productData) {
+      await deleteProduct(productData);
+    }
+  }
+
+
   useEffect(() => {
     const init = async () => {
       if (isNewProduct) {
@@ -53,6 +63,10 @@ export function ProductModal({ productData, dialogTrigger, userId, username }: P
       dialogTrigger={dialogTrigger}
       onSubmit={handleSubmit}
     >
+      <Button variant="destructive" className="fixed top-2 right-9" onClick={handleDeleteProduct}>
+      <span className="sr-only">Delete</span>
+      <FaTrash className="h-4 w-4" />
+  </Button>
       <ShortText
         title="Name"
         type={"string"}

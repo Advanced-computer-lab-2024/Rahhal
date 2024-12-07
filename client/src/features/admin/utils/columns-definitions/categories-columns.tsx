@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ChevronRight } from "lucide-react";
-import { FaTrash } from "react-icons/fa6";
-import { deleteCategory } from "@/api-calls/categories-api-calls";
 import { CategoryModal } from "../../components/CategoryModal";
 
 export type TCategory = {
@@ -10,9 +8,6 @@ export type TCategory = {
   name: string;
 };
 
-function deleteRow(row: any) {
-  deleteCategory(row.original._id);
-}
 
 export const categoriesColumns: ColumnDef<TCategory>[] = [
   {
@@ -26,10 +21,7 @@ export const categoriesColumns: ColumnDef<TCategory>[] = [
     cell: ({ row }) => {
       return (
         <div className="text-right">
-          <Button variant="destructive" className="h-8 w-8 p-0" onClick={() => deleteRow(row)}>
-            <span className="sr-only">Delete</span>
-            <FaTrash className="w-4 h-4" />
-          </Button>
+         
           <CategoryModal
             categoryData={row.original}
             dialogTrigger={

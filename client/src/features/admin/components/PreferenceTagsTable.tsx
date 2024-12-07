@@ -22,7 +22,7 @@ function AdminPreferenceTagView() {
         newRowModal={
           <PreferenceTagsModal
             preferenceTagData={undefined}
-            dialogTrigger={<DataTableAddButton />}
+            dialogTrigger={<DataTableAddButton className="bg-[#1d3c51]" />}
           />
         }
       />
