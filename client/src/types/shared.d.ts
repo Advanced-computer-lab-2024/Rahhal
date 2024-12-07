@@ -54,3 +54,9 @@ export type TPromocode = {
   uses: number;
 };
 
+export interface INotification {
+  _id: string;
+  userId: string;
+  message: string;
+  seen: boolean;
+}

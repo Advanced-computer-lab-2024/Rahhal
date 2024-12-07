@@ -8,7 +8,7 @@ import SecondaryLogo from "../../logos/SecondaryLogo";
 import { CartIcon } from "@/features/checkout/components/CartIcon";
 import BookmarkNavIcon from "./bookmarks/BookmarkNavIcon";
 import WishlistIcon from "./wishlist/WishListIcon";
-import NotificaionPopover from "./notifications/NotificationPopover";
+import NotificaionPopover from "../../../components/NotificationPopover";
 
 interface ButtonProps {
   navigation: number;

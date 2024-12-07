@@ -441,10 +441,3 @@ export interface TPopulatedBookmark {
   entity: IActivity | IItinerary;
   type: bookmarkType;
 }
-
-export interface INotification {
-  _id: string;
-  userId: string;
-  message: string;
-  seen: boolean;
-}
