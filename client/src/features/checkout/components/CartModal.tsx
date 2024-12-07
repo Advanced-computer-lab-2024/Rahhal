@@ -13,6 +13,8 @@ import { useQuery } from "@tanstack/react-query";
 import type { PopulatedCart } from "@/features/home/types/home-page-types";
 import useCartStore from "@/stores/nav-bar-icon-stores/cart-count-store";
 import useProductRefreshStore from "@/stores/refresh-product-store";
+import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
+import { currencyExchangeSpec } from "@/utils/currency-exchange";
 
 interface CartModalProps {
   open: boolean;
@@ -22,10 +24,14 @@ interface CartModalProps {
 export function CartModal({ open, onOpenChange }: CartModalProps) {
   const [cart, setCart] = useState<PopulatedCart | null>(null);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
+  const [prices, setPrices] = useState<Record<string, number>>([]);
   const navigate = useNavigate();
   const { id: paramId } = useParams<{ id?: string }>();
   const { incrementCount, decrementCount, setCount } = useCartStore();
   const { setRefresh } = useProductRefreshStore();
+  const { currency } = useCurrencyStore();
+  const { rates } = useRatesStore();
+  const baseCurrency = "EGP";
 
   const { data: cartData, isSuccess } = useQuery({
     queryKey: ["cart", "products"],
@@ -41,7 +47,6 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
     }
   }, [cartData]);
 
-  // Initialize quantities from CartExample
   useEffect(() => {
     if (cart) {
       const initialQuantities: Record<string, number> = {};
@@ -67,9 +72,11 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
     setCount(0);
   };
 
-  const subtotal = cart?.products.reduce((sum, item) => {
-    return sum + item.product.price * (quantities[item.product._id] || item.quantity);
-  }, 0);
+  let subtotal = cart
+    ? cart.products.reduce((acc, item) => acc + item.product.price * item.quantity, 0)
+    : 0;
+  const subTotalConverted = currencyExchangeSpec(baseCurrency, subtotal, rates, currency);
+  const subTotalDisplayed = subTotalConverted ? subTotalConverted.toFixed(2) : "N/A";
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -97,58 +104,71 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
           ) : (
             <>
               <div className="flex-1 overflow-auto -mx-6 px-6">
-                {cart?.products.map((item) => (
-                  <div key={item.product._id} className="flex gap-4 py-4 border-b">
-                    <img
-                      src={item.product.picture}
-                      alt={item.product.name}
-                      width={80}
-                      height={80}
-                      className="rounded-md object-cover"
-                    />
-                    <div className="flex-1">
-                      <h3 className="font-medium">{item.product.name}</h3>
-                      <p className="font-medium mt-1">{item.product.price.toFixed(2)} EGP</p>
+                {cart?.products.map((item) => {
+                  const convertedPrice = currencyExchangeSpec(
+                    baseCurrency,
+                    item.product.price,
+                    rates,
+                    currency,
+                  );
+                  const displayedPrice = convertedPrice ? convertedPrice.toFixed(2) : "N/A";
+                  return (
+                    <div key={item.product._id} className="flex gap-4 py-4 border-b">
+                      <img
+                        src={item.product.picture}
+                        alt={item.product.name}
+                        width={80}
+                        height={80}
+                        className="rounded-md object-cover"
+                      />
+                      <div className="flex-1">
+                        <h3 className="font-medium">{item.product.name}</h3>
+                        <p className="font-medium mt-1">
+                          {displayedPrice} {currency}
+                        </p>
 
-                      <div className="flex items-center gap-2 mt-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => decrementProductInCart(item.product._id)}
-                          disabled={quantities[item.product._id] <= 1}
-                        >
-                          <Minus className="h-4 w-4" />
-                        </Button>
-                        <span className="w-8 text-center">
-                          {quantities[item.product._id] || item.quantity}
-                        </span>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => incrementProductInCart(item.product._id)}
-                          disabled={quantities[item.product._id] >= item.product.quantity}
-                        >
-                          <Plus className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="link"
-                          className="ml-auto text-sm"
-                          onClick={() => removeProductFromCart(item.product._id)}
-                        >
-                          Remove
-                        </Button>
+                        <div className="flex items-center gap-2 mt-2">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => decrementProductInCart(item.product._id)}
+                            disabled={quantities[item.product._id] <= 1}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <span className="w-8 text-center">
+                            {quantities[item.product._id] || item.quantity}
+                          </span>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => incrementProductInCart(item.product._id)}
+                            disabled={quantities[item.product._id] >= item.product.quantity}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="link"
+                            className="ml-auto text-sm"
+                            onClick={() => removeProductFromCart(item.product._id)}
+                          >
+                            Remove
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               <div className="mt-4 space-y-4">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span className="font-semibold">{subtotal?.toFixed(2)} EGP</span>
+                  <span className="font-semibold">
+                    {subTotalDisplayed} {currency}{" "}
+                  </span>
                 </div>
                 <Button
                   className="w-full bg-[--primary-color-dark] hover:bg-[--primary-color-fade]"
