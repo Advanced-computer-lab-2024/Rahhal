@@ -81,8 +81,8 @@ export default function App() {
             <Route element={<CheckoutPage />}>
               <Route path="/checkout/:id" element={<Checkout />} />
             </Route>
-            <Route path="/activities/:id" element={<ActivityDetailsPage />} />
-            <Route path="/itineraries/:id" element={<ItineraryDetailsPage />} />
+            <Route path="/activities/:id?" element={<ActivityDetailsPage />} />
+            <Route path="/itineraries/:id?" element={<ItineraryDetailsPage />} />
             <Route path="/my-trips-details/:id" element={<TripDetails />} />
 
             <Route path="/signup" element={<SignupSelector />} />
