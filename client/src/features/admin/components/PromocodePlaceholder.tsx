@@ -9,14 +9,20 @@ interface NoDataPlaceholderProps {
 
 export default function NoDataPlaceholder({ onSubmit }: NoDataPlaceholderProps) {
   return (
-    <div className="flex flex-col items-center justify-center p-8 bg-gray-100 rounded-lg border border-gray-300">
-      <TicketX className="w-16 h-16 text-gray-500" />
-      <h2 className="mt-4 text-lg font-semibold text-gray-700">No Promocodes Available</h2>
-      <p className="mt-2 text-sm text-gray-500">Looks like you haven’t added any promocodes yet.</p>
-      <p className="mt-2 text-sm text-gray-500">
-        People are waiting for some discounts! Add a new promocode now.
+    <div className="flex flex-col items-center justify-center h-screen text-center text-gray-700">
+      {/* <div className="text-7xl mb-4">🎟️❌</div> */}
+      <TicketX className="w-32 h-32 text-[#E1BC6D]" />
+      <h2 className="text-2xl font-bold mb-2">No Promo Codes Yet!</h2>
+
+      <p className="text-lg mb-4">
+        Once you add a promo code, it will appear here. Ready to explore?
       </p>
-      <PromocodeModal promocodeData={undefined} dialogTrigger={<DataTableAddButton />} onSubmit={onSubmit} />
+
+      <PromocodeModal
+        promocodeData={undefined}
+        dialogTrigger={<DataTableAddButton />}
+        onSubmit={onSubmit}
+      />
     </div>
   );
 }

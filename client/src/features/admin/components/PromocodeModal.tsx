@@ -36,8 +36,6 @@ export function PromocodeModal({
   }, []);
 
   const handleDelete = () => {
-    console.log("Deleting promocode");
-    console.log(modalPromocodeData);
     if (modalPromocodeData && onDelete) {
       onDelete(modalPromocodeData._id);
     }
@@ -48,18 +46,18 @@ export function PromocodeModal({
     
     try {
       const response = await submitPromocode(modalPromocodeData, isNewPromocode);
-      console.log(response);
       if (response?.status === STATUS_CODES.STATUS_OK || response?.status === STATUS_CODES.CREATED) {
         toast({
           title: "Success",
           description: "Promocode saved successfully",
           style: {
-            backgroundColor: "green",
+            backgroundColor: "#34D399",
             color: "white",
           }
         });
         if (onSubmit) {
           onSubmit(modalPromocodeData);
+          setModalPromocodeData(DEFAULTS.PROMOCODE);
         }
       }
     } catch (error) {
@@ -87,7 +85,7 @@ export function PromocodeModal({
             value={modalPromocodeData?.code ?? ""}
             onChange={(e) =>
               setModalPromocodeData(
-                modalPromocodeData ? { ...modalPromocodeData, code: e.target.value } : undefined,
+                modalPromocodeData ? { ...modalPromocodeData, code: e.target.value.toUpperCase() } : undefined,
               )
             }
             placeholder="Enter Promocode Code"
