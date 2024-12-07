@@ -16,7 +16,7 @@ export default function GlobeDemo() {
     emissive: "#062056",
     emissiveIntensity: 0.1,
     shininess: 0.9,
-    polygonColor: "rgba(255,255,255,0.7)",
+    polygonColor: "#E1BC6D",
     ambientLight: "#38bdf8",
     directionalLeftLight: "#ffffff",
     directionalTopLight: "#ffffff",

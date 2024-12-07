@@ -9,10 +9,13 @@ import {
 import { FlipWords } from "@/components/ui/flip-words";
 import GithubGlobe from "@/features/hero/components/GithubGlobe";
 import { useNavigate } from "react-router-dom";
+import { useTour } from '@/components/AppTour';
+
 const COLORS_TOP = ["#F3DBA2", "#6D91E1"];
 
 export default function AuroraHero() {
   const navigate = useNavigate();
+  const { startTour } = useTour();
 
   const color = useMotionValue(COLORS_TOP[0]);
   const words = ["Itineraries", "Activities", "Stays", "Transportations"];
@@ -48,33 +51,59 @@ export default function AuroraHero() {
                 <FlipWords words={words} /> <br />
                 Are on Us!
               </h1>
+              <div className="flex space-x-4">
                 <motion.button
-                style={{
+                  style={{
+                    border: "0px solid",
+                    boxShadow,
+                    width: "200px",
+                    height: "50px",
+                  }}
+                  whileHover={{
+                    scale: 1.015,
+                  }}
+                  whileTap={{
+                    scale: 0.985,
+                  }}
+                  onClick={() => {
+                    navigate("/signup");
+                  }}
+                  className="group relative font-bold flex w-fit items-center justify-center gap-1.5 rounded-full bg-[var(--primary-color)] px-4 py-2 text-gray-50 transition-colors"
+                >
+                  Get Started!
+                  <FiArrowRight className="transition-transform group-hover:-rotate-45 group-active:-rotate-12" />
+                </motion.button>
+                
+                <motion.button
+                  style={{
                   border: "0px solid",
                   boxShadow,
                   width: "200px",
                   height: "50px",
-                }}
-                whileHover={{
+                  backgroundColor: "--complimentary-color"
+                  }}
+                  whileHover={{
                   scale: 1.015,
-                }}
-                whileTap={{
+                  }}
+                  whileTap={{
                   scale: 0.985,
-                }}
-                onClick={() => {
-                    navigate("/entertainment");
-                }}
-                className="group relative font-bold flex w-fit items-center justify-center gap-1.5 rounded-full bg-[var(--primary-color)] px-4 py-2 text-gray-50 transition-colors"
+                  }}
+                  onClick={() => {
+                  navigate("/entertainment");
+                  setTimeout(startTour, 50);
+                  }}
+                  className="group relative font-bold flex w-fit items-center justify-center gap-1.5 rounded-full bg-blue-500 px-4 py-2 text-gray-50 transition-colors"
                 >
-                Get Started!
-                <FiArrowRight className="transition-transform group-hover:-rotate-45 group-active:-rotate-12" />
+                  Start Tour
+                  <FiArrowRight className="transition-transform group-hover:-rotate-45 group-active:-rotate-12" />
                 </motion.button>
+              </div>
             </div>
           </div>
           <div className="col-span-6">
-            <GithubGlobe></GithubGlobe>
+            <GithubGlobe />
           </div>
-        </div >
+        </div>
       </motion.section>
     </>
   );

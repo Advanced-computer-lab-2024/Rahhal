@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-
+import { useTour } from '@/components/AppTour';
 function useIdFromParamsOrQuery() {
   const { id: paramId } = useParams<{ id?: string }>();
   const location = useLocation();
@@ -18,7 +18,7 @@ function useIdFromParamsOrQuery() {
 
 export const ProfileAvatar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const { startTour } = useTour();
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -83,7 +83,13 @@ export const ProfileAvatar = () => {
           <Link to={`/user-settings/wallet/${id}`}>
             <div className={AvatarStyles["menuItem"]}>Wallet</div>
           </Link>
-          <Link to={`/help-center/${id}`} onClick={toggleDropdown}>
+          <Link to={`/entertainment/${id}`} onClick={() => {
+            toggleDropdown();
+            setTimeout(startTour, 50);
+          }}>
+            <div className={AvatarStyles["menuItem"]}>Restart Tour</div>
+          </Link>
+          <Link to={`/complaints/${id}`} onClick={toggleDropdown}>
             <div className={AvatarStyles["menuItem"]}>Help Center</div>
           </Link>
           <Link to="/entertainment" onClick={toggleDropdown}>

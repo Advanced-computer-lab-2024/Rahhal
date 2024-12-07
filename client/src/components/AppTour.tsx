@@ -1,60 +1,95 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
+import React, { createContext, useContext, useState, useCallback } from 'react';
+import { driver, Driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
+import { useNavigate } from 'react-router-dom';
 
-const AppTour = () => {
-    const navigate = useNavigate();
+// Define the context type
+interface TourContextType {
+  startTour: () => void;
+  driverObj: Driver | null;
+}
 
-    useEffect(() => {
-        const driverObj = driver({
-            showProgress: true,
-            steps: [
-                {
-                    element: "#nav-bar-tour",
-                    popover: {
-                        title: "Navigation",
-                        description: "Start here!"
-                    }
-                },
-                {
-                    element: "#experiences-tour",
-                    popover: {
-                        title: "Experiences",
-                        description: "Explore experiences!",
-                        onNextClick: () => {
+// Create the context
+const TourContext = createContext<TourContextType>({
+  startTour: () => {},
+  driverObj: null
+});
 
-                            navigate("/travel");
-                            //timeout to have time to navigate
-                            setTimeout(() => {
-                                driverObj.moveNext();
-                            }, 50);
-                        },
-                    }
-                },
-                {
-                    element: "#header-tour",
-                    popover: {
-                        title: "Travel Header",
-                        description: "Your travel destination!",
-                        onPrevClick: () => {
-                            navigate("/entertainment");
-                            //timeout to have time to navigate
-                            setTimeout(() => {
-                                driverObj.movePrevious();
-                            }, 50);
-                        }
-                    }
-                }
-            ]
-        });
+// Create a provider component
+export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [driverObj, setDriverObj] = useState<Driver | null>(null);
+  const navigate = useNavigate();
+  // Initialize the driver object with your tour steps
+  const initializeTour = useCallback(() => {
+    const tourDriver = driver({
+      showProgress: true,
+      disableActiveInteraction: true,
+      steps: [
+        {
+          element: "#nav-bar-tour",
+          popover: {
+            title: "Navigation",
+            description: "Start here!"
+          }
+        },
+        {
+          element: "#experiences-tour",
+          popover: {
+            title: "Experiences",
+            description: "Explore experiences!",
+            onNextClick: () => {
+                
+                navigate("/travel");
+                //timeout to have time to navigate
+                setTimeout(() => {
+                    tourDriver.moveNext();
+                }, 50);
+            },
+          }
+        },
+        {
+          element: "#header-tour",
+          popover: {
+            title: "Travel Header",
+            description: "Your travel destination!",
+            onPrevClick: () => {
+                navigate("/entertainment");
+                //timeout to have time to navigate
+                setTimeout(() => {
+                    tourDriver.movePrevious();
+                }, 50);
+            }
+          }
+        }
+      ]
+    });
 
-        setTimeout(() => {
-            driverObj.drive();
-        }, 1000);
-    }, []);
+    setDriverObj(tourDriver);
+    return tourDriver;
+  }, []);
 
-    return null;
+  // Method to start the tour
+  const startTour = useCallback(() => {
+    if (!driverObj) {
+      const newDriverObj = initializeTour();
+      newDriverObj.drive();
+    } else {
+      driverObj.drive();
+    }
+  }, [driverObj, initializeTour]);
+
+  return (
+    <TourContext.Provider value={{ startTour, driverObj }}>
+      {children}
+    </TourContext.Provider>
+  );
 };
 
-export default AppTour;
+// Custom hook to use tour context
+export const useTour = () => {
+  const context = useContext(TourContext);
+  if (!context) {
+    throw new Error('useTour must be used within a TourProvider');
+  }
+  return context;
+};

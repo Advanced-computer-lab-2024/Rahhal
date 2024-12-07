@@ -45,9 +45,9 @@ import WishListPage from "@/features/home/components/wishlist/WishListPage";
 import BookmarksPage from "@/features/home/components/bookmarks/BookmarksPage";
 import AuroraHero from "@/features/hero/components/AuroraHero";
 
-import "driver.js/dist/driver.css";
-import { driver } from "driver.js";
-import AppTour from "@/components/AppTour";
+// import "driver.js/dist/driver.css";
+// import { driver } from "driver.js";
+import { TourProvider } from "@/components/AppTour";
 import ItineraryReport from "@/features/tour-guide/components/ItineraryReport";
 import ActivityReport from "@/features/advertiser/components/ActivityReport";
 import AdminReport from "@/features/admin/components/AdminReport";
@@ -81,12 +81,13 @@ export default function App() {
   const queryClient = new QueryClient();
   return (
     <div style={{ overflowY: "scroll", height: "100vh" }}>
+
       <QueryClientProvider client={queryClient}>
         <Router>
-          <AppTour />
-          <Routes>
-            {/* <Route path="/" element={<Navigate to="/entertainment" replace />} /> */}
-            <Route path="/" element={<Navigate to="/hero" replace />} />
+          <TourProvider>
+            <Routes>
+              {/* <Route path="/" element={<Navigate to="/entertainment" replace />} /> */}
+              <Route path="/" element={<Navigate to="/hero" replace />} />
 
             <Route element={<TouristHomePage loggedIn={false} />}>
               <Route path="/hero" element={<AuroraHero />} />
@@ -179,8 +180,10 @@ export default function App() {
               <Route path="/admin/:id?/promocodes" element={<PromocodeTable />} />
             </Route>
           </Routes>
+          </TourProvider>
         </Router>
       </QueryClientProvider>
+
     </div>
   );
 
