@@ -9,6 +9,9 @@ import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-
 import { toast } from "@/hooks/use-toast";
 import { createPaymentIntent } from "@/api-calls/payment-api-calls";
 
+const STRIPE_PUBLISHABLE_KEY =
+  "pk_test_51QQY2DK2Z63nKLIBPwUrMkrN3WFje7T4H0JN50vTcIVALoQlbg6DDE2NOUzWIi6dJwGw2DfY7XgxIk2YjbXYFWmO00SRKzb3Ck";
+
 const appearance: Appearance = {
   theme: "stripe",
 };
@@ -19,9 +22,7 @@ const paymentElementOptions: StripePaymentElementOptions = {
   layout: "tabs",
 };
 
-const stripePromise = loadStripe(
-  "pk_test_51QQY2DK2Z63nKLIBPwUrMkrN3WFje7T4H0JN50vTcIVALoQlbg6DDE2NOUzWIi6dJwGw2DfY7XgxIk2YjbXYFWmO00SRKzb3Ck",
-);
+const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
 type PaymentProps = {
   stripePaymentTrigger: boolean;
