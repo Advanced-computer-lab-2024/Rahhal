@@ -34,5 +34,6 @@ export const RABBITMQ = {
   QUEUE: {
     NOTIFICATION: "notification_queue",
     EVENT_REMINDER: "event_reminder_queue",
+    EVENT_OPEN: "event_open_queue",
   },
 };
