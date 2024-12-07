@@ -15,11 +15,6 @@ export async function applyPromocode(promocode: string, id: string) {
   return response.data;
 }
 
-export const fetchActivities = async () => {
-  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + `/activities`);
-  return response.data;
-};
-
 export async function createPaymentIntent(items: { id: string; amount: number }[]) {
   try {
     const response = await axios.post(SERVICES_URLS.PAYMENT + `/create-payment-intent`, {
