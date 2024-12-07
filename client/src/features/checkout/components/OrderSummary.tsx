@@ -7,6 +7,7 @@ import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-stor
 import currencyExchange, { currencyExchangeSpec } from "@/utils/currency-exchange";
 import { applyPromocode } from "@/api-calls/payment-api-calls";
 import { AxiosError } from "axios";
+import { PopulatedCart } from "@/features/home/types/home-page-types";
 
 export function OrderSummary({
   cart,
@@ -18,7 +19,7 @@ export function OrderSummary({
   setActivePromotion,
   userId,
 }: {
-  cart: Cart;
+  cart: PopulatedCart;
   activePromotion: ActivePromotion | null;
   discountAmount: number;
   total: number;

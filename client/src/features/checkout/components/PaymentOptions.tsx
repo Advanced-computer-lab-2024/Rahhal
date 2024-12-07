@@ -2,6 +2,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import StripeForm from "@/components/payment/StripeForm";
 import { Label } from "@/components/ui/label";
 import { CircleDollarSign, CreditCard, Wallet } from "lucide-react";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
+import currencyExchange from "@/utils/currency-exchange";
 
 export type TPaymentMethod = {
   id: string;
@@ -12,7 +14,7 @@ export type TPaymentMethod = {
 };
 
 type PaymentSelectorProps = {
-  walletBalance: string;
+  walletBalance: number;
   selectedPaymentMethod: string;
   stripePaymentTrigger: boolean;
   setSelectedPaymentMethod: (value: string) => void;
@@ -53,6 +55,14 @@ export function PaymentOptions({
   onPaymentCompletion,
   paymentMethods = defaultPaymentMethods,
 }: PaymentSelectorProps) {
+  const { currency } = useCurrencyStore();
+  const baseCurrency = "EGP";
+
+  const convertedWalletBalance = currencyExchange(baseCurrency, walletBalance);
+  const formattedWalletBalance = convertedWalletBalance
+    ? `${convertedWalletBalance.toFixed(2)} ${currency}`
+    : "N/A";
+
   return (
     <div className="w-full">
       <div className="mb-4">
@@ -88,7 +98,9 @@ export function PaymentOptions({
                     </Label>
                     {method.icon}
                   </div>
-                  <span className="text-gray-500">{method.id === "wallet" && walletBalance}</span>
+                  <span className="text-gray-500">
+                    {method.id === "wallet" && formattedWalletBalance}
+                  </span>
                 </div>
               </div>
               {method.expandable && selectedPaymentMethod === method.id && (
