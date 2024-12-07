@@ -3,6 +3,7 @@ import { UserRoleEnum } from "@/utils/enums";
 export const SERVICES_URLS = {
   ENTERTAINMENT: "http://localhost:3000/api/entertainment",
   USER: "http://localhost:3000/api/user",
+  PAYMENT: "http://localhost:3000/api/payment",
   PRODUCT: "http://localhost:3000/api/product",
   FIREBASE: "http://localhost:3000/api/firebase",
   BOOKING: "http://localhost:3000/api/booking",
@@ -156,14 +157,14 @@ export const DEFAULTS = {
     owner: "",
     replies: [],
   },
-  ADMIN_DATA:{
+  ADMIN_DATA: {
     _id: "",
     username: "",
     email: "",
     password: "",
     role: undefined,
     approved: false,
-  }
+  },
 };
 export const NATIONALITIES = [
   { value: "Afghanistan", label: "Afghanistan" },

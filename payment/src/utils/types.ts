@@ -1,14 +1,14 @@
 export interface IPromocode {
-    code: String;
-    type: String;
-    isActive: Boolean;
-    value: Number;
-    expiresAt: Date;
+  code: string;
+  type: string;
+  isActive: boolean;
+  value: number;
+  expiresAt: Date;
 }
 
 export interface IPromoCodeUsage {
-    promocode: String;
-    usedBy: String;
-    usedAt: Date;
-    deleted: Boolean;
+  promocode: string;
+  usedBy: string;
+  usedAt: Date;
+  deleted: boolean;
 }
