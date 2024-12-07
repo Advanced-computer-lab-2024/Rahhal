@@ -47,6 +47,7 @@ export default function ProductCard({
   const [isWishlisted, setWishlisted] = useState(false);
   const [isGuestAction, setIsGuestAction] = useState(false);
   const [isRatingHovered, setIsRatingHovered] = useState(false);
+  const [isGuestActionCart,setIsGuestActionCart] = useState(false);
 
   useEffect(() => {
     if (!userId) {
@@ -98,6 +99,11 @@ export default function ProductCard({
   };
 
   const handleAddToCart = () => {
+    if (!userId) {
+      setIsGuestActionCart(true);
+      return;
+    }
+
     setIsInCart(true);
     setQuantity(1);
     // TODO: Implement add to cart functionality
@@ -128,7 +134,7 @@ export default function ProductCard({
       <CardContent className="p-0 flex-grow">
         <div className="relative aspect-square">
           <img src={imageUrl} alt={name} className="w-full h-full object-cover rounded-[12px]" />
-          
+
           {isGuestAction && (
             <SignUpModal
               onClose={(e) => {
@@ -136,6 +142,16 @@ export default function ProductCard({
                 setIsGuestAction(false);
               }}
               text={"Making a list? Sign in to wishlist your favourite products"}
+            />
+          )}
+
+          {isGuestActionCart && (
+            <SignUpModal
+              onClose={(e) => {
+                e.stopPropagation();
+                setIsGuestActionCart(false);
+              }}
+              text={"Ready to shop? Sign in to add products to your cart"}
             />
           )}
 
