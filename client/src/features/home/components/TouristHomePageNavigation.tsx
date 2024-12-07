@@ -13,6 +13,7 @@ import NotificaionPopover from "./notifications/NotificationPopover";
 interface ButtonProps {
   navigation: number;
   setNavigation: (index: number) => void;
+  setActiveIndex: (index: number) => void;
   index: number;
   buttonName: string;
   path: string;
@@ -28,6 +29,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
   const [navigation, setNavigation] = useState(1);
   const buttonNames = ["Experiences", "Stays", "Travel", "Shop"];
   const paths = ["/entertainment", "/stays", "/travel", "/shop"];
+  const [activeIndex, setActiveIndex] = useState(0);
 
   function useIdFromParamsOrQuery() {
     const queryParams = new URLSearchParams(location.search);
@@ -37,6 +39,14 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
   }
 
   const [id, setId] = useState(useIdFromParamsOrQuery);
+
+  const icons = [
+    { component: <WishlistIcon />, route: `/my-wishlist/${id}` },
+    { component: <CartIcon />, route: null },
+    { component: <BookmarkNavIcon />, route: null },
+    { component: <CurrencyDropdown />, route: null },
+    { component: <ProfileAvatar />, route: null },
+  ];
 
   return (
     <div className="w-full h-16 flex items-center justify-between z-10 relative px-[16px]">
@@ -53,6 +63,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
             index={index + 1}
             navigation={navigation}
             setNavigation={setNavigation}
+            setActiveIndex={setActiveIndex}
             path={paths[index] + (!NavigationProps.loggedIn ? "" : `/${id}`)}
             buttonName={buttonName}
           />
@@ -78,12 +89,19 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
           <>
             <div className="flex space-x-4 items-center">
               <NotificaionPopover userId={id} />
-              <Link to={`/my-wishlist/${id}`}>
-                <WishlistIcon />
-              </Link>
-              <CartIcon />
-              <BookmarkNavIcon />
-              <CurrencyDropdown />
+              {activeIndex === 1 ? (
+                <BookmarkNavIcon />
+              ) : activeIndex === 4 ? (
+                <>
+                  <div className="flex items-center space-x-4">
+                    <CartIcon />
+                    <Link to={`/my-wishlist/${id}`} className="flex items-center">
+                      <WishlistIcon />
+                    </Link>
+                  </div>
+                </>
+              ) : null}
+
               <ProfileAvatar />
             </div>
           </>
@@ -96,27 +114,22 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
 function NavigationButton(ButtonProps: ButtonProps) {
   return (
     <Link to={ButtonProps.path}>
-  <div
-    className={cn(
-      "rounded-full flex justify-center transition-all duration-300",
-      ButtonProps.navigation === ButtonProps.index ? "bg-gray-300" : "hover:bg-gray-300/60"
-    )}
-    style={{
-      padding: ButtonProps.navigation === ButtonProps.index ? "0.5rem" : "0.25rem",
-    }}
-  >
-    <Button
-      className={cn(
-        "rounded-none rounded-t-md relative w-20 h-8 text-foreground bg-transparent hover:bg-transparent",
-        ButtonProps.navigation === ButtonProps.index
-          ? "font-semibold"
-          : "text-muted-foreground"
-      )}
-      onClick={() => ButtonProps.setNavigation(ButtonProps.index)}
-    >
-      {ButtonProps.buttonName}
-    </Button>
-  </div>
-</Link>
+      <div className="rounded-full hover:bg-gray-300/60 flex justify-center">
+        <Button
+          className={cn(
+            "rounded-none rounded-t-md relative w-20 text-foreground bg-transparent hover:bg-transparent",
+            ButtonProps.navigation === ButtonProps.index
+              ? "font-semibold"
+              : "text-muted-foreground",
+          )}
+          onClick={() => {
+            ButtonProps.setNavigation(ButtonProps.index);
+            ButtonProps.setActiveIndex(ButtonProps.index);
+          }}
+        >
+          {ButtonProps.buttonName}
+        </Button>
+      </div>
+    </Link>
   );
 }
