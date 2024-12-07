@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import currencyExchange from "@/utils/currency-exchange";
 import { applyPromocode } from "@/api-calls/payment-api-calls";
+import { AxiosError } from "axios";
 
 export function OrderSummary({
   cart,
@@ -86,17 +87,22 @@ export function OrderSummary({
       setError("Please enter a promo code");
       return;
     }
-    console.log(promoCode);
     const normalizedCode = promoCode.trim().toUpperCase();
-    console.log(normalizedCode);
-    const promotion = await applyPromocode(normalizedCode, userId);
-    if (promotion && promotion.message) {
-      setError(promotion.message);
-      return;
+    try {
+      const promotion = await applyPromocode(normalizedCode, userId);
+      if (promotion && promotion.message) {
+        setError(promotion.message);
+        return;
+      }
+      setActivePromotion({ code: normalizedCode, promotion });
+      setPromoCode("");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        setError(error.response?.data.message || "An error occurred");
+      } else {
+        setError("An error occurred");
+      }
     }
-    console.log(promotion);
-    setActivePromotion({ code: normalizedCode, promotion });
-    setPromoCode("");
   };
 
   const handleRemovePromotion = () => {

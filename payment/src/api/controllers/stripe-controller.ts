@@ -5,7 +5,6 @@ import { STATUS_CODES, ERROR_MESSAGES } from "@/utils/constants";
 export async function createPaymentIntent(req: Request, res: Response) {
   try {
     const { items } = req.body;
-    console.log(items);
     const paymentIntent = await stripeService.createPaymentIntent(items);
     res.send({
       client_secret: paymentIntent.client_secret,

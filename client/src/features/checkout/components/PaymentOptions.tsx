@@ -1,11 +1,12 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import StripeForm from "@/components/payment/StripeForm";
 import { Label } from "@/components/ui/label";
+import { CircleDollarSign, CreditCard, Wallet } from "lucide-react";
 
-type PaymentMethod = {
+export type TPaymentMethod = {
   id: string;
   label: string;
-  icons: string[];
+  icon: JSX.Element;
   additional?: string;
   expandable?: boolean;
 };
@@ -18,25 +19,26 @@ type PaymentSelectorProps = {
   setStripePaymentTrigger: (value: boolean) => void;
   setIsLoading: (value: boolean) => void;
   onPaymentCompletion: () => Promise<void>;
+  paymentMethods?: TPaymentMethod[];
 };
 
-const paymentMethods: PaymentMethod[] = [
+const defaultPaymentMethods: TPaymentMethod[] = [
   {
     id: "wallet",
     label: "Wallet",
-    icons: [],
+    icon: <Wallet className="text-primary-color" />,
     expandable: false,
   },
   {
     id: "creditCard",
-    label: "Pay via ( Debit Cards / Credit cards / Paypal / Apple Pay )",
-    icons: [],
+    label: "Pay via card card",
+    icon: <CreditCard className="text-primary-color" />,
     expandable: true,
   },
   {
     id: "cash",
     label: "Cash on Delivery (COD)",
-    icons: [],
+    icon: <CircleDollarSign className="text-primary-color" />,
     expandable: false,
   },
 ];
@@ -49,9 +51,10 @@ export function PaymentOptions({
   setIsLoading,
   setStripePaymentTrigger,
   onPaymentCompletion,
+  paymentMethods = defaultPaymentMethods,
 }: PaymentSelectorProps) {
   return (
-    <div className="w-full  mt-10">
+    <div className="w-full">
       <div className="mb-4">
         <h2 className="text-xl font-medium">Payment</h2>
         <p className="text-sm text-gray-500">All transactions are secure and encrypted.</p>
@@ -83,20 +86,8 @@ export function PaymentOptions({
                     <Label htmlFor={method.id} className="text-sm font-medium">
                       {method.label}
                     </Label>
+                    {method.icon}
                   </div>
-                  {/* <div className="flex items-center gap-2">
-                    {method.icons.map((icon, index) => (
-                      <img
-                        key={index}
-                        src={icon}
-                        alt="payment method"
-                        className="h-6 object-contain"
-                      />
-                    ))}
-                    {method.additional && (
-                      <span className="text-sm text-gray-500">{method.additional}</span>
-                    )}
-                  </div> */}
                   <span className="text-gray-500">{method.id === "wallet" && walletBalance}</span>
                 </div>
               </div>
