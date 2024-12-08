@@ -18,7 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import OrdersPageStyles from "@/features/home/styles/MyOrdersPage.module.css";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import currencyExchange from "@/utils/currency-exchange";
-import {PaymentMethod} from "@/utils/enums";
+import { PaymentMethod } from "@/utils/enums";
 interface OrderDetailsProps {
   order: TOrder; // Use the TOrder type
   onClose: () => void;
@@ -54,7 +54,11 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
         orderStatus: OrderStatus.cancelled,
       };
       const updatedOrder = await cancelOrder(order._id as string, orderData);
-      if (id && (order.paymentMethod === PaymentMethod.creditCard || order.paymentMethod === PaymentMethod.wallet)) {
+      if (
+        id &&
+        (order.paymentMethod === PaymentMethod.creditCard ||
+          order.paymentMethod === PaymentMethod.wallet)
+      ) {
         await refundMoney(id, order.totalPrice);
       }
       setCurrentOrder(updatedOrder as TOrder);
@@ -97,6 +101,15 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
         title: "Rating submitted successfully",
         duration: 3500,
       });
+      // Update the specific product in the currentOrder state
+      setCurrentOrder((prevOrder) => {
+        const updatedItems = prevOrder.items.map((item) =>
+          item.productId === selectedProductId
+            ? { ...item, rating: { rating: values.rating, review: values.comment } }
+            : item,
+        );
+        return { ...prevOrder, items: updatedItems };
+      });
 
       setShowRating(false);
       const response = await rateProduct(
@@ -134,8 +147,9 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
         <div className="space-y-6">
           <div>
             <h3 className="font-semibold mb-2">Products</h3>
-            {order.items.map((item, index) => {
-              const isRated = !!item.rating; // Check if the item is rated (assumes `item.rating` contains the rating)
+            {currentOrder.items.map((item, index) => {
+              const isRated = !!item.rating; // Dynamically check if the item has a rating
+              
               return (
                 <div key={index} className="flex justify-between items-center py-2 border-b">
                   <span>{item.name}</span>
