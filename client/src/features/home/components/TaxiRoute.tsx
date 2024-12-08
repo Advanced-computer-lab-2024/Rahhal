@@ -51,6 +51,7 @@ function TaxiRoute({
   const convertedPrice = currencyExchange(originalCurrency, amount);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
   const [isGuestAction, setIsGuestAction] = useState(false);
+  const [promocodeDiscount, setPromocodeDiscount] = useState(0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => setIsModalOpen(false);
@@ -79,6 +80,7 @@ function TaxiRoute({
       entity: selectedTaxi !== null ? selectedTaxi.id : "",
       type: bookingType.Transportation,
       selectedPrice: convertedPrice !== undefined ? convertedPrice : 0,
+      discount: promocodeDiscount,
       selectedDate: new Date(selectedTaxi.start.dateTime), //no provided date by the API
     };
 
@@ -112,6 +114,7 @@ function TaxiRoute({
           type={"Airport Taxi"}
           userId={userID}
           egpPrice={egpPrice}
+          setPromocodeDiscount={setPromocodeDiscount}
         />
       )}
       <div id="transportation-reserve-tour">

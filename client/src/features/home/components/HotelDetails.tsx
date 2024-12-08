@@ -78,6 +78,7 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
   const [showMoreFeat, setShowMoreFeat] = useState(false);
   const [showMoreType, setShowMoreType] = useState(false);
   const [isGuestAction, setIsGuestAction] = useState(false);
+  const [promocodeDiscount, setPromocodeDiscount] = useState(0);
 
   const propertyAmenities = chunkArray(hotel.features.propertyAmenities, 2);
   const roomFeatures = chunkArray(hotel.features.roomFeatures, 2);
@@ -94,6 +95,7 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
       entity: index!,
       type: bookingType.Hotel,
       selectedDate: new Date(date.from!),
+      discount: promocodeDiscount,
       selectedPrice: price,
     };
     const booking = await createBooking(bookingRequest);
