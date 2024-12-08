@@ -10,8 +10,8 @@ import { PaymentOptions } from "./PaymentOptions";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { constructReceiptData, createOrderInstance } from "../utils/helpers";
-import { fetchUserCart } from "@/api-calls/cart-api-calls";
+import { constructReceiptData, createOrderInstance, updateProductsStock } from "../utils/helpers";
+import { emptyCart, fetchUserCart } from "@/api-calls/cart-api-calls";
 import { usePromocode } from "@/api-calls/promocode-api-calls";
 import { sendReceipt } from "@/api-calls/payment-api-calls";
 import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
@@ -134,13 +134,20 @@ export default function Checkout() {
     try {
       if (user && cart) {
         const fullAddress = `${newAddress}, ${city}`;
+        const updatedPromocode =
+          activePromotion?.promotion.type === "shipping" ? "DELIVERY" : activePromotion?.code || "";
+
         const order = await createOrderInstance(
           cart,
           selectedPaymentMethod,
           discountAmount,
-          activePromotion?.code || "",
+          updatedPromocode,
           fullAddress,
         );
+
+        await emptyCart(cart.user);
+        updateProductsStock(cart);
+
         if (selectedPaymentMethod === "wallet") {
           await updateUser(user, { balance: (user.balance as number) - totalAmount });
         }

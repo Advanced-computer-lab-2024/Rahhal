@@ -70,6 +70,12 @@ export async function updateProduct(productData: TProduct, productImages: FileLi
   window.location.reload();
 }
 
+export async function updateProductStock(productId: string, quantity: number) {
+  await axios.patch(`${SERVICES_URLS.PRODUCT}/products/${productId}`, {
+    quantity,
+  });
+}
+
 export async function deleteProduct(product: TProduct) {
   await axios.delete(`${SERVICES_URLS.PRODUCT}/products/${product._id}`);
   alert("Product deleted successfully");

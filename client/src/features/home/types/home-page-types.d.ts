@@ -1,5 +1,6 @@
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
+import { THistoricalPlace } from "@/features/tourism-governor/utils/tourism-governor-columns";
 
 export interface Promotion {
   type: "percentage" | "fixed" | "shipping";
@@ -436,7 +437,7 @@ export interface HotelDetailsProps {
 export interface TPopulatedBookmark {
   _id: string;
   user: string;
-  entity: IActivity | IItinerary;
+  entity: IActivity | IItinerary | THistoricalPlace;
   type: bookmarkType;
 }
 

@@ -63,7 +63,7 @@ export async function decrementQuantity(user: string, productId: string): Promis
 }
 
 export async function emptyCart(user: string) {
-  const response = await axios.patch(`${SERVICES_URLS.ORDER}/carts`, {
+  const response = await axios.patch(`${SERVICES_URLS.ORDER}/carts`, null, {
     params: { user, operation: CartUpdates.EmptyCart },
   });
   return response.data;

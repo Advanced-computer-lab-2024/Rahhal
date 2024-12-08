@@ -1,5 +1,6 @@
 import { PopulatedCart, TOrder } from "@/features/home/types/home-page-types";
 import { createOrder } from "@/api-calls/order-api-calls";
+import { updateProductStock } from "@/api-calls/products-api-calls";
 
 export async function createOrderInstance(
   cart: PopulatedCart,
@@ -31,7 +32,15 @@ export async function createOrderInstance(
     shippingAddress: selectedAddress,
     billingAddress: selectedAddress,
   };
+
   return (await createOrder(order)) as TOrder;
+}
+
+export async function updateProductsStock(cart: PopulatedCart) {
+  cart.products.forEach(async (product) => {
+    product.product.quantity -= product.quantity;
+    await updateProductStock(product.product._id, product.product.quantity);
+  });
 }
 
 export function constructReceiptData(
