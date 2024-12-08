@@ -53,12 +53,6 @@ export function AdminSidebar({ id }: AdminSidebarProps) {
                 <SidebarGroupContent>
                   <SidebarMenu>
                     {group.items.map((item) => {
-                      // const pathParts = window.location.pathname.split("/");
-                      // const basePath = pathParts[1]; // 'admin'
-                      // const userId = pathParts[2]; // potential ID
-                      // const fullPath = userId
-                      //   ? `/${basePath}/${userId}${item.url}`
-                      //   : `/${basePath}${item.url}`;
                       const fullPath = `${item.url}`;
 
                       return (
