@@ -25,15 +25,18 @@ import NotificaionPopover from "@/components/NotificationPopover";
 import { TentTree, ClipboardMinus, Star } from "lucide-react";
 import { logoutUser } from "@/api-calls/users-api-calls";
 import { UserState } from "@/stores/user-state-store";
+import { useNavigate } from "react-router-dom";
 
 interface TourGuideSidebarProps {
   id?: string;
 }
 
 export function TourGuideSidebar({ id }: TourGuideSidebarProps) {
+  const navigate = useNavigate();
   const handleLogout = async () => {
     await logoutUser();
-    UserState();
+    await UserState();
+    navigate("/signin");
   };
   return (
     <Sidebar collapsible="icon">
@@ -123,7 +126,7 @@ export function TourGuideSidebar({ id }: TourGuideSidebarProps) {
                   <a href={`http://localhost:5173/user-settings`}>
                     <DropdownMenuItem>Profile</DropdownMenuItem>
                   </a>
-                  <a href={`http://localhost:5173/signin`}>
+                  <a>
                     <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                   </a>
                 </DropdownMenuContent>

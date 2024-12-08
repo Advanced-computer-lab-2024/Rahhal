@@ -41,8 +41,7 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
       setErrors(newErrors);
       const reqBody = { username: username, password: password };
       const response: any = await loginUser(reqBody);
-      UserState();
-      console.log(response);
+      await UserState();
       setDisabled(true);
       toast({
         title: "Login Successfull",

@@ -25,16 +25,18 @@ import {
 import NotificaionPopover from "@/components/NotificationPopover";
 import { logoutUser } from "@/api-calls/users-api-calls";
 import { UserState } from "@/stores/user-state-store";
-
+import { useNavigate } from "react-router-dom";
 interface AdminSidebarProps {
   id?: string | null;
 }
 
 export function AdminSidebar({ id }: AdminSidebarProps) {
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     await logoutUser();
-    UserState();
+    await UserState();
+    navigate("/signin");
   };
 
   return (
@@ -70,7 +72,7 @@ export function AdminSidebar({ id }: AdminSidebarProps) {
                             isActive={window.location.pathname === fullPath}
                             tooltip={item.label}
                           >
-                            <a href={"http://localhost:5173"+fullPath}>
+                            <a href={"http://localhost:5173" + fullPath}>
                               <item.icon />
                               <span>{item.label}</span>
                             </a>
@@ -107,7 +109,7 @@ export function AdminSidebar({ id }: AdminSidebarProps) {
                   <a href={`http://localhost:5173/user-settings`}>
                     <DropdownMenuItem>Profile</DropdownMenuItem>
                   </a>
-                  <a href={`http://localhost:5173/signin`}>
+                  <a>
                     <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                   </a>
                 </DropdownMenuContent>
