@@ -29,7 +29,7 @@ interface ContentProps {
   onTicketSelect?: (index: number) => void; // Handler for ticket selection
   notify?: boolean;
   footerText?: string;
-  isNotifyAnimating: boolean;
+  isNotifyAnimating?: boolean;
 }
 
 export const OverViewContent: React.FC<ContentProps> = ({
@@ -121,7 +121,6 @@ export const OverViewContent: React.FC<ContentProps> = ({
           onClick={onButton2Click}
           color={button2Color}
           disabled={isButtonDisabled || disabled2}
-          isNotifyAnimating={isNotifyAnimating}
         />
       )}
       {footerText && (
