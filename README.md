@@ -887,6 +887,44 @@ export default function NotificaionPopover({ userId, isAdmin = false }: Notifica
 </details>
 
 
+## Code Style
+### Naming Conventions
+- We use camel case for variable names and function names.
+- We use kabab case for file names.
+- We use Pascal case for class names.
+
+### RESTful API Conventions
+- Use nouns (not verbs) to represent resources
+```typescript
+✅ http://api.example.com/v1/store/items/{item-id}
+❌ http://api.example.com/v1/store/CreateItems/{item-id}
+```
+
+- Use plural nouns for collections
+```typescript
+✅ http://api.example.com/v1/store/items/{item-id}
+❌ http://api.example.com/v1/store/item/{item-id}
+```
+
+- Use hyphens (-) to improve readability
+```typescript
+✅ http://api.example.com/v1/store/inventory-management
+❌ http://api.example.com/v1/store/inventory_management
+```
+
+- Use forward slashes for hierarchy, avoid trailing slashes
+```typescript
+✅ http://api.example.com/v1/store/items
+❌ http://api.example.com/v1/store/items/
+```
+
+- Avoid file extensions in URIs
+```typescript
+✅ http://api.example.com/v1/store/items
+❌ http://api.example.com/v1/store/items.json
+```
+
+
 
 
 ## Contribute 
