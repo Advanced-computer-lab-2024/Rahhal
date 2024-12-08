@@ -46,8 +46,6 @@ export default function NotificaionPopover({ userId, isAdmin = false }: Notifica
     userId,
     (newNotification: INotification) => {
       setNotifications((prev) => {
-        const exists = prev.some((n) => n._id === newNotification._id);
-        if (exists) return prev;
         return [newNotification, ...prev];
       });
     },
