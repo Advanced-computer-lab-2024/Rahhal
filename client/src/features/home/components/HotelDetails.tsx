@@ -19,7 +19,6 @@ import { useParams } from "react-router-dom";
 import { useHotelSearchBarStore } from "@/stores/search-bar-stores/hotel-search-bar-slice";
 import { getUserById, addLoyalityPoints } from "@/api-calls/users-api-calls";
 import { calculateAge } from "@/utils/age-calculator";
-import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { bookingType } from "@/utils/enums";
@@ -27,6 +26,7 @@ import type { TBookingType } from "../types/home-page-types";
 import { createBooking } from "@/api-calls/booking-api-calls";
 import SignUpModal from "./SignupModal";
 import { useTour } from "@/components/AppTour";
+import BookingModal from "./payment-modal/PaymentModal";
 export default function HotelDetails({ hotels }: HotelDetailsProps) {
   const { index, id } = useParams();
   const [isAboveEighteen, setIsAboveEighteen] = useState(false);
@@ -55,6 +55,7 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
   const { currency } = useCurrencyStore();
   const parsedIndex = parseInt(index!);
   const hotel = hotels[parsedIndex];
+
   const newPrice = currencyExchangeSpec("USD", parseInt(hotel.averagePrice), rates, currency)
     ?.toFixed(0)!
     .toLocaleString();
@@ -79,14 +80,27 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
   const [showMoreType, setShowMoreType] = useState(false);
   const [isGuestAction, setIsGuestAction] = useState(false);
   const [promocodeDiscount, setPromocodeDiscount] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => setIsModalOpen(false);
 
   const propertyAmenities = chunkArray(hotel.features.propertyAmenities, 2);
   const roomFeatures = chunkArray(hotel.features.roomFeatures, 2);
   const roomTypes = chunkArray(hotel.features.roomTypes, 2);
 
-  const handleHotelBooking = async (price: number) => {
+  const egpPrice = currencyExchangeDefaultSpec(
+    currency,
+    differenceInDays(date.to!, date.from!) * parseInt(newPrice!) + parseInt(newPrice!) * 0.1,
+    rates,
+  )!;
+
+  const handleHotelBooking = async () => {
     if (!login) {
       setIsGuestAction(true);
+      return;
+    }
+
+    if (!isModalOpen && id) {
+      setIsModalOpen(true);
       return;
     }
 
@@ -96,10 +110,10 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
       type: bookingType.Hotel,
       selectedDate: new Date(date.from!),
       discount: promocodeDiscount,
-      selectedPrice: price,
+      selectedPrice: egpPrice,
     };
     const booking = await createBooking(bookingRequest);
-    if (booking) await addLoyalityPoints(id!, price);
+    if (booking) await addLoyalityPoints(id!, egpPrice);
   };
 
   return (
@@ -111,6 +125,21 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
             setIsGuestAction(false);
           }}
           text={"Planning your stay? Sign in to book the perfect hotel effortlessly!"}
+        />
+      )}
+
+      {isModalOpen && (
+        <BookingModal
+          parentBookingFunc={handleHotelBooking}
+          currency={currency}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          price={Number(newPrice)}
+          name={hotel.name}
+          type={"Hotel"}
+          userId={id ?? ""}
+          egpPrice={egpPrice ?? 0}
+          setPromocodeDiscount={setPromocodeDiscount}
         />
       )}
 
@@ -176,56 +205,29 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
                   <div className="w-[100%] flex justify-center h-fit">
                     <ReservationDetails date={date} setDate={setDate} />
                   </div>
-
-                  <div className="flex justify-center">
-                    {!login && (
-
-                      <button onClick={() => handleHotelBooking(parseInt(newPrice!))} className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12">
-                        Reserve Room
-                      </button>
-
+                <div className="flex justify-center">
+                  <button
+                    className={cn(
+                      "bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12",
+                      (login && !isAboveEighteen) || !date.to || adults <= 0
+                        ? "hover:bg-[var(--primary-color-fade)] bg-[var(--primary-color-fade)]"
+                        : "",
                     )}
-
-                    {login && (
-                      <button
-                        className={cn(
-                          "bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12",
-                          !isAboveEighteen || !date.to || adults <= 0
-                            ? "hover:bg-[var(--primary-color-fade)] bg-[var(--primary-color-fade)]"
-                            : "",
-                        )}
-                        disabled={!isAboveEighteen || !date.to || adults <= 0}
-                        onClick={() => {
-                          toast({
-                            title: "Booking successful",
-                            description: "Loyality points added to your account!",
-                            style: {
-                              backgroundColor: "#34D399",
-                              color: "#FFFFFF",
-                            },
-                            duration: 3000,
-                          });
-                          handleHotelBooking(
-                            currencyExchangeDefaultSpec(
-                              currency,
-                              differenceInDays(date.to!, date.from!) * parseInt(newPrice!) +
-                              parseInt(newPrice!) * 0.1,
-                              rates,
-                            )!,
-                          );
-                        }}
-                      >
-                        Reserve Room
-                      </button>
-                    )}
-                  </div>
-                  <div className="h-4 flex justify-center">
-                    {login && !isAboveEighteen && (
-                      <span className="text-red-500 text-xs">
-                        You must be 18 years or older to book this hotel
-                      </span>
-                    )}
-                  </div>
+                    disabled={(login && !isAboveEighteen) || !date.to || adults <= 0}
+                    onClick={() => {
+                      handleHotelBooking();
+                    }}
+                  >
+                    Reserve Room
+                  </button>
+                </div>
+                <div className="h-4 flex justify-center">
+                  {login && !isAboveEighteen && (
+                    <span className="text-red-500 text-xs">
+                      You must be 18 years or older to book this hotel
+                    </span>
+                  )}
+                </div>
 
                   <div className="flex justify-center h-28">
                     <div className="flex flex-col justify-end items-center w-fit gap-3 h-fit">
