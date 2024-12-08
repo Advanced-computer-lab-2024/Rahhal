@@ -9,7 +9,11 @@ export async function getNotifyRequestById(id: string) {
   return await notifyRequestRepository.getNotifyRequestById(id);
 }
 
-export async function createNotifyRequest(notifyRequestData: Partial<INotifyRequest>) {
+export async function createNotifyRequest(notifyRequestData: INotifyRequest) {
+  const existingNotifyRequest = await notifyRequestRepository.getNotifyRequests(notifyRequestData);
+  if (existingNotifyRequest.length > 0) {
+    return existingNotifyRequest[0];
+  }
   return await notifyRequestRepository.createNotifyRequest(notifyRequestData);
 }
 
