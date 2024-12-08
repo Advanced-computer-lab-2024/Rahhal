@@ -84,7 +84,7 @@ export default function FlightAccordion({
         />
       )}
 
-      {isModalOpen && (
+      {isModalOpen && bookingPrice && (
         <BookingModal
           parentBookingFunc={onConfirmFlight}
           currency={currency}

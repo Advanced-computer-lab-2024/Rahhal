@@ -101,7 +101,7 @@ function TaxiRoute({
         />
       )}
 
-      {isModalOpen && (
+      {isModalOpen && egpPrice && (
         <BookingModal
           parentBookingFunc={onConfirmTrip}
           currency={currency}

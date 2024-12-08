@@ -116,7 +116,6 @@ const ActivityDetailsPage: React.FC = () => {
     }
   };
 
-
   const onTicketSelect = (index: number) => {
     setSelectedPrice(price[Object.keys(price)[index]]);
   };
@@ -154,7 +153,7 @@ const ActivityDetailsPage: React.FC = () => {
             />
           )}
 
-          {isModalOpen && (
+          {isModalOpen && selectedPrice && (
             <BookingModal
               parentBookingFunc={handleButtonClick}
               discountPerc={specialDiscount}

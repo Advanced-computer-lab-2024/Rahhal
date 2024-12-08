@@ -40,7 +40,7 @@ interface BookingModalProps {
   taxiPrice?: number;
   parentBookingFunc: () => void;
   userId: string;
-  egpPrice?:number;
+  egpPrice: number;
 }
 interface BookingFormProps {
   price: number;
@@ -49,7 +49,7 @@ interface BookingFormProps {
   currency: string;
   discountPerc?: number;
   userId: string;
-  egpPrice?:number;
+  egpPrice: number;
 
   onClose: () => void;
   parentBookingFunc: () => void;
@@ -67,6 +67,7 @@ function useIdFromParamsOrQuery() {
 
 function BookingForm({
   price,
+  egpPrice,
   name,
   type,
   currency,
@@ -96,6 +97,7 @@ function BookingForm({
 
   // Apply both discounts
   const totalPrice = price * (1 - (discountPerc ?? 0) / 100) * (1 - promoDiscountPerc / 100);
+  const egpTotalPrice = egpPrice * (1 - (discountPerc ?? 0) / 100) * (1 - promoDiscountPerc / 100);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -135,7 +137,7 @@ function BookingForm({
 
       let remainingBalanceConverted, remainingBalanceFormatted;
       if (selectedPaymentMethod === "wallet") {
-        const remainingBalance = (user.balance as number) - totalPrice;
+        const remainingBalance = (user.balance as number) - egpTotalPrice;
         await updateUser(user, { balance: remainingBalance });
         remainingBalanceConverted = currencyExchangeSpec("EGP", remainingBalance, rates, currency);
         remainingBalanceFormatted = remainingBalanceConverted
@@ -266,7 +268,7 @@ function BookingForm({
               setIsLoading={setIsPaymentLoading}
               setSelectedPaymentMethod={setSelectedPaymentMethod}
               paymentMethods={paymentMethods}
-              amount={totalPrice}
+              amount={egpTotalPrice}
             />
           )}
         </div>
@@ -296,6 +298,7 @@ export default function BookingModal({
   currency,
   name,
   price,
+  egpPrice,
   type,
   isOpen,
   onClose,
@@ -312,6 +315,7 @@ export default function BookingModal({
 
         <BookingForm
           price={price}
+          egpPrice={egpPrice}
           name={name}
           type={type}
           currency={currency}
