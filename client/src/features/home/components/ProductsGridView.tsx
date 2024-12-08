@@ -46,7 +46,12 @@ const ProductGridView = () => {
   };
 
   const resetFilters = () => {
-    setSelectedPriceRange([0, 10000]);
+    if (combined.length > 0) {
+      const maxPrice = Math.max(...combined.map((item) => getPriceValue(item.price)));
+      setSelectedPriceRange([0, maxPrice]); // Dynamically set the max price
+    } else {
+      setSelectedPriceRange([0, 10000]); // Fallback if combined is empty
+    }
     setSelectedRatings([]);
   };
 
@@ -68,13 +73,25 @@ const ProductGridView = () => {
     if (!isLoadingProducts && products) setCombined([...products]);
   }, [isLoadingProducts, products]);
 
+  useEffect(() => {
+    if (combined.length > 0) {
+      const maxPrice = Math.max(...combined.map((item) => getPriceValue(item.price)));
+      setSelectedPriceRange([0, maxPrice]);
+    }
+  }, [combined]);
+
   let combinedSideBarFilters = [
     {
       title: "Reset Filters",
       content: (
-        <Button variant="outline" size="sm" onClick={resetFilters}>
-          <FilterX className="w-4 h-4" />
-          <span className="ml-2">Reset Filters</span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={resetFilters}
+          className="flex items-center justify-center w-full bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 rounded-lg transition-all duration-300 shadow-sm"
+        >
+          <FilterX className="w-5 h-5 text-red-500" />
+          <span className="ml-2 font-medium text-gray-700">Reset Filters</span>
         </Button>
       ),
     },
