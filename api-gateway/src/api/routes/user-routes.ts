@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/users", grantAccess([Role.ADMIN,Role.GUEST]), userContoller.getApprovedUsers);
 router.get("/users/requests", grantAccess([Role.ADMIN,Role.GUEST]), userContoller.getUsersPendingRequests);
-router.get("/users/:id", grantAccess([Role.ADMIN, Role.ADVERTISER, Role.SELLER, Role.TOURGUIDE, Role.TOURISMGOVERNOR, Role.TOURIST]), userContoller.getUserById);
+router.get("/users/:id", userContoller.getUserById);
 router.get("/users/:id/activities", grantAccess([Role.ADVERTISER]), userContoller.getUserActivities);
 router.get("/users/:id/historical-places", grantAccess([Role.TOURISMGOVERNOR]), userContoller.getUserHistoricalPlaces);
 router.get("/users/:id/products", grantAccess([Role.SELLER]), userContoller.getUserProducts);

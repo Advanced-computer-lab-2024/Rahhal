@@ -48,10 +48,6 @@ export async function deleteAccount(req: Request, res: Response) {
   try {
     const userId = req.params.id;
     await generalService.deleteAccount(userId);
-    res.cookie("jwt", " ", {
-      sameSite: "lax",
-      maxAge: 1,
-    });
     res.status(STATUS_CODES.STATUS_OK).json();
   } catch (error) {
     res.status(STATUS_CODES.BAD_GATEWAY).json(error);

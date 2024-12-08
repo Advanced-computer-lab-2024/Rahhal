@@ -9,10 +9,11 @@ import {
 } from "@/components/ui/dialog";
 import { TUser } from "@/types/user";
 import { Button } from "@/components/ui/button";
-import { deleteUserNoReload } from "@/api-calls/users-api-calls";
+import { deleteUserNoReload, logoutUser } from "@/api-calls/users-api-calls";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { AxiosError } from "axios";
+import { UserState } from "@/stores/user-state-store";
 
 export default function DeleteAccountButton({ user }: { user: TUser }) {
   const [open, setOpen] = useState(false);
@@ -39,6 +40,8 @@ export default function DeleteAccountButton({ user }: { user: TUser }) {
             onClick={async () => {
               try {
                 await deleteUserNoReload(user);
+                await logoutUser();
+                await UserState();
                 navigate("/");
                 window.location.reload();
               } catch (error) {
