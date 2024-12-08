@@ -9,7 +9,7 @@ import useUserStore from "@/stores/user-state-store";
 
 export const EditContextTourGov = createContext<{ user: TUser }>({ user: DEFAULTS.ADMIN_DATA });
 
-export default function AdminHomepage() {
+export default function TourismGovernorHomepage() {
   const { id } = useUserStore();
   const [user, setUser] = useState<TUser>(DEFAULTS.ADMIN_DATA);
 

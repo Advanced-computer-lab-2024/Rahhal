@@ -194,10 +194,10 @@ function BookingForm({
           selectedPaymentMethod === "wallet"
             ? `You have ${remainingBalanceFormatted} ${currency} left in your wallet, enjoy them 🥳`
             : "Payment Successful",
-        style: {
-          backgroundColor: "#34D399",
-          color: "white",
-        },
+        // style: {
+        //   backgroundColor: "#34D399",
+        //   color: "white",
+        // },
         duration: 5000,
       });
     } catch (e) {

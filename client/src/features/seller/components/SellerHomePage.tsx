@@ -9,7 +9,7 @@ import useUserStore from "@/stores/user-state-store";
 
 export const EditContextSeller = createContext<{ user: TUser }>({ user: DEFAULTS.ADMIN_DATA });
 
-export default function SellerHomePage() {
+export default function SellerHomepage() {
   const { id } = useUserStore();
   const [user, setUser] = useState<TUser>(DEFAULTS.ADMIN_DATA);
 
