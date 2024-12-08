@@ -31,5 +31,29 @@ export async function createOrderInstance(
     shippingAddress: selectedAddress,
     billingAddress: selectedAddress,
   };
-  return await createOrder(order);
+  return (await createOrder(order)) as TOrder;
+}
+
+export function constructReceiptData(order: TOrder, deliveryFee: number): string {
+  let receipt = `\nPAYMENT RECEIPT FOR ORDER ${order._id}\n`;
+  receipt += "-----------------\n\n";
+  receipt += "ITEM : PRICE\n";
+
+  // Add items
+  order.items.forEach((item) => {
+    receipt += `${item.name} (x${item.quantity}): ${(item.price * item.quantity).toFixed(2)} EGP\n`;
+  });
+
+  receipt += "-----------------\n";
+  receipt += `Delivery: ${deliveryFee.toFixed(2)} EGP\n`;
+
+  if (order.discountAmount && order.discountAmount > 0) {
+    receipt += `Discount: -${order.discountAmount.toFixed(2)} EGP\n`;
+  }
+
+  const finalTotalPrice = order.totalPrice + deliveryFee - (order.discountAmount || 0);
+
+  receipt += `Total Price: ${finalTotalPrice.toFixed(2)} EGP`;
+
+  return receipt;
 }
