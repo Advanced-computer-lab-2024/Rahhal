@@ -52,10 +52,12 @@ export function DateTimePickerSearchBar({
   } else if (open && focusIndex !== index && setFocusIndex) {
     setFocusIndex(index ? index : 0); // Set focus when the popover opens
   }
+
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
     onDateChange(undefined);
   };
+
   return (
     <>
       <div
@@ -102,7 +104,7 @@ export function DateTimePickerSearchBar({
                 ? ""
                 : "hover:bg-gray-300/65 z-0"
               : focusIndex === index
-                ? "bg-background z-10 relative shadow-[rgba(0,_0,_0,_0.15)_0px_0px_16px]"
+                ? "bg-background shadow-[0_0_12px_0_rgba(0,0,0,0.16)]"
                 : "",
           )}
         >

@@ -19,7 +19,7 @@ function TravelPageHeader({
   onIconClickTaxis,
 }: TravelPageHeaderProps) {
   return (
-    <>
+    <div id="searchBar">
       <div className="flex justify-center py-[10px] px-[16px] items-center w-[100%] ">
         {transferType === "taxis" ? (
           <TransportationSearchBar onIconClick={onIconClickTaxis} />
@@ -28,10 +28,9 @@ function TravelPageHeader({
         ) : (
           <TransportationSearchBar onIconClick={onIconClickTaxis} />
         )}
-       
       </div>
       <hr className="border-t bg-[var(--gray-scale)] " />
-    </>
+    </div>
   );
 }
 

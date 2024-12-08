@@ -42,7 +42,7 @@ function GuestSelector({
   const sum = adults + children + infants;
   let displayedText;
   let guestsText;
-
+  console.log("corner", corner);
   if (!open && focusIndex === index && setFocusIndex) {
     setFocusIndex(0); // Reset focus when the popover closes
   } else if (open && focusIndex !== index && setFocusIndex) {
@@ -120,7 +120,7 @@ function GuestSelector({
                 ? ""
                 : "hover:bg-gray-300/65 z-0"
               : focusIndex === index
-                ? "bg-background z-10 shadow-[rgba(0,_0,_0,_0.15)_0px_0px_6px]"
+                ? "bg-background shadow-[0_0_12px_0_rgba(0,0,0,0.16)]"
                 : "",
           )}
         >
