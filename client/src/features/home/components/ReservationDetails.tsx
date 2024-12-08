@@ -7,6 +7,8 @@ import GuestSelector from "@/features/home/components/search-bar/counter";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useHotelSearchBarStore } from "@/stores/search-bar-stores/hotel-search-bar-slice";
+import { Stepper } from "./search-bar/stepper";
+import { Button } from "@/components/ui/button";
 
 interface ReservationProps {
   date: DateRange;
@@ -45,6 +47,20 @@ export default function ReservationDetails({ date, setDate }: ReservationProps) 
     }
   };
 
+  const guestsText = adults + children === 0 ? "" : adults + children === 1 ? "guest" : "guests";
+  const infantsText = infants === 0 ? "" : infants === 1 ? "infant" : "infants";
+
+  let displayedText;
+  const sum = adults + children + infants;
+  if (sum === 0) {
+    displayedText = "Add guests";
+  } else if (adults + children === 0) {
+    displayedText = infants === 0 ? "" : `${infants} ${infantsText}`;
+  } else if (infants === 0) {
+    displayedText = `${adults + children} ${guestsText}`;
+  } else {
+    displayedText = `${adults + children} ${guestsText}, ${infants} ${infantsText}`;
+  }
   return (
     <div className={cn("grid gap-2 h-fit")}>
       <div className="border rounded-lg w-64 h-fit overflow-hidden border-gray-500">
@@ -167,16 +183,44 @@ export default function ReservationDetails({ date, setDate }: ReservationProps) 
             />
           </PopoverContent>
         </Popover>
-        <GuestSelector
-          adults={adults}
-          setAdults={setAdults}
-          infants={infants}
-          setInfants={setInfants}
-          children={children}
-          setChildren={setChildren}
-          placeholder="guests"
-          className="w-full rounded-none hover:bg-transparent px-3 h-12"
-        />
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              size="lg"
+              className={cn(
+                "focus-visible:outline-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent bg-transparent hover:bg-transparent flex justify-start items-center px-1 relative",
+                "text-left font-normal border-none w-full rounded-none h-12 ",
+              )}
+            >
+              <div className="flex flex-col ml-2">
+                <span className="text-black text-sm">Who</span>
+                <span
+                  className={
+                    infants + adults + children > 0 ? "text-black text-xs" : "text-gray-500 text-xs"
+                  }
+                >
+                  {displayedText}
+                </span>
+              </div>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[300px] p-4 space-y-4 rounded-[8%]">
+            <Stepper
+              label="Adults"
+              description="Ages 13 or above"
+              count={adults}
+              setCount={setAdults}
+            />
+            <Stepper
+              label="Children"
+              description="Ages 2–12"
+              count={children}
+              setCount={setChildren}
+            />
+            <Stepper label="Infants" description="Under 2" count={infants} setCount={setInfants} />
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   );
