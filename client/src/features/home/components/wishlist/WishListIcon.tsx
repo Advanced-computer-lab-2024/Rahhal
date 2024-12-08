@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchUserWishlist } from "@/api-calls/wishlist-api-calls";
 import { useParams } from "react-router-dom";
 import { TPopulatedWishlist } from "../../types/home-page-types";
-import useWishlistStore from "@/stores/wishlist-count-store";
+import useWishlistStore from "@/stores/nav-bar-icon-stores/wishlist-count-store";
 import useUserStore from "@/stores/user-state-store";
 
 function WishlistIcon() {
