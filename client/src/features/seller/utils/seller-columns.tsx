@@ -24,7 +24,10 @@ function calculateAverageRating(ratings: TRating[]) {
   return totalRating / ratings.length;
 }
 
-export const productsColumns: ColumnDef<TProduct>[] = [
+export const productsColumns = (
+  onDelete: (id: string) => void,
+  onSubmit: (product: TProduct) => void,
+): ColumnDef<TProduct>[] => [
   {
     accessorKey: "name",
     header: "Name",
@@ -91,7 +94,6 @@ export const productsColumns: ColumnDef<TProduct>[] = [
     cell: ({ row }) => {
       return (
         <div className="text-right">
-         
           <ProductModal
             productData={row.original}
             dialogTrigger={
@@ -100,6 +102,8 @@ export const productsColumns: ColumnDef<TProduct>[] = [
                 <ChevronRight className="h-4 w-4" />
               </Button>
             }
+            onDelete={(id) => onDelete(id)}
+            onSubmit={(product) => onSubmit(product)}
           />
         </div>
       );

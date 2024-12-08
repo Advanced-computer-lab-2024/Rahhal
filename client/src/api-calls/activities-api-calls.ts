@@ -47,9 +47,9 @@ export async function updateActivity(activityData: TActivity, activityImages: Fi
 
   activityData.images = [...activityData.images, ...urls];
 
-  await axios.patch(`${SERVICES_URLS.ENTERTAINMENT}/activities/${activityData!._id}`, activityData);
-  alert("Activity updated successfully");
-  window.location.reload();
+  const response = await axios.patch(`${SERVICES_URLS.ENTERTAINMENT}/activities/${activityData!._id}`, activityData);
+  return response;
+  
 }
 
 export async function createActivity(

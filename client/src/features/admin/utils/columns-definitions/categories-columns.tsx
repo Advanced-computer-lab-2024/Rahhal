@@ -9,7 +9,10 @@ export type TCategory = {
 };
 
 
-export const categoriesColumns: ColumnDef<TCategory>[] = [
+export const categoriesColumns= (
+  onDelete: (id: string) => void,
+  onSubmit: (category: TCategory) => void,
+): ColumnDef<TCategory>[] => [
   {
     accessorKey: "name",
     header: "Category Name",
@@ -30,6 +33,8 @@ export const categoriesColumns: ColumnDef<TCategory>[] = [
                 <ChevronRight className="w-4 h-4" />
               </Button>
             }
+            onDelete={(id) => onDelete(id)}
+            onSubmit={(category) => onSubmit(category)}
           />
         </div>
       );

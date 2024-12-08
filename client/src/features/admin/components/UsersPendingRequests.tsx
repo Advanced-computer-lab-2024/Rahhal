@@ -16,6 +16,7 @@ import { userRequestColumns } from "@/features/admin/utils/columns-definitions/u
 import { Row } from "@tanstack/react-table";
 import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 function UserRequestsView() {
   const [usersRequests, setUsersRequests] = useState<TUser[]>([]);
@@ -38,7 +39,10 @@ function UserRequestsView() {
     toast({
       title: "Success",
       description: "User deleted successfully",
-      variant: "default", // Assuming your toast uses 'status' or similar for the type of message
+      style: {
+        backgroundColor: "#34D399",
+        color: "white",
+      }, // Assuming your toast uses 'status' or similar for the type of message
     });
   };
 
@@ -53,17 +57,30 @@ function UserRequestsView() {
     toast({
       title: "Success",
       description: "User approved successfully",
-      variant: "default", // Assuming your toast uses 'status' or similar for the type of message
+      style: {
+        backgroundColor: "#34D399",
+        color: "white",
+      }, // Assuming your toast uses 'status' or similar for the type of message
     });
   };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
   return (
-    <DataTable
-      data={usersRequests}
-      columns={userRequestColumns({ onApprove: handleUserApprove, onDelete: handleUserDelete })}
-    />
+    <div className="container m-auto">
+      <h1
+        className={cn(
+          "text-3xl font-bold tracking-tight",
+          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent",
+        )}
+      >
+        Pending Users
+      </h1>
+      <DataTable
+        data={usersRequests}
+        columns={userRequestColumns({ onApprove: handleUserApprove, onDelete: handleUserDelete })}
+      />
+    </div>
   );
 }
 

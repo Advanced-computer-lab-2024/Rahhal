@@ -60,7 +60,7 @@ export function GenericModal({
             )}
           </div>
           <div className="justify-self-end">
-            <Button onClick={handleSubmit}>Save changes</Button>
+            <Button onClick={handleSubmit} className="bg-[#1d3c51]">Save changes</Button>
           </div>
         </DialogFooter>
       </DialogContent>

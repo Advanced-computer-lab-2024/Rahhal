@@ -57,12 +57,11 @@ export async function updateItinerary(itineraryData: TItinerary, itineraryImages
 
   itineraryData.images = [...itineraryData.images, ...urls];
 
-  await axios.patch(
+  const response = await axios.patch(
     `${SERVICES_URLS.ENTERTAINMENT}/itineraries/${itineraryData!._id}`,
     itineraryData,
   );
-  alert("Itinerary updated successfully");
-  window.location.reload();
+  return response;
 }
 
 export async function createItinerary(
