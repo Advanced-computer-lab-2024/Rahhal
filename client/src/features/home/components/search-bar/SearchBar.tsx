@@ -54,6 +54,7 @@ interface SearchBar {
   searchPartsOnValueChange?: ((value: string) => void)[];
   inputBox?: boolean;
   onIconClick?: () => void;
+  displayHours?: boolean;
 }
 
 // SearchBar component
@@ -68,6 +69,7 @@ export default function SearchBar({
   searchPartsOnValueChange,
   inputBox = true,
   onIconClick,
+  displayHours,
 }: SearchBar) {
   const { focusIndex, setFocusIndex, hoverIndex, setHoverIndex } = useGeneralSearchBarStore();
 
@@ -77,25 +79,34 @@ export default function SearchBar({
   const searchBarRef = useRef<HTMLDivElement>(null);
   let dualDatePickerFound = false;
 
-useEffect(() => {
-  const handleClickOutside = (e: MouseEvent) => {
-    if (popoverRef.current && searchBarRef.current && (!searchBarRef.current.contains(e.target as Node) && !popoverRef.current.contains(e.target as Node))) {
-      setFocusIndex(0);
-      console.log("Popover Visible & I Pressed Outside");
-    } else if (!popoverRef.current && searchBarRef.current && !searchBarRef.current.contains(e.target as Node)) {
-      setFocusIndex(0);
-      console.log("Popover Not Visible & I Pressed Outside");
-    }
-    console.log("I Clicked a Button");
-  };
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        popoverRef.current &&
+        searchBarRef.current &&
+        !searchBarRef.current.contains(e.target as Node) &&
+        !popoverRef.current.contains(e.target as Node)
+      ) {
+        setFocusIndex(0);
+        console.log("Popover Visible & I Pressed Outside");
+      } else if (
+        !popoverRef.current &&
+        searchBarRef.current &&
+        !searchBarRef.current.contains(e.target as Node)
+      ) {
+        setFocusIndex(0);
+        console.log("Popover Not Visible & I Pressed Outside");
+      }
+      console.log("I Clicked a Button");
+    };
 
-  document.addEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
 
-  return () => {
-    document.removeEventListener('click', handleClickOutside);
-  };
-}, []);
-    let newIndex = 0;
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+  let newIndex = 0;
   return (
     <div
       className={cn(
@@ -141,33 +152,37 @@ useEffect(() => {
           )}
         </div>
       </div>
-      {focusIndex == 0 && <div className="relative"><div className="border-l border-gray-300 h-8" /> </div>}
+      {focusIndex == 0 && (
+        <div className="relative">
+          <div className="border-l border-gray-300 h-8" />{" "}
+        </div>
+      )}
       {searchParts?.map((value, index) => (
         <>
           {searchPartsValues &&
             searchPartsHandlers &&
             searchPartsTypes &&
             (searchPartsTypes[index] === "dropdown" ? (
-              (newIndex = index + (dualDatePickerFound ? 1 : 0)),
+              ((newIndex = index + (dualDatePickerFound ? 1 : 0)),
               (
-              <SearchPart
-                corner={searchParts.length}
-                setFocusIndex={setFocusIndex}
-                focusIndex={focusIndex}
-                index={index + 1 + (inputBox ? 1 : 0) + (dualDatePickerFound ? 1 : 0)}
-                placeholder_1={value}
-                placeholder_2={searchPartsPlaceholders ? searchPartsPlaceholders[newIndex] : ""}
-                hoverIndex={hoverIndex}
-                setHoverIndex={setHoverIndex}
-                values={searchPartsValues.length > 0 ? searchPartsValues[newIndex] : []}
-                handler={searchPartsHandlers[newIndex] as SearchPartHandler<string>}
-                onValueChange={
-                  searchPartsOnValueChange && searchPartsOnValueChange.length >= newIndex
-                    ? searchPartsOnValueChange[newIndex]
-                    : undefined
-                }
-              />
-              )
+                <SearchPart
+                  corner={searchParts.length}
+                  setFocusIndex={setFocusIndex}
+                  focusIndex={focusIndex}
+                  index={index + 1 + (inputBox ? 1 : 0) + (dualDatePickerFound ? 1 : 0)}
+                  placeholder_1={value}
+                  placeholder_2={searchPartsPlaceholders ? searchPartsPlaceholders[newIndex] : ""}
+                  hoverIndex={hoverIndex}
+                  setHoverIndex={setHoverIndex}
+                  values={searchPartsValues.length > 0 ? searchPartsValues[newIndex] : []}
+                  handler={searchPartsHandlers[newIndex] as SearchPartHandler<string>}
+                  onValueChange={
+                    searchPartsOnValueChange && searchPartsOnValueChange.length >= newIndex
+                      ? searchPartsOnValueChange[newIndex]
+                      : undefined
+                  }
+                />
+              ))
             ) : searchPartsTypes[index] === "date" ? (
               <DateTimePickerSearchBar
                 index={index + 1 + (inputBox ? 1 : 0) + (dualDatePickerFound ? 1 : 0)}
@@ -198,50 +213,58 @@ useEffect(() => {
                     searchPartsHandlers[index].setState as (date: Date | undefined) => void
                   }
                   rightDate={searchPartsHandlers[index + 1].state[0] as Date}
-                  rightPlaceholder={searchPartsPlaceholders ? searchPartsPlaceholders[index + 1] : ""}
+                  rightPlaceholder={
+                    searchPartsPlaceholders ? searchPartsPlaceholders[index + 1] : ""
+                  }
                   onRightDateChange={
                     searchPartsHandlers[index + 1].setState as (date: Date | undefined) => void
                   }
                   popoverRef={popoverRef}
-                  hour={true}
+                  hour={displayHours}
                 />
               ))
             ) : searchPartsTypes[index] === "stepper" ? (
-              (newIndex = index + (dualDatePickerFound ? 1 : 0)),
+              ((newIndex = index + (dualDatePickerFound ? 1 : 0)),
               (
-              <GuestSelector
-                index={index + 1 + (inputBox ? 1 : 0) + (dualDatePickerFound ? 1 : 0)}
-                setFocusIndex={setFocusIndex}
-                focusIndex={focusIndex}
-                hoverIndex={hoverIndex}
-                setHoverIndex={setHoverIndex}
-                corner={searchParts.length}
-                adults={searchPartsHandlers[newIndex].state[0] as number}
-                setAdults={searchPartsHandlers[newIndex].setState as (value: number) => void}
-                children={searchPartsHandlers[newIndex + 1].state[0] as number}
-                setChildren={searchPartsHandlers[newIndex + 1].setState as (value: number) => void}
-                infants={searchPartsHandlers[newIndex + 2].state[0] as number}
-                setInfants={searchPartsHandlers[newIndex + 2].setState as (value: number) => void}
-                placeholder={searchPartsPlaceholders ? searchPartsPlaceholders[newIndex] : ""}
-              />
-              )
+                <GuestSelector
+                  index={index + 1 + (inputBox ? 1 : 0) + (dualDatePickerFound ? 1 : 0)}
+                  setFocusIndex={setFocusIndex}
+                  focusIndex={focusIndex}
+                  hoverIndex={hoverIndex}
+                  setHoverIndex={setHoverIndex}
+                  corner={searchParts.length}
+                  adults={searchPartsHandlers[newIndex].state[0] as number}
+                  setAdults={searchPartsHandlers[newIndex].setState as (value: number) => void}
+                  children={searchPartsHandlers[newIndex + 1].state[0] as number}
+                  setChildren={
+                    searchPartsHandlers[newIndex + 1].setState as (value: number) => void
+                  }
+                  infants={searchPartsHandlers[newIndex + 2].state[0] as number}
+                  setInfants={searchPartsHandlers[newIndex + 2].setState as (value: number) => void}
+                  placeholder={searchPartsPlaceholders ? searchPartsPlaceholders[newIndex] : ""}
+                />
+              ))
             ) : (
               ""
             ))}
-          {focusIndex == 0 && <div className="relative"><div className="border-l border-gray-300 h-8" /> </div>}
+          {focusIndex == 0 && (
+            <div className="relative">
+              <div className="border-l border-gray-300 h-8" />{" "}
+            </div>
+          )}
         </>
       ))}
       {focusIndex == 0 && (
         <div className="relative flex justify-center items-center h-full">
-        <Button
-          variant="default"
-          size="default"
-          //bg-[#ff585f] hover:bg-[#ff585f] hover:bg-gradient-to-r hover:from-[#ff111c] to hover:to-[#ff1151]
-          className=" bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] absolute right-1 w-10 h-10 rounded-full px-2 py-0 transition duration-300"
-          onClick={onIconClick}
-        >
-          <SearchIcon className="w-7 h-7" />
-        </Button>
+          <Button
+            variant="default"
+            size="default"
+            //bg-[#ff585f] hover:bg-[#ff585f] hover:bg-gradient-to-r hover:from-[#ff111c] to hover:to-[#ff1151]
+            className=" bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] absolute right-1 w-10 h-10 rounded-full px-2 py-0 transition duration-300"
+            onClick={onIconClick}
+          >
+            <SearchIcon className="w-7 h-7" />
+          </Button>
         </div>
       )}
     </div>
