@@ -17,7 +17,7 @@ import { LoginPage } from "@/components/LoginPage";
 import PreferenceTagsAdminView from "@/features/admin/components/PreferenceTagsTable";
 import AdminComplaintsView from "@/features/admin/components/ComplaintsTable";
 import SellerView from "@/features/seller/components/SellerView";
-import TouristGovernerHomepage from "@/features/tourism-governor/components/TourismGovernerHomepage";
+import TouristGovernerHomepage from "@/features/tourism-governor/components/TourismGovernorHomepage";
 import AdminProductsView from "@/features/admin/components/AdminProductsView";
 import HistoricalPlacesView from "@/features/tourism-governor/components/HistoricalPlacesView";
 import HistoricalTagsView from "@/features/tourism-governor/components/HistoricalTagsTable";
@@ -47,6 +47,10 @@ import ItineraryReport from "@/features/tour-guide/components/ItineraryReport";
 import ActivityReport from "@/features/advertiser/components/ActivityReport";
 import AdminReport from "@/features/admin/components/AdminReport";
 import PromocodeTable from "@/features/admin/components/PromocodeTable";
+import SellerHomePage from "@/features/seller/components/SellerHomePage";
+import TourGuideHomePage from "@/features/tour-guide/components/TourGuideHomePage";
+import ReviewDisplay from "@/components/Ratings";
+import AdvertiserHomePage from "@/features/advertiser/components/AdvertiserHomePage";
 
 export default function App() {
   const { setRates } = useRatesStore();
@@ -100,20 +104,41 @@ export default function App() {
               <Route index element={<ProfileForm />} />
               <Route path="account" element={<AccountForm />} />
             </Route>
-            <Route path="/advertiser/:id" element={<AdvertiserView />} />
-            <Route path="/advertiser/report" element={<ActivityReport />} />
-            <Route path="/tourism-governor/:id" element={<TouristGovernerHomepage />} />
-            <Route
-              path="/tourism-governor/historical-places/:id"
-              element={<HistoricalPlacesView />}
-            />
-            <Route path="/tourism-governor/historical-tags/:id" element={<HistoricalTagsView />} />
 
-            <Route path="/seller/:id" element={<SellerView />} />
-            <Route path="/seller/report" element={<ProductReport />} />
+            <Route element={<AdvertiserHomePage />}>
+              <Route path="/advertiser/:id" element={<AdvertiserView />} />
+              <Route path="/advertiser/:id?/report" element={<ActivityReport />} />
+              <Route path="/advertiser/:id/user-settings" element={<ProfileForm />} />
+              <Route path="/advertiser/:id/user-settings/account" element={<AccountForm />} />
+            </Route>
 
-            <Route path="/tour-guide/:id" element={<TourGuideView />} />
-            <Route path="/tour-guide/report" element={<ItineraryReport />} />
+            <Route element={<TouristGovernerHomepage />}>
+              <Route
+                path="/tourism-governor/:id/historical-places"
+                element={<HistoricalPlacesView />}
+              />
+              <Route
+                path="/tourism-governor/:id/historical-tags"
+                element={<HistoricalTagsView />}
+              />
+              <Route path="/tourism-governor/:id/user-settings" element={<ProfileForm />} />
+              <Route path="/tourism-governor/:id/user-settings/account" element={<AccountForm />} />
+            </Route>
+
+            <Route element={<SellerHomePage />}>
+              <Route path="/seller/:id" element={<SellerView />} />
+              <Route path="/seller/:id?/report" element={<ProductReport />} />
+              <Route path="/seller/:id/user-settings" element={<ProfileForm />} />
+              <Route path="/seller/:id/user-settings/account" element={<AccountForm />} />
+            </Route>
+
+            <Route element={<TourGuideHomePage />}>
+              <Route path="/tour-guide/:id" element={<TourGuideView />} />
+              <Route path="/tour-guide/:id?/report" element={<ItineraryReport />} />
+              <Route path="/tour-guide/:id/user-settings" element={<ProfileForm />} />
+              <Route path="/tour-guide/:id/user-settings/account" element={<AccountForm />} />
+              <Route path="/tour-guide/:id/reviews" element={<ReviewDisplay />} />
+            </Route>
 
             <Route element={<AdminHomepage />}>
               <Route path="/admin/:id?/home" element={<AdminReport />} />

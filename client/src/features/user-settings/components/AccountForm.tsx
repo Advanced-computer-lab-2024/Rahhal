@@ -16,6 +16,10 @@ import { Button } from "@/components/ui/button";
 import { useContext } from "react";
 import { EditContext } from "./SettingsView";
 import { EditContextAdmin } from "@/features/admin/components/AdminHomepage";
+import { EditContextSeller } from "@/features/seller/components/SellerHomePage";
+import { EditContextTourGuide } from "@/features/tour-guide/components/TourGuideHomePage";
+import { EditContextTourGov } from "@/features/tourism-governor/components/TourismGovernorHomepage";
+import { EditContextAdvertiser } from "@/features/advertiser/components/AdvertiserHomePage";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { updateUser } from "@/api-calls/users-api-calls";
@@ -28,7 +32,18 @@ export default function AccountForm() {
   const [editForm, setEditForm] = useState(false);
 
   const url = window.location.href;
-  const context = url.includes("admin") ? EditContextAdmin : EditContext;
+  const context = url.includes("admin")
+    ? EditContextAdmin
+    : url.includes("seller")
+      ? EditContextSeller
+      : url.includes("tour-guide")
+        ? EditContextTourGuide
+        : url.includes("tourism-governor")
+          ? EditContextTourGov
+          : url.includes("advertiser")
+            ? EditContextAdvertiser
+            : EditContext;
+
   const { user } = useContext(context);
   const { id } = useParams();
 
@@ -105,9 +120,7 @@ export default function AccountForm() {
     fetchPreferenceTags().then((tags) =>
       setPreferenceTags(tags as { _id: string; name: string }[]),
     );
-    form.reset(
-      user
-    );
+    form.reset(user);
   }, [user, form]);
 
   //submiting preferences
@@ -137,7 +150,7 @@ export default function AccountForm() {
     toast({
       title: "Updating ... ",
     });
-    setTimeout(() => { }, 1500);
+    setTimeout(() => {}, 1500);
 
     if (changePassword) {
       const isOldPasswordValid = await oldPasswordForm.trigger();
@@ -165,16 +178,14 @@ export default function AccountForm() {
               <h3 className="text-lg font-medium">Account</h3>
               <Button
                 onClick={() => {
-                  if(!editForm){
+                  if (!editForm) {
                     setEditForm(true);
-                  }
-                  else{
+                  } else {
                     form.reset(user);
                     oldPasswordForm.reset();
                     setChangePassword(false);
                     setEditForm(false);
                   }
-
                 }}
                 type="button"
                 className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
@@ -313,8 +324,8 @@ export default function AccountForm() {
                                       return checked
                                         ? field.onChange([...field.value, item.name])
                                         : field.onChange(
-                                          field.value?.filter((value) => value !== item.name),
-                                        );
+                                            field.value?.filter((value) => value !== item.name),
+                                          );
                                     }}
                                   />
                                 </FormControl>

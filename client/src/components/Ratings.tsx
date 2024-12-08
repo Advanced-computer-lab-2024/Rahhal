@@ -1,9 +1,10 @@
 import React from "react";
 import { Star } from "lucide-react";
 import type { TRating } from "@/types/shared";
-
+import { useContext } from "react";
+import { EditContextTourGuide } from "@/features/tour-guide/components/TourGuideHomePage";
 interface ReviewProps {
-  reviews: TRating[];
+  reviews?: TRating[];
 }
 
 const ReviewStar = ({ filled }: { filled: boolean }) => (
@@ -29,10 +30,12 @@ const ReviewCard = ({ review }: { review: TRating }) => (
 );
 
 const ReviewDisplay: React.FC<ReviewProps> = ({ reviews }) => {
+  const { user } = useContext(EditContextTourGuide);
+  const reviewsMapped = reviews ?? user.ratings ?? [];
   return (
     <div className="w-full">
       <h2 className="text-2xl font-bold mb-4">Customer Reviews</h2>
-      {reviews.map((review, index) => (
+      {reviewsMapped.map((review, index) => (
         <ReviewCard key={index} review={review} />
       ))}
     </div>
