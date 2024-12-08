@@ -4,7 +4,7 @@ import { TPopulatedBooking } from "../../types/home-page-types";
 import { addLoyalityPoints, getUserById } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
 import { createBooking } from "@/api-calls/booking-api-calls";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useParams, useSearchParams, Outlet } from "react-router-dom";
 import TouristHomePageNavigation from "../TouristHomePageNavigation";
 import ItinerariesPageTemplate from "../ItinerariesPageTemplate";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
@@ -180,8 +180,6 @@ const ItineraryDetailsPage: React.FC = () => {
               setPromocodeDiscount={setPromocodeDiscount}
             />
           )}
-
-          <TouristHomePageNavigation loggedIn={id ? true : false} />
           <ItinerariesPageTemplate
             _id={_id}
             name={name}

@@ -54,10 +54,10 @@ export function AdvertiserSidebar({ id }: AdvertiserSidebarProps) {
                     <SidebarMenuItem>
                       <SidebarMenuButton
                         asChild
-                        isActive={window.location.pathname === `/advertiser/${id}`}
+                        isActive={window.location.pathname === `/home`}
                         tooltip="Activities"
                       >
-                        <a href={`/advertiser/${id}`}>
+                        <a href={`http://localhost:5173/home}`}>
                           <Laugh />
                           Activities
                         </a>
@@ -67,10 +67,10 @@ export function AdvertiserSidebar({ id }: AdvertiserSidebarProps) {
                     <SidebarMenuItem>
                       <SidebarMenuButton
                         asChild
-                        isActive={window.location.pathname === `/advertiser/${id}/report`}
+                        isActive={window.location.pathname === `/report`}
                         tooltip="Reports"
                       >
-                        <a href={`/advertiser/${id}/report`}>
+                        <a href={`http://localhost:5173/report`}>
                           <ClipboardMinus />
                           Reports
                         </a>
@@ -98,10 +98,10 @@ export function AdvertiserSidebar({ id }: AdvertiserSidebarProps) {
                     </SidebarMenuButton>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                    <a href={`/advertiser/${id}/user-settings/account`}>
+                    <a href={`http://localhost:5173/user-settings/account`}>
                       <DropdownMenuItem>Account</DropdownMenuItem>
                     </a>
-                    <a href={`/advertiser/${id}/user-settings`}>
+                    <a href={`http://localhost:5173/user-settings`}>
                       <DropdownMenuItem>Profile</DropdownMenuItem>
                     </a>
                   </DropdownMenuContent>

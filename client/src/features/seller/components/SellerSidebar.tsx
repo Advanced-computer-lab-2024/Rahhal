@@ -54,10 +54,10 @@ export function SellerSidebar({ id }: SellerSidebarProps) {
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
-                      isActive={window.location.pathname === `/seller/${id}`}
+                      isActive={window.location.pathname === `http://localhost:5173/home`}
                       tooltip="Products"
                     >
-                      <a href={`/seller/${id}`}>
+                      <a href={`http://localhost:5173/home`}>
                         <ShoppingCart />
                         Products
                       </a>
@@ -67,10 +67,10 @@ export function SellerSidebar({ id }: SellerSidebarProps) {
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
-                      isActive={window.location.pathname === `/seller/${id}/report`}
+                      isActive={window.location.pathname === `http://localhost:5173/report`}
                       tooltip="Reports"
                     >
-                      <a href={`/seller/${id}/report`}>
+                      <a href={`http://localhost:5173/report`}>
                         <ClipboardMinus />
                         Reports
                       </a>
@@ -98,10 +98,10 @@ export function SellerSidebar({ id }: SellerSidebarProps) {
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                  <a href={`/seller/${id}/user-settings/account`}>
+                  <a href={`http://localhost:5173/user-settings/account`}>
                     <DropdownMenuItem>Account</DropdownMenuItem>
                   </a>
-                  <a href={`/seller/${id}/user-settings`}>
+                  <a href={`http://localhost:5173//user-settings`}>
                     <DropdownMenuItem>Profile</DropdownMenuItem>
                   </a>
                 </DropdownMenuContent>

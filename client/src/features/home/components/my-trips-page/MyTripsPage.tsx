@@ -105,7 +105,7 @@ export const MyTripsPage = () => {
       });
       return;
     }
-    return navigate(`/my-trips-details/${userId}`, { state: { booking } });
+    return navigate(`/my-trips-details/}`, { state: { booking } });
   };
 
   const [selectedMainFilter, setSelectedMainFilter] = useState("experiences");

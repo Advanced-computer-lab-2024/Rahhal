@@ -75,7 +75,6 @@ export function TripDetails() {
   const ratingFormRef = React.useRef<HTMLButtonElement>(null);
   return (
     <>
-      <TouristHomePageNavigation /*loggedIn={true}*/ />
       {booking.type === bookingType.Activity && (
         <BookedActivityDetailsPage
           activity={booking.entity as TActivity}
