@@ -17,7 +17,7 @@ export const ProfileAvatar = () => {
   };
   const handleLogoutUser = async () => {
     await logoutUser();
-    UserState();
+    await UserState();
   };
 
   const { id } = useUserStore();
