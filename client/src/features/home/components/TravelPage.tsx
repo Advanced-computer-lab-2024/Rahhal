@@ -33,6 +33,7 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   const [flightRequest, setFlightRequest] = useState<FlightRequest | null>(null);
   const [taxiSkeleton, setTaxiSkeleton] = useState<boolean>(false);
   const [flightSkeleton, setFlightSkeleton] = useState<boolean>(false);
+  const [autoSearchTour, setAutoSearchTour] = useState<boolean>(false);
   const { id } = useParams<{ id: string }>();
   const userId = id ? id : "";
   const { data: userData } = useQuery({
@@ -62,6 +63,10 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     passengers,
     setSelectedPickupLocation,
     setSelectedDropOffLocation,
+    setPickupLocation,
+    setDropOffLocation,
+    setDepartureTime,
+    setPassengers,
   } = useSearchBarStore();
   const {
     data: taxiData,
@@ -109,6 +114,7 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   };
 
   const onIconClickTaxis = async () => {
+    console.log("Manual", pickupLocation);
     if (!pickupLocation.length) {
       toast({
         title: "Please specify the pickup location",
@@ -183,6 +189,41 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     }
   };
 
+  const setupTourTaxiSearch = async () => {
+    setAutoSearchTour(true);
+  
+    // Set state values
+    setPickupLocation("Cairo International Airport (CAI), El Nozha, Egypt");
+    setDropOffLocation("Banafseg 5, New Cairo 1, Egypt");
+    const tourDepartureTime = new Date("2024-12-31T00:00:00+02:00");
+    setDepartureTime(tourDepartureTime);
+    setPassengers(2);
+  };
+  
+
+
+  useEffect(() => {
+    if (
+      autoSearchTour &&
+      pickupLocation.length > 0 &&
+      dropOffLocation.length > 0 &&
+      departureTime &&
+      passengers > 0
+    ) {
+      onIconClickTaxis();
+    }
+  }, [pickupLocation, dropOffLocation, departureTime, passengers, autoSearchTour]);
+  
+
+
+  // Expose global function for tour
+  useEffect(() => {
+    (window as any).tourTaxiSearch = setupTourTaxiSearch;
+    return () => {
+      delete (window as any).tourTaxiSearch;
+    };
+  }, [setAutoSearchTour,autoSearchTour,pickupLocation, dropOffLocation, departureTime, passengers]);
+
   useEffect(() => {
     if (transportationError) {
       alert(`Error fetching transfer requests: ${transportationError.message}`);
@@ -212,19 +253,37 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     let pickUpCountryCode: string | undefined;
     let dropOffCountryCode: string | undefined;
 
-    // Get pickup details
-    const pickUpSelectedIndex = pickupSuggestions.indexOf(pickupLocation[0]);
-    const pickUpPlaceId = pickupSuggestionsPlaceId[pickUpSelectedIndex];
-    const pickUpDetails = await fetchPlaceDetails(pickUpPlaceId);
+    console.log("pickupLocation[0]", pickupLocation[0]);
 
+
+    console.log("pickupSuggestions", pickupSuggestions);
+
+
+
+
+    let pickUpPlaceId: string;
+    let dropOffPlaceId: string;
+    if (autoSearchTour) {
+      pickUpPlaceId = "ChIJQU-oLggXWBQRhhPiUSGvZeA";
+      dropOffPlaceId = "ChIJOxGgaoQZWBQRkGnseVrnH5s";
+    } else {
+      console.log("enteredElse");
+      console.log("tour?: ", autoSearchTour);
+      
+      const pickUpSelectedIndex = pickupSuggestions.indexOf(pickupLocation[0]);
+      pickUpPlaceId = pickupSuggestionsPlaceId[pickUpSelectedIndex];
+      const dropOffSelectedIndex = dropOffSuggestions.indexOf(dropOffLocation[0]);
+      dropOffPlaceId = dropOffSuggestionsPlaceId[dropOffSelectedIndex];
+    }
+    setAutoSearchTour(false);
+    // Get pickup details
+    const pickUpDetails = await fetchPlaceDetails(pickUpPlaceId);
+    console.log("pickUpDetails", pickUpDetails);
     if (pickUpDetails) {
       pickUpGeocode = pickUpDetails.location;
       pickUpCountryCode = pickUpDetails.countryCode;
     }
-
     // Get dropoff details
-    const dropOffSelectedIndex = dropOffSuggestions.indexOf(dropOffLocation[0]);
-    const dropOffPlaceId = dropOffSuggestionsPlaceId[dropOffSelectedIndex];
     const dropOffDetails = await fetchPlaceDetails(dropOffPlaceId);
     if (dropOffDetails) {
       dropOffGeocode = dropOffDetails.location;

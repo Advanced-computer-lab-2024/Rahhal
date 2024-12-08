@@ -87,10 +87,10 @@ export default function App() {
           <TourProvider>
             <Routes>
               {/* <Route path="/" element={<Navigate to="/entertainment" replace />} /> */}
-              <Route path="/" element={<Navigate to="/hero" replace />} />
+              <Route path="/" element={<Navigate to="/home" replace />} />
 
             <Route element={<TouristHomePage loggedIn={false} />}>
-              <Route path="/hero" element={<AuroraHero />} />
+              <Route path="/home" element={<AuroraHero />} />
               <Route path="/entertainment" element={<GeneralGridView />} />
               <Route path="/shop" element={<ProductGridView />} />
               <Route path="/travel" element={<TravelPage loggedIn={false} />} />

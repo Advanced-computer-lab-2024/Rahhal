@@ -112,7 +112,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
 }
 
 function NavigationButton(ButtonProps: ButtonProps) {
-  const subPaths = ["/stays", "/travel","/shop"];
+  const subPaths = ["/stays", "/travel","/shop","/home"];
 
   return (
     <Link to={ButtonProps.path}>

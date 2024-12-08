@@ -89,7 +89,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                                 // Move to the next tour step after navigation
                                 setTimeout(() => {
                                     tourDriver.moveNext();
-                                }, 500);
+                                }, 50);
                             }
                             else {
                                 console.log("Specific itinerary not found");
@@ -101,12 +101,12 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 {
                     element: "#itinerary-tour",
                     popover: {
-                        title: "Booking",
-                        description: "This is the page where you book your experiences!",
+                        title: "Viewing an Experience",
+                        description: "Upon choosing an experience, you can find its details here!",
                         onNextClick: () => {
                             setTimeout(() => {
                                 tourDriver.moveNext();
-                            }, 500);
+                            }, 50);
                         },
                         onPrevClick: () => {
                             navigate("/entertainment");
@@ -115,18 +115,18 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                             }, 50);
                         }
                     }
-                }
-                ,
+                },
+
                 {
                     element: "#book-itinerary-tour",
                     popover: {
-                        title: "Booking",
-                        description: "This is the page where you book your experiences!",
+                        title: "Booking an Experience",
+                        description: "If you like an experience, you can book it from here!",
                         onNextClick: () => {
-                            navigate("/stays")
+                            navigate("/stays");
                             setTimeout(() => {
                                 tourDriver.moveNext();
-                            }, 500);
+                            }, 50);
                         },
                         onPrevClick: () => {
                             setTimeout(() => {
@@ -134,14 +134,13 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                             }, 50);
                         }
                     }
-
                 },
                 //Book A Stay
                 {
                     element: "#nav-bar-tour",
                     popover: {
                         title: "Navigation",
-                        description: "Now We Look at stays!",
+                        description: "Now we look at stays!",
                         onNextClick: () => {
                             setTimeout(() => {
                                 tourDriver.moveNext();
@@ -157,16 +156,16 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                                 // Move to the next tour step after navigation
                                 setTimeout(() => {
                                     tourDriver.movePrevious();
-                                }, 500);
+                                }, 50);
                             }
-                        }
+                        },
                     }
                 },
                 {
                     element: "#stays-searchBar-tour",
                     popover: {
-                        title: "Search Bar",
-                        description: "Search For Your Perfect Stay!",
+                        title: "Search for Stays",
+                        description: "Use the search bar to search for your perfect stay!",
                         onNextClick: () => {
                             setTimeout(() => {
                                 tourDriver.moveNext();
@@ -175,7 +174,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         onPrevClick: () => {
                             setTimeout(() => {
                                 tourDriver.movePrevious();
-                            }, 500);
+                            }, 50);
                         }
 
                     }
@@ -194,7 +193,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         onPrevClick: () => {
                             setTimeout(() => {
                                 tourDriver.movePrevious();
-                            }, 500);
+                            }, 50);
                         },
                         side: "top",
                         align: "center"
@@ -205,8 +204,9 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     element: "#stay-reservation-details-tour",
                     popover: {
                         title: "Reservation Details",
-                        description: "Reserve from here!",
+                        description: "Here you can find your stay details, and if you like it you can also reserve it from here!",
                         onNextClick: () => {
+                            navigate("/travel");
                             setTimeout(() => {
                                 tourDriver.moveNext();
                             }, 50);
@@ -215,7 +215,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                             navigate("/stays");
                             setTimeout(() => {
                                 tourDriver.movePrevious();
-                            }, 500);
+                            }, 50);
                         },
                         side: "top",
                         align: "end"
@@ -227,9 +227,8 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     element: "#nav-bar-tour",
                     popover: {
                         title: "Navigation",
-                        description: "Now We Look at Travel!",
+                        description: "Now we look at ways of travel!",
                         onNextClick: () => {
-                            navigate("/travel");
                             setTimeout(() => {
                                 tourDriver.moveNext();
                             }, 50);
@@ -237,7 +236,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         onPrevClick: () => {
                             navigate("stays/hotel/1");
                             setTimeout(() => {
-                                tourDriver.moveNext();
+                                tourDriver.movePrevious();
                             }, 50);
                         },
                     }
@@ -245,22 +244,22 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 {
                     element: "#travel-searchBar-tour",
                     popover: {
-                        title: "SearchBar",
-                        description: "Search For Your Perfect Travel!",
+                        title: "Search for Travel",
+                        description: "Search for your perfect travel, either using Airport Taxis, Flights or Buses!",
                         onNextClick: () => {
                             // Directly call the globally exposed function from TravelPage
                             // This function was set up in the useEffect in TravelPage
                             if ((window as any).tourTaxiSearch) {
-                              (window as any).tourTaxiSearch();
-                            }              
+                                (window as any).tourTaxiSearch();
+                            }
                             setTimeout(() => {
-                              tourDriver.moveNext();
-                            }, 500);
-                          },
+                                tourDriver.moveNext();
+                            }, 8000);
+                        },
                         onPrevClick: () => {
                             navigate("stays/hotel/1");
                             setTimeout(() => {
-                                tourDriver.moveNext();
+                                tourDriver.movePrevious();
                             }, 50);
                         },
                     }
@@ -268,10 +267,32 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 {
                     element: "#transportation-reserve-tour",
                     popover: {
-                        title: "Transportation",
-                        description: "Reserve from here!",
+                        title: "Reserving a Travel",
+                        description: "If you like a travel option, you can reserve it from here!",
+                        onNextClick: () => {
+                            setTimeout(() => {
+                                tourDriver.moveNext();
+                            }, 50);
+                        },
+                        onPrevClick: () => {
+                            setTimeout(() => {
+                                tourDriver.movePrevious();
+                            }, 50);
+                        },
+                    }
+                },
+                {
+                    popover: {
+                        title: "Congratulations!",
+                        description: "You have completed the tour! You can now plan you first vacation!",
+                        onPrevClick: () => {
+                            setTimeout(() => {
+                                tourDriver.movePrevious();
+                            }, 50);
+                        }
                     }
                 }
+
             ]
         });
 

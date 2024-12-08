@@ -18,25 +18,26 @@ function TransportationPage({ data, loggedIn, id, isAdult }: TransportationPageP
 
   return (
     <div className="w-[100%] flex">
-      <div className="w-[60%] flex flex-col p-10 gap-8">
-        {data.map((offer, index) => {
-          const { vehicle, serviceProvider, quotation } = offer;
-          return (
-            <TaxiCard
-              key={index}
-              type={vehicle.code}
-              price={parseFloat(quotation.monetaryAmount)}
-              originalCurrency={quotation.currencyCode}
-              guests={vehicle.seats ? vehicle.seats[0].count : undefined}
-              luggage={vehicle.baggages ? vehicle.baggages[0].count : undefined}
-              provider={serviceProvider.logoUrl}
-              isSelected={selectedTaxi === index}
-              onClick={() => setSelectedTaxi(index)}
-            />
-          );
-        })}
-      </div>
-      <div id="transportation-reserve-tour">
+
+        <div className="w-[60%] flex flex-col p-10 gap-8">
+          {data.map((offer, index) => {
+            const { vehicle, serviceProvider, quotation } = offer;
+            return (
+              <TaxiCard
+                key={index}
+                type={vehicle.code}
+                price={parseFloat(quotation.monetaryAmount)}
+                originalCurrency={quotation.currencyCode}
+                guests={vehicle.seats ? vehicle.seats[0].count : undefined}
+                luggage={vehicle.baggages ? vehicle.baggages[0].count : undefined}
+                provider={serviceProvider.logoUrl}
+                isSelected={selectedTaxi === index}
+                onClick={() => setSelectedTaxi(index)}
+              />
+            );
+          })}
+        </div>
+
         <div className="p-10">
           {selectedTaxi !== null && (
             <TaxiRoute
@@ -54,7 +55,6 @@ function TransportationPage({ data, loggedIn, id, isAdult }: TransportationPageP
             />
           )}
         </div>
-      </div>
     </div>
   );
 }
