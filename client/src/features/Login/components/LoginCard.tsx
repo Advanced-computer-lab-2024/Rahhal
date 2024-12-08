@@ -76,7 +76,7 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
             } else if (response.role === "advertiser") {
                 navigate(`/advertiser/${response._id}`);
             } else if (response.role === "tourismGovernor") {
-                navigate(`/tourism-governor/${response._id}`);
+                navigate(`/tourism-governor/${response._id}/historical-places`);
             } else if (response.role === "seller") {
                 navigate(`/seller/${response._id}`);
             }

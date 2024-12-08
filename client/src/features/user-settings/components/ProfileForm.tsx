@@ -14,6 +14,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useEffect, useRef, useState } from "react";
 import { EditContext } from "./SettingsView";
 import { EditContextAdmin } from "@/features/admin/components/AdminHomepage";
+import { EditContextSeller } from "@/features/seller/components/SellerHomePage";
+import { EditContextTourGuide } from "@/features/tour-guide/components/TourGuideHomePage";
+import { EditContextTourGov } from "@/features/tourism-governor/components/TourismGovernorHomepage";
+import { EditContextAdvertiser } from "@/features/advertiser/components/AdvertiserHomePage";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Role } from "./SettingsView";
@@ -31,8 +35,19 @@ export default function ProfileForm() {
 
   // get the url of tthe window
   const url = window.location.href;
-  const context = url.includes("admin") ? EditContextAdmin : EditContext;
-  const { user } = useContext( context );
+  const context = url.includes("admin")
+    ? EditContextAdmin
+    : url.includes("seller")
+      ? EditContextSeller
+      : url.includes("tour-guide")
+        ? EditContextTourGuide
+        : url.includes("tourism-governor")
+          ? EditContextTourGov
+          : url.includes("advertiser")
+            ? EditContextAdvertiser
+            : EditContext;
+
+  const { user } = useContext(context);
 
   const profileFormSchema = z.object({
     firstName: z
@@ -170,10 +185,10 @@ export default function ProfileForm() {
     toast({
       title: "Updating ... ",
     });
-    setTimeout(() => { }, 1500);
+    setTimeout(() => {}, 1500);
 
     if (data.addresses) {
-      data.addresses = data.addresses.filter(address => address.trim() !== "");
+      data.addresses = data.addresses.filter((address) => address.trim() !== "");
     }
 
     if (data.profilePicture) {
@@ -206,22 +221,24 @@ export default function ProfileForm() {
               onClick={() => {
                 if (!editForm) {
                   setEditForm(true);
-                }
-                else {
+                } else {
                   const { profilePicture, ...userWithoutProfilePicture } = user;
                   form.reset(userWithoutProfilePicture);
 
                   // Reset the file input
                   if (fileInputRef.current) {
-                    fileInputRef.current.value = ''; // Clear the file input
+                    fileInputRef.current.value = ""; // Clear the file input
                   }
                   setEditForm(false);
                 }
                 console.log("Dirty fields:", form.formState.dirtyFields);
                 console.log("editForm:", !editForm);
                 console.log("formState.isDirty:", !form.formState.isDirty);
-                console.log("addresses check:", form.watch("addresses")?.every((address) => address.trim() === "") && form.getValues("addresses")?.length !== 0);
-
+                console.log(
+                  "addresses check:",
+                  form.watch("addresses")?.every((address) => address.trim() === "") &&
+                    form.getValues("addresses")?.length !== 0,
+                );
               }}
               type="button"
               className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
@@ -637,8 +654,9 @@ export default function ProfileForm() {
             type="submit"
             disabled={
               !editForm ||
-              (Object.keys(form.formState.dirtyFields).length === 0) ||
-              (form.watch("addresses")?.every((address) => address.trim() === "") && form.getValues("addresses")?.length !== 0)
+              Object.keys(form.formState.dirtyFields).length === 0 ||
+              (form.watch("addresses")?.every((address) => address.trim() === "") &&
+                form.getValues("addresses")?.length !== 0)
             }
           >
             Update profile
