@@ -8,7 +8,10 @@ export type TPreferenceTag = {
 };
 
 
-export const preferenceTagsColumns: ColumnDef<TPreferenceTag>[] = [
+export const preferenceTagsColumns= (
+  onDelete: (id: string) => void,
+  onSubmit: (preferenceTag: TPreferenceTag) => void,
+): ColumnDef<TPreferenceTag>[] => [
   {
     accessorKey: "name",
     header: "Preference Tag Name",
@@ -28,6 +31,8 @@ export const preferenceTagsColumns: ColumnDef<TPreferenceTag>[] = [
                 <ChevronRight className="w-4 h-4" />
               </Button>
             }
+            onDelete={(id) => onDelete(id)}
+            onSubmit={(preferenceTag) => onSubmit(preferenceTag)}
           />
         </div>
       );

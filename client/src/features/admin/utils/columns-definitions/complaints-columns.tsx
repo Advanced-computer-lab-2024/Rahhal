@@ -18,7 +18,9 @@ export type TComplaint = {
   replies: string[];
 };
 
-export const complaintsColumns: ColumnDef<TComplaint>[] = [
+export const complaintsColumns= (
+  onSubmit: (complaint: TComplaint) => void,
+): ColumnDef<TComplaint>[] => [
   {
     accessorKey: "title",
     header: "Title",
@@ -62,6 +64,7 @@ export const complaintsColumns: ColumnDef<TComplaint>[] = [
                 <ChevronRight className="w-4 h-4" />
               </Button>
             }
+            onSubmit={(complaint) => onSubmit(complaint)}
           />
         </div>
       );

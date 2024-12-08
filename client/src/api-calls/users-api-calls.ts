@@ -25,14 +25,9 @@ export const getUserById = async (id: string): Promise<TUser> => {
 };
 
 // delete user from users endpoint
-export async function deleteUser(user: TUser) {
-  try {
-    await axios.delete(`${SERVICES_URLS.USER}/users/${user._id}`);
-    alert("User deleted successfully");
-    window.location.reload();
-  } catch (error) {
-    console.log(user._id);
-  }
+export async function deleteUser(id: string) {
+  const response = await axios.delete(`${SERVICES_URLS.USER}/users/${id}`);
+  return response;
 }
 
 export async function deleteUserNoReload(user: TUser) {
@@ -52,21 +47,11 @@ export async function submitUser(user: TUser | undefined, isNewUser: boolean) {
     };
 
     const response = await axios.post(SERVICES_URLS.USER + "/users", newUser);
-    console.log(response.data);
-    alert("User created successfully");
-    window.location.reload();
+    return response;
   } else {
     if (user) {
-      try {
-        const response = await axios.patch(`${SERVICES_URLS.USER}/users/${user._id}`, user);
-        console.log(response.data);
-        alert("User updated successfully");
-        window.location.reload();
-      } catch (error) {
-        console.log(user);
-        console.log(user.approved);
-        console.log(error);
-      }
+      const response = await axios.patch(`${SERVICES_URLS.USER}/users/${user._id}`, user);
+      return response;
     }
   }
 }

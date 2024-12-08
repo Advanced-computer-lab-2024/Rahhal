@@ -19,13 +19,10 @@ export const createComplaint = async (comnplaint: TComplaint) => {
 
 export const updateComplaint = async (complaintId: string, status: string) => {
   const response = await axios.patch(SERVICES_URLS.USER + "/complaints/" + complaintId, { status });
-
-  console.log(response.data);
-  alert("Complaint updated successfully");
-  window.location.reload();
+  return response;
 };
 
 export const addReply = async (complaintId: string, reply: string) => {
   const response = await axios.post(SERVICES_URLS.USER + "/complaints/" + complaintId, { reply });
-  return response.data;
+  return response;
 };

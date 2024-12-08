@@ -7,50 +7,90 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import type { TUser } from "@/types/user";
-import ShortText from "@/components/ShortText";
 import { GenericSelect } from "@/components/GenericSelect";
 import { UserRoleEnum } from "@/utils/enums";
 import UserDocuments from "@/components/UserDocuments";
 import KeyValuePairGrid from "@/components/KeyValuePairGrid";
 import { format } from "../utils/key-value-formatters/user-details-formatter";
 import PictureViewer from "@/components/PictureViewer";
-
+import { toast } from "@/hooks/use-toast";
+import { STATUS_CODES } from "@/lib/constants";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface UserModalProps {
   userData?: TUser;
   dialogTrigger?: React.ReactNode;
+  onDelete?: (id: string) => void;
+  onSubmit?: (user: TUser) => void;
 }
 
-export function UserModal({ userData, dialogTrigger }: UserModalProps) {
+export function UserModal({ userData, dialogTrigger, onDelete, onSubmit }: UserModalProps) {
   const isNewUser: boolean = userData === undefined; // check if the user is new or existing
   const [modalUserData, setModalUserData] = useState<TUser>(userData ?? DEFAULTS.USER); // current user data present in the modal
-  // create generic modal with components based on data type of columns
+  
+  const handleDelete = () => {
+    if (modalUserData && onDelete) {
+      onDelete(modalUserData._id);
+    }
+  }
+
+  const handleSubmit = async () => {
+    if (!modalUserData) return;
+    
+    try {
+      const response = await submitUser(modalUserData, isNewUser);
+      if (response?.status === STATUS_CODES.STATUS_OK || response?.status === STATUS_CODES.CREATED) {
+        toast({
+          title: "Success",
+          description: "User saved successfully",
+          style: {
+            backgroundColor: "#34D399",
+            color: "white",
+          }
+        });
+        if (onSubmit) {
+          onSubmit(modalUserData);
+          setModalUserData(DEFAULTS.USER);
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as any).response?.data?.message || "Error saving user",
+        variant: "destructive",
+      });
+    }
+  }
+
   return (
     <GenericModal
       title={userData?.firstName ?? "New User"}
       description="User Details"
       dialogTrigger={dialogTrigger}
-      onSubmit={() => submitUser(modalUserData, isNewUser)}
+      onSubmit={handleSubmit}
+      showDeleteButton={!isNewUser}
+      onDelete={handleDelete}
     >
       {isNewUser && (
-        <>
-          <ShortText
-            title="Username"
-            initialValue={modalUserData.username}
-            onSave={(value) => setModalUserData({ ...modalUserData, username: value })}
-            placeholder="Username"
-            initialDisabled={!isNewUser}
-            type="text"
-          />
+        <div className="flex flex-col gap-4 p-4">
+          <div className="flex flex-col gap-2">
+            <Label>Username</Label>
+            <Input
+              value={modalUserData.username}
+              onChange={(e) => setModalUserData({ ...modalUserData, username: e.target.value })}
+              placeholder="Username"
+            />
+          </div>
 
-          <ShortText
-            title="Password"
-            initialValue={modalUserData.password}
-            onSave={(value) => setModalUserData({ ...modalUserData, password: value })}
-            initialDisabled={!isNewUser}
-            placeholder="Password"
-            type="text"
-          />
+          <div className="flex flex-col gap-2">
+            <Label>Password</Label>
+            <Input
+              value={modalUserData.password}
+              onChange={(e) => setModalUserData({ ...modalUserData, password: e.target.value })}
+              placeholder="Password"
+            />
+          </div>
 
           <GenericSelect
             label={"Role"}
@@ -63,7 +103,7 @@ export function UserModal({ userData, dialogTrigger }: UserModalProps) {
             }
             placeholder={"Select a role"}
           />
-        </>
+        </div>
       )}
 
       {!isNewUser && (

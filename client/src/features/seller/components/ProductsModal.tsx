@@ -1,50 +1,96 @@
 import { GenericModal } from "@/components/GenericModal";
 import { useEffect, useState } from "react";
 import PictureCard from "@/components/PictureCard";
-import ShortText from "@/components/ShortText";
 import ReviewDisplay from "@/components/Ratings";
-import { sampleReviews } from "@/lib/utils";
 import { DEFAULTS } from "@/lib/constants";
-import LongText from "@/components/LongText";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TNewProduct, TProduct } from "@/features/seller/utils/seller-columns";
-import { deleteProduct } from "@/api-calls/products-api-calls";
-import { Button } from "@/components/ui/button";
-import { FaTrash } from "react-icons/fa";
 import { createProduct, updateProduct } from "@/api-calls/products-api-calls";
+import { toast } from "@/hooks/use-toast";
+import { STATUS_CODES } from "@/lib/constants";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface ProductModalProps {
   productData?: TProduct;
   dialogTrigger?: React.ReactNode;
   userId?: string;
   username?: string;
+  onSubmit?: (product: TProduct) => void;
+  onDelete?: (id: string) => void;
 }
 
-export function ProductModal({ productData, dialogTrigger, userId, username }: ProductModalProps) {
+export function ProductModal({
+  productData,
+  dialogTrigger,
+  userId,
+  username,
+  onDelete,
+  onSubmit,
+}: ProductModalProps) {
   const isNewProduct: boolean = productData === undefined;
   const [modalProductData, setModalProductData] = useState<TProduct | undefined>(productData); // current product data present in the modal
-
   const [productImages, setProductImages] = useState<FileList | null>(null);
 
-  const handleSubmit = async () => {
-    const { _id, ...rest } = modalProductData!;
-
-    if (isNewProduct) {
-      const newProduct: TNewProduct = rest;
-
-      // I am sure that userId is not null when the modal open from table add button
-      // otherwise it opens from an edit action and in that situation userId is not null
-      // and already stored in the database and it's not needed in updates
-      await createProduct(newProduct, userId!, username!, productImages);
-    } else await updateProduct(modalProductData!, productImages);
+  const handleDelete = () => {
+    if (modalProductData && onDelete) {
+      if (modalProductData._id) {
+        onDelete(modalProductData._id);
+      }
+    }
   };
 
-  const handleDeleteProduct = async () => {
-    if (productData) {
-      await deleteProduct(productData);
-    }
-  }
+  const handleSubmit = async () => {
+    if (!modalProductData) return;
 
+    try {
+      toast({
+        title: "Saving",
+        description: "Saving product",
+        style: {
+          backgroundColor: "#3B82F6",
+          color: "white",
+        },
+      });
+      let response;
+      if (isNewProduct) {
+        // remove _id from new product
+        const { _id, ...newProduct } = modalProductData;
+        response = await createProduct(
+          newProduct as TNewProduct,
+          userId ?? "",
+          username ?? "",
+          productImages,
+        );
+      } else {
+        response = await updateProduct(modalProductData, productImages);
+      }
+
+      if (
+        response?.status === STATUS_CODES.STATUS_OK ||
+        response?.status === STATUS_CODES.CREATED
+      ) {
+        toast({
+          title: "Success",
+          description: "Product saved successfully",
+          style: {
+            backgroundColor: "#34D399",
+            color: "white",
+          },
+        });
+        if (onSubmit) {
+          onSubmit(modalProductData);
+          setModalProductData(DEFAULTS.PRODUCT);
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save product",
+        variant: "destructive",
+      });
+    }
+  };
 
   useEffect(() => {
     const init = async () => {
@@ -62,59 +108,74 @@ export function ProductModal({ productData, dialogTrigger, userId, username }: P
       description="Product Details"
       dialogTrigger={dialogTrigger}
       onSubmit={handleSubmit}
+      showDeleteButton={!isNewProduct}
+      onDelete={handleDelete}
     >
-      <Button variant="destructive" className="fixed top-2 right-9" onClick={handleDeleteProduct}>
-      <span className="sr-only">Delete</span>
-      <FaTrash className="h-4 w-4" />
-  </Button>
-      <ShortText
-        title="Name"
-        type={"string"}
-        initialValue={modalProductData?.name ?? ""}
-        onSave={(value) =>
-          setModalProductData(modalProductData ? { ...modalProductData, name: value } : undefined)
-        }
-        placeholder={"Enter the name of your product"}
-        initialDisabled={!isNewProduct}
-      />
+      <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-2">
+          <Label>Product Name</Label>
+          <Input
+            value={modalProductData?.name ?? ""}
+            onChange={(e) =>
+              setModalProductData(
+                modalProductData ? { ...modalProductData, name: e.target.value } : undefined,
+              )
+            }
+            placeholder="Enter the name of your product"
+          />
+        </div>
+      </div>
 
-      <ShortText
-        title="Price (EGP)"
-        type={"number"}
-        initialValue={modalProductData?.price.toString() ?? "0"}
-        onSave={(value) =>
-          setModalProductData(
-            modalProductData ? { ...modalProductData, price: Number(value) } : undefined,
-          )
-        }
-        placeholder={"Enter the price of your product"}
-        initialDisabled={!isNewProduct}
-      />
+      <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-2">
+          <Label>Price (EGP)</Label>
+          <Input
+            type="number"
+            value={modalProductData?.price ?? ""}
+            onChange={(e) =>
+              setModalProductData(
+                modalProductData
+                  ? { ...modalProductData, price: Number(e.target.value) }
+                  : undefined,
+              )
+            }
+            placeholder="Enter the price of your product"
+          />
+        </div>
+      </div>
 
-      <ShortText
-        title="Quantity"
-        type={"number"}
-        initialValue={modalProductData?.quantity.toString() ?? "0"}
-        onSave={(value) =>
-          setModalProductData(
-            modalProductData ? { ...modalProductData, quantity: Number(value) } : undefined,
-          )
-        }
-        placeholder={"Enter the quantity of your product"}
-        initialDisabled={!isNewProduct}
-      />
+      <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-2">
+          <Label>Quantity</Label>
+          <Input
+            type="number"
+            value={modalProductData?.quantity ?? ""}
+            onChange={(e) =>
+              setModalProductData(
+                modalProductData
+                  ? { ...modalProductData, quantity: Number(e.target.value) }
+                  : undefined,
+              )
+            }
+            placeholder="Enter the quantity of your product"
+          />
+        </div>
+      </div>
 
-      <LongText
-        title="Description"
-        initialValue={modalProductData?.description ?? ""}
-        onSave={(value) =>
-          setModalProductData(
-            modalProductData ? { ...modalProductData, description: value } : undefined,
-          )
-        }
-        placeholder={"Enter a detailed description"}
-        initialDisabled={!isNewProduct}
-      />
+      <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-2">
+          <Label>Description</Label>
+          <Input
+            value={modalProductData?.description ?? ""}
+            onChange={(e) =>
+              setModalProductData(
+                modalProductData ? { ...modalProductData, description: e.target.value } : undefined,
+              )
+            }
+            placeholder="Enter a detailed description"
+          />
+        </div>
+      </div>
 
       <div className="flex items-center space-x-2">
         <Checkbox
@@ -145,7 +206,7 @@ export function ProductModal({ productData, dialogTrigger, userId, username }: P
           setProductImages(dataTransfer.files);
         }}
       />
-      {!isNewProduct && <ReviewDisplay reviews={modalProductData?.ratings ?? sampleReviews} />}
+      {!isNewProduct && <ReviewDisplay reviews={modalProductData?.ratings} />}
       {!isNewProduct && (
         <a
           className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
