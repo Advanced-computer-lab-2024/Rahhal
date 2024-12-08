@@ -49,3 +49,13 @@ export async function applyPromocode(req: Request, res: Response) {
         res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
     }
 }
+
+export async function usePromocode(req: Request, res: Response) {
+    const userid = req.params.id;
+    try {
+        const promocode = await promocodeService.usePromocode(userid, req.body);
+        res.status(promocode.status).json(promocode.data);
+    } catch (error) {
+        res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
+    }
+}
