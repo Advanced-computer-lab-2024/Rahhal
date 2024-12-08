@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TaxiCard } from "./TaxiCard";
 import TaxiRoute from "./TaxiRoute";
-import { useSearchBarStore } from "@/stores/transportation-searchbar-slice";
+import { useSearchBarStore } from "@/stores/search-bar-stores/transportation-searchbar-slice";
 import type { TransportationData } from "../types/home-page-types";
 
 interface TransportationPageProps {

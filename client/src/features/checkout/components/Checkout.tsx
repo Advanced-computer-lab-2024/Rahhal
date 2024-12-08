@@ -1,5 +1,4 @@
 import { OrderSummary } from "./OrderSummary";
-import { CartExample } from "../utils/CartExample";
 import { Input } from "@/components/ui/input";
 import { DeliveryForm } from "./DeliveryForm";
 import { getUserById, updateUser } from "@/api-calls/users-api-calls";
@@ -12,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { createOrderInstance } from "../utils/helpers";
-import { useCurrencyStore } from "@/stores/currency-exchange-store";
+import { fetchUserCart } from "@/api-calls/cart-api-calls";
 
 function useIdFromParamsOrQuery() {
   const { id: paramId } = useParams<{ id?: string }>();
@@ -31,9 +30,12 @@ export default function Checkout() {
     queryFn: () => getUserById(id as string),
     enabled: !!id,
   });
+  const { data: cart } = useQuery({
+    queryKey: ["user-cart", id],
+    queryFn: () => fetchUserCart(id as string),
+    enabled: !!id,
+  });
 
-  const cart = CartExample;
-  const { currency } = useCurrencyStore();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -113,7 +115,7 @@ export default function Checkout() {
 
   const handlePaymentCompletion = async () => {
     try {
-      if (user) {
+      if (user && cart) {
         const fullAddress = `${newAddress}, ${city}`;
         await createOrderInstance(
           cart,
@@ -147,9 +149,7 @@ export default function Checkout() {
   const handleGoToPrevStep = () => {
     setCurrentCheckoutStep(1);
   };
-
-  const formattedWalletBalance = `${user?.balance ? user.balance.toFixed(2) : "0.00"} ${currency}`;
-
+  console.log(totalAmount);
   return (
     <>
       <div className="min-h-screen flex">
@@ -159,22 +159,25 @@ export default function Checkout() {
               <h1 className="text-5xl font-semibold">Checkout</h1>
             </div>
             {currentCheckoutStep === 2 ? (
-              <div className="mt-10">
-                <PaymentOptions
-                  selectedPaymentMethod={selectedPaymentMethod}
-                  stripePaymentTrigger={stripePaymentTrigger}
-                  walletBalance={formattedWalletBalance}
-                  onPaymentCompletion={handlePaymentCompletion}
-                  setStripePaymentTrigger={setStripePaymentTrigger}
-                  setIsLoading={setIsPaymentLoading}
-                  setSelectedPaymentMethod={setSelectedPaymentMethod}
-                />
-                <div className="flex gap-4 mt-4">
-                  <Button variant="outline" onClick={handleGoToPrevStep}>
-                    <ArrowLeft className="h-5 w-5 " />
-                  </Button>
+              user && (
+                <div className="mt-10">
+                  <PaymentOptions
+                    selectedPaymentMethod={selectedPaymentMethod}
+                    stripePaymentTrigger={stripePaymentTrigger}
+                    walletBalance={(user.balance as number) || 0}
+                    onPaymentCompletion={handlePaymentCompletion}
+                    setStripePaymentTrigger={setStripePaymentTrigger}
+                    setIsLoading={setIsPaymentLoading}
+                    setSelectedPaymentMethod={setSelectedPaymentMethod}
+                    amount={totalAmount}
+                  />
+                  <div className="flex gap-4 mt-4">
+                    <Button variant="outline" onClick={handleGoToPrevStep}>
+                      <ArrowLeft className="h-5 w-5 " />
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              )
             ) : (
               <div className="space-y-6">
                 <div>
@@ -218,17 +221,17 @@ export default function Checkout() {
 
         <div className="w-1/2 bg-gray-50 ">
           <div className="p-8 sticky top-0  ">
-            {user && (
+            {user && cart && (
               <div className="max-w-md mx-auto p-4">
                 <OrderSummary
-                  cart={CartExample}
+                  cart={cart}
                   discountAmount={discountAmount}
                   activePromotion={activePromotion}
                   total={totalAmount}
                   setDiscountAmount={setDiscountAmount}
                   setActivePromotion={setActivePromotion}
                   setTotal={setTotalAmount}
-                  userId={id}
+                  userId={id!}
                 />
                 <Button
                   className="mt-6 w-full bg-complimentary-color hover:bg-complementary-hover disabled:bg-[--complimentary-color-fade] text-white py-3 px-4 rounded-md font-medium transition-colors"

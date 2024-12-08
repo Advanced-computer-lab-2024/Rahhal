@@ -3,20 +3,20 @@ import type { CartItem } from "@/utils/types";
 import * as cartRepository from "@/database/repositories/cart-repository";
 import { EMPTYPRODUCT, MIN_QUANTITY } from "@/utils/constants";
 
-export async function getCart(userId: string) {
-  return await cartRepository.getCart(userId);
+export async function getCart(user: string) {
+  return await cartRepository.getCart(user);
 }
 
-export async function createCart(userId: string) {
-  return await cartRepository.createCart(userId);
+export async function createCart(user: string) {
+  return await cartRepository.createCart(user);
 }
 
-export async function deleteCart(userId: string) {
-  return await cartRepository.deleteCart(userId);
+export async function deleteCart(user: string) {
+  return await cartRepository.deleteCart(user);
 }
 
-export async function updateCart(userId: string, operation: CartUpdates, productId: string) {
-  const cart = await getCart(userId as string);
+export async function updateCart(user: string, operation: CartUpdates, productId: string) {
+  const cart = await getCart(user as string);
   if (!cart) {
     throw new Error("Cart not found");
   }
@@ -27,22 +27,19 @@ export async function updateCart(userId: string, operation: CartUpdates, product
       updatedProducts = [];
       break;
 
-    case CartUpdates.RemoveProduct:
-      updatedProducts = updatedProducts.filter((item: CartItem) => item.productId !== productId);
-      break;
-
-    case CartUpdates.IncrementQuantity:
-      updatedProducts = updatedProducts.map((item: CartItem) => {
-        if (item.productId === productId) {
-          return { productId: item.productId, quantity: item.quantity + MIN_QUANTITY };
+      case CartUpdates.IncrementQuantity:
+        updatedProducts = updatedProducts.map((item: CartItem) => {
+          if (item.productId === productId) {
+            return { productId: item.productId, quantity: item.quantity + MIN_QUANTITY };
+          }
+          return item;
+        });
+  
+        if (!updatedProducts.some((item: CartItem) => item.productId === productId)) {
+          updatedProducts.push({ productId, quantity: MIN_QUANTITY });
         }
-        return item;
-      });
-
-      if (!updatedProducts.some((item: CartItem) => item.productId === productId)) {
-        updatedProducts.push({ productId, quantity: MIN_QUANTITY });
-      }
-      break;
+        break;
+  
 
     case CartUpdates.DecrementQuantity:
       updatedProducts = updatedProducts
@@ -59,5 +56,28 @@ export async function updateCart(userId: string, operation: CartUpdates, product
       break;
   }
 
-  return await cartRepository.updateCart(userId, updatedProducts);
+  return await cartRepository.updateCart(user, updatedProducts);
+}
+
+export async function addItemToCart(user: string, productId: string) {
+  const cart = await getCart(user as string);
+  if (!cart) {
+    throw new Error("Cart not found");
+  }
+
+  const updatedProducts = cart.products;
+  updatedProducts.push({ productId, quantity: MIN_QUANTITY });
+
+  return await cartRepository.updateCart(user, updatedProducts);
+}
+
+export async function removeItemFromCart(user: string, productId: string) {
+  const cart = await getCart(user as string);
+  if (!cart) {
+    throw new Error("Cart not found");
+  }
+
+  const updatedProducts = cart.products.filter((item: CartItem) => item.productId !== productId);
+
+  return await cartRepository.updateCart(user, updatedProducts);
 }

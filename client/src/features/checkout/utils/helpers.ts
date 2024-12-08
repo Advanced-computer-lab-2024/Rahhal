@@ -1,8 +1,8 @@
-import { TOrder } from "@/features/home/types/home-page-types";
+import { PopulatedCart, TOrder } from "@/features/home/types/home-page-types";
 import { createOrder } from "@/api-calls/order-api-calls";
 
 export async function createOrderInstance(
-  cart: Cart,
+  cart: PopulatedCart,
   paymentMethod: string,
   discountAmount: number,
   promoCode: string,
@@ -13,7 +13,7 @@ export async function createOrderInstance(
     0,
   );
   const order: TOrder = {
-    userId: cart.userId,
+    userId: cart.user,
     orderStatus: "processing",
     paymentMethod: paymentMethod,
     items: cart.products.map((product) => ({

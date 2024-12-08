@@ -1,6 +1,6 @@
 import SearchBar from "@/features/home/components/search-bar/SearchBar";
 import { fetchSuggestions } from "@/api-calls/google-maps-api-calls";
-import { useFlightSearchBarStore } from "@/stores/flight-searchbar-slice";
+import { useFlightSearchBarStore } from "@/stores/search-bar-stores/flight-searchbar-slice";
 
 interface FlightSearchBarProps {
   onIconClick: () => void;

@@ -177,8 +177,6 @@ function BookingForm({
     setIsRedeeming(false);
   };
 
-  const formattedWalletBalance = `${user?.balance ? user.balance.toFixed(2) : "0.00"} ${currency}`;
-
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
@@ -241,16 +239,19 @@ function BookingForm({
       </div>
       <div>
         <div className="mt-1 border rounded-md p-3">
-          <PaymentOptions
-            selectedPaymentMethod={selectedPaymentMethod}
-            stripePaymentTrigger={stripePaymentTrigger}
-            walletBalance={formattedWalletBalance}
-            onPaymentCompletion={handlePaymentCompletion}
-            setStripePaymentTrigger={setStripePaymentTrigger}
-            setIsLoading={setIsPaymentLoading}
-            setSelectedPaymentMethod={setSelectedPaymentMethod}
-            paymentMethods={paymentMethods}
-          />
+          {user && (
+            <PaymentOptions
+              selectedPaymentMethod={selectedPaymentMethod}
+              stripePaymentTrigger={stripePaymentTrigger}
+              walletBalance={(user?.balance as number) || 0}
+              onPaymentCompletion={handlePaymentCompletion}
+              setStripePaymentTrigger={setStripePaymentTrigger}
+              setIsLoading={setIsPaymentLoading}
+              setSelectedPaymentMethod={setSelectedPaymentMethod}
+              paymentMethods={paymentMethods}
+              amount={totalPrice}
+            />
+          )}
         </div>
       </div>
       <div className="flex justify-center">

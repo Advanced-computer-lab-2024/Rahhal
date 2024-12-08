@@ -7,7 +7,7 @@ export async function populateCart(cart: ICart): Promise<PopulatedCart> {
       const productData = await productAxiosInstance.get<IProduct>(
         `/products/${product.productId}`,
       );
-      return { productId: productData.data, quantity: product.quantity };
+      return { product: productData.data, quantity: product.quantity };
     }),
   );
 

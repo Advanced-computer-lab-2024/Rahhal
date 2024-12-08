@@ -24,6 +24,6 @@ interface CartItem {
 
 type Cart = {
   _id: string;
-  userId: string;
-  products: CartItem[];
+  user: string;
+  products: IPopulatedCartItem[];
 };

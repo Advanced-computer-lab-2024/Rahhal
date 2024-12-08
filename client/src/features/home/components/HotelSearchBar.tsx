@@ -1,7 +1,7 @@
 import SearchBar from "@/features/home/components/search-bar/SearchBar";
 import { useState } from "react";
 import { fetchSuggestions } from "@/api-calls/google-maps-api-calls";
-import { useHotelSearchBarStore } from "@/stores/hotel-search-bar-slice";
+import { useHotelSearchBarStore } from "@/stores/search-bar-stores/hotel-search-bar-slice";
 
 interface HotelSearchBarProps {
   onIconClick: () => void;

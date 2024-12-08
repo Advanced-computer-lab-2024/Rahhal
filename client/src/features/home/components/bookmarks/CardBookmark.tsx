@@ -3,7 +3,7 @@ import * as React from "react";
 import { Bookmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import useBookmarkStore from "@/stores/bookmark-count-store";
+import useBookmarkStore from "@/stores/nav-bar-icon-stores/bookmark-count-store";
 import { addBookmark, isEntityBookmarked, removeBookmark } from "@/api-calls/bookmark-api-calls";
 import { useParams } from "react-router-dom";
 import { bookmarkType } from "@/utils/enums";

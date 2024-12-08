@@ -24,13 +24,13 @@ import { countries } from "../utils/constants";
 import { touristSchema } from "../utils/ZodSchemas/touristSchema";
 import { createUser } from "@/api-calls/users-api-calls";
 import { SignupProps } from "../utils/constants";
+import { createUserCart } from "@/api-calls/cart-api-calls";
 
 type TouristFormData = z.infer<typeof touristSchema>;
 
 export default function SignupTourist({ isSubmitting, setIsSubmitting }: SignupProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
-
 
   const {
     control,
@@ -83,6 +83,7 @@ export default function SignupTourist({ isSubmitting, setIsSubmitting }: SignupP
       await delay(4500);
 
       const response: any = await createUser(reqBody);
+      const userCart = await createUserCart(response._id);
       toast({
         title: "User Created",
         description: "User created successfully!",
@@ -141,7 +142,7 @@ export default function SignupTourist({ isSubmitting, setIsSubmitting }: SignupP
 
   return (
     <div className="flex">
-      <Card className="w-full max-w-3xl flex flex-col" style={{borderColor : "#FFFFFF"}}>
+      <Card className="w-full max-w-3xl flex flex-col" style={{ borderColor: "#FFFFFF" }}>
         <CardHeader className="flex flex-row items-center space-x-4">
           <CardTitle className="text-3xl font-bold">Tourist Sign Up</CardTitle>
         </CardHeader>

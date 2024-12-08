@@ -3,10 +3,11 @@ import { Input } from "@/components/ui/input";
 import { Package, AlertCircle, X } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useEffect, useState } from "react";
-import { useCurrencyStore } from "@/stores/currency-exchange-store";
-import currencyExchange from "@/utils/currency-exchange";
+import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
+import currencyExchange, { currencyExchangeSpec } from "@/utils/currency-exchange";
 import { applyPromocode } from "@/api-calls/payment-api-calls";
 import { AxiosError } from "axios";
+import { PopulatedCart } from "@/features/home/types/home-page-types";
 
 export function OrderSummary({
   cart,
@@ -18,7 +19,7 @@ export function OrderSummary({
   setActivePromotion,
   userId,
 }: {
-  cart: Cart;
+  cart: PopulatedCart;
   activePromotion: ActivePromotion | null;
   discountAmount: number;
   total: number;
@@ -28,6 +29,7 @@ export function OrderSummary({
   userId: string;
 }) {
   const { currency } = useCurrencyStore();
+  const { rates } = useRatesStore();
   const baseCurrency = "EGP";
 
   const [promoCode, setPromoCode] = useState("");
@@ -35,7 +37,7 @@ export function OrderSummary({
   const defaultShipping = 100;
 
   let subtotal = cart.products.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
-  const subTotalConverted = currencyExchange(baseCurrency, subtotal);
+  const subTotalConverted = currencyExchangeSpec(baseCurrency, subtotal, rates, currency);
   const subTotalDisplayed = subTotalConverted ? subTotalConverted.toFixed(2) : "N/A";
 
   const getShippingCost = () => {
@@ -113,7 +115,12 @@ export function OrderSummary({
   const productsWithViewingPrices = cart.products.map((item) => ({
     ...item,
     viewingPrice:
-      currencyExchange(baseCurrency, item.product.price * item.quantity)?.toFixed(2) || "N/A",
+      currencyExchangeSpec(
+        baseCurrency,
+        item.product.price * item.quantity,
+        rates,
+        currency,
+      )?.toFixed(2) || "N/A",
   }));
 
   return (

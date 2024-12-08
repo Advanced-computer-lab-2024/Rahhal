@@ -1,14 +1,12 @@
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
 
-
 export interface Promotion {
-  type: 'percentage' | 'fixed' | 'shipping';
+  type: "percentage" | "fixed" | "shipping";
   value: number;
   description: string;
   message?: string;
 }
-
 
 export interface IOrder {
   _id: Types.ObjectId;
@@ -440,4 +438,22 @@ export interface TPopulatedBookmark {
   user: string;
   entity: IActivity | IItinerary;
   type: bookmarkType;
+}
+
+export interface INotification {
+  _id: string;
+  userId: string;
+  message: string;
+  seen: boolean;
+}
+
+export interface PopulatedCart {
+  _id: string;
+  user: string;
+  products: IPopulatedCartItem[];
+}
+
+interface IPopulatedCartItem {
+  product: IProduct;
+  quantity: number;
 }
