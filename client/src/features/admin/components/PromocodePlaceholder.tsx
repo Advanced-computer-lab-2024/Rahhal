@@ -20,7 +20,7 @@ export default function NoDataPlaceholder({ onSubmit }: NoDataPlaceholderProps) 
 
       <PromocodeModal
         promocodeData={undefined}
-        dialogTrigger={<DataTableAddButton />}
+        dialogTrigger={<DataTableAddButton className="bg-[#1d3c51]" />}
         onSubmit={onSubmit}
       />
     </div>

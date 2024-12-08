@@ -37,6 +37,7 @@ export const DEFAULTS = {
     name: "",
     description: "",
     owner: "",
+    ownerName: "",
     date: new Date(),
     time: new Date(),
     location: { longitude: 31.1342, latitude: 29.9792 },

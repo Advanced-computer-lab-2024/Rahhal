@@ -8,13 +8,16 @@ import { Label } from "@radix-ui/react-label";
 import { updateItinerary } from "@/api-calls/itineraries-api-calls";
 import PictureViewer from "@/components/PictureViewer";
 import KeyValuePairGrid from "@/components/KeyValuePairGrid";
+import { toast } from "@/hooks/use-toast";
+import { STATUS_CODES } from "@/lib/constants";
 
 interface ItineraryViewProps {
   itineraryData?: TItinerary;
   dialogTrigger?: React.ReactNode;
+  onSubmit?: (itinerary: TItinerary) => void;
 }
 
-export function ItineraryView({ itineraryData, dialogTrigger }: ItineraryViewProps) {
+export function ItineraryView({ itineraryData, dialogTrigger, onSubmit }: ItineraryViewProps) {
   const [modalItineraryData, setModalItineraryData] = useState<TItinerary>(
     itineraryData ?? DEFAULTS.ITINERARY,
   );
@@ -26,8 +29,30 @@ export function ItineraryView({ itineraryData, dialogTrigger }: ItineraryViewPro
   }, []);
 
   const handleSubmit = async () => {
-    if (modalItineraryData) {
-      await updateItinerary(modalItineraryData, null);
+    if (!modalItineraryData) return;
+
+    try {
+      const response = await updateItinerary(modalItineraryData, null);
+      if (response?.status === STATUS_CODES.STATUS_OK) {
+        toast({
+          title: "Success",
+          description: "Itinerary saved successfully",
+          style: {
+            backgroundColor: "#34D399",
+            color: "white",
+          },
+        });
+      }
+      if (onSubmit) {
+        onSubmit(modalItineraryData);
+        setModalItineraryData(DEFAULTS.ITINERARY);
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save itinerary",
+        variant: "destructive",
+      });
     }
   };
 

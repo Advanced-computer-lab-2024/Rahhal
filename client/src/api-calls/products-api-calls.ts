@@ -50,9 +50,7 @@ export async function createProduct(
   newProductData.picture = urls[0];
 
   await axios.patch(`${SERVICES_URLS.PRODUCT}/products/${productId}`, newProductData);
-
-  alert("Product created successfully");
-  window.location.reload();
+  return response;
 }
 
 export async function updateProduct(productData: TProduct, productImages: FileList | null) {
@@ -65,9 +63,11 @@ export async function updateProduct(productData: TProduct, productImages: FileLi
 
   productData.picture = urls[0];
 
-  await axios.patch(`${SERVICES_URLS.PRODUCT}/products/${productData!._id}`, productData);
-  alert("Product updated successfully");
-  window.location.reload();
+  const response = await axios.patch(
+    `${SERVICES_URLS.PRODUCT}/products/${productData!._id}`,
+    productData,
+  );
+  return response;
 }
 
 export async function updateProductStock(productId: string, quantity: number) {
@@ -76,8 +76,7 @@ export async function updateProductStock(productId: string, quantity: number) {
   });
 }
 
-export async function deleteProduct(product: TProduct) {
-  await axios.delete(`${SERVICES_URLS.PRODUCT}/products/${product._id}`);
-  alert("Product deleted successfully");
-  window.location.reload();
+export async function deleteProduct(id: string) {
+  const response = await axios.delete(`${SERVICES_URLS.PRODUCT}/products/${id}`);
+  return response;
 }

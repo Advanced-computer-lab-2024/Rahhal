@@ -29,7 +29,9 @@ export type TActivity = {
   ratings: TRating[];
   owner: string;
   ownerName: string;
+  isAppropriate: boolean;
 };
+
 // Derive TNewActivity from TActivity
 export type TNewActivity = Omit<TActivity, "preferenceTags" | "category" | "tags" | "_id"> & {
   // Each representing the id(s) of the omitted fields so that they can directly be inserted in the db

@@ -1,16 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ChevronRight } from "lucide-react";
-import { FaTrash } from "react-icons/fa6";
 import { UserModal } from "@/features/admin/components/UserModal";
-import { deleteUser } from "@/api-calls/users-api-calls";
 import type { TUser } from "@/types/user";
 
-function deleteRow(row: any) {
-  deleteUser(row.original);
-}
 
-export const userColumns: ColumnDef<TUser>[] = [
+export const userColumns= (
+  onDelete: (id: string) => void,
+  onSubmit: (user: TUser) => void,
+): ColumnDef<TUser>[] => [
   {
     accessorKey: "username",
     header: "Username",
@@ -33,10 +31,6 @@ export const userColumns: ColumnDef<TUser>[] = [
     cell: ({ row }) => {
       return (
         <div className="text-right">
-          <Button variant="destructive" className="h-8 w-8 p-0" onClick={() => deleteRow(row)}>
-            <span className="sr-only">Delete</span>
-            <FaTrash className="h-4 w-4" />
-          </Button>
           <UserModal
             userData={row.original}
             dialogTrigger={
@@ -45,6 +39,8 @@ export const userColumns: ColumnDef<TUser>[] = [
                 <ChevronRight className="h-4 w-4" />
               </Button>
             }
+            onDelete={(id) => onDelete(id)}
+            onSubmit={(user) => onSubmit(user)}
           />
         </div>
       );

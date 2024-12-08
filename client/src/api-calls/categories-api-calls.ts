@@ -11,9 +11,7 @@ export const fetchCategories = async () => {
 // delete category by id
 export const deleteCategory = async (id: string) => {
   const response = await axios.delete(SERVICES_URLS.ENTERTAINMENT + "/categories/" + id);
-  alert("Category deleted successfully");
-  window.location.reload();
-  return response.data;
+  return response;
 };
 
 // submit category to categories endpoint
@@ -22,22 +20,15 @@ export const submitCategory = async (
   isNewCategory: boolean,
 ) => {
   if (isNewCategory) {
-    try {
-      await axios.post(SERVICES_URLS.ENTERTAINMENT + "/categories", categoryData);
-      console.log(categoryData);
-    } catch (error) {
-      console.log(categoryData);
-    }
-    alert("Category created successfully");
-    window.location.reload();
+      const response = await axios.post(SERVICES_URLS.ENTERTAINMENT + "/categories", categoryData);
+      return response;
   } else {
     if (categoryData) {
-      await axios.patch(
+      const response = await axios.patch(
         `${SERVICES_URLS.ENTERTAINMENT}/categories/${categoryData._id}`,
         categoryData,
       );
-      alert("Category updated successfully");
-      window.location.reload();
+      return response;
     }
   }
 };

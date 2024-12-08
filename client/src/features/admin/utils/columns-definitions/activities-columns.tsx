@@ -14,8 +14,8 @@ export type TActivity = {
   _id?: string;
   name: string;
   description: string;
-  images: string[];
   time: Date;
+  images: string[];
   date: Date;
   location: { longitude: number; latitude: number };
   specialDiscount: number;
@@ -26,6 +26,7 @@ export type TActivity = {
   tags: { _id: string; name: string }[];
   ratings: TRating[];
   owner: string;
+  ownerName: string;
   isAppropriate: boolean;
 };
 
@@ -39,7 +40,9 @@ export function calculateAverageRating(ratings: TRating[]) {
   return totalRating / ratings.length;
 }
 
-export const activitiesColumns: ColumnDef<TActivity>[] = [
+export const activitiesColumns= (
+  onSubmit: (promocode: TActivity) => void,
+): ColumnDef<TActivity>[] => [
   {
     accessorKey: "name",
     header: "Name",
@@ -79,6 +82,7 @@ export const activitiesColumns: ColumnDef<TActivity>[] = [
                 <ChevronRight className="h-4 w-4" />
               </Button>
             }
+            onSubmit={(activity) => onSubmit(activity)}
           />
         </div>
       );

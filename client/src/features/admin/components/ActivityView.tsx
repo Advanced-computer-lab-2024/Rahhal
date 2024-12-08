@@ -8,13 +8,16 @@ import { Label } from "@radix-ui/react-label";
 import { updateActivity } from "@/api-calls/activities-api-calls";
 import PictureViewer from "@/components/PictureViewer";
 import KeyValuePairGrid from "@/components/KeyValuePairGrid";
+import { toast } from "@/hooks/use-toast";
+import { STATUS_CODES } from "@/lib/constants";
 
 interface ActivityViewProps {
   activityData?: TActivity;
   dialogTrigger?: React.ReactNode;
+  onSubmit?: (activity: TActivity) => void;
 }
 
-export function ActivityView({ activityData, dialogTrigger }: ActivityViewProps) {
+export function ActivityView({ activityData, dialogTrigger, onSubmit }: ActivityViewProps) {
   const [modalActivityData, setModalActivityData] = useState<TActivity>(
     activityData ?? DEFAULTS.ACTIVITY,
   );
@@ -26,8 +29,30 @@ export function ActivityView({ activityData, dialogTrigger }: ActivityViewProps)
   }, []);
 
   const handleSubmit = async () => {
-    if (modalActivityData) {
-      await updateActivity(modalActivityData, null);
+    if (!modalActivityData) return;
+
+    try {
+      const response = await updateActivity(modalActivityData, null);
+      if (response?.status === STATUS_CODES.STATUS_OK) {
+        toast({
+          title: "Success",
+          description: "Activity saved successfully",
+          style: {
+            backgroundColor: "#34D399",
+            color: "white",
+          },
+        });
+        if (onSubmit) {
+          onSubmit(modalActivityData);
+          setModalActivityData(DEFAULTS.ACTIVITY);
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save activity",
+        variant: "destructive",
+      });
     }
   };
 

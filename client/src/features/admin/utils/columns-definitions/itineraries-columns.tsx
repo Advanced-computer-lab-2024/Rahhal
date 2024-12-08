@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button';
-import { ColumnDef } from '@tanstack/react-table';
-import { ChevronRight } from 'lucide-react';
-import { ItineraryView } from '@/features/admin/components/ItineraryView';
+import { Button } from "@/components/ui/button";
+import { ColumnDef } from "@tanstack/react-table";
+import { ChevronRight } from "lucide-react";
+import { ItineraryView } from "@/features/admin/components/ItineraryView";
 
 export type TRating = {
   userId: string;
@@ -11,26 +11,27 @@ export type TRating = {
 };
 
 export type TItinerary = {
-    _id?: string;
-    name: string;
-    images: string[];
-    description: string;
-    activities: string[];
-    locations: { longitude: number; latitude: number }[];
-    timeline: string;
-    durationOfActivities: string[];
-    languages: string[];
-    price: number;
-    availableDatesTime: { Date: Date; Time: Date }[];
-    accessibility: string;
-    pickUpLocation: { longitude: number; latitude: number; placeId: string };
-    dropOffLocation: { longitude: number; latitude: number; placeId: string };
-    ratings: TRating[];
-    preferenceTags: { _id: string; name: string }[];
-    category: { _id: string; name: string };
-    owner: string;
-    appropriate: boolean;
-    active: boolean;
+  _id?: string;
+  name: string;
+  images: string[];
+  description: string;
+  activities: string[];
+  locations: { longitude: number; latitude: number }[];
+  timeline: string;
+  durationOfActivities: string[];
+  languages: string[];
+  price: number;
+  availableDatesTime: { Date: Date; Time: Date }[];
+  accessibility: string;
+  pickUpLocation: { longitude: number; latitude: number; placeId: string };
+  dropOffLocation: { longitude: number; latitude: number; placeId: string };
+  ratings: TRating[];
+  preferenceTags: { _id: string; name: string }[];
+  category: { _id: string; name: string };
+  active: boolean;
+  owner: string;
+  ownerName: string;
+  appropriate: boolean;
 };
 
 function calculateAverageRating(ratings: TRating[]): number {
@@ -42,26 +43,28 @@ function calculateAverageRating(ratings: TRating[]): number {
   return totalRating / ratings.length;
 }
 
-export const itinerariesColumns: ColumnDef<TItinerary>[] = [
+export const itinerariesColumns= (
+  onSubmit: (itinerary: TItinerary) => void,
+):ColumnDef<TItinerary>[] => [
   {
-    accessorKey: 'name',
-    header: 'Name',
+    accessorKey: "name",
+    header: "Name",
     cell: ({ row }) => <div className="capitalize">{row.original.name}</div>,
   },
   {
-    accessorKey: 'price',
-    header: 'Price',
+    accessorKey: "price",
+    header: "Price",
   },
   {
-    accessorKey: 'ratings',
-    header: 'Rating',
+    accessorKey: "ratings",
+    header: "Rating",
     cell: ({ row }) => (
       <div className="capitalize">{calculateAverageRating(row.original.ratings)}</div>
     ),
   },
   {
-    accessorKey: 'status',
-    header: 'Status',
+    accessorKey: "status",
+    header: "Status",
     cell: ({ row }) => (
       <div>
         {row.original.appropriate ? (
@@ -73,7 +76,7 @@ export const itinerariesColumns: ColumnDef<TItinerary>[] = [
     ),
   },
   {
-    id: 'actions',
+    id: "actions",
     enableHiding: false,
     cell: ({ row }) => (
       <div className="text-right">
@@ -85,6 +88,7 @@ export const itinerariesColumns: ColumnDef<TItinerary>[] = [
               <ChevronRight className="h-4 w-4" />
             </Button>
           }
+          onSubmit={onSubmit}
         />
       </div>
     ),
