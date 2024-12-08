@@ -23,12 +23,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import NotificaionPopover from "@/components/NotificationPopover";
 import { ShoppingCart, ClipboardMinus } from "lucide-react";
+import { logoutUser } from "@/api-calls/users-api-calls";
+import { UserState } from "@/stores/user-state-store";
 
 interface SellerSidebarProps {
   id?: string;
 }
 
 export function SellerSidebar({ id }: SellerSidebarProps) {
+  const handleLogout = async () => {
+    await logoutUser();
+    UserState();
+  };
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -103,6 +110,9 @@ export function SellerSidebar({ id }: SellerSidebarProps) {
                   </a>
                   <a href={`http://localhost:5173//user-settings`}>
                     <DropdownMenuItem>Profile</DropdownMenuItem>
+                  </a>
+                  <a href={`http://localhost:5173/signin`}>
+                    <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                   </a>
                 </DropdownMenuContent>
               </DropdownMenu>
