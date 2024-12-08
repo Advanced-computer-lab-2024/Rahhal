@@ -107,13 +107,15 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
       if (booking && booking?._id && booking.selectedDate) {
         // If the text field is not empty, this means that the user has passed the 48 hours limit
         if (!text) {
+          const price =
+            booking.selectedPrice - booking.selectedPrice * ((booking.discount ?? 0) / 100);
           updateBookingRequest(booking._id, { status: bookingStatus.Cancelled });
-          refundMoney(userId, booking.selectedPrice);
+          refundMoney(userId, price);
           setBooking({ ...booking, status: bookingStatus.Cancelled });
           setIsButtonDisabled(true);
           toast({
             title: "Success",
-            description: `You have successfully cancelled the itinerary, your wallet has been refunded by ${currency} ${booking.selectedPrice}`,
+            description: `You have successfully cancelled the itinerary, your wallet has been refunded by ${currency} ${price}`,
             duration: 5000,
           });
         }

@@ -156,14 +156,19 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
       // cancel activity if there is still 48 hours left
       if (booking && booking?._id && booking.selectedDate) {
         if (!text) {
+          const discountedPrice =
+            booking.selectedPrice -
+            (booking.selectedPrice * (booking.entity as TActivity).specialDiscount) / 100;
+          const promocodeDiscountedPrice =
+            discountedPrice - discountedPrice * ((booking.discount ?? 0) / 100);
           updateBookingRequest(booking._id, { status: bookingStatus.Cancelled });
-          refundMoney(userId, booking.selectedPrice);
+          refundMoney(userId, promocodeDiscountedPrice);
           setBooking({ ...booking, status: bookingStatus.Cancelled });
           booking.status = bookingStatus.Cancelled;
           setIsButtonDisabled(true);
           toast({
             title: "Success",
-            description: `You have successfully cancelled the Activity, your wallet has been refunded by ${currency} ${booking.selectedPrice}`,
+            description: `You have successfully cancelled the Activity, your wallet has been refunded by ${currency} ${price}`,
             duration: 5000,
           });
         }
