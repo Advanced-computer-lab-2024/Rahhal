@@ -53,3 +53,14 @@ export async function applyPromocode(req: Request, res: Response) {
     res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
   }
 }
+
+export async function usePromocode(req: Request, res: Response) {
+  try {
+    const id = req.params.id;
+    const code = req.body.code;
+    const promocode = await promocodeService.usePromocode(id, code);
+    res.status(STATUS_CODES.STATUS_OK).json(promocode);
+  } catch (error: any) {
+    res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
+  }
+}

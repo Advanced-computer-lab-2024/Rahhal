@@ -10,6 +10,7 @@ router.post("/promocode", promocodeController.createPromocode);
 router.patch("/promocode/:id", promocodeController.updatePromocode);
 router.delete("/promocode/:id", promocodeController.deletePromocode);
 router.post("/promocode/:id", promocodeController.applyPromocode);
+router.post("/promocode/use/:id", promocodeController.usePromocode);
 
 // Stripe
 router.post("/create-payment-intent", stripeController.createPaymentIntent);
