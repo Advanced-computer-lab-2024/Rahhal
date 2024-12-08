@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/carousel";
 import { Card } from "@/components/ui/card";
 import useEmblaCarousel from "embla-carousel-react";
-import { useFlightSearchBarStore } from "@/stores/flight-searchbar-slice";
+import { useFlightSearchBarStore } from "@/stores/search-bar-stores/flight-searchbar-slice";
 import { useGeneralSearchBarStore } from "@/stores/general-search-bar-store";
 
 interface Destination {
@@ -88,7 +88,7 @@ export default function FlightsLandingComponent() {
     }
   }, [emblaApi, slidesPerView]);
 
-  const handleCardClick = (destinationName: string,e) => {
+  const handleCardClick = (destinationName: string, e) => {
     e.stopPropagation();
     let departureSuggestionsPlaceId: string[] = [];
     let arrivalSuggestionsPlaceId: string[] = [];
@@ -147,7 +147,7 @@ export default function FlightsLandingComponent() {
                 >
                   <Card
                     className="overflow-hidden"
-                    onClick={(e) => handleCardClick(destination.name,e)}
+                    onClick={(e) => handleCardClick(destination.name, e)}
                   >
                     <div className="relative aspect-[4/3]">
                       <img
