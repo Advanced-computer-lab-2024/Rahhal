@@ -80,7 +80,6 @@ export default function AuroraHero() {
                   boxShadow,
                   width: "200px",
                   height: "50px",
-                  backgroundColor: "--complimentary-color"
                   }}
                   whileHover={{
                   scale: 1.015,
@@ -92,7 +91,7 @@ export default function AuroraHero() {
                   navigate("/entertainment");
                   setTimeout(startTour, 50);
                   }}
-                  className="group relative font-bold flex w-fit items-center justify-center gap-1.5 rounded-full bg-blue-500 px-4 py-2 text-gray-50 transition-colors"
+                  className="group relative font-bold flex w-fit items-center justify-center gap-1.5 bg-[var(--complimentary-color)] rounded-full px-4 py-2 text-gray-50 transition-colors"
                 >
                   Start Tour
                   <FiArrowRight className="transition-transform group-hover:-rotate-45 group-active:-rotate-12" />
