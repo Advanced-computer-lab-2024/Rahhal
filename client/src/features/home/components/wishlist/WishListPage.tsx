@@ -24,7 +24,6 @@ function BookmarksPage() {
     if (!ratings || ratings.length === 0) return 0;
     return ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length;
   };
-
   return (
     <>
       {/* Header */}
@@ -54,15 +53,17 @@ function BookmarksPage() {
         {/* Wishlist */}
         {!isLoading &&
           wishlistData &&
+          wishlistData.length > 0 &&
+          isSuccess &&
           wishlistData.map((item) => {
             return (
               <ProductCard
-                id={item.product._id}
-                name={item.product.name}
-                price={item.product.price}
-                imageUrl={item.product.picture}
-                rating={getAverageRating(item.product.ratings)}
-                seller={item.product.seller}
+                id={item.product?._id}
+                name={item.product?.name}
+                price={item.product?.price}
+                imageUrl={item.product?.picture}
+                rating={getAverageRating(item.product?.ratings)}
+                sellername={item.product?.sellerName}
               />
             );
           })}
