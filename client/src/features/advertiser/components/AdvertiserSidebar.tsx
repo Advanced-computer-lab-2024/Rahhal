@@ -57,7 +57,7 @@ export function AdvertiserSidebar({ id }: AdvertiserSidebarProps) {
                         isActive={window.location.pathname === `/home`}
                         tooltip="Activities"
                       >
-                        <a href={`http://localhost:5173/home}`}>
+                        <a href={`http://localhost:5173/home`}>
                           <Laugh />
                           Activities
                         </a>

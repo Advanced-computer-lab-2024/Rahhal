@@ -8,7 +8,7 @@ import {
 import { IHotelDetails } from "@/features/home/types/home-page-types"
 import { currencyExchangeSpec } from "@/utils/currency-exchange"
 import { useRatesStore, useCurrencyStore } from "@/stores/currency-exchange-store"
-import { Link, useParams } from "react-router-dom"
+import { Link } from "react-router-dom"
 import useUserStore from "@/stores/user-state-store"
 
 interface HotelCardProps {
@@ -19,7 +19,7 @@ interface HotelCardProps {
 export default function HotelCard({ hotel, index }: HotelCardProps) {
   const { rates } = useRatesStore()
   const { currency } = useCurrencyStore()
-  // const { id } = useParams()
+
   const {id} = useUserStore();
 
   return (
@@ -77,19 +77,13 @@ export default function HotelCard({ hotel, index }: HotelCardProps) {
         </div>
 
         <div>
-          {id ? (
-            <Link to={`/stays/${id}/hotel/${index}`}>
-              <button className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] text-white rounded-sm p-2 text-sm">
-                Reserve
-              </button>
-            </Link>
-          ) : (
+          
             <Link to={`/stays/hotel/${index}`}>
               <button className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] text-white rounded-sm p-2 text-sm">
                 Reserve
               </button>
             </Link>
-          )}
+        
         </div>
       </div>
     </div>

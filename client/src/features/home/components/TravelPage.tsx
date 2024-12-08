@@ -9,7 +9,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getUserById } from "@/api-calls/users-api-calls";
 import { calculateAge } from "@/utils/age-calculator";
 import TransportationPage from "./TransportationPage";
-import { useParams } from "react-router-dom";
 import FlightPage from "./FlightPage";
 import { getFlights } from "@/api-calls/flights-search-api-calls";
 import { useFlightSearchBarStore } from "@/stores/search-bar-stores/flight-searchbar-slice";
@@ -26,10 +25,8 @@ import { useTour } from "@/components/AppTour";
 
 import useUserStore from "@/stores/user-state-store";
 
-interface TravelPageProps {
-  loggedIn: boolean;
-}
-function TravelPage({ loggedIn }: TravelPageProps) {
+
+function TravelPage() {
   const [isAdult, setAdult] = useState(true);
   const [transferType, setTransferType] = useState("taxis");
   const [transferRequest, setTransferRequest] = useState<TransferRequest | null>(null);
@@ -42,6 +39,7 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   // const { id } = useParams<{ id: string }>();
   const { id } = useUserStore();
   const userId = id ? id : "";
+  const loggedIn = userId? true : false;
   const { data: userData } = useQuery({
     queryKey: ["fetchUser"],
     queryFn: () => getUserById(userId ? userId : ""),

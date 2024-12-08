@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fetchUserWishlist } from "@/api-calls/wishlist-api-calls";
 import { useQuery } from "@tanstack/react-query";
@@ -8,7 +7,6 @@ import NoWishlist from "@/assets/NoWishListIcon.png";
 import useUserStore from "@/stores/user-state-store";
 
 function BookmarksPage() {
-  // const { id } = useParams();
   const { id } = useUserStore();
 
   const {

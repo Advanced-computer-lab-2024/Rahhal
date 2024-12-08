@@ -227,7 +227,8 @@ const ActivityDetailsPage: React.FC = () => {
               footerText={text}
             />
           </DetailsPageTemplateProps>
-        </Outlet>
+          </>
+        
       )}
       <TouristHomePageNavigation /*loggedIn={id ? id !== "undefined" : false}*/ />
       <DetailsPageTemplateProps

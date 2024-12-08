@@ -7,13 +7,12 @@ import {
   THistoricalTag,
 } from "@/features/tourism-governor/utils/historical-tags-columns";
 import { HistoricalTagsModal } from "./HistoricalTagsModal";
-import { useParams } from "react-router-dom";
 import useUserStore from "@/stores/user-state-store";
 
 function HistoricalTagsView() {
   const [historicalTags, setHistoricalTags] = useState<THistoricalTag[]>([]);
 
-  // const { id } = useParams();
+
   const { id } = useUserStore();
 
   useEffect(() => {

@@ -8,11 +8,8 @@ import { useHotelStore } from "@/stores/hotel-store";
 import HotelsLandingComponent from "@/features/home/components/hotels-landing-page/HotelsLandingComponent"; // Import the landing page
 import { toast } from "@/hooks/use-toast";
 
-interface HotelPageProps {
-  loggedIn: boolean;
-}
 
-function HotelsPage({ loggedIn }: HotelPageProps) {
+function HotelsPage() {
   const {
     destinationLocation,
     destinationSuggestions,

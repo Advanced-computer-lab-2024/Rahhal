@@ -10,7 +10,6 @@ import useUserStore from "@/stores/user-state-store";
 export const EditContextAdmin = createContext<{ user: TUser }>({ user: DEFAULTS.ADMIN_DATA });
 
 export default function AdminHomepage() {
-  //const { id } = useParams<{ id: string }>();
   const { id } = useUserStore();
     const [user, setUser] = useState<TUser>(DEFAULTS.ADMIN_DATA);
 

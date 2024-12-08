@@ -53,7 +53,6 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
         },
         duration: 3000,
       });
-      await new Promise((resolve) => setTimeout(resolve, 3000));
       setDisabled(false);
       navigate(`/`);
     } catch (error) {
