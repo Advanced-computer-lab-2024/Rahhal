@@ -1,6 +1,61 @@
 # Rahhal
 
 
+## Motivation
+
+Welcome to Rahhal, your all-in-one travel planner! We created Rahhal to simplify vacation planning by offering personalized itineraries, seamless bookings, and budget-friendly suggestions all in one platform. Whether you’re exploring historic sites, relaxing on beaches, or discovering local gems, Rahhal makes it easy to plan and enjoy your perfect trip. Stay organized with real-time updates, expert tours, and exclusive local experiences. Start your journey stress-free with Rahhal!
+
+
+## Tech and Frameworks used
+
+-   [Node.js](https://nodejs.org/en/)
+-   [Express](https://expressjs.com/)
+-   [React](https://reactjs.org/)
+-   [MongoDB](https://www.mongodb.com/)
+-   [Mongoose](https://mongoosejs.com/)
+-   [firebase](https://firebase.google.com/)
+-   [swagger](https://swagger.io/)
+-   [Stripe](https://stripe.com/)
+-   [prettier](https://prettier.io/)
+-   [Git](https://git-scm.com/)
+-   [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+-   [Postman](https://www.postman.com/)
+-   [VSCode](https://code.visualstudio.com/)
+-   [JWT](https://jwt.io/)
+-   [Docker](https://www.docker.com/)
+-   [ESlint](https://eslint.org/)
+-   [Husky](https://github.com/typicode/husky/tree/main)
+
+
+## How To Use
+
+
+- Make sure you follow the Installation steps first.
+
+```bash
+
+MONGO_URI="<Your Mongo Connection String>"
+PORT=3000
+
+```
+- start Rahhal 
+
+```bash
+
+cd Rahhal 
+docker compose up
+
+```
+
+## License
+
+The software is open source under the Apache 2.0 License.
+
+-   [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+
+
+
+
 ## Build Status
 
 - Our project is currently under active development and not recommended for production environments.
