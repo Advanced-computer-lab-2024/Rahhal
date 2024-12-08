@@ -132,6 +132,8 @@ function BookingForm({
       `\nPayment Method: ${selectedPaymentMethod === "wallet" ? "Wallet" : "Credit Card"}`,
     );
 
+    summary.push(`\nTransaction deducted amount: EGP ${egpTotalPrice.toFixed(2)}`);
+
     return summary.join("\n");
   };
 
