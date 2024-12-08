@@ -1,7 +1,7 @@
 # Rahhal
 
 ## Testing
-We are using `jest`. To run the tests.
+We are using `vitest`. To run the tests.
 Execute the following commands in the root directory of the project.
   
 
