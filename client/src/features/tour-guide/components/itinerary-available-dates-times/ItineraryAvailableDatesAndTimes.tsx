@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ItineraryAvailableDatesAndTimesEdit from "./ItineraryAvailableDatesAndTimesEdit";
-import ItineraryAvailableDatesAndTimesNonEdit from "./ItineraryAvailableDatesAndTimesNonEdit";
+import { PlusCircle } from "lucide-react";
+import { Label } from "@/components/ui/label";
 
 interface DateTimeEntry {
   Date: Date;
@@ -18,31 +18,34 @@ const ItineraryAvailableDatesAndTimes: React.FC<ItineraryAvailableDatesAndTimesP
   availableDatesTime,
   onSave,
 }) => {
-  const [isEditing, setIsEditing] = useState(false);
+  const [addTrigger, setAddTrigger] = useState(false);
 
   const handleSave = (newDatesTime: DateTimeEntry[]) => {
-    console.log("Saving Dates and Times: ", newDatesTime);
     onSave(newDatesTime); // Call the onSave prop to update the parent state
-    setIsEditing(false); // Exit edit mode after saving
   };
 
   return (
-    <Card>
-      <CardHeader className="flex justify-between items-center">
-        <span>Available Dates and Times</span>
-        <Button onClick={() => setIsEditing(!isEditing)}>{isEditing ? "Cancel" : "Edit"}</Button>
-      </CardHeader>
-      <CardContent>
-        {isEditing ? (
-          <ItineraryAvailableDatesAndTimesEdit
-            availableDatesTime={availableDatesTime}
-            onSave={handleSave}
-          />
-        ) : (
-          <ItineraryAvailableDatesAndTimesNonEdit availableDatesTime={availableDatesTime} />
-        )}
-      </CardContent>
-    </Card>
+    <div>
+      <div className="flex gap-3 items-center">
+        <Label className="text-lg">Available Dates and Times</Label>
+        <Button
+          variant="link"
+          className="p-0"
+          onClick={() => {
+            setAddTrigger(true);
+          }}
+        >
+          <PlusCircle className="h-5 w-5 hover:text-gray-600" />
+        </Button>
+      </div>
+
+      <ItineraryAvailableDatesAndTimesEdit
+        availableDatesTime={availableDatesTime}
+        addTrigger={addTrigger}
+        triggerClenup={() => setAddTrigger(false)}
+        onSave={handleSave}
+      />
+    </div>
   );
 };
 

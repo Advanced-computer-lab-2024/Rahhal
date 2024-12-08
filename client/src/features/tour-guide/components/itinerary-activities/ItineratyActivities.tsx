@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Check, Plus, PlusCircle, X, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import ItineraryActivitiesEdit from "./ItineraryActivitiesEdit";
 import ItineraryActivitiesNonEdit from "./ItineraryActivitiesNonEdit";
-import EditSaveButton from "@/components/EditSaveButton";
+import { Label } from "@/components/ui/label";
 
 interface ItineraryActivities {
   title: string;
@@ -32,6 +31,7 @@ const ItineraryActivities = ({
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editType, setEditType] = useState("");
   const [editDuration, setEditDuration] = useState("");
+  const [isAdding, setIsAdding] = useState(true);
 
   const addActivity = () => {
     if (newType && newDuration) {
@@ -83,58 +83,61 @@ const ItineraryActivities = ({
   };
 
   return (
-    <Card className="m-5 mx-6">
-      <div className="p-3 flex justify-between">
-        <CardTitle className="text-sm">{title}</CardTitle>
-        <EditSaveButton
-          isDisabled={isDisabled}
-          saveChanges={() => setIsDisabled(true)}
-          toggleEditMode={() => setIsDisabled(false)}
-        />
+    <div>
+      <div className="flex gap-3 items-center">
+        <Label className="text-lg">Activites</Label>
+        <Button variant="link" className="p-0" onClick={() => setIsAdding(true)}>
+          <PlusCircle className="h-5 w-5 hover:text-gray-600" />
+        </Button>
       </div>
-      <CardContent>
-        <div className="space-y-4">
-          {activities.map((activity) => (
-            <div key={activity.id} className="flex justify-between items-center">
-              {editingId === activity.id ? (
-                <ItineraryActivitiesEdit
-                  editType={editType}
-                  setEditType={setEditType}
-                  editDuration={editDuration}
-                  setEditDuration={setEditDuration}
-                  saveEdit={saveEdit}
-                  cancelEditing={cancelEditing}
-                />
-              ) : (
-                <ItineraryActivitiesNonEdit
-                  activity={activity}
-                  startEditing={startEditing}
-                  removeActivity={removeActivity}
-                />
-              )}
-            </div>
-          ))}
-          {!isDisabled && (
-            <div className="flex space-x-2">
-              <Input
-                placeholder="Activity"
-                value={newType}
-                onChange={(e) => setNewType(e.target.value)}
+      <div className="space-y-4">
+        {activities.map((activity) => (
+          <div
+            key={activity.id}
+            className="flex justify-between items-center border py-2 px-4 rounded-md"
+          >
+            {editingId === activity.id ? (
+              <ItineraryActivitiesEdit
+                editType={editType}
+                setEditType={setEditType}
+                editDuration={editDuration}
+                setEditDuration={setEditDuration}
+                saveEdit={saveEdit}
+                cancelEditing={cancelEditing}
               />
-              <Input
-                placeholder="Duration"
-                value={newDuration}
-                onChange={(e) => setNewDuration(e.target.value)}
+            ) : (
+              <ItineraryActivitiesNonEdit
+                activity={activity}
+                startEditing={startEditing}
+                removeActivity={removeActivity}
               />
-              <Button onClick={addActivity}>
-                <Plus className="h-4 w-4 mr-2" />
-                Add
+            )}
+          </div>
+        ))}
+        {!isDisabled && isAdding && (
+          <div className="flex space-x-2">
+            <Input
+              placeholder="Activity"
+              value={newType}
+              onChange={(e) => setNewType(e.target.value)}
+            />
+            <Input
+              placeholder="Duration"
+              value={newDuration}
+              onChange={(e) => setNewDuration(e.target.value)}
+            />
+            <div className="flex">
+              <Button onClick={() => setIsAdding(false)} variant="link">
+                <XIcon className="h-4 w-4 hover:text-primary/60" />
+              </Button>
+              <Button onClick={addActivity} variant="link">
+                <Check className="h-4 w-4 hover:text-primary/60" />
               </Button>
             </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 
