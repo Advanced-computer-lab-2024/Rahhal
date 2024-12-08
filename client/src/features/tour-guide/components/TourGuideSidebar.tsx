@@ -63,7 +63,7 @@ export function TourGuideSidebar({ id }: TourGuideSidebarProps) {
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
-                      isActive={window.location.pathname === `http://localhost:5173/home`}
+                      isActive={window.location.href === `http://localhost:5173/home`}
                       tooltip="Itineraries"
                     >
                       <a href={`http://localhost:5173/home`}>
@@ -76,7 +76,7 @@ export function TourGuideSidebar({ id }: TourGuideSidebarProps) {
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
-                      isActive={window.location.pathname === `http://localhost:5173/report`}
+                      isActive={window.location.href === `http://localhost:5173/report`}
                       tooltip="Reports"
                     >
                       <a href={`http://localhost:5173/report`}>
@@ -89,7 +89,7 @@ export function TourGuideSidebar({ id }: TourGuideSidebarProps) {
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
-                      isActive={window.location.pathname === `/http://localhost:5173/reviews`}
+                      isActive={window.location.href === `http://localhost:5173/reviews`}
                       tooltip="Customer Reviews"
                     >
                       <a href={`http://localhost:5173/reviews`}>

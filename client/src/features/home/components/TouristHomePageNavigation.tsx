@@ -87,7 +87,7 @@ export default function TouristHomePageNavigation() {
                                 <>
                                     <div className="flex items-center space-x-4">
                                         <CartIcon />
-                                        <Link to={`/my-wishlist/${id}`} className="flex items-center">
+                                        <Link to={`/my-wishlist`} className="flex items-center">
                                             <WishlistIcon />
                                         </Link>
                                     </div>
