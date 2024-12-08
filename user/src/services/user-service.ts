@@ -6,6 +6,7 @@ import { Role } from "@/utils/constants";
 import { ObjectId } from "mongodb";
 import { bookingStatus, POINTS, LEVELS } from "@/utils/constants";
 import { hasBookings, deleteEntities, deactivateEntities } from "@/services/booking-calls";
+import publishNotification from "@/publishers/notification-publisher";
 
 export async function createUser(userData: IUser) {
   return await userRepository.createUser(userData);
@@ -53,6 +54,9 @@ export async function getUser(filter: Partial<IUser>): Promise<IUser | null> {
 }
 
 export async function updateUser(userId: string, updatedUser: IUser): Promise<IUser | null> {
+  if(updatedUser.approved === true) {
+    sendApprovalNotification(userId);
+  }
   return await userRepository.updateUser(userId, updatedUser);
 }
 
@@ -98,4 +102,13 @@ export function updatePointsAndLevel(user: IUser, amountPaid: number) {
 
 export async function getNumberOfUsers(startDate?: Date, endDate?: Date) {
   return await userRepository.getNumberOfUsers(startDate, endDate);
+}
+
+export async function sendApprovalNotification(id: string) {
+  const data = {
+    userId: id,
+    message: "Welcome to Rahhal Family, Your account has been approved",
+  };
+
+  publishNotification(data);
 }
