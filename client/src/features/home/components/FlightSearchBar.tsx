@@ -87,7 +87,7 @@ function FlightSearchBar({ onIconClick }: FlightSearchBarProps) {
         { state: children, setState: setChildren },
         { state: infants, setState: setInfants },
       ]}
-      searchPartsTypes={["dropdown", "dropdown", "date", "date", "stepper"]}
+      searchPartsTypes={["dropdown", "dropdown", "dualDate", "stepper"]}
       searchPartsPlaceholders={searchPartsPlaceholders}
       searchPartsOnValueChange={[handlePickUpChange, handleDropOffChange]}
       onIconClick={onIconClick}

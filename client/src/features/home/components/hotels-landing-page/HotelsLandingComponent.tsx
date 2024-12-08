@@ -63,7 +63,8 @@ export default function HotelsLandingComponent() {
     fetchData();
   }, []);
 
-  const openSearchBar = () => {
+  const openSearchBar = (e) => {
+    e.stopPropagation();
     setFocusIndex(1);
   };
 
@@ -82,7 +83,7 @@ export default function HotelsLandingComponent() {
           </p>
           <button
             className="mt-4 px-6 py-2 bg-[var(--complimentary-color)] hover:bg-[var(--complimentary-color-dark)] text-white text-sm sm:text-base font-semibold rounded-lg shadow-lg cursor-pointer"
-            onClick={openSearchBar}
+            onClick={(e)=>openSearchBar(e)}
           >
             Search Now
           </button>

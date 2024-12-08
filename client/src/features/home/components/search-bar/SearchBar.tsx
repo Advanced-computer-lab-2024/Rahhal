@@ -203,6 +203,7 @@ useEffect(() => {
                     searchPartsHandlers[index + 1].setState as (date: Date | undefined) => void
                   }
                   popoverRef={popoverRef}
+                  hour={true}
                 />
               ))
             ) : searchPartsTypes[index] === "stepper" ? (

@@ -88,7 +88,8 @@ export default function FlightsLandingComponent() {
     }
   }, [emblaApi, slidesPerView]);
 
-  const handleCardClick = (destinationName: string) => {
+  const handleCardClick = (destinationName: string,e) => {
+    e.stopPropagation();
     let departureSuggestionsPlaceId: string[] = [];
     let arrivalSuggestionsPlaceId: string[] = [];
     let arrivalLocation: string = "";
@@ -109,7 +110,7 @@ export default function FlightsLandingComponent() {
       setArrivalLocation(arrivalLocation);
       setDepartureSuggestionsPlaceId(departureSuggestionsPlaceId);
       setArrivalSuggestionsPlaceId(arrivalSuggestionsPlaceId);
-      setOpen(true);
+      setFocusIndex(3);
     }
   };
   return (
@@ -146,7 +147,7 @@ export default function FlightsLandingComponent() {
                 >
                   <Card
                     className="overflow-hidden"
-                    onClick={() => handleCardClick(destination.name)}
+                    onClick={(e) => handleCardClick(destination.name,e)}
                   >
                     <div className="relative aspect-[4/3]">
                       <img
