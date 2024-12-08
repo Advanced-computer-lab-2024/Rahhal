@@ -107,6 +107,7 @@ export const MyTripsPage = () => {
 
   const [selectedMainFilter, setSelectedMainFilter] = useState("experiences");
   const [selectedSubFilter, setSelectedSubFilter] = useState("activity");
+  const [filteredBookings, setFilteredBookings] = useState<TPopulatedBooking[]>(booking as TPopulatedBooking[]);
 
   useEffect(() => {
     
@@ -116,8 +117,15 @@ export const MyTripsPage = () => {
     );
     if (selectedOption) setSelectedMainFilter(selectedOption.type);
 
+    if (!booking) return;
+    // filter bookings based on the selected sub filter
+    setFilteredBookings(
+      (booking as TPopulatedBooking[]).filter((booking) => booking.type === selectedSubFilter),
+    );
 
-  }, [selectedSubFilter]);
+
+
+  }, [selectedSubFilter, booking]);
 
   return (
     <div className="mb-5">
@@ -148,8 +156,8 @@ export const MyTripsPage = () => {
       </div>
       
       <div className={PageStyles["trip-list"]}>
-        {booking && booking.length > 0
-          ? booking.map(
+        {filteredBookings && filteredBookings.length > 0
+          ? filteredBookings.map(
               (booking: TPopulatedBooking) =>
                 booking.type === selectedSubFilter && (
                   <MyTripsCard
