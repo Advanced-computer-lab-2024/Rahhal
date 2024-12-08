@@ -447,6 +447,11 @@ export interface INotification {
   seen: boolean;
 }
 
+export interface INotifyRequest {
+  user: string;
+  entity: string;
+}
+
 export interface PopulatedCart {
   _id: string;
   user: string;
