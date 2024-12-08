@@ -124,6 +124,9 @@ export default function Checkout() {
           activePromotion?.code || "",
           fullAddress,
         );
+        if (selectedPaymentMethod === "wallet") {
+          await updateUser(user, { balance: (user.balance as number) - totalAmount });
+        }
         if (saveInfo) {
           const updatedAddresses = [...(user.addresses || []), fullAddress];
           console.log(updatedAddresses);
@@ -149,7 +152,7 @@ export default function Checkout() {
   const handleGoToPrevStep = () => {
     setCurrentCheckoutStep(1);
   };
-  console.log(totalAmount);
+
   return (
     <>
       <div className="min-h-screen flex">
@@ -249,7 +252,14 @@ export default function Checkout() {
           </div>
         </div>
       </div>
-      <CompletionPopup completed={completed} orderDetails="This is a test order" />
+      {user && (
+        <CompletionPopup
+          completed={completed}
+          isPayedWithWallet={selectedPaymentMethod === "wallet"}
+          remainingWalletBalance={(user.balance as number) - totalAmount}
+          orderDetails="This is a test order"
+        />
+      )}
     </>
   );
 }
