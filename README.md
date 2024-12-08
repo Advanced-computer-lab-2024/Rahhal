@@ -3,6 +3,10 @@
 ## API Reference
 ![API Reference](https://github.com/user-attachments/assets/f9e9c678-9571-473f-9a37-088ad59a21a1)
 
+### Note
+You can also access the API reference by visiting the following link: `http://localhost:${PORT}/api-docs`
+where `${PORT}` is the port number assigned to your api-gateway service.
+
 ## Testing
 We are using `vitest`. To run the tests, execute the following commands in the root directory of the project.
 
