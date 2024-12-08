@@ -134,7 +134,10 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
           currency={currency}
           isOpen={isModalOpen}
           onClose={closeModal}
-          price={Number(newPrice)}
+          price={Number(
+            differenceInDays(date.to!, date.from!) * parseInt(newPrice!) +
+              parseInt(newPrice!) * 0.1,
+          )}
           name={hotel.name}
           type={"Hotel"}
           userId={id ?? ""}

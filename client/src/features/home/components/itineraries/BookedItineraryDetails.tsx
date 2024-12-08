@@ -1,12 +1,12 @@
 import { OverviewCard } from "../overview-card/OverViewCard";
 import { TPopulatedBooking } from "../../types/home-page-types";
-import { addLoyalityPoints, getUserById, refundMoney } from "@/api-calls/users-api-calls";
+import { getUserById, refundMoney } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
 import { fetchBookingById, updateBookingRequest } from "@/api-calls/booking-api-calls";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import { useEffect, useRef, useState } from "react";
-import { bookingStatus, bookingType } from "@/utils/enums";
+import { bookingStatus } from "@/utils/enums";
 import { toast } from "@/hooks/use-toast";
 import { formatDate, formatTime } from "../../utils/filter-lists/overview-card";
 import ItinerariesPageTemplate from "../ItinerariesPageTemplate";
@@ -15,6 +15,7 @@ interface BookedItineraryDetailsProps {
   itinerary: TItinerary;
   initialBooking: TPopulatedBooking | null;
   userId: string;
+  discount: number;
   ratingFormRef: React.RefObject<HTMLButtonElement>;
 }
 
@@ -23,6 +24,7 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
   initialBooking,
   userId,
   ratingFormRef: itineraryRatingFormRef,
+  discount,
 }) => {
   const {
     _id,
@@ -166,6 +168,7 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
           onButtonClick={handleButtonClick}
           onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
           footerText={text}
+          promocodeDiscount={discount}
         />
       </ItinerariesPageTemplate>
     </div>

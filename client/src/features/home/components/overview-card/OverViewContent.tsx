@@ -30,6 +30,7 @@ interface ContentProps {
   notify?: boolean;
   footerText?: string;
   isNotifyAnimating?: boolean;
+  promocodeDiscount?: number;
 }
 
 export const OverViewContent: React.FC<ContentProps> = ({
@@ -51,6 +52,7 @@ export const OverViewContent: React.FC<ContentProps> = ({
   notify,
   footerText,
   isNotifyAnimating,
+  promocodeDiscount,
 }) => {
   const [selectedTicket, setSelectedTicket] = useState<number>(0);
   const [selectedDate, setSelectedDate] = useState<string>(

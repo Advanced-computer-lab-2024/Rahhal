@@ -17,6 +17,7 @@ interface BookedActivityDetailsProps {
   activity: TActivity;
   initialBooking: TPopulatedBooking;
   userId: string;
+  discount: number;
   ratingFormRef: React.RefObject<HTMLButtonElement>;
 }
 
@@ -25,6 +26,7 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
   initialBooking,
   userId,
   ratingFormRef,
+  discount,
 }) => {
   const {
     _id,
@@ -235,6 +237,7 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
           discount={specialDiscount}
           tickets={selectedTicket ? [selectedTicket] : []}
           footerText={text}
+          promocodeDiscount={discount}
         />
       </DetailsPageTemplateProps>
     </div>

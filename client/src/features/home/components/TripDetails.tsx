@@ -71,13 +71,13 @@ export function TripDetails() {
   const userId = useParams().id;
   const { booking } = useLocation().state;
   const ratingFormRef = React.useRef<HTMLButtonElement>(null);
-
   return (
     <>
       <TouristHomePageNavigation loggedIn={true} />
       {booking.type === bookingType.Activity && (
         <BookedActivityDetailsPage
           activity={booking.entity as TActivity}
+          discount={booking.discount}
           userId={userId ?? ""}
           initialBooking={booking}
           ratingFormRef={ratingFormRef}
@@ -87,6 +87,7 @@ export function TripDetails() {
       {booking.type === bookingType.Itinerary && (
         <BookedItineraryDetailsPage
           itinerary={booking.entity as TItinerary}
+          discount={booking.discount}
           userId={userId ?? ""}
           initialBooking={booking}
           ratingFormRef={ratingFormRef}

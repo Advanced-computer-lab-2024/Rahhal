@@ -26,6 +26,7 @@ interface OverviewCardProps {
   notify?: boolean; // Optional for the notification bell
   footerText?: string; // Optional for any extra text to be displayed
   isNotifyAnimating?: boolean;
+  promocodeDiscount?: number; // Optional for cases with a promo code discount
 }
 
 export const OverviewCard: React.FC<OverviewCardProps> = ({
@@ -50,11 +51,17 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({
   notify,
   footerText,
   isNotifyAnimating,
+  promocodeDiscount,
 }) => {
   return (
     <div className={styles.card}>
       {/* Header Section */}
-      <Header originalPrice={originalPrice} discount={discount} currency={currency} />
+      <Header
+        originalPrice={originalPrice}
+        discount={discount}
+        currency={currency}
+        promocodeDiscount={promocodeDiscount}
+      />
 
       {/* Content Section */}
       <OverViewContent

@@ -7,9 +7,15 @@ interface HeaderProps {
   currency: string;
   originalPrice?: number;
   discount?: number; // Optional for cases without discount
+  promocodeDiscount?: number; // Optional for cases with a promo code discount
 }
 
-const Header: React.FC<HeaderProps> = ({ currency, originalPrice, discount }) => {
+const Header: React.FC<HeaderProps> = ({
+  currency,
+  originalPrice,
+  discount,
+  promocodeDiscount,
+}) => {
   const convertedPrice = originalPrice ? currencyExchange("EGP", originalPrice) : undefined;
 
   const discountedPrice =
@@ -17,19 +23,29 @@ const Header: React.FC<HeaderProps> = ({ currency, originalPrice, discount }) =>
       ? convertedPrice - (convertedPrice * discount) / 100
       : undefined;
 
-  const displayDiscountedPrice = discountedPrice ? discountedPrice.toFixed(0) : undefined;
+  const promocodeDiscountedPrice = promocodeDiscount
+    ? discountedPrice
+      ? discountedPrice - discountedPrice * (promocodeDiscount / 100)
+      : convertedPrice
+        ? convertedPrice - convertedPrice * (promocodeDiscount / 100)
+        : undefined
+    : discountedPrice;
+
+  const displayDiscountedPrice = promocodeDiscountedPrice
+    ? promocodeDiscountedPrice.toFixed(0)
+    : undefined;
 
   const displayOriginalConvertedPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
 
   return (
     <div className={styles.header}>
       <div className={styles.priceInfo}>
-        {discountedPrice ? (
+        {promocodeDiscountedPrice ? (
           <>
             <span className={styles.originalPrice}>
               Total: {currency} {displayOriginalConvertedPrice}
             </span>
-            <span className={styles.discountedPrice}>
+            <span className={styles.promocodeDiscountedPrice}>
               <TbRosetteDiscount className={styles.discountIcon} /> {currency}{" "}
               {displayDiscountedPrice}
             </span>
