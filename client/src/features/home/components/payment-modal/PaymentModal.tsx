@@ -4,15 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Check, Wallet, CreditCard } from "lucide-react";
-
 import { applyPromocode } from "@/api-calls/payment-api-calls";
 import { Promotion } from "@/features/home/types/home-page-types";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { PaymentOptions, TPaymentMethod } from "@/features/checkout/components/PaymentOptions";
-import { getUserById } from "@/api-calls/users-api-calls";
+import { getUserById, updateUser } from "@/api-calls/users-api-calls";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useRatesStore } from "@/stores/currency-exchange-store";
+import { currencyExchangeSpec } from "@/utils/currency-exchange";
 
 const paymentMethods: TPaymentMethod[] = [
   {
@@ -39,6 +40,7 @@ interface BookingModalProps {
   taxiPrice?: number;
   parentBookingFunc: () => void;
   userId: string;
+  egpPrice: number;
 }
 interface BookingFormProps {
   price: number;
@@ -47,6 +49,7 @@ interface BookingFormProps {
   currency: string;
   discountPerc?: number;
   userId: string;
+  egpPrice: number;
 
   onClose: () => void;
   parentBookingFunc: () => void;
@@ -64,6 +67,7 @@ function useIdFromParamsOrQuery() {
 
 function BookingForm({
   price,
+  egpPrice,
   name,
   type,
   currency,
@@ -89,9 +93,11 @@ function BookingForm({
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const { toast } = useToast();
-  console.log("user is ", userId);
+  const { rates } = useRatesStore();
+
   // Apply both discounts
   const totalPrice = price * (1 - (discountPerc ?? 0) / 100) * (1 - promoDiscountPerc / 100);
+  const egpTotalPrice = egpPrice * (1 - (discountPerc ?? 0) / 100) * (1 - promoDiscountPerc / 100);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -125,27 +131,40 @@ function BookingForm({
     try {
       setIsLoading(true);
 
+      // Do the actual booking
+      await parentBookingFunc();
       await new Promise((resolve) => setTimeout(resolve, 3000));
-      parentBookingFunc();
-      setIsLoading(false);
-      onClose();
 
-      setStripePaymentTrigger(false);
+      let remainingBalanceConverted, remainingBalanceFormatted;
+      if (selectedPaymentMethod === "wallet") {
+        const remainingBalance = (user.balance as number) - egpTotalPrice;
+        await updateUser(user, { balance: remainingBalance });
+        remainingBalanceConverted = currencyExchangeSpec("EGP", remainingBalance, rates, currency);
+        remainingBalanceFormatted = remainingBalanceConverted
+          ? remainingBalanceConverted.toFixed(2)
+          : "N/A";
+      }
 
       toast({
-        title: "Success",
-        description: "Payment successful",
+        title: "Thank you for choosing Rahhal",
+        description:
+          selectedPaymentMethod === "wallet"
+            ? `You have ${remainingBalanceFormatted} ${currency} left in your wallet, enjoy them 🥳`
+            : "Payment Successful",
         variant: "default",
-        duration: 3000,
+        duration: 5000,
       });
     } catch (e) {
       toast({
         title: "Error",
         description: (e as any).response.data.error,
         variant: "destructive",
-
         duration: 3000,
       });
+    } finally {
+      setStripePaymentTrigger(false);
+      setIsLoading(false);
+      onClose();
     }
   };
 
@@ -241,15 +260,15 @@ function BookingForm({
         <div className="mt-1 border rounded-md p-3">
           {user && (
             <PaymentOptions
+              walletBalance={user?.balance || 0}
               selectedPaymentMethod={selectedPaymentMethod}
               stripePaymentTrigger={stripePaymentTrigger}
-              walletBalance={(user?.balance as number) || 0}
               onPaymentCompletion={handlePaymentCompletion}
               setStripePaymentTrigger={setStripePaymentTrigger}
               setIsLoading={setIsPaymentLoading}
               setSelectedPaymentMethod={setSelectedPaymentMethod}
               paymentMethods={paymentMethods}
-              amount={totalPrice}
+              amount={egpTotalPrice}
             />
           )}
         </div>
@@ -279,6 +298,7 @@ export default function BookingModal({
   currency,
   name,
   price,
+  egpPrice,
   type,
   isOpen,
   onClose,
@@ -295,6 +315,7 @@ export default function BookingModal({
 
         <BookingForm
           price={price}
+          egpPrice={egpPrice}
           name={name}
           type={type}
           currency={currency}

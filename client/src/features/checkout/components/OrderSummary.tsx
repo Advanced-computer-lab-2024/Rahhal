@@ -65,8 +65,6 @@ export function OrderSummary({
 
   const calculateDiscount = () => {
     if (!activePromotion) return 0;
-    console.log(activePromotion.promotion);
-
     switch (activePromotion.promotion.type) {
       case "percentage":
         return (subtotal * activePromotion.promotion.value) / 100;
@@ -81,7 +79,7 @@ export function OrderSummary({
     const newDiscountAmount = calculateDiscount();
     setDiscountAmount(newDiscountAmount);
     setTotal(subtotalAfterDiscount + shippingCost + tax);
-  }, [activePromotion]);
+  }, [activePromotion, tax]);
 
   const handleApplyPromoCode = async () => {
     setError(null);

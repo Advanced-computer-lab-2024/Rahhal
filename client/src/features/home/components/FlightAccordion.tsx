@@ -45,6 +45,7 @@ export default function FlightAccordion({
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
 
   const bookingPrice = currencyExchangeDefault(offer.price.currency, offer.price.amount);
+
   const dbPrice = bookingPrice ? bookingPrice.toFixed(0) : "N/A";
 
   const onConfirmFlight = async () => {
@@ -68,9 +69,6 @@ export default function FlightAccordion({
     if (userID && offer !== null) {
       await addLoyalityPoints(userID, parseFloat(dbPrice));
     }
-    if (booking) {
-      alert("Trip confirmed successfully!");
-    }
   };
 
   const logoPath = getAirlineLogo(offer.airline);
@@ -86,7 +84,7 @@ export default function FlightAccordion({
         />
       )}
 
-      {isModalOpen && (
+      {isModalOpen && bookingPrice && (
         <BookingModal
           parentBookingFunc={onConfirmFlight}
           currency={currency}
@@ -96,6 +94,7 @@ export default function FlightAccordion({
           name={offer.airline}
           type={"Flight"}
           userId={userID}
+          egpPrice={bookingPrice}
         />
       )}
 

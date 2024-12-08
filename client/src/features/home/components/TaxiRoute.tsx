@@ -10,7 +10,7 @@ import { createBooking } from "@/api-calls/booking-api-calls";
 import type { TBookingType, TTaxiData } from "../types/home-page-types";
 import { bookingType } from "@/utils/enums";
 import { addLoyalityPoints } from "@/api-calls/users-api-calls";
-import { currencyExchangeDefaultSpec } from "@/utils/currency-exchange";
+import { currencyExchangeDefaultSpec, currencyExchangeDefault } from "@/utils/currency-exchange";
 import { useState } from "react";
 import SignUpModal from "./SignupModal";
 
@@ -46,6 +46,8 @@ function TaxiRoute({
   const { currency } = useCurrencyStore();
   const { rates } = useRatesStore();
 
+  const egpPrice = currencyExchangeDefault("EUR", amount);
+
   const convertedPrice = currencyExchange(originalCurrency, amount);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
   const [isGuestAction, setIsGuestAction] = useState(false);
@@ -58,7 +60,7 @@ function TaxiRoute({
       setIsGuestAction(true);
       return;
     }
-    if (!isModalOpen && userID ) {
+    if (!isModalOpen && userID) {
       setIsModalOpen(true);
       return;
     }
@@ -85,10 +87,6 @@ function TaxiRoute({
     if (userID && convertedPrice !== undefined) {
       await addLoyalityPoints(userID, convertedPrice);
     }
-
-    if (booking) {
-      alert("Trip confirmed successfully!");
-    }
   };
 
   return (
@@ -103,7 +101,7 @@ function TaxiRoute({
         />
       )}
 
-      {isModalOpen && (
+      {isModalOpen && egpPrice && (
         <BookingModal
           parentBookingFunc={onConfirmTrip}
           currency={currency}
@@ -113,6 +111,7 @@ function TaxiRoute({
           name={serviceProvider}
           type={"Airport Taxi"}
           userId={userID}
+          egpPrice={egpPrice}
         />
       )}
 
