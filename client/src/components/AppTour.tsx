@@ -5,17 +5,26 @@ import { useNavigate } from 'react-router-dom';
 import { fetchActiveAppropriateItineraries } from '@/api-calls/itineraries-api-calls';
 import { Itinerary } from '@/features/home/types/home-page-types';
 
-// Define the context type
+// Update the context type
 interface TourContextType {
     startTour: () => void;
     driverObj: Driver | null;
+    isLoading: boolean;
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    toggleLoading: () => void; // Add the new method
 }
 
 // Create the context
 const TourContext = createContext<TourContextType>({
     startTour: () => { },
-    driverObj: null
+    driverObj: null,
+    isLoading: false,
+    setIsLoading: () => { },
+    toggleLoading: () => { }
+    
 });
+
+
 
 
 // Create a provider component
@@ -23,6 +32,16 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [driverObj, setDriverObj] = useState<Driver | null>(null);
     const navigate = useNavigate();
     const [specificItinerary, setSpecificItinerary] = useState<Itinerary | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+
+
+    const toggleLoading = useCallback(() => {
+        setIsLoading(isLoading => !isLoading);
+    }, []);
+    useEffect(() => {
+        console.log("isLoading in context:", isLoading);
+    }, [isLoading]);
 
     useEffect(() => {
         const fetchItineraries = async () => {
@@ -50,6 +69,44 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         fetchItineraries();
     }, []);
+
+
+
+
+    useEffect(() => {
+        const observer = new MutationObserver(() => {
+            const nextButton = document.querySelector('.driver-popover-next-btn');
+            if (nextButton) {
+                if (isLoading) {
+                    nextButton.classList.add('driver-popover-btn-disabled');
+                } else {
+                    nextButton.classList.remove('driver-popover-btn-disabled');
+                }
+            }
+        });
+    
+        const targetNode = document.body; // Assuming the buttons are dynamically added to the body
+        const config = { childList: true, subtree: true }; // Observe all DOM additions/removals
+    
+        observer.observe(targetNode, config);
+    
+        // Directly update the button's class whenever isLoading changes
+        const nextButton = document.querySelector('.driver-popover-next-btn');
+        if (nextButton) {
+            if (isLoading) {
+                nextButton.classList.add('driver-popover-btn-disabled');
+            } else {
+                nextButton.classList.remove('driver-popover-btn-disabled');
+            }
+        }
+    
+        return () => {
+            observer.disconnect(); // Clean up observer on component unmount
+        };
+    }, [isLoading]);
+    
+
+    
     // useEffect(() => {
     //     if (driverObj) {
     //       //destroys the driver object when the user navigates to a different page using browser controls
@@ -62,7 +119,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const tourDriver = driver({
             showProgress: true,
             smoothScroll: true,
-            disableActiveInteraction: true,
+            // disableActiveInteraction: true,
             steps: [
                 {
                     element: "#nav-bar-tour",
@@ -80,7 +137,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         onNextClick: () => {
                             // Check if specific itinerary exists before navigating
                             if (specificItinerary) {
-                                console.log("Navigating to specific itinerary:", specificItinerary);
+                                // console.log("Navigating to specific itinerary:", specificItinerary);
 
                                 navigate(`/itineraries?eventId=${specificItinerary._id}`, {
                                     state: { item: specificItinerary }
@@ -123,6 +180,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         title: "Booking an Experience",
                         description: "If you like an experience, you can book it from here!",
                         onNextClick: () => {
+                            // setIsLoading(true);
                             navigate("/stays");
                             setTimeout(() => {
                                 tourDriver.moveNext();
@@ -148,7 +206,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         },
                         onPrevClick: () => {
                             if (specificItinerary) {
-                                console.log("Navigating to specific itinerary:", specificItinerary);
+                                // console.log("Navigating to specific itinerary:", specificItinerary);
 
                                 navigate(`/itineraries?eventId=${specificItinerary._id}`, {
                                     state: { item: specificItinerary }
@@ -312,7 +370,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, [driverObj, initializeTour]);
 
     return (
-        <TourContext.Provider value={{ startTour, driverObj }}>
+        <TourContext.Provider value={{ startTour, driverObj, toggleLoading, setIsLoading, isLoading }}>
             {children}
         </TourContext.Provider>
     );

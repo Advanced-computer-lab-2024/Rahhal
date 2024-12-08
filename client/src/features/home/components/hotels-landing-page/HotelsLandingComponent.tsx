@@ -16,6 +16,9 @@ import { useHotelStore } from "@/stores/hotel-store";
 import HotelCard from "../HotelCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGeneralSearchBarStore } from "@/stores/general-search-bar-store";
+import { useTour } from "@/components/AppTour";
+
+
 
 export default function HotelsLandingComponent() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -24,6 +27,7 @@ export default function HotelsLandingComponent() {
   const { hotels, setHotels } = useHotelStore();
   const { setFocusIndex } = useGeneralSearchBarStore();
 
+  const { toggleLoading, isLoading, setIsLoading } = useTour();
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) {
@@ -42,6 +46,10 @@ export default function HotelsLandingComponent() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+
+
+
 
   useEffect(() => {
     if (emblaApi) {
@@ -67,6 +75,18 @@ export default function HotelsLandingComponent() {
     e.stopPropagation();
     setFocusIndex(1);
   };
+  useEffect(() => {
+    console.log("Hotels loading before toggle in useEffect", loading);
+    console.log("tour loading before toggle in useEffect", isLoading);
+
+    toggleLoading(); // Correctly calling the toggle function
+    console.log("loading before after in useEffect", loading);
+    console.log("tour loading after toggle in useEffect", isLoading);
+  }, [toggleLoading, loading]);
+
+  useEffect(() => {
+    setIsLoading(true);
+  }, []); 
 
   return (
     <div className="w-full px-0 sm:px-8 lg:px-16 py-4">

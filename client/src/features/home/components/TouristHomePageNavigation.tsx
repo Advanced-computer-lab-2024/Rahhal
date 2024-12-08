@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { ProfileAvatar } from "./ProfileAvatar";
 import CurrencyDropdown from "./CurrencyDropdown";
@@ -9,6 +9,7 @@ import { CartIcon } from "@/features/checkout/components/CartIcon";
 import BookmarkNavIcon from "./bookmarks/BookmarkNavIcon";
 import WishlistIcon from "./wishlist/WishListIcon";
 import NotificaionPopover from "../../../components/NotificationPopover";
+import { useTour } from "@/components/AppTour";
 
 interface ButtonProps {
   navigation: number;
@@ -47,6 +48,13 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
     { component: <CurrencyDropdown />, route: null },
     { component: <ProfileAvatar />, route: null },
   ];
+  const { toggleLoading, isLoading } = useTour();
+
+  useEffect(() => {
+    console.log(isLoading);
+    
+  },[isLoading]);
+
 
   return (
     <div className="w-full h-16 flex items-center justify-between z-10 relative px-[16px]">
@@ -68,6 +76,11 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
             buttonName={buttonName}
           />
         ))}
+        <div>
+          <button onClick={toggleLoading}>
+            Toggle Loading (Current: {isLoading ? 'Loading' : 'Not Loading'})
+          </button>
+        </div>
       </div>
 
       {/* Right-Side Authentication Buttons or Avatar */}
@@ -112,7 +125,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
 }
 
 function NavigationButton(ButtonProps: ButtonProps) {
-  const subPaths = ["/stays", "/travel","/shop","/home"];
+  const subPaths = ["/stays", "/travel", "/shop", "/home"];
 
   return (
     <Link to={ButtonProps.path}>
@@ -128,8 +141,8 @@ function NavigationButton(ButtonProps: ButtonProps) {
         <Button
           className={cn(
             "rounded-none rounded-t-md relative w-20 text-foreground bg-transparent hover:bg-transparent",
-            location.pathname.includes(ButtonProps.path) || 
-            (ButtonProps.path === "/entertainment" && !subPaths.some(subPath => location.pathname.includes(subPath)))
+            location.pathname.includes(ButtonProps.path) ||
+              (ButtonProps.path === "/entertainment" && !subPaths.some(subPath => location.pathname.includes(subPath)))
               ? "font-semibold"
               : "text-muted-foreground",
           )}
