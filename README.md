@@ -14,8 +14,7 @@ Execute the following commands in the root directory of the project.
 ```bash
 > git clone https://github.com/Advanced-computer-lab-2024/Rahhal.git
 > cd Rahhal
-> chmod +x install-all.sh
-> ./install-all.sh
+> docker compose up --build
 ```
 
 ## Credits
