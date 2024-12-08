@@ -30,10 +30,12 @@
     "vitest": "^2.1.1"
   },
   "dependencies": {
+    "@types/amqplib": "^0.10.6",
+    "amqplib": "^0.10.5",
     "axios": "^1.7.8",
     "body-parser": "^1.20.2",
-    "date-fns": "^4.1.0",
     "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "mongoose": "^7.6.8",

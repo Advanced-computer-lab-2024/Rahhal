@@ -21,3 +21,8 @@ export const ERROR_MESSAGES = {
   BAD_GATEWAY: "Bad Gateway",
 };
 
+export const RABBITMQ = {
+  QUEUE: {
+    NOTIFICATION: "notification_queue",
+  },
+};
