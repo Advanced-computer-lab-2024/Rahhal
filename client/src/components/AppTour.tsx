@@ -272,7 +272,18 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         onNextClick: () => {
                             setTimeout(() => {
                                 navigate("/entertainment");
-                                tourDriver.moveNext();
+                                tourDriver.highlight({
+                                    popover: {
+                                        title: "Congratulations!",
+                                        description: "You have completed the tour! You can now plan you first vacation!",
+                                        showButtons: [
+                                            'close'
+                                          ],
+                                          onCloseClick: () => {
+                                            tourDriver.destroy();
+                                          }
+                                    }
+                                  });
                             }, 50);
                         },
                         onPrevClick: () => {
@@ -282,17 +293,6 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         },
                     }
                 },
-                {
-                    popover: {
-                        title: "Congratulations!",
-                        description: "You have completed the tour! You can now plan you first vacation!",
-                        onPrevClick: () => {
-                            setTimeout(() => {
-                                tourDriver.movePrevious();
-                            }, 50);
-                        },
-                    }
-                }
 
             ]
         });
