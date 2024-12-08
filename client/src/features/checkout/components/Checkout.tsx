@@ -115,7 +115,7 @@ export default function Checkout() {
 
   const handlePaymentCompletion = async () => {
     try {
-      if (user) {
+      if (user && cart) {
         const fullAddress = `${newAddress}, ${city}`;
         await createOrderInstance(
           cart,
@@ -149,7 +149,7 @@ export default function Checkout() {
   const handleGoToPrevStep = () => {
     setCurrentCheckoutStep(1);
   };
-
+  console.log(totalAmount);
   return (
     <>
       <div className="min-h-screen flex">
@@ -169,6 +169,7 @@ export default function Checkout() {
                     setStripePaymentTrigger={setStripePaymentTrigger}
                     setIsLoading={setIsPaymentLoading}
                     setSelectedPaymentMethod={setSelectedPaymentMethod}
+                    amount={totalAmount}
                   />
                   <div className="flex gap-4 mt-4">
                     <Button variant="outline" onClick={handleGoToPrevStep}>

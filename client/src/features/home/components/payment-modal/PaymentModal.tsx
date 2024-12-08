@@ -249,6 +249,7 @@ function BookingForm({
               setIsLoading={setIsPaymentLoading}
               setSelectedPaymentMethod={setSelectedPaymentMethod}
               paymentMethods={paymentMethods}
+              amount={totalPrice}
             />
           )}
         </div>

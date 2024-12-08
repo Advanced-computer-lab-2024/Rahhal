@@ -22,6 +22,7 @@ type PaymentSelectorProps = {
   setIsLoading: (value: boolean) => void;
   onPaymentCompletion: () => Promise<void>;
   paymentMethods?: TPaymentMethod[];
+  amount: number;
 };
 
 const defaultPaymentMethods: TPaymentMethod[] = [
@@ -54,14 +55,13 @@ export function PaymentOptions({
   setStripePaymentTrigger,
   onPaymentCompletion,
   paymentMethods = defaultPaymentMethods,
+  amount,
 }: PaymentSelectorProps) {
   const { currency } = useCurrencyStore();
   const baseCurrency = "EGP";
 
   const convertedWalletBalance = currencyExchange(baseCurrency, walletBalance);
-  const formattedWalletBalance = convertedWalletBalance
-    ? `${convertedWalletBalance.toFixed(2)} ${currency}`
-    : "N/A";
+  const formattedWalletBalance = `${convertedWalletBalance?.toFixed(2)} ${currency}`;
 
   return (
     <div className="w-full">
@@ -76,48 +76,64 @@ export function PaymentOptions({
           setSelectedPaymentMethod(value);
         }}
       >
-        {paymentMethods.map((method) => (
-          <div key={method.id} className="border rounded-lg overflow-hidden">
-            <div
-              className={`border-l-2 transition-colors ${
-                selectedPaymentMethod === method.id
-                  ? "border-complementary"
-                  : "border-transparent hover:bg-gray-50"
-              }`}
-            >
-              <div className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <RadioGroupItem
-                      value={method.id}
-                      id={method.id}
-                      className="text-complementary"
-                    />
-                    <Label htmlFor={method.id} className="text-sm font-medium">
-                      {method.label}
-                    </Label>
-                    {method.icon}
+        {paymentMethods.map((method) => {
+          const isDisabled = method.id === "wallet" && walletBalance < amount;
+
+          return (
+            <div key={method.id} className="border rounded-lg overflow-hidden">
+              <div
+                className={`border-l-2 transition-colors ${
+                  selectedPaymentMethod === method.id
+                    ? "border-complementary"
+                    : "border-transparent"
+                } ${isDisabled ? "" : "hover:bg-gray-50"}`}
+              >
+                <label
+                  onClick={() => !isDisabled && setSelectedPaymentMethod(method.id)}
+                  htmlFor={method.id}
+                  className={`block p-4 ${
+                    isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+                  } flex flex-col`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <RadioGroupItem
+                        value={method.id}
+                        id={method.id}
+                        className="text-complementary disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={isDisabled}
+                      />
+                      <Label htmlFor={method.id} className="text-sm font-medium">
+                        {method.label}
+                      </Label>
+                      {method.icon}
+                    </div>
+                    <div className="flex flex-col items-end justify-center">
+                      <span className={isDisabled ? "text-gray-400" : "text-gray-500"}>
+                        {method.id === "wallet" && formattedWalletBalance}
+                      </span>
+                      {isDisabled && method.id === "wallet" && (
+                        <p className="text-[0.7rem] text-red-800 ">Insufficient balance</p>
+                      )}
+                    </div>
                   </div>
-                  <span className="text-gray-500">
-                    {method.id === "wallet" && formattedWalletBalance}
-                  </span>
-                </div>
+                </label>
+                {method.expandable && selectedPaymentMethod === method.id && (
+                  <div className="p-4 border-t bg-white">
+                    {method.id === "creditCard" && (
+                      <StripeForm
+                        onPaymentCompletion={onPaymentCompletion}
+                        stripePaymentTrigger={stripePaymentTrigger}
+                        setStripePaymentTrigger={setStripePaymentTrigger}
+                        setIsLoading={setIsLoading}
+                      />
+                    )}
+                  </div>
+                )}
               </div>
-              {method.expandable && selectedPaymentMethod === method.id && (
-                <div className="p-4 border-t bg-white">
-                  {method.id === "creditCard" && (
-                    <StripeForm
-                      onPaymentCompletion={onPaymentCompletion}
-                      stripePaymentTrigger={stripePaymentTrigger}
-                      setStripePaymentTrigger={setStripePaymentTrigger}
-                      setIsLoading={setIsLoading}
-                    />
-                  )}
-                </div>
-              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </RadioGroup>
     </div>
   );
