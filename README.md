@@ -30,22 +30,83 @@ Welcome to Rahhal, your all-in-one travel planner! We created Rahhal to simplify
 ## How To Use
 
 
-- Make sure you follow the Installation steps first.
+- Add a `.env` file for the environment variables in the root directory of the project each service
 
+### Client (Frontend)
 ```bash
 
-MONGO_URI="<Your Mongo Connection String>"
-PORT=3000
-
+PORT
+GOOGLE_MAPS_API_KEY
+EXCHANGE_RATES_API_KEY
+AMADEUS_AUTH_URL
+AMADEUS_TRANSFER_URL
+AMADEUS_API_KEY
+AMADEUS_API_SECRET
+STORAGE_BUCKET
+GOOGLE_MAPS_API_KEY
 ```
-- start Rahhal 
 
+### API-Gateway
+```bash
+PORT
+GOOGLE_MAPS_API_KEY
+EXCHANGE_RATES_API_KEY
+STORAGE_BUCKET
+```
+
+### Authentication
+```bash
+SECRETKEY
+PORT
+MONGODB_URI
+```
+### User
 ```bash
 
-cd Rahhal 
-docker compose up
-
+PORT
+MONGODB_URI
 ```
+
+### Product
+```bash
+
+PORT
+MONGODB_URI
+```
+### Order
+```bash
+PORT
+MONGODB_URI
+```
+### Payment
+```bash
+PORT
+MONGODB_URI
+STRIPE_SECRET_KEY
+STRIPE_PUBLISH_KEY
+```
+
+### Notification
+```bash
+PORT
+MONGODB_URI
+SMTP_HOST
+SMTP_PORT
+SMTP_USER
+SMTP_PASS
+```
+
+### Entertainment
+```bash
+PORT
+MONGODB_URI
+```
+### Booking
+```bash
+PORT
+MONGODB_URI
+```
+
 
 ## License
 
