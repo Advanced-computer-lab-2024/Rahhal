@@ -16,9 +16,12 @@ import { getUserById, refundMoney } from "@/api-calls/users-api-calls";
 import { RateableEntityType, OrderStatus } from "@/utils/enums";
 import { useQuery } from "@tanstack/react-query";
 import OrdersPageStyles from "@/features/home/styles/MyOrdersPage.module.css";
-import { useCurrencyStore } from "@/stores/currency-exchange-store";
-import currencyExchange from "@/utils/currency-exchange";
 import { PaymentMethod } from "@/utils/enums";
+import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
+import { currencyExchangeSpec } from "@/utils/currency-exchange";
+import { fetchProductById, updateProductStock } from "@/api-calls/products-api-calls";
+import { TProduct } from "@/features/seller/utils/seller-columns";
+import currencyExchange from "@/utils/currency-exchange";
 interface OrderDetailsProps {
   order: TOrder; // Use the TOrder type
   onClose: () => void;
@@ -61,6 +64,11 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
       ) {
         await refundMoney(id, order.totalPrice);
       }
+      order.items.forEach(async (item) => {
+        const product = await fetchProductById(item.productId);
+        (product as TProduct).quantity += item.quantity;
+        await updateProductStock(item.productId, (product as TProduct).quantity);
+      });
       setCurrentOrder(updatedOrder as TOrder);
       onUpdateOrder(updatedOrder as TOrder);
     } catch (error) {
@@ -128,8 +136,22 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
   };
 
   const { currency } = useCurrencyStore();
-  const convertedTotalPrice = currencyExchange("EGP", currentOrder.totalPrice);
-  const displayTotalPrice = convertedTotalPrice ? convertedTotalPrice.toFixed(0) : "N/A";
+  const { rates } = useRatesStore();
+
+  const deliveryPrice = currencyExchangeSpec(
+    "EGP",
+    order.promoCode === "DELIVERY" ? 0 : 100,
+    rates,
+    currency,
+  );
+  const displayDelivery = deliveryPrice ? deliveryPrice.toFixed(2) : "N/A";
+  const taxes = currencyExchangeSpec("EGP", currentOrder.totalPrice * 0.12, rates, currency);
+  const displayTaxes = taxes ? taxes.toFixed(2) : "N/A";
+  const convertedTotalPrice = currencyExchangeSpec("EGP", currentOrder.totalPrice, rates, currency);
+  const displayTotalPrice =
+    convertedTotalPrice && taxes && deliveryPrice
+      ? (convertedTotalPrice + taxes + deliveryPrice).toFixed(2)
+      : "N/A";
 
   return (
     <div className="fixed inset-y-0 right-0 w-full sm:w-96 bg-background shadow-lg p-6 overflow-auto z-50">
@@ -147,15 +169,24 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
         <div className="space-y-6">
           <div>
             <h3 className="font-semibold mb-2">Products</h3>
-            {currentOrder.items.map((item, index) => {
-              const isRated = !!item.rating; // Dynamically check if the item has a rating
-              
+            {order.items.map((item, index) => {
+              const isRated = !!item.rating; // Check if the item is rated (assumes `item.rating` contains the rating)
+              const convertedPrice = currencyExchangeSpec(
+                "EGP",
+                item.price * item.quantity,
+                rates,
+                currency,
+              );
+              const convertedPriceValue = convertedPrice ? convertedPrice.toFixed(2) : "N/A";
               return (
                 <div key={index} className="flex justify-between items-center py-2 border-b">
-                  <span>{item.name}</span>
+                  <span>
+                    {item.name}
+                    {` x${item.quantity}`}
+                  </span>
                   <div className="flex items-center gap-4">
                     <span>
-                      {currency} {currencyExchange("EGP", item.price)?.toFixed(0)}
+                      {currency} {convertedPriceValue}
                     </span>
                     {isRated ? (
                       // Display smaller star with rating value
@@ -192,7 +223,7 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
           <div>
             <h3 className="font-semibold mb-2">Order Information</h3>
             <p>
-              <strong>Order ID:</strong> {order._id?.slice(0, 6) || "N/A"}
+              <strong>Order ID:</strong> #{order._id?.slice(0, 14)}
             </p>
             <p>
               <strong>Date:</strong>{" "}
@@ -211,6 +242,20 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
               >
                 {currentOrder.orderStatus}
               </span>
+            </p>
+            {order.discountAmount && order.discountAmount > 0 ? (
+              <p>
+                <strong>Discount:</strong> {currency} {order.discountAmount.toFixed(2)}
+              </p>
+            ) : null}
+            <p>
+              <strong>Delivery:</strong>{" "}
+              <span className={`${order.promoCode === "DELIVERY" ? "text-green-500" : ""}`}>
+                {order.promoCode === "DELIVERY" ? "FREE" : `${currency} ${displayDelivery}`}
+              </span>
+            </p>
+            <p>
+              <strong>Taxes:</strong> {currency} {displayTaxes}
             </p>
             <p>
               <strong>Total:</strong> {currency} {displayTotalPrice}
