@@ -43,7 +43,7 @@ function ComplaintsTable() {
           {/* Button for adding a complaint */}
           <TouristComplaintsModal
             complaintData={undefined}
-            dialogTrigger={<DataTableAddButton className="bg-[#1d3c51] text-white rounded" />}
+            dialogTrigger={<DataTableAddButton className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white rounded" />}
             id={id ? id : ""}
             onCreateComplaint={handleCreateComplaint}
           />
