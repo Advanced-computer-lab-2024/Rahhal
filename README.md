@@ -1,5 +1,36 @@
 # Rahhal
 
+## Testing
+We are using `vitest`. To run the tests.
+Execute the following commands in the root directory of the project.
+  
+
+```bash
+> chmod +x run-tests.sh
+>./run-tests.sh
+```
+
+## Installation
+```bash
+> git clone https://github.com/Advanced-computer-lab-2024/Rahhal.git
+> cd Rahhal
+> docker compose up --build
+```
+
+## Credits
+- [shadcn](https://ui.shadcn.com)
+- [RabbitMQ Docs](https://www.rabbitmq.com/docs)
+- [Stripe docs](https://stripe.com/docs)
+- [TypeScript Crash Course](https://www.youtube.com/watch?v=BCg4U1FzODs)
+- [React Crash Course](https://www.youtube.com/watch?v=LDB4uaJ87e0&pp=ygUbcmVhY3QgY291cnNlIHRyYXZlcnN5IG1lZGlh)
+- [Tailwind CSS Crash Course](https://www.youtube.com/watch?v=dFgzHOX84xQ)
+- [Vite Crash Course](https://www.youtube.com/watch?v=89NJdbYTgJ8&pp=ygUEVml0ZQ%3D%3D)
+- [React Query Hook + Zod](https://www.youtube.com/watch?v=u6PQ5xZAv7Q)
+- [MongoDB Crash Course](https://www.youtube.com/watch?v=DZBGEVgL2eE&pp=ygUUTW9uZ29zZSBjcmFzaCBjb3Vyc2U%3D)
+- [How to build NodeJS Microservice - NodeJS Monolithic to Microservice Architecture](https://www.youtube.com/watch?v=EXDkgjU8DDU&list=PLaLqLOj2bk9ZV2RhqXzABUP5QSg42uJEs&index=1&pp=iAQB)
+
+
+
 
 ## Build Status
 
