@@ -22,7 +22,7 @@ import { useTour } from "@/components/AppTour";
 import useUserStore from "@/stores/user-state-store";
 
 
-const ItineraryDetailsPage: React.FC = () => {
+const ItineraryDetailsPage: React.FC = () => { 
   const loc = useLocation();
   const [searchParams] = useSearchParams();
   const eventId = searchParams.get("eventId");
@@ -216,34 +216,7 @@ const ItineraryDetailsPage: React.FC = () => {
           </ItinerariesPageTemplate>
         </>
       )}
-      <TouristHomePageNavigation /*loggedIn={id ? id !== "undefined" : false}*/ />
-      <ItinerariesPageTemplate
-        _id={_id}
-        name={name}
-        ownerName={ownerName}
-        images={images}
-        dropOffLocation={dropOffLocation}
-        pickUpLocation={pickUpLocation}
-        preferenceTagNames={preferenceTagNames}
-        description={description}
-        ratings={ratings}
-        activities={activities}
-        durationOfActivities={durationOfActivities}
-        languages={languages}
-        accessibility={accessibility}
-      >
-        <OverviewCard
-          currency={currency}
-          originalPrice={price}
-          buttonText={cardButtonText}
-          buttonColor={"gold"}
-          dropdownOptions={cardDropdownOptions}
-          dateOptions={true}
-          disabled={isButtonDisabled && !selectedDate}
-          onButtonClick={handleButtonClick}
-          onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
-        />
-      </ItinerariesPageTemplate>
+     
     </div>
   );
 };
