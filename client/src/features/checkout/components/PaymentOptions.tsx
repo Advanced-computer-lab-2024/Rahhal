@@ -3,6 +3,9 @@ import StripeForm from "@/components/payment/StripeForm";
 import { Label } from "@/components/ui/label";
 import { CircleDollarSign, CreditCard, Wallet } from "lucide-react";
 
+import currencyExchange from "@/utils/currency-exchange";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
+
 export type TPaymentMethod = {
   id: string;
   label: string;
@@ -12,7 +15,6 @@ export type TPaymentMethod = {
 };
 
 type PaymentSelectorProps = {
-  formattedWalletBalance: string;
   walletBalance: number;
   selectedPaymentMethod: string;
   stripePaymentTrigger: boolean;
@@ -48,7 +50,6 @@ const defaultPaymentMethods: TPaymentMethod[] = [
 export function PaymentOptions({
   selectedPaymentMethod,
   stripePaymentTrigger,
-  formattedWalletBalance,
   walletBalance,
   paymentMethods = defaultPaymentMethods,
   amount,
@@ -57,6 +58,11 @@ export function PaymentOptions({
   setStripePaymentTrigger,
   onPaymentCompletion,
 }: PaymentSelectorProps) {
+  const { currency } = useCurrencyStore();
+
+  const convertedWalletBalance = currencyExchange("EGP", walletBalance);
+  const formattedWalletBalance = `${convertedWalletBalance?.toFixed(2)} ${currency}`;
+
   return (
     <div className="w-full">
       <div className="mb-4">

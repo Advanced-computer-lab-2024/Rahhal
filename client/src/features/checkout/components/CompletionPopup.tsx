@@ -1,20 +1,28 @@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle } from "lucide-react";
+import currencyExchange from "@/utils/currency-exchange";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
 
 interface CompletionPopupProps {
   completed: boolean;
   isPayedWithWallet?: boolean;
-  formattedRemainingWalletBalance?: string;
+  remainingWalletBalance?: number;
   orderDetails?: string;
 }
 
 export function CompletionPopup({
   completed,
   isPayedWithWallet,
-  formattedRemainingWalletBalance,
+  remainingWalletBalance,
   orderDetails = "Cheeseburger and Fries",
 }: CompletionPopupProps) {
   if (!completed) return null;
+
+  const { currency } = useCurrencyStore();
+
+  const convertedWalletBalance = currencyExchange("EGP", remainingWalletBalance || 0);
+  const formattedRemainingWalletBalance = `${convertedWalletBalance?.toFixed(2)} ${currency}`;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>

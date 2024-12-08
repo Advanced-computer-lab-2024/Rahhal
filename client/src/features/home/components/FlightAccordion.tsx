@@ -68,9 +68,6 @@ export default function FlightAccordion({
     if (userID && offer !== null) {
       await addLoyalityPoints(userID, parseFloat(dbPrice));
     }
-    if (booking) {
-      alert("Trip confirmed successfully!");
-    }
   };
 
   const logoPath = getAirlineLogo(offer.airline);

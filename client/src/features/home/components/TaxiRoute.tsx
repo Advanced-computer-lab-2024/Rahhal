@@ -58,7 +58,7 @@ function TaxiRoute({
       setIsGuestAction(true);
       return;
     }
-    if (!isModalOpen && userID ) {
+    if (!isModalOpen && userID) {
       setIsModalOpen(true);
       return;
     }
@@ -84,10 +84,6 @@ function TaxiRoute({
 
     if (userID && convertedPrice !== undefined) {
       await addLoyalityPoints(userID, convertedPrice);
-    }
-
-    if (booking) {
-      alert("Trip confirmed successfully!");
     }
   };
 
