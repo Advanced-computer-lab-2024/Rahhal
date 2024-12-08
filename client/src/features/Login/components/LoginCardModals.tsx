@@ -7,6 +7,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { loginUser } from "@/api-calls/users-api-calls";
+import { UserState } from "@/stores/user-state-store";
 
 interface LoginPageProps {
     redirectLink?: string;
@@ -20,15 +22,6 @@ export default function LoginCardModals({ redirectLink,onLogin }: LoginPageProps
   const [password, setPassword] = useState("");
   const [disabled, setDisabled] = useState(false);
   const [errors, setErrors] = useState({ username: "", password: "" });
-
-  const userLogin: any = async (credentials: any) => {
-    const response = await axios.post("http://localhost:3000/api/user/users/login", credentials, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  };
 
   const handleSubmit = async (e: any) => {
     e.stopPropagation();
@@ -50,8 +43,8 @@ export default function LoginCardModals({ redirectLink,onLogin }: LoginPageProps
       newErrors.password = "";
       setErrors(newErrors);
       const reqBody = { username: username, password: password };
-      const response = await userLogin(reqBody);
-      console.log(response);
+      const response = await loginUser(reqBody);
+      await UserState();
       setDisabled(true);
       
       toast({
