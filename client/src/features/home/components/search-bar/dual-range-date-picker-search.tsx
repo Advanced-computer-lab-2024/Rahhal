@@ -1,6 +1,6 @@
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DayPicker } from "react-day-picker";
+import { DayPicker } from "react-day-picker-v9";
 import { Calendar } from "@/components/ui/calendar";
 import {
   add,
@@ -417,7 +417,7 @@ export function DualDatePickerSearchBar({
               style={{ display: !activeType ? "flex" : "none" }}
               className="w-full justify-center"
             >
-              <Calendar
+              <DayPicker
                 classNames={{
                   months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
                   month: "flex flex-col justify-center items-center space-y-4",
@@ -425,13 +425,13 @@ export function DualDatePickerSearchBar({
                   head_cell: "text-muted-foreground rounded-md w-11 font-normal text-[0.8rem]",
                   row: "flex w-full mt-0.5 ",
                   caption_label: "text-lg font-md",
-                  button_previous: "absolute left-4 top-4 border-none rounded-[999px]",
-                  button_next: "absolute right-4 top-4 border-none rounded-[999px]",
+                  button_previous: "top-4 border-none rounded-[999px]",
+                  button_next: "top-4 border-none rounded-[999px]",
                   day: "h-11 w-11 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-                  week:"flex",
-                  weekdays:"flex",
-                  weekday:"w-11",
-                  nav:"hidden"
+                  week: "flex",
+                  weekdays: "flex",
+                  weekday: "w-11",
+                  nav: "absolute w-full flex justify-between items-center",
                 }}
                 showOutsideDays={false}
                 className={"flex w-full relative"}
@@ -445,7 +445,7 @@ export function DualDatePickerSearchBar({
                 components={{
                   DayButton: ({ day, ...props }) => {
                     const dayDate = day.date;
-                    
+
                     console.log(dayDate);
                     let isSelected = false;
                     let isBefore = false;
@@ -500,7 +500,7 @@ export function DualDatePickerSearchBar({
                   Months: ({ ...props }) => {
                     console.log(props.children);
                     return (
-                      <div className={"flex justify-between px-5 w-full h-full"}>
+                      <div className={"flex justify-between mx-5 w-full h-full relative"}>
                         {" "}
                         {props.children}
                       </div>
