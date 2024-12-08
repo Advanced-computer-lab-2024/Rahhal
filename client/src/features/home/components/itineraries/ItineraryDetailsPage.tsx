@@ -37,7 +37,6 @@ const ItineraryDetailsPage: React.FC = () => {
     }
   }, [loc.state?.item, eventId]);
 
-  const itinerary = loc.state?.item;
   // const itinerary = await fetchItineraryById(us)
   const {
     _id,

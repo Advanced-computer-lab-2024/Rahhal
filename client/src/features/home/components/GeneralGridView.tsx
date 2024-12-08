@@ -1,42 +1,42 @@
 import GeneralGridStyle from "../styles/GeneralGridView.module.css";
 import EntertainmentCard from "@/features/home/components/EntertainmentCard";
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
-import { Skeleton } from "@/components/ui/skeleton";
+import {useEffect, useState} from "react";
+import {useQuery} from "@tanstack/react-query";
+import {useNavigate} from "react-router-dom";
+import {Skeleton} from "@/components/ui/skeleton";
 import FilterSortSearchHeader from "./FilterSortSearchHeader";
 import FilterSideBar from "@/features/home/components/filter-sidebar/FilterSideBar";
 import HeaderIcons from "./header/HeaderIcons";
-import type { Option } from "@/components/ui/multiple-selector";
-import { ItinerariesFilter } from "@/features/home/utils/filter-lists/itineraries-filter";
-import { CommonFilter } from "@/features/home/utils/filter-lists/common-filter";
-import { HistoricalPlacesFilter } from "@/features/home/utils/filter-lists/historical-places-filter";
-import { DateRange } from "react-day-picker";
-import { FilterX } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { fetchAppropriateActivities } from "@/api-calls/activities-api-calls";
-import { fetchCategories } from "@/api-calls/categories-api-calls";
-import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
-import { fetchHistoricalPlaces } from "@/api-calls/historical-places-api-calls";
-import { fetchHistoricalTags } from "@/api-calls/historical-tags-api-calls";
-import { fetchActiveAppropriateItineraries } from "@/api-calls/itineraries-api-calls";
+import type {Option} from "@/components/ui/multiple-selector";
+import {ItinerariesFilter} from "@/features/home/utils/filter-lists/itineraries-filter";
+import {CommonFilter} from "@/features/home/utils/filter-lists/common-filter";
+import {HistoricalPlacesFilter} from "@/features/home/utils/filter-lists/historical-places-filter";
+import {DateRange} from "react-day-picker";
+import {FilterX} from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {fetchAppropriateActivities} from "@/api-calls/activities-api-calls";
+import {fetchCategories} from "@/api-calls/categories-api-calls";
+import {fetchPreferenceTags} from "@/api-calls/preference-tags-api-calls";
+import {fetchHistoricalPlaces} from "@/api-calls/historical-places-api-calls";
+import {fetchHistoricalTags} from "@/api-calls/historical-tags-api-calls";
+import {fetchActiveAppropriateItineraries} from "@/api-calls/itineraries-api-calls";
 import {
   Activity,
   Category,
-  HistoricalTag,
+  Filter,
   HistoricalPlace,
+  HistoricalTag,
   IRating,
   Itinerary,
   PreferenceTag,
   SortOption,
-  Filter,
 } from "../types/home-page-types";
-import { isWithinInterval } from "date-fns";
-import { getPriceValue } from "../utils/price-calculator";
-import { getUserById } from "@/api-calls/users-api-calls";
+import {isWithinInterval} from "date-fns";
+import {getPriceValue} from "../utils/price-calculator";
+import {getUserById} from "@/api-calls/users-api-calls";
 import FilterButton from "./FilterButton";
 import SortButton from "./SortButton";
-import { bookmarkType } from "@/utils/enums";
+import {bookmarkType} from "@/utils/enums";
 import useUserStore from "@/stores/user-state-store";
 
 function GeneralGridView() {
@@ -49,7 +49,7 @@ function GeneralGridView() {
   const [skeleton, setSkeleton] = useState<boolean>(true);
   const [finishedLoading, setFinishedLoading] = useState<boolean>(false);
   const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>([0, 10000]);
-  const [selectedDates, setSelectedDates] = useState<DateRange>({ from: undefined, to: undefined });
+  const [selectedDates, setSelectedDates] = useState<DateRange>({from: undefined, to: undefined});
   const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<Option[]>([]);
   const [selectedHistoricalTags, setSelectedHistoricalTags] = useState<Option[]>([]);
@@ -57,7 +57,7 @@ function GeneralGridView() {
   const [loaded, setLoaded] = useState(false);
 
   // const { id } = useParams<{ id: string }>();
-  const { id } = useUserStore();
+  const {id} = useUserStore();
   // useQueries
   const {
     data: activities,
@@ -113,7 +113,7 @@ function GeneralGridView() {
     queryFn: fetchCategories,
     select: (data) => data as Category[],
   });
-  const { data: userData } = useQuery({
+  const {data: userData} = useQuery({
     queryKey: ["user", "userData"],
     queryFn: () => getUserById(id ? id : ""),
     enabled: !!id,
@@ -124,26 +124,25 @@ function GeneralGridView() {
   const handleCardClick = (item: Itinerary | Activity | HistoricalPlace) => {
     // Navigate to detail page, pass the item data via state
     const type =
-      "languages" in item ? "itinerary" : "isBookingOpen" in item ? "activity" : "historicalPlace";
+        "languages" in item ? "itinerary" : "isBookingOpen" in item ? "activity" : "historicalPlace";
     if (type === "historicalPlace") {
-      navigate(`/hplace/details/${item._id}`, { state: { item } });
+      navigate(`/hplace/details/${item._id}`, {state: {item}});
       return;
     }
     if (type === "activity")
       navigate(`/activities`, {
-        state: { item },
+        state: {item},
       });
     if (type === "itinerary")
       navigate(`/itineraries`, {
-        state: { item },
+        state: {item},
       });
-    }
-  };
+  }
 
   //fetching data
   useEffect(() => {
     setFinishedLoading(
-      !isLoadingActivities &&
+        !isLoadingActivities &&
         !isLoadingItineraries &&
         !isPreferenceTags &&
         !isLoadingCategories &&
@@ -177,10 +176,10 @@ function GeneralGridView() {
     if (isSuccessCategories && isSuccessPreferenceTags && isSuccessHistoricalTags) {
       const categoryNames = categories.map((category: Category) => category.name);
       const preferenceTagsNames = preferenceTags.map(
-        (preferenceTag: PreferenceTag) => preferenceTag.name,
+          (preferenceTag: PreferenceTag) => preferenceTag.name,
       );
       const historicalTagsNames = historicalTags.map(
-        (historicalTag: HistoricalTag) => historicalTag.name,
+          (historicalTag: HistoricalTag) => historicalTag.name,
       );
       setSearchPartsValues([categoryNames, [...preferenceTagsNames, ...historicalTagsNames]]);
     }
@@ -238,7 +237,7 @@ function GeneralGridView() {
       setSelectedPriceRange([0, 10000]); // Fallback if combined is empty
     }
     setSelectedRatings([]);
-    setSelectedDates({ from: undefined, to: undefined });
+    setSelectedDates({from: undefined, to: undefined});
     setSelectedLanguages([]);
     setSelectedHistoricalTags([]);
   };
@@ -258,33 +257,33 @@ function GeneralGridView() {
       ),
     },
   ].concat(
-    CommonFilter(
-      selectedDates,
-      setSelectedDates,
-      selectedPriceRange,
-      setSelectedPriceRange,
-      selectedRatings,
-      setSelectedRatings,
-      activeFilter.includes("itinerary") && activeFilter.length === 1,
-    ),
+      CommonFilter(
+          selectedDates,
+          setSelectedDates,
+          selectedPriceRange,
+          setSelectedPriceRange,
+          selectedRatings,
+          setSelectedRatings,
+          activeFilter.includes("itinerary") && activeFilter.length === 1,
+      ),
   );
   if (historicalTags && activeFilter.includes("place")) {
     const historicalTagsNames = historicalTags
-      .map((historicalTag: HistoricalTag) => historicalTag.name)
-      .map((tag: string) => ({ label: tag, value: tag }));
+        .map((historicalTag: HistoricalTag) => historicalTag.name)
+        .map((tag: string) => ({label: tag, value: tag}));
     combinedSideBarFilters = combinedSideBarFilters.concat(
-      HistoricalPlacesFilter(historicalTagsNames, setSelectedHistoricalTags),
+        HistoricalPlacesFilter(historicalTagsNames, setSelectedHistoricalTags),
     );
   }
   if (itineraries && activeFilter.includes("itinerary")) {
     const languages: Option[] = Array.from(
-      new Set<string>(
-        itineraries.flatMap((itinerary: Itinerary) => (itinerary as Itinerary).languages),
-      ),
-    ).map((language: string) => ({ label: language, value: language }));
+        new Set<string>(
+            itineraries.flatMap((itinerary: Itinerary) => (itinerary as Itinerary).languages),
+        ),
+    ).map((language: string) => ({label: language, value: language}));
 
     combinedSideBarFilters = combinedSideBarFilters.concat(
-      ItinerariesFilter(languages, setSelectedLanguages),
+        ItinerariesFilter(languages, setSelectedLanguages),
     );
   }
 
@@ -295,124 +294,124 @@ function GeneralGridView() {
 
   //Searching first, then result is filter  then result is sorted
   const filteredCombinedItems = combined
-    .filter((item) => {
-      if ("languages" in item) {
-        const itemDates = (item as Itinerary).availableDatesTime.map((date) => new Date(date.Date));
-        return itemDates.some(
-          (date) =>
-            new Date(date) >= new Date() ||
-            new Date(date).toDateString() === new Date().toDateString(),
-        );
-      } else if ("isBookingOpen" in item) {
-        return (
-          new Date((item as Activity).date) >= new Date() ||
-          new Date((item as Activity).date).toDateString() === new Date().toDateString()
-        );
-      } else return true;
-    })
-    .filter((item) => {
-      // Filter based on search
-      if (search) {
-        return item.name.toLowerCase().includes(search.toLowerCase());
-      }
-      return true;
-    })
-    .filter((item) => {
-      // Filter based on active filters
-      if (activeFilter.length === 0) return true; // No filters applied, show all
-      if (activeFilter.includes("itinerary") && "languages" in item) return true;
-      if (activeFilter.includes("activity") && "isBookingOpen" in item) return true;
-      if (activeFilter.includes("place") && "openingHours" in item) return true;
-      return false;
-    })
-    .filter((item) => {
-      // Filter based on selected category
-      if (item.category) {
-        return selectedCategory.length === 0 || selectedCategory.includes(item.category.name);
-      }
-    })
-    .filter((item) => {
-      // Filter based on selected tag
-      const preferenceTags = selectedTag.some((tag) =>
-        item.preferenceTags?.some((preferenceTag) => preferenceTag.name === tag),
-      );
-      const historicalTags = selectedTag.some((tag) =>
-        (item as HistoricalPlace).tags?.some((historicalTag) => historicalTag.name === tag),
-      );
-      return selectedTag.length === 0 || preferenceTags || historicalTags;
-    })
-    .filter((item) => {
-      // Filter based on selected languages
-      return (
-        selectedLanguages.length === 0 ||
-        selectedLanguages.some((language) =>
-          (item as Itinerary)?.languages?.includes(language.value),
-        )
-      );
-    })
-    .filter((item) => {
-      // Filter based on selected historical tags
-      return (
-        selectedHistoricalTags.length === 0 ||
-        selectedHistoricalTags.some((tag) =>
-          (item as HistoricalPlace)?.tags?.some((t) => t.name === tag.value),
-        )
-      );
-    })
-    .filter((item) => {
-      // Filter based on selected price range
-      const itemPrice = getPriceValue(item.price);
-      return (
-        (selectedPriceRange[0] != -1 &&
-          itemPrice >= selectedPriceRange[0] &&
-          itemPrice <= selectedPriceRange[1]) ||
-        (selectedPriceRange[0] === -1 && selectedPriceRange[1] === -1)
-      );
-    })
-    .filter((item) => {
-      // Filter based on selected ratings
-      const itemRating = getAverageRating(item.ratings);
-      return (
-        selectedRatings.length === 0 ||
-        selectedRatings.some((rating) => itemRating >= rating && itemRating < rating + 1)
-      );
-    })
-    .filter((item) => {
-      // Filter based on selected dates
-      const adjustedToDate = selectedDates?.to
-        ? new Date(selectedDates.to.getTime() + 86400000)
-        : null;
-      let matchDate = null;
-      if (
-        "openingHours" in item ||
-        (selectedDates.from === undefined && selectedDates.to === undefined)
-      )
-        matchDate = true;
-      else if ("isBookingOpen" in item) {
-        const itemDate = (item as Activity).date;
-        matchDate =
-          (selectedDates.from &&
-            adjustedToDate &&
-            isWithinInterval(itemDate, { start: selectedDates.from, end: adjustedToDate })) ||
-          (selectedDates.to === undefined &&
-            selectedDates.from &&
-            new Date(itemDate).toDateString() === selectedDates.from.toDateString());
-      } else if ("languages" in item) {
-        const itemDates = (item as Itinerary).availableDatesTime.map((date) => new Date(date.Date));
-        matchDate =
-          !selectedDates?.from ||
-          itemDates.some(
-            (date) =>
-              (selectedDates.from &&
-                adjustedToDate &&
-                isWithinInterval(date, { start: selectedDates.from, end: adjustedToDate })) ||
-              (selectedDates.to === undefined &&
-                selectedDates.from &&
-                new Date(date).toDateString() === selectedDates.from.toDateString()),
+      .filter((item) => {
+        if ("languages" in item) {
+          const itemDates = (item as Itinerary).availableDatesTime.map((date) => new Date(date.Date));
+          return itemDates.some(
+              (date) =>
+                  new Date(date) >= new Date() ||
+                  new Date(date).toDateString() === new Date().toDateString(),
           );
-      }
-      return matchDate;
-    });
+        } else if ("isBookingOpen" in item) {
+          return (
+              new Date((item as Activity).date) >= new Date() ||
+              new Date((item as Activity).date).toDateString() === new Date().toDateString()
+          );
+        } else return true;
+      })
+      .filter((item) => {
+        // Filter based on search
+        if (search) {
+          return item.name.toLowerCase().includes(search.toLowerCase());
+        }
+        return true;
+      })
+      .filter((item) => {
+        // Filter based on active filters
+        if (activeFilter.length === 0) return true; // No filters applied, show all
+        if (activeFilter.includes("itinerary") && "languages" in item) return true;
+        if (activeFilter.includes("activity") && "isBookingOpen" in item) return true;
+        if (activeFilter.includes("place") && "openingHours" in item) return true;
+        return false;
+      })
+      .filter((item) => {
+        // Filter based on selected category
+        if (item.category) {
+          return selectedCategory.length === 0 || selectedCategory.includes(item.category.name);
+        }
+      })
+      .filter((item) => {
+        // Filter based on selected tag
+        const preferenceTags = selectedTag.some((tag) =>
+            item.preferenceTags?.some((preferenceTag) => preferenceTag.name === tag),
+        );
+        const historicalTags = selectedTag.some((tag) =>
+            (item as HistoricalPlace).tags?.some((historicalTag) => historicalTag.name === tag),
+        );
+        return selectedTag.length === 0 || preferenceTags || historicalTags;
+      })
+      .filter((item) => {
+        // Filter based on selected languages
+        return (
+            selectedLanguages.length === 0 ||
+            selectedLanguages.some((language) =>
+                (item as Itinerary)?.languages?.includes(language.value),
+            )
+        );
+      })
+      .filter((item) => {
+        // Filter based on selected historical tags
+        return (
+            selectedHistoricalTags.length === 0 ||
+            selectedHistoricalTags.some((tag) =>
+                (item as HistoricalPlace)?.tags?.some((t) => t.name === tag.value),
+            )
+        );
+      })
+      .filter((item) => {
+        // Filter based on selected price range
+        const itemPrice = getPriceValue(item.price);
+        return (
+            (selectedPriceRange[0] != -1 &&
+                itemPrice >= selectedPriceRange[0] &&
+                itemPrice <= selectedPriceRange[1]) ||
+            (selectedPriceRange[0] === -1 && selectedPriceRange[1] === -1)
+        );
+      })
+      .filter((item) => {
+        // Filter based on selected ratings
+        const itemRating = getAverageRating(item.ratings);
+        return (
+            selectedRatings.length === 0 ||
+            selectedRatings.some((rating) => itemRating >= rating && itemRating < rating + 1)
+        );
+      })
+      .filter((item) => {
+        // Filter based on selected dates
+        const adjustedToDate = selectedDates?.to
+            ? new Date(selectedDates.to.getTime() + 86400000)
+            : null;
+        let matchDate = null;
+        if (
+            "openingHours" in item ||
+            (selectedDates.from === undefined && selectedDates.to === undefined)
+        )
+          matchDate = true;
+        else if ("isBookingOpen" in item) {
+          const itemDate = (item as Activity).date;
+          matchDate =
+              (selectedDates.from &&
+                  adjustedToDate &&
+                  isWithinInterval(itemDate, {start: selectedDates.from, end: adjustedToDate})) ||
+              (selectedDates.to === undefined &&
+                  selectedDates.from &&
+                  new Date(itemDate).toDateString() === selectedDates.from.toDateString());
+        } else if ("languages" in item) {
+          const itemDates = (item as Itinerary).availableDatesTime.map((date) => new Date(date.Date));
+          matchDate =
+              !selectedDates?.from ||
+              itemDates.some(
+                  (date) =>
+                      (selectedDates.from &&
+                          adjustedToDate &&
+                          isWithinInterval(date, {start: selectedDates.from, end: adjustedToDate})) ||
+                      (selectedDates.to === undefined &&
+                          selectedDates.from &&
+                          new Date(date).toDateString() === selectedDates.from.toDateString()),
+              );
+        }
+        return matchDate;
+      });
 
   const sortedCombinedItems = filteredCombinedItems.sort((firstItem, secondItem) => {
     const firstItemRating = getAverageRating(firstItem.ratings ?? []);
@@ -431,11 +430,11 @@ function GeneralGridView() {
       default:
         // Sort by user preferences
         const aPreferenceTags =
-          userData &&
-          firstItem.preferenceTags?.some((tag) => userData.preferences?.includes(tag.name));
+            userData &&
+            firstItem.preferenceTags?.some((tag) => userData.preferences?.includes(tag.name));
         const bPreferenceTags =
-          userData &&
-          secondItem.preferenceTags?.some((tag) => userData.preferences?.includes(tag.name));
+            userData &&
+            secondItem.preferenceTags?.some((tag) => userData.preferences?.includes(tag.name));
         if (aPreferenceTags && !bPreferenceTags) return -1;
         if (!aPreferenceTags && bPreferenceTags) return 1;
         return 0;
@@ -446,13 +445,13 @@ function GeneralGridView() {
     if (!skeleton) {
       const loadImages = async () => {
         const imagePromises = sortedCombinedItems.map(
-          (item) =>
-            new Promise<void>((resolve, reject) => {
-              const img = new Image();
-              img.src = item.images[0];
-              img.onload = () => resolve();
-              img.onerror = () => reject();
-            }),
+            (item) =>
+                new Promise<void>((resolve, reject) => {
+                  const img = new Image();
+                  img.src = item.images[0];
+                  img.onload = () => resolve();
+                  img.onerror = () => reject();
+                }),
         );
         await Promise.all(imagePromises);
         setLoaded(true);
@@ -462,70 +461,70 @@ function GeneralGridView() {
   }, [sortedCombinedItems]);
 
   return (
-    <div className={GeneralGridStyle["general-grid-view"]}>
-      <FilterSortSearchHeader
-        searchPlaceHolder={"Name"}
-        setSearch={setSearch}
-        searchParts={searchParts}
-        searchPartsValues={searchPartsValues}
-        searchPartsTypes={["dropdown", "dropdown"]}
-        searchPartsHandlers={[
-          { state: selectedCategory, setState: handleCategoryClick },
-          { state: selectedTag, setState: handleTagClick },
-        ]}
-        searchPartsPlaceholders={["Add Category", "Add Tag"]}
-        handleSort={handleSort}
-      ></FilterSortSearchHeader>
-      <hr className="border-t bg-[var(--gray-scale)] " />
-      <div className="flex w-[100vw]">
-        <FilterSideBar sideBarItems={combinedSideBarFilters} />
-        <div className={GeneralGridStyle["scrollable"]}>
-          <div className={GeneralGridStyle["general-grid-view__header"]}>
-            <HeaderIcons
-              activeFilters={activeFilter}
-              handleActiveFilterClick={handleActiveFilterClick}
-            />
-            <div className={GeneralGridStyle["filter-sort-buttons__container"]}>
-              <FilterButton />
-              <SortButton onSort={handleSort} />
-            </div>
-          </div>
-
-          <div className={GeneralGridStyle["general-grid-view__cards"]}>
-            {skeleton && (
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-[250px]" />
-                <Skeleton className="h-4 w-[200px]" />
+      <div className={GeneralGridStyle["general-grid-view"]}>
+        <FilterSortSearchHeader
+            searchPlaceHolder={"Name"}
+            setSearch={setSearch}
+            searchParts={searchParts}
+            searchPartsValues={searchPartsValues}
+            searchPartsTypes={["dropdown", "dropdown"]}
+            searchPartsHandlers={[
+              {state: selectedCategory, setState: handleCategoryClick},
+              {state: selectedTag, setState: handleTagClick},
+            ]}
+            searchPartsPlaceholders={["Add Category", "Add Tag"]}
+            handleSort={handleSort}
+        ></FilterSortSearchHeader>
+        <hr className="border-t bg-[var(--gray-scale)] "/>
+        <div className="flex w-[100vw]">
+          <FilterSideBar sideBarItems={combinedSideBarFilters}/>
+          <div className={GeneralGridStyle["scrollable"]}>
+            <div className={GeneralGridStyle["general-grid-view__header"]}>
+              <HeaderIcons
+                  activeFilters={activeFilter}
+                  handleActiveFilterClick={handleActiveFilterClick}
+              />
+              <div className={GeneralGridStyle["filter-sort-buttons__container"]}>
+                <FilterButton/>
+                <SortButton onSort={handleSort}/>
               </div>
-            )}
+            </div>
 
-            {!skeleton &&
-              sortedCombinedItems.map((item) => (
-                <EntertainmentCard
-                  key={item._id}
-                  id={item._id}
-                  entityType={
-                    "languages" in item
-                      ? bookmarkType.Itinerary
-                      : "isBookingOpen" in item
-                        ? bookmarkType.Activity
-                        : bookmarkType.HistoricalPlace
-                  }
-                  image={item.images[0]}
-                  rating={getAverageRating(item.ratings)}
-                  title={item.name}
-                  price={item.price}
-                  languages={(item as Itinerary)?.languages}
-                  availability={(item as Activity)?.isBookingOpen}
-                  openingTime={(item as HistoricalPlace)?.openingHours}
-                  date={(item as Activity)?.date}
-                  onClick={() => handleCardClick(item)}
-                />
-              ))}
+            <div className={GeneralGridStyle["general-grid-view__cards"]}>
+              {skeleton && (
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-[250px]"/>
+                    <Skeleton className="h-4 w-[200px]"/>
+                  </div>
+              )}
+
+              {!skeleton &&
+                  sortedCombinedItems.map((item) => (
+                      <EntertainmentCard
+                          key={item._id}
+                          id={item._id}
+                          entityType={
+                            "languages" in item
+                                ? bookmarkType.Itinerary
+                                : "isBookingOpen" in item
+                                    ? bookmarkType.Activity
+                                    : bookmarkType.HistoricalPlace
+                          }
+                          image={item.images[0]}
+                          rating={getAverageRating(item.ratings)}
+                          title={item.name}
+                          price={item.price}
+                          languages={(item as Itinerary)?.languages}
+                          availability={(item as Activity)?.isBookingOpen}
+                          openingTime={(item as HistoricalPlace)?.openingHours}
+                          date={(item as Activity)?.date}
+                          onClick={() => handleCardClick(item)}
+                      />
+                  ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
   );
 }
 
