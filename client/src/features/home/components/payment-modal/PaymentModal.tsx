@@ -107,6 +107,34 @@ function BookingForm({
     setStripePaymentTrigger(true);
   };
 
+  // For clarity it should be mover to another helper function file, LATER.
+  const constructBookingReceipt = () => {
+    const summary = [];
+    summary.push(`\nBooking Details:`);
+    summary.push(`${type}: ${name}`);
+    summary.push(`Base Price: ${currency} ${price.toFixed(0)}`);
+
+    if ((discountPerc ?? 0) > 0) {
+      summary.push(
+        `Discount (${discountPerc}%): -${currency} ${((price * (discountPerc ?? 0)) / 100).toFixed(0)}`,
+      );
+    }
+
+    if (promoDiscountPerc > 0) {
+      const promoAmount = price * (1 - (discountPerc ?? 0) / 100) * (promoDiscountPerc / 100);
+      summary.push(
+        `Promo Code Discount (${promoDiscountPerc}%): -${currency} ${promoAmount.toFixed(0)}`,
+      );
+    }
+
+    summary.push(`Final Total: ${currency} ${totalPrice.toFixed(0)}`);
+    summary.push(
+      `\nPayment Method: ${selectedPaymentMethod === "wallet" ? "Wallet" : "Credit Card"}`,
+    );
+
+    return summary.join("\n");
+  };
+
   const handleCompleteOrder = () => {
     if (selectedPaymentMethod === "creditCard") {
       setStripePaymentTrigger(true);
@@ -138,7 +166,7 @@ function BookingForm({
       await new Promise((resolve) => setTimeout(resolve, 3000));
       parentBookingFunc();
 
-      await sendReceipt(id!, "This is a test receipt");
+      await sendReceipt(id!, constructBookingReceipt());
 
       setIsLoading(false);
       onClose();
@@ -214,7 +242,7 @@ function BookingForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">Order Summary</h3>
+        <h3 className="text-lg font-semibold">Booking Summary</h3>
         <p>
           {type}: {name}
         </p>

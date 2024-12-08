@@ -41,19 +41,19 @@ export function constructReceiptData(order: TOrder, deliveryFee: number): string
 
   // Add items
   order.items.forEach((item) => {
-    receipt += `${item.name} (x${item.quantity}): ${(item.price * item.quantity).toFixed(2)} EGP\n`;
+    receipt += `${item.name} (x${item.quantity}):  EGP ${(item.price * item.quantity).toFixed(2)}\n`;
   });
 
   receipt += "-----------------\n";
-  receipt += `Delivery: ${deliveryFee.toFixed(2)} EGP\n`;
+  receipt += `Delivery: EGP ${deliveryFee.toFixed(2)}\n`;
 
   if (order.discountAmount && order.discountAmount > 0) {
-    receipt += `Discount: -${order.discountAmount.toFixed(2)} EGP\n`;
+    receipt += `Discount: -  EGP ${order.discountAmount.toFixed(2)}\n`;
   }
 
   const finalTotalPrice = order.totalPrice + deliveryFee - (order.discountAmount || 0);
 
-  receipt += `Total Price: ${finalTotalPrice.toFixed(2)} EGP`;
+  receipt += `Total Price:  EGP ${finalTotalPrice.toFixed(2)}`;
 
   return receipt;
 }
