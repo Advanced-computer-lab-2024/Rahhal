@@ -230,31 +230,6 @@ const ActivityDetailsPage: React.FC = () => {
           </>
         
       )}
-      <TouristHomePageNavigation /*loggedIn={id ? id !== "undefined" : false}*/ />
-      <DetailsPageTemplateProps
-        _id={_id}
-        name={name}
-        ownerName={ownerName}
-        images={images}
-        location={location}
-        preferenceTagNames={preferenceTagNames}
-        description={description}
-        ratings={ratings}
-      >
-        <OverviewCard
-          currency={currency}
-          originalPrice={selectedPrice}
-          buttonText={cardButtonText}
-          buttonColor={isBookingOpen ? "gold" : "blue"}
-          date={formattedDate}
-          time={formattedTime}
-          disabled={isButtonDisabled && isBookingOpen}
-          onButtonClick={handleButtonClick}
-          discount={specialDiscount}
-          onTicketSelect={onTicketSelect}
-          tickets={tickets}
-        />
-      </DetailsPageTemplateProps>
     </div>
   );
 };

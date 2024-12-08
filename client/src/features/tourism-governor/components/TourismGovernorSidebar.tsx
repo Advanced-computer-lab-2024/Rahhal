@@ -64,11 +64,11 @@ export function TourismGovernerSidebar({ id }: TourismGovernerSidebarProps) {
                     <SidebarMenuButton
                       asChild
                       isActive={
-                        window.location.pathname === `http//localhost:5173/historical-places`
+                        window.location.pathname === `http://localhost:5173/historical-places`
                       }
                       tooltip="Historical Places"
                     >
-                      <a href={`http//localhost:5173/historical-places`}>
+                      <a href={`/historical-places`}>
                         <Pyramid />
                         Historical Places
                       </a>
@@ -78,10 +78,10 @@ export function TourismGovernerSidebar({ id }: TourismGovernerSidebarProps) {
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
-                      isActive={window.location.pathname === `http//localhost:5173/historical-tags`}
+                      isActive={window.location.pathname === `http://localhost:5173/historical-tags`}
                       tooltip="Historical Tags"
                     >
-                      <a href={`http//localhost:5173/historical-tags`}>
+                      <a href={`/historical-tags`}>
                         <Tags />
                         Historical Tags
                       </a>

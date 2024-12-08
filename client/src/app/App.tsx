@@ -17,7 +17,7 @@ import { LoginPage } from "@/components/LoginPage";
 import PreferenceTagsAdminView from "@/features/admin/components/PreferenceTagsTable";
 import AdminComplaintsView from "@/features/admin/components/ComplaintsTable";
 import SellerView from "@/features/seller/components/SellerView";
-import TouristGovernerHomepage from "@/features/tourism-governor/components/TourismGovernorHomepage";
+import TourismGovernerHomepage from "@/features/tourism-governor/components/TourismGovernorHomepage";
 import AdminProductsView from "@/features/admin/components/AdminProductsView";
 import HistoricalPlacesView from "@/features/tourism-governor/components/HistoricalPlacesView";
 import HistoricalTagsView from "@/features/tourism-governor/components/HistoricalTagsTable";
@@ -107,7 +107,7 @@ export default function App() {
                 ) : role === Roles.TOURGUIDE ? (
                   <TourGuideHomePage />
                 ) : role === Roles.TOURISMGOVERNOR ? (
-                  <TouristGovernerHomepage />
+                  <TourismGovernerHomepage />
                 ) : (
                   <NotFound />
                 )
@@ -230,6 +230,8 @@ export default function App() {
                     <TourGuideView />
                   ) : role === Roles.ADMIN ? (
                     <AdminReport />
+                  ): role === Roles.TOURISMGOVERNOR ? (
+                    <HistoricalPlacesView />
                   ) : (
                     <NotFound />
                   )
@@ -319,7 +321,7 @@ export default function App() {
                 ) : role === Roles.TOURGUIDE ? (
                   <TourGuideHomePage />
                 ) : role === Roles.TOURISMGOVERNOR ? (
-                  <TouristGovernerHomepage />
+                  <TourismGovernerHomepage />
                 ) : (
                   <NotFound />
                 )
