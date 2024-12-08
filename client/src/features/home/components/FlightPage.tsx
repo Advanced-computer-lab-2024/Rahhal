@@ -13,8 +13,8 @@ function FlightPage({ rawData, loggedIn, userId, isAdult }: TransportationPagePr
   const { data, dictionaries } = rawData;
 
   return (
-    <div className="w-full flex">
-      <div className="w-[60%] flex flex-col p-10 gap-8">
+    <div className="w-full flex justify-center">
+      <div className="w-[90%] flex flex-col p-10 gap-8">
         {data.map((offer, index) => {
           const parsedOffer = parseFlightOfferData(offer, dictionaries);
           return (
