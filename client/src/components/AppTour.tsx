@@ -4,7 +4,7 @@ import 'driver.js/dist/driver.css';
 import { useNavigate } from 'react-router-dom';
 import { fetchActiveAppropriateItineraries } from '@/api-calls/itineraries-api-calls';
 import { Itinerary } from '@/features/home/types/home-page-types';
-
+import styles from '@/features/home/styles/AppTour.module.css';
 // Update the context type
 interface TourContextType {
     startTour: () => void;
@@ -83,9 +83,19 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (nextButton) {
                 if (isLoadingTour || (!searchPressed && travelSearchHelper)) {
                     nextButton.classList.add('driver-popover-btn-disabled');
+                    // Replace button text with spinner if spinner not already present
+                    if (travelSearchHelper && !searchPressed) {
+
+                    }
+                    else if (!nextButton.querySelector(`.${styles.spinner}`)) {
+                        nextButton.innerHTML = `<div class="driver-popover-btn-disabled ${styles.spinner}"></div>`; // Spinner placeholder
+                    }
                 } else {
                     nextButton.classList.remove('driver-popover-btn-disabled');
-
+                    // Remove spinner and restore original text
+                    if (nextButton.querySelector(`.${styles.spinner}`)) {
+                        nextButton.innerHTML = 'Next'; // Replace with your original button text
+                    }
                 }
             }
             const searchButton = document.querySelector('.search-tour');
@@ -108,8 +118,19 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (nextButton) {
             if (isLoadingTour || (!searchPressed && travelSearchHelper)) {
                 nextButton.classList.add('driver-popover-btn-disabled');
+                // Replace button text with spinner if spinner not already present
+                if (travelSearchHelper && !searchPressed) {
+
+                }
+                else if (!nextButton.querySelector(`.${styles.spinner}`)) {
+                    nextButton.innerHTML = `<div class="driver-popover-btn-disabled ${styles.spinner}"></div>`; // Spinner placeholder
+                }
             } else {
                 nextButton.classList.remove('driver-popover-btn-disabled');
+                // Remove spinner and restore original text
+                if (nextButton.querySelector(`.${styles.spinner}`)) {
+                    nextButton.innerHTML = 'Next'; // Replace with your original button text
+                }
             }
         }
         const searchButton = document.querySelector('.search-tour');
@@ -344,14 +365,11 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         title: "Search for Travel",
                         description: "Search for your perfect travel, either using Airport Taxis, Flights or Buses!",
                         onNextClick: () => {
-                            // Directly call the globally exposed function from TravelPage
-                            // This function was set up in the useEffect in TravelPage
                             tourDriver.moveNext();
 
                         },
                         onPrevClick: () => {
                             setTimeout(() => {
-                                setTravelSearchHelper(false);
                                 tourDriver.movePrevious();
                             }, 50);
                         },

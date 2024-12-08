@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { ProfileAvatar } from "./ProfileAvatar";
 import CurrencyDropdown from "./CurrencyDropdown";
@@ -48,12 +48,6 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
     { component: <CurrencyDropdown />, route: null },
     { component: <ProfileAvatar />, route: null },
   ];
-  const { toggleLoading, isLoadingTour } = useTour();
-
-  useEffect(() => {
-    console.log(isLoadingTour);
-    
-  },[isLoadingTour]);
 
 
   return (
@@ -76,11 +70,6 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
             buttonName={buttonName}
           />
         ))}
-        <div>
-          <button onClick={toggleLoading}>
-            Toggle Loading (Current: {isLoadingTour ? 'Loading' : 'Not Loading'})
-          </button>
-        </div>
       </div>
 
       {/* Right-Side Authentication Buttons or Avatar */}
