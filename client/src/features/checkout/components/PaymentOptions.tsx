@@ -2,8 +2,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import StripeForm from "@/components/payment/StripeForm";
 import { Label } from "@/components/ui/label";
 import { CircleDollarSign, CreditCard, Wallet } from "lucide-react";
-import { useCurrencyStore } from "@/stores/currency-exchange-store";
-import currencyExchange from "@/utils/currency-exchange";
 
 export type TPaymentMethod = {
   id: string;
@@ -14,15 +12,16 @@ export type TPaymentMethod = {
 };
 
 type PaymentSelectorProps = {
+  formattedWalletBalance: string;
   walletBalance: number;
   selectedPaymentMethod: string;
   stripePaymentTrigger: boolean;
+  paymentMethods?: TPaymentMethod[];
+  amount: number;
   setSelectedPaymentMethod: (value: string) => void;
   setStripePaymentTrigger: (value: boolean) => void;
   setIsLoading: (value: boolean) => void;
   onPaymentCompletion: () => Promise<void>;
-  paymentMethods?: TPaymentMethod[];
-  amount: number;
 };
 
 const defaultPaymentMethods: TPaymentMethod[] = [
@@ -49,20 +48,15 @@ const defaultPaymentMethods: TPaymentMethod[] = [
 export function PaymentOptions({
   selectedPaymentMethod,
   stripePaymentTrigger,
+  formattedWalletBalance,
   walletBalance,
+  paymentMethods = defaultPaymentMethods,
+  amount,
   setSelectedPaymentMethod,
   setIsLoading,
   setStripePaymentTrigger,
   onPaymentCompletion,
-  paymentMethods = defaultPaymentMethods,
-  amount,
 }: PaymentSelectorProps) {
-  const { currency } = useCurrencyStore();
-  const baseCurrency = "EGP";
-
-  const convertedWalletBalance = currencyExchange(baseCurrency, walletBalance);
-  const formattedWalletBalance = `${convertedWalletBalance?.toFixed(2)} ${currency}`;
-
   return (
     <div className="w-full">
       <div className="mb-4">

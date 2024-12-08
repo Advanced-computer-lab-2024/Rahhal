@@ -13,6 +13,7 @@ import { PaymentOptions, TPaymentMethod } from "@/features/checkout/components/P
 import { getUserById } from "@/api-calls/users-api-calls";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import currencyExchange from "@/utils/currency-exchange";
 
 const paymentMethods: TPaymentMethod[] = [
   {
@@ -89,9 +90,12 @@ function BookingForm({
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const { toast } = useToast();
-  console.log("user is ", userId);
+
   // Apply both discounts
   const totalPrice = price * (1 - (discountPerc ?? 0) / 100) * (1 - promoDiscountPerc / 100);
+
+  const convertedWalletBalance = currencyExchange("EGP", user?.balance || 0);
+  const formattedWalletBalance = `${convertedWalletBalance?.toFixed(2)} ${currency}`;
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -241,9 +245,10 @@ function BookingForm({
         <div className="mt-1 border rounded-md p-3">
           {user && (
             <PaymentOptions
+              walletBalance={user?.balance || 0}
               selectedPaymentMethod={selectedPaymentMethod}
               stripePaymentTrigger={stripePaymentTrigger}
-              walletBalance={(user?.balance as number) || 0}
+              formattedWalletBalance={formattedWalletBalance}
               onPaymentCompletion={handlePaymentCompletion}
               setStripePaymentTrigger={setStripePaymentTrigger}
               setIsLoading={setIsPaymentLoading}

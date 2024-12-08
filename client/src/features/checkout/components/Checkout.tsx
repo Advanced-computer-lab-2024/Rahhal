@@ -12,6 +12,8 @@ import { ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { createOrderInstance } from "../utils/helpers";
 import { fetchUserCart } from "@/api-calls/cart-api-calls";
+import currencyExchange from "@/utils/currency-exchange";
+import { useCurrencyStore } from "@/stores/currency-exchange-store";
 
 function useIdFromParamsOrQuery() {
   const { id: paramId } = useParams<{ id?: string }>();
@@ -38,6 +40,7 @@ export default function Checkout() {
 
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { currency } = useCurrencyStore();
 
   const [selectedAddress, setSelectedAddress] = useState("");
   const [newAddress, setNewAddress] = useState("");
@@ -61,6 +64,9 @@ export default function Checkout() {
   const [currentCheckoutStep, setCurrentCheckoutStep] = useState(2);
   const [stripePaymentTrigger, setStripePaymentTrigger] = useState(false);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+
+  const convertedWalletBalance = currencyExchange("EGP", user?.balance || 0);
+  const formattedWalletBalance = `${convertedWalletBalance?.toFixed(2)} ${currency}`;
 
   const handleContinueToPayment = () => {
     const newErrors: { address?: string; city?: string; postalCode?: string; phone?: string } = {};
@@ -164,6 +170,7 @@ export default function Checkout() {
                   <PaymentOptions
                     selectedPaymentMethod={selectedPaymentMethod}
                     stripePaymentTrigger={stripePaymentTrigger}
+                    formattedWalletBalance={formattedWalletBalance}
                     walletBalance={(user.balance as number) || 0}
                     onPaymentCompletion={handlePaymentCompletion}
                     setStripePaymentTrigger={setStripePaymentTrigger}
@@ -249,7 +256,12 @@ export default function Checkout() {
           </div>
         </div>
       </div>
-      <CompletionPopup completed={completed} orderDetails="This is a test order" />
+      <CompletionPopup
+        completed={completed}
+        isPayedWithWallet={selectedPaymentMethod === "wallet"}
+        formattedRemainingWalletBalance={formattedWalletBalance}
+        orderDetails="This is a test order"
+      />
     </>
   );
 }
