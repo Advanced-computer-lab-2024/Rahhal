@@ -11,17 +11,20 @@ function MinMaxRangeSlider({ values, onValueChange }: SliderProps) {
   const max = useRef(values[1]);
 
   const onValueChangeMin = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value === "" ? 0 : parseInt(e.target.value);
-    if (value >= min.current && value <= max.current) {
-      if (value > values[1]) onValueChange([values[1], value]);
-      else onValueChange([value, values[1]]);
+    const value = e.target.value === "" ? 0 : parseInt(e.target.value, 10);
+    if (!isNaN(value)) {
+      if (value <= values[1]) {
+        onValueChange([value, values[1]]);
+      }
     }
   };
+
   const onValueChangeMax = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value === "" ? max.current : parseInt(e.target.value);
-    if (value >= min.current && value <= max.current) {
-      if (value < values[0]) onValueChange([value, values[0]]);
-      else onValueChange([values[0], value]);
+    const value = e.target.value === "" ? values[1] : parseInt(e.target.value, 10);
+    if (!isNaN(value)) {
+      if (value >= values[0]) {
+        onValueChange([values[0], value]);
+      }
     }
   };
   return (
@@ -42,7 +45,7 @@ function MinMaxRangeSlider({ values, onValueChange }: SliderProps) {
             name="min"
             defaultValue={values[0]}
             value={values[0]}
-            className="w-[50%] p-2 border border-gray-300 rounded-full  text-center"
+            className="w-[80%] p-2 border border-gray-300 rounded-full  text-center"
             onChange={onValueChangeMin}
           />
         </div>
@@ -52,7 +55,7 @@ function MinMaxRangeSlider({ values, onValueChange }: SliderProps) {
             type="text"
             name="max"
             value={values[1]}
-            className="w-[50%] p-2 border border-gray-300 rounded-full text-center"
+            className="w-[80%] p-2 border border-gray-300 rounded-full text-center"
             onChange={onValueChangeMax}
           />
         </div>

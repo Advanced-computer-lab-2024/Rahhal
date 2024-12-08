@@ -41,7 +41,7 @@ export default function FilterStarRating({
           />
           <div className="flex items-center gap-0.5 text-primary">
             {Array.from({ length: rating }).map((_) => (
-              <StarIcon className="w-5 h-5 fill-current" />
+             <StarIcon className="w-5 h-5 fill-[var(--secondary-color)] stroke-1" />
             ))}
             {Array.from({ length: 5 - rating }).map((_) => (
               <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
