@@ -353,22 +353,24 @@ export default function BookingModal({
 }: BookingModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-xl">
+      <DialogContent className="max-w-xl max-h-[100vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle>Book {type}</DialogTitle>
         </DialogHeader>
 
-        <BookingForm
-          price={price}
-          egpPrice={egpPrice}
-          name={name}
-          type={type}
-          currency={currency}
-          discountPerc={discountPerc}
-          onClose={onClose}
-          parentBookingFunc={parentBookingFunc}
-          userId={userId}
-        />
+        <div className="overflow-y-auto max-h-[90vh]">
+          <BookingForm
+            price={price}
+            egpPrice={egpPrice}
+            name={name}
+            type={type}
+            currency={currency}
+            discountPerc={discountPerc}
+            onClose={onClose}
+            parentBookingFunc={parentBookingFunc}
+            userId={userId}
+          />
+        </div>
       </DialogContent>
     </Dialog>
   );
