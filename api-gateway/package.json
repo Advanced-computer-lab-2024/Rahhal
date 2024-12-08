@@ -41,6 +41,7 @@
     "firebase": "^11.0.1",
     "mongoose": "^7.6.8",
     "morgan": "^1.10.0",
+    "swagger-autogen": "^2.23.7",
     "zod": "^3.23.8"
   }
 }
