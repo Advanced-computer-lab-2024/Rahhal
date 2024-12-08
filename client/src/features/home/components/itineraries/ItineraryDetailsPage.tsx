@@ -43,7 +43,6 @@ const ItineraryDetailsPage: React.FC = () => {
     setIsLoading(false);
   },[]);
 
-  const itinerary = loc.state?.item;
   // const itinerary = await fetchItineraryById(us)
   const {
     _id,
