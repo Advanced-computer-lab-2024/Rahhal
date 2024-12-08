@@ -5,7 +5,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useEffect, useState } from "react";
 import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
 import currencyExchange, { currencyExchangeSpec } from "@/utils/currency-exchange";
-import { applyPromocode } from "@/api-calls/payment-api-calls";
+import { applyPromocode } from "@/api-calls/promocode-api-calls";
 import { AxiosError } from "axios";
 import { PopulatedCart } from "@/features/home/types/home-page-types";
 
