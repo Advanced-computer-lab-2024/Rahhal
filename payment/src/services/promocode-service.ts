@@ -48,7 +48,7 @@ export async function applyPromocode(id: string, code: string) {
     }
 
     const usedByUser = await promocodeRepository.findPromocodeUsage({ promocode: code, usedBy: id, deleted: false });
-    if (usedByUser && usedByUser.length > promocode.uses) {
+    if (usedByUser && usedByUser.length >= promocode.uses) {
         throw new Error("Promocode already used");
     }
 
