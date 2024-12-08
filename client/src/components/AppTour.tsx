@@ -81,10 +81,10 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const observer = new MutationObserver(() => {
             const nextButton = document.querySelector('.driver-popover-next-btn');
             if (nextButton) {
-                if (isLoadingTour || (!searchPressed && travelSearchHelper)) {
+                if (isLoadingTour || (!searchButtonClicked && travelSearchHelper)) {
                     nextButton.classList.add('driver-popover-btn-disabled');
                     // Replace button text with spinner if spinner not already present
-                    if (travelSearchHelper && !searchPressed) {
+                    if (travelSearchHelper && !searchButtonClicked) {
 
                     }
                     else if (!nextButton.querySelector(`.${styles.spinner}`)) {
@@ -116,10 +116,10 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Directly update the button's class whenever isLoadingTour changes
         const nextButton = document.querySelector('.driver-popover-next-btn');
         if (nextButton) {
-            if (isLoadingTour || (!searchPressed && travelSearchHelper)) {
+            if (isLoadingTour || (!searchButtonClicked && travelSearchHelper)) {
                 nextButton.classList.add('driver-popover-btn-disabled');
                 // Replace button text with spinner if spinner not already present
-                if (travelSearchHelper && !searchPressed) {
+                if (travelSearchHelper && !searchButtonClicked) {
 
                 }
                 else if (!nextButton.querySelector(`.${styles.spinner}`)) {
@@ -145,7 +145,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return () => {
             observer.disconnect(); // Clean up observer on component unmount
         };
-    }, [isLoadingTour, searchPressed, travelSearchHelper]);
+    }, [isLoadingTour, searchPressed, searchButtonClicked, travelSearchHelper]);
 
 
 
@@ -370,6 +370,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         },
                         onPrevClick: () => {
                             setTimeout(() => {
+                                setTravelSearchHelper(false);
                                 tourDriver.movePrevious();
                             }, 50);
                         },
