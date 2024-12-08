@@ -25,6 +25,7 @@ export enum bookingStatus {
 export enum bookmarkType {
   Activity = "activity",
   Itinerary = "itinerary",
+  HistoricalPlace = "historicalPlace",
 }
 
 // ---------------- ZOD RELATED -----------------
