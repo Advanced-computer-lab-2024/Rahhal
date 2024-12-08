@@ -54,7 +54,8 @@ export async function getUser(filter: Partial<IUser>): Promise<IUser | null> {
 }
 
 export async function updateUser(userId: string, updatedUser: IUser): Promise<IUser | null> {
-  if(updatedUser.approved === true) {
+  const user = await userRepository.getUser({ _id: new ObjectId(userId) });
+  if(user?.approved === false && updatedUser.approved === true) {
     sendApprovalNotification(userId);
   }
   return await userRepository.updateUser(userId, updatedUser);
