@@ -164,7 +164,7 @@ function BookingForm({
       setIsLoading(true);
 
       // Do the actual booking
-      await parentBookingFunc();
+      
       await new Promise((resolve) => setTimeout(resolve, 3000));
       parentBookingFunc();
 
