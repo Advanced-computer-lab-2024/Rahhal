@@ -167,7 +167,6 @@ export default function Checkout() {
                   <PaymentOptions
                     selectedPaymentMethod={selectedPaymentMethod}
                     stripePaymentTrigger={stripePaymentTrigger}
-                    // formattedWalletBalance={formattedWalletBalance}
                     walletBalance={(user.balance as number) || 0}
                     onPaymentCompletion={handlePaymentCompletion}
                     setStripePaymentTrigger={setStripePaymentTrigger}
