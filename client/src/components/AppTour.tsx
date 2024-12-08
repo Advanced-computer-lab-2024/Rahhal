@@ -271,6 +271,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         description: "If you like a travel option, you can reserve it from here!",
                         onNextClick: () => {
                             setTimeout(() => {
+                                navigate("/entertainment");
                                 tourDriver.moveNext();
                             }, 50);
                         },
@@ -289,7 +290,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                             setTimeout(() => {
                                 tourDriver.movePrevious();
                             }, 50);
-                        }
+                        },
                     }
                 }
 
