@@ -89,7 +89,6 @@ export default function HistoricalDetailsPage() {
 
   return (
     <>
-      <TouristHomePageNavigation loggedIn={true} />
 
       {/* Hero Section */}
       <motion.section

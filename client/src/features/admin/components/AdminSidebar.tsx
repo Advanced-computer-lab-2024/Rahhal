@@ -53,12 +53,13 @@ export function AdminSidebar({ id }: AdminSidebarProps) {
                 <SidebarGroupContent>
                   <SidebarMenu>
                     {group.items.map((item) => {
-                      const pathParts = window.location.pathname.split("/");
-                      const basePath = pathParts[1]; // 'admin'
-                      const userId = pathParts[2]; // potential ID
-                      const fullPath = userId
-                        ? `/${basePath}/${userId}${item.url}`
-                        : `/${basePath}${item.url}`;
+                      // const pathParts = window.location.pathname.split("/");
+                      // const basePath = pathParts[1]; // 'admin'
+                      // const userId = pathParts[2]; // potential ID
+                      // const fullPath = userId
+                      //   ? `/${basePath}/${userId}${item.url}`
+                      //   : `/${basePath}${item.url}`;
+                      const fullPath = `${item.url}`;
 
                       return (
                         <SidebarMenuItem key={item.label}>
@@ -67,7 +68,7 @@ export function AdminSidebar({ id }: AdminSidebarProps) {
                             isActive={window.location.pathname === fullPath}
                             tooltip={item.label}
                           >
-                            <a href={fullPath}>
+                            <a href={"http://localhost:5173"+fullPath}>
                               <item.icon />
                               <span>{item.label}</span>
                             </a>
@@ -98,10 +99,10 @@ export function AdminSidebar({ id }: AdminSidebarProps) {
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                  <a href={`/admin/${id}/user-settings/account`}>
+                  <a href={`http://localhost:5173/user-settings/account`}>
                     <DropdownMenuItem>Account</DropdownMenuItem>
                   </a>
-                  <a href={`/admin/${id}/user-settings`}>
+                  <a href={`http://localhost:5173/user-settings`}>
                     <DropdownMenuItem>Profile</DropdownMenuItem>
                   </a>
                 </DropdownMenuContent>

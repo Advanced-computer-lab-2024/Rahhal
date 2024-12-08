@@ -54,10 +54,10 @@ export function TourGuideSidebar({ id }: TourGuideSidebarProps) {
                     <SidebarMenuItem>
                       <SidebarMenuButton
                         asChild
-                        isActive={window.location.pathname === `/tour-guide/${id}`}
+                        isActive={window.location.pathname === `http://localhost:5173/home`}
                         tooltip="Itineraries"
                       >
-                        <a href={`/tour-guide/${id}`}>
+                        <a href={`http://localhost:5173/home`}>
                           <TentTree />
                           Itineraries
                         </a>
@@ -67,10 +67,10 @@ export function TourGuideSidebar({ id }: TourGuideSidebarProps) {
                     <SidebarMenuItem>
                       <SidebarMenuButton
                         asChild
-                        isActive={window.location.pathname === `/tour-guide/${id}/report`}
+                        isActive={window.location.pathname === `http://localhost:5173/report`}
                         tooltip="Reports"
                       >
-                        <a href={`/tour-guide/${id}/report`}>
+                        <a href={`http://localhost:5173/report`}>
                           <ClipboardMinus />
                           Reports
                         </a>
@@ -80,10 +80,10 @@ export function TourGuideSidebar({ id }: TourGuideSidebarProps) {
                     <SidebarMenuItem>
                       <SidebarMenuButton
                         asChild
-                        isActive={window.location.pathname === `/tour-guide/${id}/reviews`}
+                        isActive={window.location.pathname === `/http://localhost:5173/reviews`}
                         tooltip="Customer Reviews"
                       >
-                        <a href={`/tour-guide/${id}/reviews`}>
+                        <a href={`http://localhost:5173/reviews`}>
                           <Star />
                           Customer Reviews
                         </a>
@@ -111,10 +111,10 @@ export function TourGuideSidebar({ id }: TourGuideSidebarProps) {
                     </SidebarMenuButton>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                    <a href={`/tour-guide/${id}/user-settings/account`}>
+                    <a href={`http://localhost:5173/user-settings/account`}>
                       <DropdownMenuItem>Account</DropdownMenuItem>
                     </a>
-                    <a href={`/tour-guide/${id}/user-settings`}>
+                    <a href={`http://localhost:5173/user-settings`}>
                       <DropdownMenuItem>Profile</DropdownMenuItem>
                     </a>
                   </DropdownMenuContent>
