@@ -91,6 +91,7 @@ function TransportationSearchBar({ onIconClick }: TransportationSearchBarProps) 
       searchPartsPlaceholders={searchPartsPlaceholders}
       searchPartsOnValueChange={[handlePickUpChange, handleDropOffChange]}
       onIconClick={onIconClick}
+      displayHours={true}
     />
   );
 }

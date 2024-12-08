@@ -70,6 +70,23 @@ function HotelSearchBar({ onIconClick }: HotelSearchBarProps) {
   const searchPartsPlaceholders = ["Destination", "Check-in", "Check-out", "guests"];
   const searchPartsValues = [destinationSuggestions, [], [], []];
   return (
+    // <SearchBar
+    //   inputBox={false}
+    //   searchParts={searchParts}
+    //   searchPartsValues={searchPartsValues}
+    //   searchPartsHandlers={[
+    //     { state: destinationLocation, setState: setDestinationLocation },
+    //     { state: checkIn, setState: setCheckIn },
+    //     { state: checkOut, setState: setCheckOut },
+    //     { state: [adults], setState: handleAdultsChange },
+    //     { state: [children], setState: handleChildrenChange },
+    //     { state: [infants], setState: handleInfantsChange },
+    //   ]}
+    //   searchPartsTypes={["dropdown", "date", "date", "stepper"]}
+    //   searchPartsPlaceholders={searchPartsPlaceholders}
+    //   searchPartsOnValueChange={[handlePickUpChange]}
+    //   onIconClick={onIconClick}
+    // />
     <SearchBar
       inputBox={false}
       searchParts={searchParts}
@@ -82,10 +99,11 @@ function HotelSearchBar({ onIconClick }: HotelSearchBarProps) {
         { state: [children], setState: handleChildrenChange },
         { state: [infants], setState: handleInfantsChange },
       ]}
-      searchPartsTypes={["dropdown", "date", "date", "stepper"]}
+      searchPartsTypes={["dropdown", "dualDate", "stepper"]}
       searchPartsPlaceholders={searchPartsPlaceholders}
       searchPartsOnValueChange={[handlePickUpChange]}
       onIconClick={onIconClick}
+      displayHours={false}
     />
   );
 }

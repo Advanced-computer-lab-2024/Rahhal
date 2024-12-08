@@ -15,14 +15,15 @@ import { fetchHotels } from "@/api-calls/hotel-api-calls";
 import { useHotelStore } from "@/stores/hotel-store";
 import HotelCard from "../HotelCard";
 import { Skeleton } from "@/components/ui/skeleton";
-
-
+import { useGeneralSearchBarStore } from "@/stores/general-search-bar-store";
 
 export default function HotelsLandingComponent() {
   const [loading, setLoading] = useState<boolean>(true);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [slidesPerView, setSlidesPerView] = useState(1);
   const { hotels, setHotels } = useHotelStore();
+  const { setFocusIndex } = useGeneralSearchBarStore();
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) {
@@ -62,6 +63,11 @@ export default function HotelsLandingComponent() {
     fetchData();
   }, []);
 
+  const openSearchBar = (e) => {
+    e.stopPropagation();
+    setFocusIndex(1);
+  };
+
   return (
     <div className="w-full px-0 sm:px-8 lg:px-16 py-4">
       {/* Hero Section */}
@@ -75,7 +81,10 @@ export default function HotelsLandingComponent() {
           <p className="text-white text-base sm:text-lg font-light">
             Latest reviews. Lowest prices.
           </p>
-          <button className="mt-4 px-6 py-2 bg-[var(--complimentary-color)] hover:bg-[var(--complimentary-color-dark)] text-white text-sm sm:text-base font-semibold rounded-lg shadow-lg cursor-pointer">
+          <button
+            className="mt-4 px-6 py-2 bg-[var(--complimentary-color)] hover:bg-[var(--complimentary-color-dark)] text-white text-sm sm:text-base font-semibold rounded-lg shadow-lg cursor-pointer"
+            onClick={(e)=>openSearchBar(e)}
+          >
             Search Now
           </button>
         </div>
