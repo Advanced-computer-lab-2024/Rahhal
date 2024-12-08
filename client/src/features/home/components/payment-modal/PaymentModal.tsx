@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRatesStore } from "@/stores/currency-exchange-store";
 import { currencyExchangeSpec } from "@/utils/currency-exchange";
+import useUserStore from "@/stores/user-state-store";
 
 const paymentMethods: TPaymentMethod[] = [
   {
@@ -58,7 +59,7 @@ interface BookingFormProps {
 }
 
 function useIdFromParamsOrQuery() {
-  const { id: paramId } = useParams<{ id?: string }>();
+  const { id: paramId } = useUserStore();
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);

@@ -29,7 +29,7 @@ import SignUpModal from "./SignupModal";
 import useUserStore from "@/stores/user-state-store";
 export default function HotelDetails({ hotels }: HotelDetailsProps) {
   
-  const { index/*, id*/ } = useParams();
+  const { index } = useParams();
   const { id } = useUserStore();
   const [isAboveEighteen, setIsAboveEighteen] = useState(false);
   const [login, setLogin] = useState(false);

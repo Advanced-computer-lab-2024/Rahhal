@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
 import { updateBookingRequest } from "@/api-calls/booking-api-calls";
@@ -69,7 +69,7 @@ export const tripRatingEntity: Record<string, TRatingEntity> = {
 };
 
 export function TripDetails() {
-  // const userId = useParams().id;
+
   const {id:userId} = useUserStore();
   const { booking } = useLocation().state;
   const ratingFormRef = React.useRef<HTMLButtonElement>(null);

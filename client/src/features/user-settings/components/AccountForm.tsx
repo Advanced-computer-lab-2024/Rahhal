@@ -20,7 +20,6 @@ import { EditContextSeller } from "@/features/seller/components/SellerHomePage";
 import { EditContextTourGuide } from "@/features/tour-guide/components/TourGuideHomePage";
 import { EditContextTourGov } from "@/features/tourism-governor/components/TourismGovernorHomepage";
 import { EditContextAdvertiser } from "@/features/advertiser/components/AdvertiserHomePage";
-import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { updateUser } from "@/api-calls/users-api-calls";
 import DeleteAccountButton from "./DeleteAccountButton";
@@ -46,7 +45,6 @@ export default function AccountForm() {
             : EditContext;
 
   const { user } = useContext(EditContext);
-  // const { id } = useParams();
   const { id } = useUserStore();
 
   const passwordValidator = z.object({

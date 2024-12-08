@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   decrementQuantity,
   fetchUserCart,
@@ -24,14 +24,14 @@ interface CartModalProps {
 export function CartModal({ open, onOpenChange }: CartModalProps) {
   const [cart, setCart] = useState<PopulatedCart | null>(null);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
-  const [prices, setPrices] = useState<Record<string, number>>([]);
+  // const [prices, setPrices] = useState<Record<string, number>>([]);
   const navigate = useNavigate();
   const { incrementCount, decrementCount, setCount } = useCartStore();
   const { setRefresh } = useProductRefreshStore();
   const { currency } = useCurrencyStore();
   const { rates } = useRatesStore();
   const baseCurrency = "EGP";
-  // const { id: paramId } = useParams<{ id?: string }>();
+
   const { id: paramId } = useUserStore();
 
   const { data: cartData, isSuccess } = useQuery({
@@ -95,7 +95,7 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
                 onClick={() => {
                   onOpenChange(false);
                   setRefresh(false);
-                  navigate(`/shop/${paramId}`);
+                  navigate(`/shop`);
                 }}
               >
                 Explore Our Products
@@ -173,7 +173,10 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
                 <Button
                   className="w-full bg-[--primary-color-dark] hover:bg-[--primary-color-fade]"
                   size="lg"
-                  onClick={() => navigate(`/checkout/${paramId}`)}
+                  onClick={() =>{
+                    onOpenChange(false);
+                    navigate("/checkout");
+                  }}
                 >
                   Check out
                 </Button>

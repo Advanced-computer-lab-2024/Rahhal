@@ -3,7 +3,6 @@ import { DataTable } from "@/components/data-table/DataTable";
 import { activitiesColumns, TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { ActivitiesModal } from "./ActivityModal";
-import { useParams } from "react-router-dom";
 import { fetchUserActivities } from "@/api-calls/activities-api-calls";
 import { TUser } from "@/types/user";
 import { getUserById } from "@/api-calls/users-api-calls";
@@ -11,7 +10,6 @@ import useUserStore from "@/stores/user-state-store";
 
 function AdvertiserView() {
   const [activities, setActivities] = useState<TActivity[]>([]);
-  //const { id } = useParams();
   const { id } = useUserStore();
   const [user, setUser] = useState<TUser>();
 

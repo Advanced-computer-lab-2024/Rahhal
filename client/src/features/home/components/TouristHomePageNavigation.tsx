@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ProfileAvatar } from "./ProfileAvatar";
 import CurrencyDropdown from "./CurrencyDropdown";
 import SecondaryLogo from "../../logos/SecondaryLogo";
@@ -22,7 +22,7 @@ interface ButtonProps {
 
 
 export default function TouristHomePageNavigation() {
-    //const { id: paramId } = useParams<{ id?: string }>();
+
 
     const location = useLocation();
     const [navigation, setNavigation] = useState(1);
@@ -30,18 +30,11 @@ export default function TouristHomePageNavigation() {
     const paths = ["/entertainment", "/stays", "/travel", "/shop"];
     const [activeIndex, setActiveIndex] = useState(0);
 
-    // function useIdFromParamsOrQuery() {
-    //     const queryParams = new URLSearchParams(location.search);
-    //     const queryId = queryParams.get("userId");
-    //
-    //     return paramId || queryId;
-    // }
-    //
-    // const [id, setId] = useState(useIdFromParamsOrQuery);
+
     const { id  } = useUserStore();
 
     const icons = [
-        { component: <WishlistIcon />, route: `/my-wishlist/${id}` },
+        { component: <WishlistIcon />, route: `/my-wishlist` },
         { component: <CartIcon />, route: null },
         { component: <BookmarkNavIcon />, route: null },
         { component: <CurrencyDropdown />, route: null },
