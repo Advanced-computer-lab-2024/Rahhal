@@ -1,5 +1,8 @@
 # Rahhal
 
+## API Reference
+![API Reference](.readme/api-reference.jpg)
+
 ## Testing
 We are using `vitest`. To run the tests.
 Execute the following commands in the root directory of the project.
