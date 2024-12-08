@@ -137,6 +137,8 @@ export default function Checkout() {
         const updatedPromocode =
           activePromotion?.promotion.type === "shipping" ? "DELIVERY" : activePromotion?.code || "";
 
+        await updateProductsStock(cart);
+
         const order = await createOrderInstance(
           cart,
           selectedPaymentMethod,
@@ -144,9 +146,6 @@ export default function Checkout() {
           updatedPromocode,
           fullAddress,
         );
-
-        await emptyCart(cart.user);
-        updateProductsStock(cart);
 
         if (selectedPaymentMethod === "wallet") {
           await updateUser(user, { balance: (user.balance as number) - totalAmount });
@@ -157,6 +156,7 @@ export default function Checkout() {
 
         const orderReceipt = constructReceiptData(order, deliveryFee, currency, currencyConvertor);
         await sendReceipt(id!, orderReceipt);
+        await emptyCart(cart.user);
 
         if (saveInfo) {
           const updatedAddresses = [...(user.addresses || []), fullAddress];
