@@ -3,6 +3,7 @@ import { UserRoleEnum } from "@/utils/enums";
 export const SERVICES_URLS = {
   ENTERTAINMENT: "http://localhost:3000/api/entertainment",
   USER: "http://localhost:3000/api/user",
+  PAYMENT: "http://localhost:3000/api/payment",
   PRODUCT: "http://localhost:3000/api/product",
   FIREBASE: "http://localhost:3000/api/firebase",
   BOOKING: "http://localhost:3000/api/booking",
@@ -14,7 +15,6 @@ export const SERVICES_URLS = {
   FLIGHTS: "http://localhost:3000/api/flights-search",
   EXTERNALAPI: "http://localhost:3000/api/external-api",
   NOTIFICATION: "http://localhost:3008",
-  PAYMENT: "http://localhost:3000/api/payment",
 };
 
 export const STATUS_CODES = {
@@ -85,6 +85,7 @@ export const DEFAULTS = {
     ratings: [],
   },
   USER: {
+    _id: "",
     firstName: "",
     lastName: "",
     username: "",
@@ -106,6 +107,12 @@ export const DEFAULTS = {
     description: "",
     createdAt: new Date(),
     updatedAt: new Date(),
+    balance: 0,
+    points: 0,
+    accumulativePoints: 0,
+    level: "",
+    ratings: [],
+    preferences: [],
   },
   PREFERENCE_TAG: {
     _id: "",
@@ -156,14 +163,23 @@ export const DEFAULTS = {
     owner: "",
     replies: [],
   },
-  ADMIN_DATA:{
+  ADMIN_DATA: {
     _id: "",
     username: "",
     email: "",
     password: "",
     role: undefined,
     approved: false,
-  }
+  },
+  PROMOCODE: {
+    _id: "",
+    code: "",
+    type: "",
+    isActive: true,
+    expiresAt: new Date(),
+    value: 0,
+    uses: 1,
+  },
 };
 export const NATIONALITIES = [
   { value: "Afghanistan", label: "Afghanistan" },

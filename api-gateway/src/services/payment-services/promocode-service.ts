@@ -19,3 +19,7 @@ export async function deletePromocode(id: string) {
 export async function applyPromocode(id: string, body: string) {
     return await paymentAxiosInstance.post(`/promocode/${id}`, body);
 }
+
+export async function usePromocode(id: string, body: string) {
+    return await paymentAxiosInstance.post(`/promocode/use/${id}`, body);
+}

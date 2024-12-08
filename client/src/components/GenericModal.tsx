@@ -17,6 +17,8 @@ interface GenericModalProps {
   dialogTrigger: React.ReactNode;
   children: React.ReactNode[];
   onSubmit: () => void;
+  showDeleteButton?: boolean;
+  onDelete?: () => void;
 }
 
 export function GenericModal({
@@ -25,11 +27,13 @@ export function GenericModal({
   dialogTrigger,
   children,
   onSubmit,
+  showDeleteButton = false,
+  onDelete,
 }: GenericModalProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const handleSubmit = async (event: any) => {
+  const handleSubmit = (event: any) => {
     event.preventDefault();
-    await onSubmit();
+    onSubmit();
     setIsOpen(false);
   };
 
@@ -47,8 +51,17 @@ export function GenericModal({
         <ScrollArea className="flex-grow">
           <div className="flex-1 space-y-4 px-4">{children && children.map((child) => child)}</div>
         </ScrollArea>
-        <DialogFooter>
-          <Button onClick={handleSubmit}>Save changes</Button>
+        <DialogFooter className="grid grid-cols-2 w-full px-4">
+          <div className="justify-self-start">
+            {showDeleteButton && (
+              <Button onClick={onDelete} variant="destructive">
+                Delete
+              </Button>
+            )}
+          </div>
+          <div className="justify-self-end">
+            <Button onClick={handleSubmit}>Save changes</Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -24,7 +24,9 @@ router.delete("/wishlists/:id", wishlistController.deleteWishlist);
 // cart routes
 router.get("/carts", cartController.getCart);
 router.post("/carts", cartController.createCart);
+router.post("/carts/add", cartController.addItemToCart);
 router.patch("/carts", cartController.updateCart);
+router.delete("/carts/remove", cartController.removeItemFromCart);
 router.delete("/carts", cartController.deleteCart);
 
 export default router;

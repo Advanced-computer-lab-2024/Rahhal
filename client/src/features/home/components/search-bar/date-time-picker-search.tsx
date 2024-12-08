@@ -60,7 +60,7 @@ export function DateTimePickerSearchBar({
     <>
       <div
         className={cn(
-          " flex items-center px-0 relative overflow-hidden",
+          " flex items-center px-0 relative",
           focusIndex === 1 && hoverIndex === 2
             ? index === 1
               ? "bg-gray-300/65"
@@ -96,13 +96,13 @@ export function DateTimePickerSearchBar({
       >
         <div
           className={cn(
-            "rounded-full focus-within:bg-background focus-within:shadow-sm h-[66px] flex items-center",
+            "rounded-full focus-within:bg-background focus-within:shadow-sm h-[66px] flex items-center relative",
             focusIndex != index
               ? hoverIndex == index && (index == focusIndex! - 1 || index == focusIndex! + 1)
                 ? ""
-                : "hover:bg-gray-300/65"
+                : "hover:bg-gray-300/65 z-0"
               : focusIndex === index
-                ? "bg-background shadow-lg"
+                ? "bg-background z-10 relative shadow-[rgba(0,_0,_0,_0.15)_0px_0px_16px]"
                 : "",
           )}
         >

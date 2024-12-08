@@ -6,7 +6,7 @@ interface NotificationData {
   message: string;
 }
 
-export async function publishNotification(data: NotificationData) {
+export default async function publishNotification(data: NotificationData) {
   try {
     const rabbitMQ = RabbitMQConnection.getInstance();
     await rabbitMQ.connect();

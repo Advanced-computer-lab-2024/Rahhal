@@ -44,3 +44,19 @@ export type TOrder = {
   createdAt: Date;
 };
 
+export type TPromocode = {
+  _id: string;
+  code: string;
+  type: string;
+  isActive: boolean;
+  expiresAt: Date;
+  value: number;
+  uses: number;
+};
+
+export interface INotification {
+  _id: string;
+  userId: string;
+  message: string;
+  seen: boolean;
+}

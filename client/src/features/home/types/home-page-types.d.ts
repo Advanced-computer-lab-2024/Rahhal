@@ -1,14 +1,12 @@
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
 
-
 export interface Promotion {
-  type: 'percentage' | 'fixed' | 'shipping';
+  type: "percentage" | "fixed" | "shipping";
   value: number;
   description: string;
   message?: string;
 }
-
 
 export interface IOrder {
   _id: Types.ObjectId;
@@ -452,4 +450,15 @@ export interface INotification {
 export interface INotifyRequest {
   user: string;
   entity: string;
+}
+
+export interface PopulatedCart {
+  _id: string;
+  user: string;
+  products: IPopulatedCartItem[];
+}
+
+interface IPopulatedCartItem {
+  product: IProduct;
+  quantity: number;
 }

@@ -8,7 +8,7 @@ import SecondaryLogo from "../../logos/SecondaryLogo";
 import { CartIcon } from "@/features/checkout/components/CartIcon";
 import BookmarkNavIcon from "./bookmarks/BookmarkNavIcon";
 import WishlistIcon from "./wishlist/WishListIcon";
-import NotificaionPopover from "./notifications/NotificationPopover";
+import NotificaionPopover from "../../../components/NotificationPopover";
 
 interface ButtonProps {
   navigation: number;
@@ -101,7 +101,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
                   </div>
                 </>
               ) : null}
-
+              <CurrencyDropdown />
               <ProfileAvatar />
             </div>
           </>
@@ -114,17 +114,25 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
 function NavigationButton(ButtonProps: ButtonProps) {
   return (
     <Link to={ButtonProps.path}>
-      <div className="rounded-full hover:bg-gray-300/60 flex justify-center">
+      <div
+        className={cn(
+          "rounded-full flex justify-center transition-all duration-300",
+          ButtonProps.navigation === ButtonProps.index ? "bg-gray-300" : "hover:bg-gray-300/60",
+        )}
+        style={{
+          padding: ButtonProps.navigation === ButtonProps.index ? "0.5rem" : "0.25rem",
+        }}
+      >
         <Button
           className={cn(
-            "rounded-none rounded-t-md relative w-20 text-foreground bg-transparent hover:bg-transparent",
+            "rounded-none rounded-t-md relative w-20 h-6 text-foreground bg-transparent hover:bg-transparent",
             ButtonProps.navigation === ButtonProps.index
               ? "font-semibold"
               : "text-muted-foreground",
           )}
           onClick={() => {
             ButtonProps.setNavigation(ButtonProps.index);
-            ButtonProps.setActiveIndex(ButtonProps.index);
+            ButtonProps.setActiveIndex(ButtonProps.index); // Ensure activeIndex is updated
           }}
         >
           {ButtonProps.buttonName}

@@ -3,11 +3,32 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Check } from "lucide-react";
-
+import { Loader2, Check, Wallet, CreditCard } from "lucide-react";
 import { applyPromocode } from "@/api-calls/payment-api-calls";
 import { Promotion } from "@/features/home/types/home-page-types";
+import { useLocation, useParams } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import { PaymentOptions, TPaymentMethod } from "@/features/checkout/components/PaymentOptions";
+import { getUserById, updateUser } from "@/api-calls/users-api-calls";
+import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { useRatesStore } from "@/stores/currency-exchange-store";
+import { currencyExchangeSpec } from "@/utils/currency-exchange";
 
+const paymentMethods: TPaymentMethod[] = [
+  {
+    id: "wallet",
+    label: "Wallet",
+    icon: <Wallet className="text-primary-color" />,
+    expandable: false,
+  },
+  {
+    id: "creditCard",
+    label: "Pay via card card",
+    icon: <CreditCard className="text-primary-color" />,
+    expandable: true,
+  },
+];
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -19,6 +40,7 @@ interface BookingModalProps {
   taxiPrice?: number;
   parentBookingFunc: () => void;
   userId: string;
+  egpPrice: number;
 }
 interface BookingFormProps {
   price: number;
@@ -27,13 +49,25 @@ interface BookingFormProps {
   currency: string;
   discountPerc?: number;
   userId: string;
+  egpPrice: number;
 
   onClose: () => void;
   parentBookingFunc: () => void;
 }
 
+function useIdFromParamsOrQuery() {
+  const { id: paramId } = useParams<{ id?: string }>();
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const queryId = queryParams.get("userId");
+
+  return paramId || queryId;
+}
+
 function BookingForm({
   price,
+  egpPrice,
   name,
   type,
   currency,
@@ -42,47 +76,116 @@ function BookingForm({
   parentBookingFunc,
   userId,
 }: BookingFormProps) {
+  const id = useIdFromParamsOrQuery();
+
+  const { data: user } = useQuery({
+    queryKey: ["user", id],
+    queryFn: () => getUserById(id as string),
+    enabled: !!id,
+  });
   const [promoCode, setPromoCode] = useState("");
   const [promoDiscountPerc, setPromoDiscountPerc] = useState(0); // Promo code discount percentage
   const [isRedeeming, setIsRedeeming] = useState(false);
   const [promoStatus, setPromoStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  console.log("user is ", userId);
+  const [stripePaymentTrigger, setStripePaymentTrigger] = useState(false);
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
+  const { toast } = useToast();
+  const { rates } = useRatesStore();
+
   // Apply both discounts
   const totalPrice = price * (1 - (discountPerc ?? 0) / 100) * (1 - promoDiscountPerc / 100);
+  const egpTotalPrice = egpPrice * (1 - (discountPerc ?? 0) / 100) * (1 - promoDiscountPerc / 100);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setIsLoading(true);
+    handleCompleteOrder();
+    setStripePaymentTrigger(true);
+  };
 
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    parentBookingFunc();
-    setIsLoading(false);
-    onClose();
+  const handleCompleteOrder = () => {
+    if (selectedPaymentMethod === "creditCard") {
+      setStripePaymentTrigger(true);
+    } else if (selectedPaymentMethod === "wallet") {
+      const walletBalance = user?.balance || 0;
+
+      if (walletBalance < totalPrice) {
+        toast({
+          title: "Insufficient balance",
+          description:
+            "Unfortunately, you do not have enough balance in your wallet to complete this order",
+          variant: "destructive",
+          duration: 3000,
+        });
+      } else {
+        handlePaymentCompletion();
+      }
+    } else {
+      handlePaymentCompletion();
+    }
+  };
+
+  const handlePaymentCompletion = async () => {
+    try {
+      setIsLoading(true);
+
+      // Do the actual booking
+      await parentBookingFunc();
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      let remainingBalanceConverted, remainingBalanceFormatted;
+      if (selectedPaymentMethod === "wallet") {
+        const remainingBalance = (user.balance as number) - egpTotalPrice;
+        await updateUser(user, { balance: remainingBalance });
+        remainingBalanceConverted = currencyExchangeSpec("EGP", remainingBalance, rates, currency);
+        remainingBalanceFormatted = remainingBalanceConverted
+          ? remainingBalanceConverted.toFixed(2)
+          : "N/A";
+      }
+
+      toast({
+        title: "Thank you for choosing Rahhal",
+        description:
+          selectedPaymentMethod === "wallet"
+            ? `You have ${remainingBalanceFormatted} ${currency} left in your wallet, enjoy them 🥳`
+            : "Payment Successful",
+        variant: "default",
+        duration: 5000,
+      });
+    } catch (e) {
+      toast({
+        title: "Error",
+        description: (e as any).response.data.error,
+        variant: "destructive",
+        duration: 3000,
+      });
+    } finally {
+      setStripePaymentTrigger(false);
+      setIsLoading(false);
+      onClose();
+    }
   };
 
   const handleRedeemPromo = async () => {
     setIsRedeeming(true);
 
-    const promoCodeResponse = (await applyPromocode(promoCode, userId)) as Promotion;
-
-    if (promoCodeResponse.message) {
-      setTimeout(() => {
-        setPromoStatus("error");
-        setErrorMessage(promoCodeResponse.message ?? "");
-        setTimeout(() => setPromoStatus("idle"), 1500);
-        setIsRedeeming(false);
-        return;
-      },1500);
-    }
-
-    if (promoCodeResponse.type == "percentage") {
-      setTimeout(() => {
+    try {
+      const promoCodeResponse = (await applyPromocode(promoCode, userId)) as Promotion;
+      if (promoCodeResponse.type == "percentage") {
         setPromoStatus("success");
         setPromoDiscountPerc(promoCodeResponse.value);
-        setIsRedeeming(false);
-      }, 2000);
+      }
+    } catch (error: unknown) {
+      setPromoStatus("error");
+      if (error instanceof AxiosError) {
+        setErrorMessage(error.response?.data.message || "An error occurred");
+      } else {
+        setErrorMessage("An error occurred");
+      }
+      setIsRedeeming(false);
+      setTimeout(() => setPromoStatus("idle"), 3000);
     }
   };
 
@@ -90,6 +193,7 @@ function BookingForm({
     setPromoCode("");
     setPromoDiscountPerc(0);
     setPromoStatus("idle");
+    setIsRedeeming(false);
   };
 
   return (
@@ -153,8 +257,21 @@ function BookingForm({
         {promoStatus === "error" && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
       </div>
       <div>
-        <Label htmlFor="card-element">Credit or debit card</Label>
-        <div className="mt-1 border rounded-md p-3"></div>
+        <div className="mt-1 border rounded-md p-3">
+          {user && (
+            <PaymentOptions
+              walletBalance={user?.balance || 0}
+              selectedPaymentMethod={selectedPaymentMethod}
+              stripePaymentTrigger={stripePaymentTrigger}
+              onPaymentCompletion={handlePaymentCompletion}
+              setStripePaymentTrigger={setStripePaymentTrigger}
+              setIsLoading={setIsPaymentLoading}
+              setSelectedPaymentMethod={setSelectedPaymentMethod}
+              paymentMethods={paymentMethods}
+              amount={egpTotalPrice}
+            />
+          )}
+        </div>
       </div>
       <div className="flex justify-center">
         <Button
@@ -181,6 +298,7 @@ export default function BookingModal({
   currency,
   name,
   price,
+  egpPrice,
   type,
   isOpen,
   onClose,
@@ -190,13 +308,14 @@ export default function BookingModal({
 }: BookingModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>Book {type}</DialogTitle>
         </DialogHeader>
 
         <BookingForm
           price={price}
+          egpPrice={egpPrice}
           name={name}
           type={type}
           currency={currency}

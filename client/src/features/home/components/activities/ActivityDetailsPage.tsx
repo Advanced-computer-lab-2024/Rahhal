@@ -177,7 +177,7 @@ const ActivityDetailsPage: React.FC = () => {
             />
           )}
 
-          {isModalOpen && (
+          {isModalOpen && selectedPrice && (
             <BookingModal
               parentBookingFunc={handleBookButtonClick}
               discountPerc={specialDiscount}
@@ -188,6 +188,7 @@ const ActivityDetailsPage: React.FC = () => {
               name={name}
               type={"Activity"}
               userId={id ?? ""}
+              egpPrice={selectedPrice}
             />
           )}
 

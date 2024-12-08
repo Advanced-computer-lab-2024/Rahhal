@@ -43,7 +43,7 @@ export async function updateProduct(id: string, product: IProduct) {
       message: outOfStockmessage
     });
   }
-  return newProduct;
+  return await productsRepository.updateProduct(id, product);
 }
 
 // Delete a product

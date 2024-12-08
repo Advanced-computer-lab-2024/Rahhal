@@ -14,6 +14,8 @@ import { getPriceValue } from "../utils/price-calculator";
 import ProductCard from "@/features/home/components/product-card/ProductCard";
 import { addToWishlist } from "@/api-calls/wishlist-api-calls";
 import { useParams } from "react-router-dom";
+import FilterButton from "./FilterButton";
+import SortButton from "./SortButton";
 
 // Fetching logic from the database
 const ProductGridView = () => {
@@ -24,8 +26,7 @@ const ProductGridView = () => {
   const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
   const [sortOption, setSortOption] = useState<SortOption | null>(null);
 
-  const {id} = useParams();
-
+  const { id } = useParams();
 
   // useQueries
   const { data: products, isLoading: isLoadingProducts } = useQuery({
@@ -49,18 +50,18 @@ const ProductGridView = () => {
     setSelectedRatings([]);
   };
 
-const handleWishListClick = async (productId: string) => {
-  if (id) {
-    try {
-      await addToWishlist(id, productId);
-      console.log("Added to wishlist");
-    } catch (error) {
-      console.error("Failed to add to wishlist", error);
+  const handleWishListClick = async (productId: string) => {
+    if (id) {
+      try {
+        await addToWishlist(id, productId);
+        console.log("Added to wishlist");
+      } catch (error) {
+        console.error("Failed to add to wishlist", error);
+      }
+    } else {
+      console.error("User ID is undefined");
     }
-  } else {
-    console.error("User ID is undefined");
-  }
-}
+  };
 
   useEffect(() => {
     // Combine all data into one array initially
@@ -136,46 +137,52 @@ const handleWishListClick = async (productId: string) => {
   });
 
   return (
-    <div className={ProductGridStyle["product-grid-view"]}>
-      <FilterSortSearchHeader
-        searchPlaceHolder={"Search for products.. "}
-        setSearch={setSearch}
-        handleSort={handleSort}
-      ></FilterSortSearchHeader>
-      <hr className="border-t bg-[var(--gray-scale)] " />
-      <div className="flex w-[100vw]">
-        <FilterSideBar sideBarItems={combinedSideBarFilters} />
-        <div className={ProductGridStyle["scrollable"]}>
-          <div className={ProductGridStyle["product-grid-view__header"]}>
-            <h1>Products</h1>
-          </div>
-
-          <div className={ProductGridStyle["product-grid-view__cards"]}>
-            {skeleton && (
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-[250px]" />
-                <Skeleton className="h-4 w-[200px]" />
+    <>
+      <div className={ProductGridStyle["product-grid-view"]}>
+        <FilterSortSearchHeader
+          searchPlaceHolder={"Search for products.. "}
+          setSearch={setSearch}
+          handleSort={handleSort}
+        ></FilterSortSearchHeader>
+        <hr className="border-t bg-[var(--gray-scale)] " />
+        <div className="flex w-[100vw]">
+          <FilterSideBar sideBarItems={combinedSideBarFilters} />
+          <div className={ProductGridStyle["scrollable"]}>
+            <div className={ProductGridStyle["product-grid-view__header"]}>
+              <h1>Products</h1>
+              <div className="flex flex-row items-center">
+                <FilterButton />
+                <SortButton onSort={handleSort} />
               </div>
-            )}
+            </div>
 
-            {!skeleton &&
-              sortedProducts?.map((products: Product) => (
-                <>
-                  <ProductCard
-                    id={products._id}
-                    imageUrl={products.picture}
-                    name={products.name}
-                    price={products.price}
-                    sellername={products.sellerName}
-                    rating={getAverageRating(products.ratings)}
-                    handleWishlistClick={() => handleWishListClick(products._id)}
-                  />
-                </>
-              ))}
+            <div className={ProductGridStyle["product-grid-view__cards"]}>
+              {skeleton && (
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[250px]" />
+                  <Skeleton className="h-4 w-[200px]" />
+                </div>
+              )}
+
+              {!skeleton &&
+                sortedProducts?.map((products: Product) => (
+                  <>
+                    <ProductCard
+                      id={products._id}
+                      imageUrl={products.picture}
+                      name={products.name}
+                      price={products.price}
+                      sellername={products.sellerName}
+                      rating={getAverageRating(products.ratings)}
+                      handleWishlistClick={() => handleWishListClick(products._id)}
+                    />
+                  </>
+                ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
