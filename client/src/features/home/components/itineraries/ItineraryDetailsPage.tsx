@@ -72,7 +72,6 @@ const ItineraryDetailsPage: React.FC = () => {
 
   const convertedPrice = currencyExchange("EGP", price);
   const convertedDisplayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
-
   React.useEffect(() => {
     if (id) {
       getUserById(id).then((user) => {
@@ -138,6 +137,7 @@ const ItineraryDetailsPage: React.FC = () => {
               name={name}
               type={"Itinerary"}
               userId={id ?? ""}
+              egpPrice={price}
             />
           )}
 

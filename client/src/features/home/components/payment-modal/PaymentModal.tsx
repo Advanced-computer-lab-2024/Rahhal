@@ -40,6 +40,7 @@ interface BookingModalProps {
   taxiPrice?: number;
   parentBookingFunc: () => void;
   userId: string;
+  egpPrice?:number;
 }
 interface BookingFormProps {
   price: number;
@@ -48,6 +49,7 @@ interface BookingFormProps {
   currency: string;
   discountPerc?: number;
   userId: string;
+  egpPrice?:number;
 
   onClose: () => void;
   parentBookingFunc: () => void;

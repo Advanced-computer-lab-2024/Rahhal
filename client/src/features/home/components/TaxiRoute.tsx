@@ -10,7 +10,7 @@ import { createBooking } from "@/api-calls/booking-api-calls";
 import type { TBookingType, TTaxiData } from "../types/home-page-types";
 import { bookingType } from "@/utils/enums";
 import { addLoyalityPoints } from "@/api-calls/users-api-calls";
-import { currencyExchangeDefaultSpec } from "@/utils/currency-exchange";
+import { currencyExchangeDefaultSpec, currencyExchangeDefault } from "@/utils/currency-exchange";
 import { useState } from "react";
 import SignUpModal from "./SignupModal";
 
@@ -45,6 +45,8 @@ function TaxiRoute({
 }: RouteCardProps) {
   const { currency } = useCurrencyStore();
   const { rates } = useRatesStore();
+
+  const egpPrice = currencyExchangeDefault("EUR", amount);
 
   const convertedPrice = currencyExchange(originalCurrency, amount);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
@@ -109,6 +111,7 @@ function TaxiRoute({
           name={serviceProvider}
           type={"Airport Taxi"}
           userId={userID}
+          egpPrice={egpPrice}
         />
       )}
 

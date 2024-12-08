@@ -45,6 +45,7 @@ export default function FlightAccordion({
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
 
   const bookingPrice = currencyExchangeDefault(offer.price.currency, offer.price.amount);
+
   const dbPrice = bookingPrice ? bookingPrice.toFixed(0) : "N/A";
 
   const onConfirmFlight = async () => {
@@ -93,6 +94,7 @@ export default function FlightAccordion({
           name={offer.airline}
           type={"Flight"}
           userId={userID}
+          egpPrice={bookingPrice}
         />
       )}
 

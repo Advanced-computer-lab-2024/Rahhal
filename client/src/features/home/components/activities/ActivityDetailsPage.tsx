@@ -116,6 +116,7 @@ const ActivityDetailsPage: React.FC = () => {
     }
   };
 
+
   const onTicketSelect = (index: number) => {
     setSelectedPrice(price[Object.keys(price)[index]]);
   };
@@ -164,6 +165,7 @@ const ActivityDetailsPage: React.FC = () => {
               name={name}
               type={"Activity"}
               userId={id ?? ""}
+              egpPrice={selectedPrice}
             />
           )}
 
