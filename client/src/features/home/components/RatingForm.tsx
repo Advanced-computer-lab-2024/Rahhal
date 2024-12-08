@@ -115,7 +115,7 @@ export default function RatingForm({
     <div className="relative">
       <button
         onClick={onClose}
-        className="absolute top-0 right-0 p-2 text-gray-500 hover:text-gray-700"
+        className="absolute top-0 right-0 p-2 text-gray-500 hover:text-gray-700 "
         aria-label="Close"
       >
         <X size={24} />
@@ -125,7 +125,7 @@ export default function RatingForm({
         onSubmit={(values) => onSubmit(values)}
         fieldConfig={getFieldsConfig(ratingEntities)}
       >
-        <AutoFormSubmit className="bg-primary text-white w-full mt-4">Submit</AutoFormSubmit>
+        <AutoFormSubmit className="bg-[var(--primary-color)]  hover:bg-[var(--primary-color-hover)] text-white w-full mt-4">Submit</AutoFormSubmit>
       </AutoForm>
     </div>
   );

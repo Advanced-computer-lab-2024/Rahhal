@@ -15,6 +15,7 @@ import { OrderStatus } from "@/utils/enums";
 import EmptyStatePlaceholder from "../EmptyStatePlaceholder";
 import OrdersPageStyles from "@/features/home/styles/MyOrdersPage.module.css";
 import cart from "@/assets/cart.png";
+import OrderStatusFilter from "./OrderStatusFilter";
 
 export const formatOrderDate = (dateString: string | undefined) => {
   if (!dateString) return "Invalid Date";
@@ -45,7 +46,6 @@ export default function OrdersPage() {
     enabled: !!id,
   });
 
-
   useEffect(() => {
     if (fetchedOrders) {
       setOrders(fetchedOrders);
@@ -71,8 +71,12 @@ export default function OrdersPage() {
     setOrders((prevOrders) =>
       prevOrders.map((order) => (order._id === updatedOrder._id ? updatedOrder : order)),
     );
-
   };
+
+  const [selectedStatuses, setSelectedStatuses] = useState<OrderStatus[]>([]);
+  const filteredOrders = selectedStatuses.length
+    ? orders.filter((order) => selectedStatuses.includes(order.orderStatus))
+    : orders;
 
   return (
     <>
@@ -89,11 +93,17 @@ export default function OrdersPage() {
           />
         </div>
       ) : (
-        <div className="container mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-6">My Orders</h1>
+        <div className="container mx-auto px-4 py-8 ">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-3xl font-bold">My Orders</h1>
+            <OrderStatusFilter
+              onStatusChange={setSelectedStatuses}
+              selectedStatuses={selectedStatuses}
+            />
+          </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Render orders from the `orders` state */}
-            {orders.map((order) => (
+            {filteredOrders.map((order) => (
               <Card key={order._id}>
                 <CardHeader>
                   <CardTitle className="flex justify-between items-center">
