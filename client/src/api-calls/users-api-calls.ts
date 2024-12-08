@@ -1,8 +1,6 @@
 import axios from "axios";
 import { SERVICES_URLS } from "@/lib/constants";
 import type { TUser } from "@/types/user";
-import { UserState } from "@/stores/user-state-store";
-// import { UserState } from "@/stores/user-state-store";
 
 // fetch data from the server
 export async function fetchUsers() {

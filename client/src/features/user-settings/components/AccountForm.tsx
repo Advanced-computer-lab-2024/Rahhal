@@ -27,28 +27,30 @@ import DoubleCheckPopupWrapper from "../../../components/DoubleCheckPopUpWrapper
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { Checkbox } from "@/components/ui/checkbox";
 import useUserStore from "@/stores/user-state-store";
+import { Roles } from "@/types/enums";
 export default function AccountForm() {
   const [preferenceTags, setPreferenceTags] = useState<{ _id: string; name: string }[]>([]);
+  const { id, role } = useUserStore();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [editForm, setEditForm] = useState(false);
   const [isDoubleCheckDialogOpen, setIsDoubleCheckDialogOpen] = useState(false);
 
-  const url = window.location.href;
-  const context = url.includes("admin")
-    ? EditContextAdmin
-    : url.includes("seller")
-      ? EditContextSeller
-      : url.includes("tour-guide")
-        ? EditContextTourGuide
-        : url.includes("tourism-governor")
-          ? EditContextTourGov
-          : url.includes("advertiser")
-            ? EditContextAdvertiser
-            : EditContext;
+  const context =
+    role === Roles.ADMIN
+      ? EditContextAdmin
+      : role === Roles.SELLER
+        ? EditContextSeller
+        : role === Roles.TOURGUIDE
+          ? EditContextTourGuide
+          : role === Roles.TOURISMGOVERNOR
+            ? EditContextTourGov
+            : role === Roles.ADVERTISER
+              ? EditContextAdvertiser
+              : EditContext;
 
-  const { user } = useContext(EditContext);
-  const { id } = useUserStore();
+  const { user } = useContext(context);
+  console.log("AccountForm -> user", user);
 
   const passwordValidator = z.object({
     oldPassword: z

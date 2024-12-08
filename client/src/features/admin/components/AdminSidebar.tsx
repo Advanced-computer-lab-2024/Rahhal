@@ -23,12 +23,20 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import NotificaionPopover from "@/components/NotificationPopover";
+import { logoutUser } from "@/api-calls/users-api-calls";
+import { UserState } from "@/stores/user-state-store";
 
 interface AdminSidebarProps {
-  id?: string;
+  id?: string | null;
 }
 
 export function AdminSidebar({ id }: AdminSidebarProps) {
+
+  const handleLogout = async () => {
+    await logoutUser();
+    UserState();
+  };
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -98,6 +106,9 @@ export function AdminSidebar({ id }: AdminSidebarProps) {
                   </a>
                   <a href={`http://localhost:5173/user-settings`}>
                     <DropdownMenuItem>Profile</DropdownMenuItem>
+                  </a>
+                  <a href={`http://localhost:5173/signin`}>
+                    <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                   </a>
                 </DropdownMenuContent>
               </DropdownMenu>
