@@ -95,7 +95,7 @@ useEffect(() => {
     document.removeEventListener('click', handleClickOutside);
   };
 }, []);
-    
+    let newIndex = 0;
   return (
     <div
       className={cn(
@@ -148,23 +148,26 @@ useEffect(() => {
             searchPartsHandlers &&
             searchPartsTypes &&
             (searchPartsTypes[index] === "dropdown" ? (
+              (newIndex = index + (dualDatePickerFound ? 1 : 0)),
+              (
               <SearchPart
                 corner={searchParts.length}
                 setFocusIndex={setFocusIndex}
                 focusIndex={focusIndex}
                 index={index + 1 + (inputBox ? 1 : 0) + (dualDatePickerFound ? 1 : 0)}
                 placeholder_1={value}
-                placeholder_2={searchPartsPlaceholders ? searchPartsPlaceholders[index] : ""}
+                placeholder_2={searchPartsPlaceholders ? searchPartsPlaceholders[newIndex] : ""}
                 hoverIndex={hoverIndex}
                 setHoverIndex={setHoverIndex}
-                values={searchPartsValues.length > 0 ? searchPartsValues[index] : []}
-                handler={searchPartsHandlers[index] as SearchPartHandler<string>}
+                values={searchPartsValues.length > 0 ? searchPartsValues[newIndex] : []}
+                handler={searchPartsHandlers[newIndex] as SearchPartHandler<string>}
                 onValueChange={
-                  searchPartsOnValueChange && searchPartsOnValueChange.length >= index
-                    ? searchPartsOnValueChange[index]
+                  searchPartsOnValueChange && searchPartsOnValueChange.length >= newIndex
+                    ? searchPartsOnValueChange[newIndex]
                     : undefined
                 }
               />
+              )
             ) : searchPartsTypes[index] === "date" ? (
               <DateTimePickerSearchBar
                 index={index + 1 + (inputBox ? 1 : 0) + (dualDatePickerFound ? 1 : 0)}
@@ -189,15 +192,22 @@ useEffect(() => {
                   hoverIndex={hoverIndex}
                   setHoverIndex={setHoverIndex}
                   corner={searchParts.length}
-                  date={searchPartsHandlers[index].state[0] as Date}
-                  placeholder={searchPartsPlaceholders ? searchPartsPlaceholders[index] : ""}
-                  onDateChange={
+                  leftDate={searchPartsHandlers[index].state[0] as Date}
+                  leftPlaceholder={searchPartsPlaceholders ? searchPartsPlaceholders[index] : ""}
+                  onLeftDateChange={
                     searchPartsHandlers[index].setState as (date: Date | undefined) => void
+                  }
+                  rightDate={searchPartsHandlers[index + 1].state[0] as Date}
+                  rightPlaceholder={searchPartsPlaceholders ? searchPartsPlaceholders[index + 1] : ""}
+                  onRightDateChange={
+                    searchPartsHandlers[index + 1].setState as (date: Date | undefined) => void
                   }
                   popoverRef={popoverRef}
                 />
               ))
             ) : searchPartsTypes[index] === "stepper" ? (
+              (newIndex = index + (dualDatePickerFound ? 1 : 0)),
+              (
               <GuestSelector
                 index={index + 1 + (inputBox ? 1 : 0) + (dualDatePickerFound ? 1 : 0)}
                 setFocusIndex={setFocusIndex}
@@ -205,14 +215,15 @@ useEffect(() => {
                 hoverIndex={hoverIndex}
                 setHoverIndex={setHoverIndex}
                 corner={searchParts.length}
-                adults={searchPartsHandlers[index].state[0] as number}
-                setAdults={searchPartsHandlers[index].setState as (value: number) => void}
-                children={searchPartsHandlers[index + 1].state[0] as number}
-                setChildren={searchPartsHandlers[index + 1].setState as (value: number) => void}
-                infants={searchPartsHandlers[index + 2].state[0] as number}
-                setInfants={searchPartsHandlers[index + 2].setState as (value: number) => void}
-                placeholder={searchPartsPlaceholders ? searchPartsPlaceholders[index] : ""}
+                adults={searchPartsHandlers[newIndex].state[0] as number}
+                setAdults={searchPartsHandlers[newIndex].setState as (value: number) => void}
+                children={searchPartsHandlers[newIndex + 1].state[0] as number}
+                setChildren={searchPartsHandlers[newIndex + 1].setState as (value: number) => void}
+                infants={searchPartsHandlers[newIndex + 2].state[0] as number}
+                setInfants={searchPartsHandlers[newIndex + 2].setState as (value: number) => void}
+                placeholder={searchPartsPlaceholders ? searchPartsPlaceholders[newIndex] : ""}
               />
+              )
             ) : (
               ""
             ))}

@@ -42,7 +42,7 @@ function GuestSelector({
   const sum = adults + children + infants;
   let displayedText;
   let guestsText;
-
+  console.log("corner", corner);
   if (!open && focusIndex === index && setFocusIndex) {
     setFocusIndex(0); // Reset focus when the popover closes
   } else if (open && focusIndex !== index && setFocusIndex) {

@@ -94,6 +94,7 @@ function HotelSearchBar({ onIconClick }: HotelSearchBarProps) {
       searchPartsHandlers={[
         { state: destinationLocation, setState: setDestinationLocation },
         { state: checkIn, setState: setCheckIn },
+        { state: checkOut, setState: setCheckOut },
         { state: [adults], setState: handleAdultsChange },
         { state: [children], setState: handleChildrenChange },
         { state: [infants], setState: handleInfantsChange },
