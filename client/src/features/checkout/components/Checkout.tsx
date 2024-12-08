@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { createOrderInstance } from "../utils/helpers";
 import { fetchUserCart } from "@/api-calls/cart-api-calls";
 import { usePromocode } from "@/api-calls/promocode-api-calls";
+import { sendReceipt } from "@/api-calls/payment-api-calls";
 
 function useIdFromParamsOrQuery() {
   const { id: paramId } = useParams<{ id?: string }>();
@@ -131,6 +132,9 @@ export default function Checkout() {
         if (activePromotion) {
           await usePromocode(activePromotion.code, user._id);
         }
+
+        await sendReceipt(id!, "This is a test receipt");
+
         if (saveInfo) {
           const updatedAddresses = [...(user.addresses || []), fullAddress];
           console.log(updatedAddresses);

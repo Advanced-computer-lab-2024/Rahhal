@@ -11,3 +11,11 @@ export async function createPaymentIntent(items: { id: string; amount: number }[
     console.error("Error creating booking:", error);
   }
 }
+
+export async function sendReceipt(userId: string, receipt: string) {
+  const response = await axios.post(SERVICES_URLS.PAYMENT + `/receipt`, {
+    userId: userId,
+    receipt: receipt,
+  });
+  return response.data;
+}

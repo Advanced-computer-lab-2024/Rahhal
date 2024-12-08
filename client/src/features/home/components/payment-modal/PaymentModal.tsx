@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Check, Wallet, CreditCard } from "lucide-react";
 import { applyPromocode, usePromocode } from "@/api-calls/promocode-api-calls";
+
+import { sendReceipt } from "@/api-calls/payment-api-calls";
 import { Promotion } from "@/features/home/types/home-page-types";
 import { useLocation, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -134,6 +136,12 @@ function BookingForm({
       // Do the actual booking
       await parentBookingFunc();
       await new Promise((resolve) => setTimeout(resolve, 3000));
+      parentBookingFunc();
+
+      await sendReceipt(id!, "This is a test receipt");
+
+      setIsLoading(false);
+      onClose();
 
       let remainingBalanceConverted, remainingBalanceFormatted;
       if (selectedPaymentMethod === "wallet") {
@@ -155,7 +163,10 @@ function BookingForm({
           selectedPaymentMethod === "wallet"
             ? `You have ${remainingBalanceFormatted} ${currency} left in your wallet, enjoy them 🥳`
             : "Payment Successful",
-        variant: "default",
+        style: {
+          backgroundColor: "#34D399",
+          color: "white",
+        },
         duration: 5000,
       });
     } catch (e) {
