@@ -14,7 +14,6 @@ import useUserStore from "@/stores/user-state-store";
 
 function AdvertiserView() {
   const [activities, setActivities] = useState<TActivity[]>([]);
-  //const { id } = useParams();
   const { id } = useUserStore();
   const [user, setUser] = useState<TUser>();
 

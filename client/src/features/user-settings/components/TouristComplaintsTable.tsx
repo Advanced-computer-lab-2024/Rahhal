@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { fetchComplaintByOwner, createComplaint } from "@/api-calls/complaints-api-calls";
-import { useParams } from "react-router-dom";
 import { TouristComplaintsModal } from "./TouristComplaintsModal";
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { DataTable } from "@/components/data-table/DataTable";
@@ -11,7 +10,6 @@ import { toast } from "@/hooks/use-toast";
 import useUserStore from "@/stores/user-state-store";
 
 function ComplaintsTable() {
-  // const { id } = useParams();
   const { id } = useUserStore();
   const [complaints, setComplaints] = useState<TComplaint[]>([]);
 

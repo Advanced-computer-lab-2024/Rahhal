@@ -32,7 +32,6 @@ export const EditContext = createContext<{
 });
 export default function SettingsView() {
   const { toast } = useToast();
-  // const { id } = useParams();
   const { id } = useUserStore();
 
   const USER_SERVICE_URL = SERVICES_URLS.USER + "/users/" + `${id}`;
@@ -47,7 +46,7 @@ export default function SettingsView() {
   useEffect(() => {
     axios
       .get(USER_SERVICE_URL)
-      .then((response) => {
+      .then((response : any) => {
         setUser(response.data);
         console.log(response.data);
       })

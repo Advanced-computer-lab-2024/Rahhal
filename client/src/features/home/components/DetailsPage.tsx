@@ -18,7 +18,7 @@ import SharePopover from "@/components/SharePopover";
 import useUserStore from "@/stores/user-state-store";
 
 const DetailsPage = () => {
-  const { /*id,*/ placeid, type } = useParams();
+  const { placeid, type } = useParams();
   const { id } = useUserStore();
   const { data: item, isPending: isItemPending } = useQuery({
     queryKey: [`${type == "hplace" ? "historical-places" : "product"}`, placeid],

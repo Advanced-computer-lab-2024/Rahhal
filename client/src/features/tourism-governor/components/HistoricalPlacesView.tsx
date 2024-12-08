@@ -14,7 +14,6 @@ import useUserStore from "@/stores/user-state-store";
 
 function HistoricalPlacesView() {
   const [historicalPlaces, setHistoricalPlaces] = useState<THistoricalPlace[]>([]);
-  // const { id } = useParams();
   const { id } = useUserStore();
 
   useEffect(() => {

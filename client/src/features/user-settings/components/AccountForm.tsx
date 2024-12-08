@@ -48,7 +48,6 @@ export default function AccountForm() {
             : EditContext;
 
   const { user } = useContext(EditContext);
-  // const { id } = useParams();
   const { id } = useUserStore();
 
   const passwordValidator = z.object({

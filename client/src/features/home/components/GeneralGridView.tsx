@@ -2,7 +2,7 @@ import GeneralGridStyle from "../styles/GeneralGridView.module.css";
 import EntertainmentCard from "@/features/home/components/EntertainmentCard";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import FilterSortSearchHeader from "./FilterSortSearchHeader";
 import FilterSideBar from "@/features/home/components/filter-sidebar/FilterSideBar";
@@ -60,7 +60,6 @@ function GeneralGridView() {
   const { toggleLoading, isLoadingTour, setIsLoading } = useTour();
 
 
-  // const { id } = useParams<{ id: string }>();
   const { id } = useUserStore();
   // useQueries
   const {
@@ -134,21 +133,17 @@ function GeneralGridView() {
     const type =
       "languages" in item ? "itinerary" : "isBookingOpen" in item ? "activity" : "historicalPlace";
     if (type === "historicalPlace") {
-      navigate(`/hplace/details/${item._id}/${id ? id : ""}`, { state: { item } });
+      navigate(`/hplace/details/${item._id}`, { state: { item } });
       return;
     }
-    if (type === "activity") {
-      let URL = "/activities" + (id ? `/${id}` : "") + `?eventId=${item._id}`;
-      navigate(URL, {
+    if (type === "activity")
+      navigate(`/activities`, {
         state: { item },
       });
-    }
-    if (type === "itinerary") {
-      let URL = "/itineraries" + (id ? `/${id}` : "") + `?eventId=${item._id}`;
-      navigate(URL, {
+    if (type === "itinerary")
+      navigate(`/itineraries`, {
         state: { item },
       });
-    }
   };
 
   //fetching data

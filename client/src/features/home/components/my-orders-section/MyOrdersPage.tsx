@@ -8,7 +8,6 @@ import { ImageCarousel } from "./ImageCarroussel";
 import { OrderDetails } from "./OrderDetails";
 import { useQuery } from "@tanstack/react-query";
 import { fetchUserOrders } from "@/api-calls/order-api-calls";
-import { useParams } from "react-router-dom";
 import { getUserById } from "@/api-calls/users-api-calls";
 import { TOrder } from "@/features/home/types/home-page-types";
 import { OrderStatus } from "@/utils/enums";
@@ -32,7 +31,6 @@ export const formatOrderDate = (dateString: string | undefined) => {
 };
 
 export default function OrdersPage() {
-  // const { id } = useParams<{ id: string }>();
   const { id } = useUserStore();
   const [selectedOrderId, setSelectedOrderId] = useState<TOrder | null>(null);
   const [orders, setOrders] = useState<TOrder[]>([]); // Use `orders` for rendering
@@ -91,7 +89,7 @@ export default function OrdersPage() {
             textOne="No Purchases Yet!"
             textTwo="Once you Buy a product - it will appear here. Ready to get started?"
             buttonText="Start Shopping"
-            navigateTo={`/shop/${id}`}
+            navigateTo={`/shop`}
           />
         </div>
       ) : (

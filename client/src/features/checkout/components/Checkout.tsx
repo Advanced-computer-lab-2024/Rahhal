@@ -2,7 +2,7 @@ import { OrderSummary } from "./OrderSummary";
 import { Input } from "@/components/ui/input";
 import { DeliveryForm } from "./DeliveryForm";
 import { getUserById, updateUser } from "@/api-calls/users-api-calls";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { CompletionPopup } from "./CompletionPopup";
@@ -18,13 +18,9 @@ import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-stor
 import { currencyExchangeSpec } from "@/utils/currency-exchange";
 import useUserStore from "@/stores/user-state-store";
 
-
 export default function Checkout() {
-
   const { id } = useUserStore();
-  const {
-    data: user,
-  } = useQuery({
+  const { data: user } = useQuery({
     queryKey: ["user", id],
     queryFn: () => getUserById(id as string),
     enabled: !!id,
@@ -160,7 +156,7 @@ export default function Checkout() {
         setCompleted(true);
         setTimeout(() => {
           setCompleted(false);
-          navigate(`/my-orders/${user._id}`);
+          navigate(`/my-orders`);
         }, 7000);
       }
     } catch (e) {

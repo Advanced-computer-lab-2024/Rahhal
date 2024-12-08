@@ -14,7 +14,7 @@ import useUserStore from "@/stores/user-state-store";
 function HistoricalTagsView() {
   const [historicalTags, setHistoricalTags] = useState<THistoricalTag[]>([]);
 
-  // const { id } = useParams();
+
   const { id } = useUserStore();
 
   useEffect(() => {

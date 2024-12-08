@@ -34,7 +34,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-import { useParams } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { GetCardType } from "../utils/CheckCardType";
 import { redeemLoyalityPoints } from "@/api-calls/users-api-calls";
@@ -91,7 +90,6 @@ export default function AccountForm() {
   const displayPrice = convertedPrice ? convertedPrice.toFixed(2) : "N/A";
 
   type balanceValues = z.infer<typeof redeemValidator>;
-  // const { id } = useParams();
   const { id } = useUserStore();
   const form = useForm<balanceValues>({
     resolver: zodResolver(redeemValidator),
