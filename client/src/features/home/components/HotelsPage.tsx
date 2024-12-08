@@ -1,4 +1,4 @@
-import { useHotelSearchBarStore } from "@/stores/hotel-search-bar-slice";
+import { useHotelSearchBarStore } from "@/stores/search-bar-stores/hotel-search-bar-slice";
 import HotelSearchBar from "./HotelSearchBar";
 import { fetchPlaceDetails } from "@/api-calls/google-maps-api-calls";
 import HotelGridView from "./HotelGridView";

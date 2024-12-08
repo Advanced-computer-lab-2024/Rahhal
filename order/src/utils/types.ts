@@ -10,7 +10,7 @@ export interface OrderQueryParams {
 export interface IWishlist {
   user: string;
   product: string;
-};
+}
 
 export interface CartItem {
   productId: string;
@@ -18,13 +18,12 @@ export interface CartItem {
 }
 
 export interface ICart {
-  userId: string;
+  user: string;
   products: CartItem[];
 }
 
 export enum CartUpdates {
   EmptyCart = "emptyCart",
-  RemoveProduct = "removeProduct",
   IncrementQuantity = "incrementQuantity",
   DecrementQuantity = "decrementQuantity",
 }

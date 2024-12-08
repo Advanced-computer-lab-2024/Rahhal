@@ -13,12 +13,19 @@ import {
   isProductWishlisted,
   removeFromWishlist,
 } from "@/api-calls/wishlist-api-calls";
-import useWishlistStore from "@/stores/wishlist-count-store";
+import useWishlistStore from "@/stores/nav-bar-icon-stores/wishlist-count-store";
 import { toast } from "@/hooks/use-toast";
 import SignUpModal from "@/features/home/components/SignupModal"; // Adjust the import path as necessary
 import { cn } from "@/lib/utils";
 import { fetchProductById } from "@/api-calls/products-api-calls";
 import { useQuery } from "@tanstack/react-query";
+import {
+  decrementQuantity,
+  incrementQuantity,
+  removeItemFromCart,
+} from "@/api-calls/cart-api-calls";
+import useCartStore from "@/stores/nav-bar-icon-stores/cart-count-store";
+import useProductRefreshStore from "@/stores/refresh-product-store";
 
 interface ProductCardProps {
   id: string;
@@ -27,7 +34,6 @@ interface ProductCardProps {
   imageUrl: string;
   rating: number | undefined;
   sellername: string;
-  discount: number;
 }
 
 export default function ProductCard({
@@ -37,18 +43,19 @@ export default function ProductCard({
   imageUrl,
   rating,
   sellername,
-  discount,
 }: ProductCardProps) {
   const userId = useParams().id;
-  const { incrementCount, decrementCount } = useWishlistStore();
   const [isInCart, setIsInCart] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [isHovered, setIsHovered] = useState(false);
   const [isWishlisted, setWishlisted] = useState(false);
   const [isGuestAction, setIsGuestAction] = useState(false);
   const [isRatingHovered, setIsRatingHovered] = useState(false);
-  const [isGuestActionCart,setIsGuestActionCart] = useState(false);
+  const [isGuestActionCart, setIsGuestActionCart] = useState(false);
 
+  const { incrementCount, decrementCount } = useWishlistStore();
+  const { incrementCount: incrementCartCount, decrementCount: decrementCartCount } = useCartStore();
+  const { refresh } = useProductRefreshStore();
   useEffect(() => {
     if (!userId) {
       return;
@@ -56,7 +63,14 @@ export default function ProductCard({
     isProductWishlisted(userId, id).then(setWishlisted);
   }, [userId, id]);
 
-  const { data: product, isLoading } = useQuery({
+  useEffect(() => {
+    if (refresh) {
+      setIsInCart(false);
+      setQuantity(1);
+    }
+  }, [refresh]);
+
+  const { data: product } = useQuery({
     queryKey: ["Product", id],
     queryFn: () => fetchProductById(id),
     enabled: !!id,
@@ -100,23 +114,38 @@ export default function ProductCard({
 
   const handleAddToCart = () => {
     if (!userId) {
-      setIsGuestActionCart(true);
+      setIsGuestAction(true);
       return;
     }
 
-    setIsInCart(true);
-    setQuantity(1);
-    // TODO: Implement add to cart functionality
+    incrementQuantity(userId, id).then(() => {
+      setIsInCart(true);
+      setQuantity(1);
+      incrementCartCount();
+    });
   };
 
-  const handleQuantityChange = (change: number) => {
-    const newQuantity = quantity + change;
-    if (newQuantity < 1) {
-      setIsInCart(false);
+  const incrementProductInCart = () => {
+    incrementQuantity(userId!, id).then(() => {
+      setQuantity(quantity + 1);
+      incrementCartCount();
+    });
+  };
+
+  const decrementProductInCart = () => {
+    if (quantity === 1) {
+      removeItemFromCart(userId!, id).then(() => {
+        setIsInCart(false);
+      });
     } else {
-      setQuantity(newQuantity);
+      decrementQuantity(userId!, id).then(() => {
+        setQuantity(quantity - 1);
+        if (quantity === 1) {
+          setIsInCart(false);
+        }
+      });
     }
-    // TODO: Implement quantity update functionality
+    decrementCartCount();
   };
 
   const { currency } = useCurrencyStore();
@@ -258,11 +287,11 @@ export default function ProductCard({
         {isInCart && (
           <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white to-transparent">
             <div className="flex justify-between items-center">
-              <Button variant="outline" size="icon" onClick={() => handleQuantityChange(-1)}>
+              <Button variant="outline" size="icon" onClick={() => decrementProductInCart()}>
                 <Minus className="h-4 w-4" />
               </Button>
               <span className="font-semibold">{quantity}</span>
-              <Button variant="outline" size="icon" onClick={() => handleQuantityChange(1)}>
+              <Button variant="outline" size="icon" onClick={() => incrementProductInCart()}>
                 <Plus className="h-4 w-4" />
               </Button>
             </div>

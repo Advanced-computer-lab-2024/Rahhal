@@ -123,7 +123,6 @@ export interface IItinerary {
   preferenceTags?: PreferenceTag[];
   category?: Category;
   owner: string;
-  
 }
 
 export interface IActivity {
@@ -249,6 +248,12 @@ export interface PopulatedCart {
 }
 
 interface IPopulatedCartItem {
-  productId: IProduct;
+  product: IProduct;
   quantity: number;
+}
+
+export enum CartUpdates {
+  EmptyCart = "emptyCart",
+  IncrementQuantity = "incrementQuantity",
+  DecrementQuantity = "decrementQuantity",
 }
