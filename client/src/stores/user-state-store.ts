@@ -32,7 +32,7 @@ const useUserStore = create<UserState>((set) => ({
 export default useUserStore;
 
 
-export function UserState() {
+export async function UserState() {
   const cookie = Cookies.get('jwt');
   console.log("cookie",cookie)
   if(cookie && cookie.length > 0){

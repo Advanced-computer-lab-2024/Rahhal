@@ -32,7 +32,6 @@ export async function deleteUser(id: string) {
 
 export async function deleteUserNoReload(user: TUser) {
   await axios.delete(`${SERVICES_URLS.GENERAL}/deleteAccount/${user._id}`);
-  // UserState();
 }
 
 // submit user to the users endpoint
