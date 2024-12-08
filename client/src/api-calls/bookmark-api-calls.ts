@@ -4,7 +4,9 @@ import type { bookmarkType } from "@/utils/enums";
 import { TPopulatedBookmark } from "@/features/home/types/home-page-types";
 
 export async function fetchUserBookmarks(userId: string): Promise<TPopulatedBookmark[]> {
-  const response = await axios.get(`${SERVICES_URLS.BOOKING}/bookmarks/${userId}`);
+  const response = await axios.get(`${SERVICES_URLS.BOOKING}/bookmarks`, {
+    params: { user: userId },
+  });
   return response.data as TPopulatedBookmark[];
 }
 
