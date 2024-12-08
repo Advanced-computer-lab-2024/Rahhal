@@ -130,7 +130,10 @@ function NavigationButton(ButtonProps: ButtonProps) {
               ? "font-semibold"
               : "text-muted-foreground",
           )}
-          onClick={() => ButtonProps.setNavigation(ButtonProps.index)}
+          onClick={() => {
+            ButtonProps.setNavigation(ButtonProps.index);
+            ButtonProps.setActiveIndex(ButtonProps.index); // Ensure activeIndex is updated
+          }}
         >
           {ButtonProps.buttonName}
         </Button>
