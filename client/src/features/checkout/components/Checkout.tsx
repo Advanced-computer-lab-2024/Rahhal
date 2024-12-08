@@ -155,7 +155,7 @@ export default function Checkout() {
   const handleGoToPrevStep = () => {
     setCurrentCheckoutStep(1);
   };
-  console.log(totalAmount);
+
   return (
     <>
       <div className="min-h-screen flex">
