@@ -12,6 +12,7 @@ import { ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { createOrderInstance } from "../utils/helpers";
 import { fetchUserCart } from "@/api-calls/cart-api-calls";
+import { usePromocode } from "@/api-calls/promocode-api-calls";
 
 function useIdFromParamsOrQuery() {
   const { id: paramId } = useParams<{ id?: string }>();
@@ -126,6 +127,9 @@ export default function Checkout() {
         );
         if (selectedPaymentMethod === "wallet") {
           await updateUser(user, { balance: (user.balance as number) - totalAmount });
+        }
+        if (activePromotion) {
+          await usePromocode(activePromotion.code, user._id);
         }
         if (saveInfo) {
           const updatedAddresses = [...(user.addresses || []), fullAddress];

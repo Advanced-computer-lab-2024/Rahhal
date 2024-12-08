@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Check, Wallet, CreditCard } from "lucide-react";
-import { applyPromocode } from "@/api-calls/payment-api-calls";
+import { applyPromocode, usePromocode } from "@/api-calls/promocode-api-calls";
 import { Promotion } from "@/features/home/types/home-page-types";
 import { useLocation, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -143,6 +143,10 @@ function BookingForm({
         remainingBalanceFormatted = remainingBalanceConverted
           ? remainingBalanceConverted.toFixed(2)
           : "N/A";
+      }
+
+      if (promoStatus === "success") {
+        await usePromocode(promoCode, userId);
       }
 
       toast({
