@@ -14,6 +14,8 @@ import { constructReceiptData, createOrderInstance } from "../utils/helpers";
 import { fetchUserCart } from "@/api-calls/cart-api-calls";
 import { usePromocode } from "@/api-calls/promocode-api-calls";
 import { sendReceipt } from "@/api-calls/payment-api-calls";
+import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
+import { currencyExchangeSpec } from "@/utils/currency-exchange";
 
 function useIdFromParamsOrQuery() {
   const { id: paramId } = useParams<{ id?: string }>();
@@ -40,6 +42,8 @@ export default function Checkout() {
 
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { currency } = useCurrencyStore();
+  const { rates } = useRatesStore();
 
   const [selectedAddress, setSelectedAddress] = useState("");
   const [newAddress, setNewAddress] = useState("");
@@ -66,6 +70,10 @@ export default function Checkout() {
   const [currentCheckoutStep, setCurrentCheckoutStep] = useState(2);
   const [stripePaymentTrigger, setStripePaymentTrigger] = useState(false);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+
+  const currencyConvertor = (originalPrice: number) => {
+    return currencyExchangeSpec("EGP", originalPrice, rates, currency) ?? 0;
+  };
 
   const handleContinueToPayment = () => {
     const newErrors: { address?: string; city?: string; postalCode?: string; phone?: string } = {};
@@ -140,7 +148,7 @@ export default function Checkout() {
           await usePromocode(activePromotion.code, user._id);
         }
 
-        const orderReceipt = constructReceiptData(order, deliveryFee);
+        const orderReceipt = constructReceiptData(order, deliveryFee, currency, currencyConvertor);
         await sendReceipt(id!, orderReceipt);
 
         if (saveInfo) {

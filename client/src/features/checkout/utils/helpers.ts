@@ -34,26 +34,33 @@ export async function createOrderInstance(
   return (await createOrder(order)) as TOrder;
 }
 
-export function constructReceiptData(order: TOrder, deliveryFee: number): string {
+export function constructReceiptData(
+  order: TOrder,
+  deliveryFee: number,
+  currency: string,
+  convertor: (originalPrice: number) => number,
+): string {
   let receipt = `\nPAYMENT RECEIPT FOR ORDER ${order._id}\n`;
   receipt += "-----------------\n\n";
   receipt += "ITEM : PRICE\n";
 
   // Add items
   order.items.forEach((item) => {
-    receipt += `${item.name} (x${item.quantity}):  EGP ${(item.price * item.quantity).toFixed(2)}\n`;
+    const convertedPrice = convertor(item.price * item.quantity);
+    receipt += `${item.name} (x${item.quantity}):  ${currency} ${convertedPrice.toFixed(2)}\n`;
   });
 
   receipt += "-----------------\n";
-  receipt += `Delivery: EGP ${deliveryFee.toFixed(2)}\n`;
+  receipt += `Delivery: ${currency} ${convertor(deliveryFee).toFixed(2)}\n`;
 
   if (order.discountAmount && order.discountAmount > 0) {
-    receipt += `Discount: -  EGP ${order.discountAmount.toFixed(2)}\n`;
+    receipt += `Discount: -  ${currency} ${convertor(order.discountAmount).toFixed(2)}\n`;
   }
 
   const finalTotalPrice = order.totalPrice + deliveryFee - (order.discountAmount || 0);
 
-  receipt += `Total Price:  EGP ${finalTotalPrice.toFixed(2)}`;
+  receipt += `Total Price:  ${currency} ${convertor(finalTotalPrice).toFixed(2)}\n`;
+  receipt += `Transaction deducted amount: EGP ${finalTotalPrice}`;
 
   return receipt;
 }
