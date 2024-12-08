@@ -62,7 +62,7 @@ export function PaymentOptions({
 
   const convertedWalletBalance: number = currencyExchange("EGP", walletBalance) ?? 0;
   const formattedWalletBalance = `${convertedWalletBalance?.toFixed(2)} ${currency}`;
-  
+
   return (
     <div className="w-full">
       <div className="mb-4">
@@ -88,15 +88,19 @@ export function PaymentOptions({
                     : "border-transparent hover:bg-gray-50"
                 }`}
               >
-                <div className="p-4 flex items-center justify-between">
+                <div
+                  className={`p-4 flex items-center justify-between ${
+                    isDisabled
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:bg-gray-50 transition-colors"
+                  }`}
+                >
                   <div className="flex items-center gap-3">
                     <RadioGroupItem
                       value={method.id}
                       id={method.id}
-                      className={`text-complementary ${
-                        isDisabled ? "cursor-not-allowed opacity-50" : ""
-                      }`}
-                      disabled={isDisabled}
+                      className="text-complementary"
+                      disabled={isDisabled} // The RadioGroupItem is still disabled
                     />
                     <Label htmlFor={method.id} className="text-sm font-medium">
                       {method.label}
