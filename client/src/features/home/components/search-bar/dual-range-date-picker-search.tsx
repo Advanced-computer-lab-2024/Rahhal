@@ -232,7 +232,7 @@ export function DualDatePickerSearchBar({
                   {leftDate ? !activeType? format(leftDate, "MMM d, hh:mm aa") : format(leftDate, "MMM dd, yyyy")  : "Add dates"}
                 </span>
               </div>
-              {leftDate && open && (
+              {leftDate && open && !activeType && (
                 <Button
                   size="icon"
                   variant="ghost"
@@ -322,7 +322,7 @@ export function DualDatePickerSearchBar({
                   {rightDate ? !activeType? format(rightDate, "MMM d, hh:mm aa") : format(rightDate, "MMM dd, yyyy")  : "Add dates"}
                   </span>
                 </div>
-                {rightDate && open && (
+                {rightDate && open && !activeType && (
                   <Button
                     size="icon"
                     variant="ghost"
@@ -352,7 +352,7 @@ export function DualDatePickerSearchBar({
                 </div>
               </div>
               <div style={{display: activeType?"flex":"none"}} className="flex-col w-full justify-center gap-8 items-center">
-                <CircularSlider trackSize={30} progressSize={30} min={1} max={12} label={`month${sliderValue>1?"s":""}`} labelBottom={true} labelColor={"black"} progressColorFrom={"#e1bc6d"} progressColorTo={"#f3dba2"} labelFontSize={"1rem"} knobColor={"white"} verticalOffset={"0rem"} useMouseAdditionalToTouch={true} valueFontSize={"5rem"}  onChange={ (value : number) => { handleSliderChange(value) } } />
+                <CircularSlider trackSize={30} progressSize={30} min={1} max={12} label={`month${sliderValue>1?"s":""}`} labelBottom={true} labelColor={"black"} progressColorFrom={"#e1bc6d"} progressColorTo={"#f3dba2"} labelFontSize={"1rem"} knobColor={"white"} verticalOffset={"0rem"} useMouseAdditionalToTouch={true} valueFontSize={"5rem"}  onChange={ (value : number) => { handleSliderChange(value) } }  />
                 {leftDate && rightDate &&
                   <div className="flex gap-2">
                     <span className={"font-medium"}>{format(leftDate!, "MMM dd, yyyy")}</span>
