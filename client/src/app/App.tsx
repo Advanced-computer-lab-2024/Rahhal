@@ -58,6 +58,7 @@ import AdvertiserHomePage from "@/features/advertiser/components/AdvertiserHomeP
 import useUserStore from "@/stores/user-state-store";
 import { Roles } from "@/types/enums";
 import ForgetPassword from "@/features/Login/components/ForgetPassword";
+import NotFound from "@/features/home/NotFound";
 
 export default function App() {
   const { setRates } = useRatesStore();
@@ -107,61 +108,61 @@ export default function App() {
                   <TourGuideHomePage />
                 ) : role === Roles.TOURISMGOVERNOR ? (
                   <TouristGovernerHomepage />
-                ) : null
+                ) : <NotFound />
               }
             >
               <Route
                 path="/entertainment"
                 element={
-                  role === Roles.GUEST || role === Roles.TOURIST ? <GeneralGridView /> : null
+                  role === Roles.GUEST || role === Roles.TOURIST ? <GeneralGridView /> :  <NotFound />
                 }
               />
               <Route
                 path="/shop"
                 element={
-                  role === Roles.GUEST || role === Roles.TOURIST ? <ProductGridView /> : null
+                  role === Roles.GUEST || role === Roles.TOURIST ? <ProductGridView /> :  <NotFound />
                 }
               />
               <Route
                 path="/travel"
-                element={role === Roles.GUEST || role === Roles.TOURIST ? <TravelPage /> : null}
+                element={role === Roles.GUEST || role === Roles.TOURIST ? <TravelPage /> :  <NotFound />}
               />
               <Route
                 path="/stays"
-                element={role === Roles.GUEST || role === Roles.TOURIST ? <HotelsPage /> : null}
+                element={role === Roles.GUEST || role === Roles.TOURIST ? <HotelsPage /> :  <NotFound />}
               />
               <Route
                 path="/stays/hotel/:index"
                 element={
                   role === Roles.GUEST || role === Roles.TOURIST ? (
                     <HotelDetails hotels={hotels} />
-                  ) : null
+                  ) :  <NotFound />
                 }
               />
-              <Route path="/my-trips" element={role === Roles.TOURIST ? <MyTripsPage /> : null} />
+              <Route path="/my-trips" element={role === Roles.TOURIST ? <MyTripsPage /> :  <NotFound />} />
               <Route
                 path="/my-trips-details"
-                element={role === Roles.TOURIST ? <TripDetails /> : null}
+                element={role === Roles.TOURIST ? <TripDetails /> :  <NotFound />}
               />
-              <Route path="/my-orders" element={role === Roles.TOURIST ? <MyOrdersPage /> : null} />
+              <Route path="/my-orders" element={role === Roles.TOURIST ? <MyOrdersPage /> :  <NotFound />} />
               <Route
                 path="/my-bookmarks"
-                element={role === Roles.TOURIST ? <BookmarksPage /> : null}
+                element={role === Roles.TOURIST ? <BookmarksPage /> :  <NotFound />}
               />
               <Route
                 path="/my-wishlist"
-                element={role === Roles.TOURIST ? <WishListPage /> : null}
+                element={role === Roles.TOURIST ? <WishListPage /> :  <NotFound />}
               />
-              <Route path="/checkout" element={role === Roles.TOURIST ? <Checkout /> : null} />
+              <Route path="/checkout" element={role === Roles.TOURIST ? <Checkout /> :  <NotFound />} />
               <Route
                 path="/:type/details/:placeid"
                 element={
-                  role === Roles.GUEST || role === Roles.TOURIST ? <HistoricalDetailsPage /> : null
+                  role === Roles.GUEST || role === Roles.TOURIST ? <HistoricalDetailsPage /> :  <NotFound />
                 }
               />
               <Route
                 path="/help-center/"
-                element={role === Roles.TOURIST ? <ComplaintsTable /> : null}
+                element={role === Roles.TOURIST ? <ComplaintsTable /> :  <NotFound />}
               />
 
               <Route
@@ -171,7 +172,7 @@ export default function App() {
                     <ActivityDetailsPage />
                   ) : role === Roles.ADMIN ? (
                     <AdminActivitiesView />
-                  ) : null
+                  ) :  <NotFound />
                 }
               />
               <Route
@@ -181,7 +182,7 @@ export default function App() {
                     <ItineraryDetailsPage />
                   ) : role === Roles.ADMIN ? (
                     <AdminItinerariesView />
-                  ) : null
+                  ) :  <NotFound />
                 }
               />
 
@@ -196,7 +197,7 @@ export default function App() {
                     <TourGuideView />
                   ) : role === Roles.ADMIN ? (
                     <AdminReport />
-                  ) : null
+                  ) :  <NotFound />
                 }
               />
 
@@ -209,54 +210,54 @@ export default function App() {
                     <ProductReport />
                   ) : role === Roles.TOURGUIDE ? (
                     <ItineraryReport />
-                  ) : null
+                  ) :  <NotFound />
                 }
               />
 
               <Route
                 path="/reviews"
-                element={role === Roles.TOURGUIDE ? <ReviewDisplay /> : null}
+                element={role === Roles.TOURGUIDE ? <ReviewDisplay /> :  <NotFound />}
               />
 
-              <Route path="/categories" element={role === Roles.ADMIN ? <CategoryView /> : null} />
-              <Route path="/users" element={role === Roles.ADMIN ? <UserView /> : null} />
+              <Route path="/categories" element={role === Roles.ADMIN ? <CategoryView /> :  <NotFound />} />
+              <Route path="/users" element={role === Roles.ADMIN ? <UserView /> :  <NotFound />} />
               <Route
                 path="/users/requests"
-                element={role === Roles.ADMIN ? <UsersPendingRequests /> : null}
+                element={role === Roles.ADMIN ? <UsersPendingRequests /> :  <NotFound />}
               />
               <Route
                 path="/products"
-                element={role === Roles.ADMIN ? <AdminProductsView /> : null}
+                element={role === Roles.ADMIN ? <AdminProductsView /> :  <NotFound />}
               />
               <Route
                 path="/preference-tags"
-                element={role === Roles.ADMIN ? <PreferenceTagsAdminView /> : null}
+                element={role === Roles.ADMIN ? <PreferenceTagsAdminView /> :  <NotFound />}
               />
               <Route
                 path="/complaints"
-                element={role === Roles.ADMIN ? <AdminComplaintsView /> : null}
+                element={role === Roles.ADMIN ? <AdminComplaintsView /> :  <NotFound />}
               />
-              <Route path="/account" element={role === Roles.ADMIN ? <AccountForm /> : null} />
+              <Route path="/account" element={role === Roles.ADMIN ? <AccountForm /> :  <NotFound />} />
               <Route
                 path="/promocodes"
-                element={role === Roles.ADMIN ? <PromocodeTable /> : null}
+                element={role === Roles.ADMIN ? <PromocodeTable /> :  <NotFound />}
               />
 
               <Route
                 path="/historical-places"
-                element={role === Roles.TOURISMGOVERNOR ? <HistoricalPlacesView /> : null}
+                element={role === Roles.TOURISMGOVERNOR ? <HistoricalPlacesView /> :  <NotFound />}
               />
               <Route
                 path="/historical-tags"
-                element={role === Roles.TOURISMGOVERNOR ? <HistoricalTagsView /> : null}
+                element={role === Roles.TOURISMGOVERNOR ? <HistoricalTagsView /> :  <NotFound />}
               />
             </Route>
 
-            <Route path="/signup" element={role === Roles.GUEST ? <SignupSelector /> : null} />
-            <Route path="/signin" element={role === Roles.GUEST ? <LoginPage /> : null} />
+            <Route path="/signup" element={role === Roles.GUEST ? <SignupSelector /> :  <NotFound />} />
+            <Route path="/signin" element={role === Roles.GUEST ? <LoginPage /> :  <NotFound />} />
             <Route
               path="/forgot-password"
-              element={role === Roles.GUEST ? <ForgetPassword /> : null}
+              element={role === Roles.GUEST ? <ForgetPassword /> :  <NotFound />}
             />
 
             <Route
@@ -273,7 +274,7 @@ export default function App() {
                   <TourGuideHomePage />
                 ) : role === Roles.TOURISMGOVERNOR ? (
                   <TouristGovernerHomepage />
-                ) : null
+                ) :  <NotFound />
               }
             >
               <Route path="/user-settings" element={<ProfileForm />} />
