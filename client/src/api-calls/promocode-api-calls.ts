@@ -7,23 +7,42 @@ export const fetchPromocodes = async () => {
   return response.data;
 };
 
+export async function applyPromocode(promocode: string, userId: string) {
+  const response = await axios.post(`${SERVICES_URLS.PAYMENT}/promocode/${userId}`, {
+    code: promocode,
+  });
+  return response.data;
+}
+
+export async function usePromocode(promocode: string, userId: string) {
+  const response = await axios.post(`${SERVICES_URLS.PAYMENT}/promocode/use/${userId}`, {
+    code: promocode,
+  });
+  return response.data;
+}
+
 export const deletePromocode = async (promocodeId: string) => {
   const response = await axios.delete(SERVICES_URLS.PAYMENT + `/promocode/${promocodeId}`);
   return response;
 };
 
-export const submitPromocode = async (promocodeData: TPromocode | undefined, isNewPromocode: boolean) => {
+export const submitPromocode = async (
+  promocodeData: TPromocode | undefined,
+  isNewPromocode: boolean,
+) => {
   if (isNewPromocode) {
     if (promocodeData) {
       const { _id, ...newPromocodeData } = promocodeData;
       const response = await axios.post(SERVICES_URLS.PAYMENT + "/promocode", newPromocodeData);
       return response;
     }
-    
   } else {
     if (promocodeData) {
-      const response = await axios.patch(`${SERVICES_URLS.PAYMENT}/promocode/${promocodeData._id}`, promocodeData);
+      const response = await axios.patch(
+        `${SERVICES_URLS.PAYMENT}/promocode/${promocodeData._id}`,
+        promocodeData,
+      );
       return response;
     }
   }
-}
+};
