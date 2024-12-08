@@ -1,6 +1,14 @@
 # Rahhal
 
 ## Testing
+We are using `jest`. To run the tests.
+Execute the following commands in the root directory of the project.
+  
+
+```bash
+> chmod +x run-tests.sh
+>./run-tests.sh
+```
 
 ## Installation
 ```bash
