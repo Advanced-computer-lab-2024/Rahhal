@@ -51,8 +51,7 @@ export default function ProductCard({
   const [isWishlisted, setWishlisted] = useState(false);
   const [isGuestAction, setIsGuestAction] = useState(false);
   const [isRatingHovered, setIsRatingHovered] = useState(false);
-  const [isGuestActionCart, setIsGuestActionCart] = useState(false);
-
+  const [guestActionText, setGuestActionText] = useState("");
   const { incrementCount, decrementCount } = useWishlistStore();
   const { incrementCount: incrementCartCount, decrementCount: decrementCartCount } = useCartStore();
   const { refresh } = useProductRefreshStore();
@@ -82,6 +81,7 @@ export default function ProductCard({
 
     if (!userId) {
       setIsGuestAction(true);
+      setGuestActionText("Making a list? Sign in to wishlist your favourite products");
 
       return;
     }
@@ -115,6 +115,7 @@ export default function ProductCard({
   const handleAddToCart = () => {
     if (!userId) {
       setIsGuestAction(true);
+      setGuestActionText("Ready to shop? Sign in to add products to your cart");
       return;
     }
 
@@ -170,20 +171,9 @@ export default function ProductCard({
                 e.stopPropagation();
                 setIsGuestAction(false);
               }}
-              text={"Making a list? Sign in to wishlist your favourite products"}
+              text={guestActionText}
             />
           )}
-
-          {isGuestActionCart && (
-            <SignUpModal
-              onClose={(e) => {
-                e.stopPropagation();
-                setIsGuestActionCart(false);
-              }}
-              text={"Ready to shop? Sign in to add products to your cart"}
-            />
-          )}
-
           <motion.button
             className={cn(
               "absolute top-2 right-2 z-1",

@@ -41,7 +41,6 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
   });
 
   useEffect(() => {
-    console.log("Cart data", cartData);
     if (isSuccess && cartData) {
       setCart(cartData);
     }

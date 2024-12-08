@@ -6,7 +6,7 @@ import * as bookmarkService from "@/services/bookmark-service";
 export async function getBookmarks(req: Request, res: Response) {
   try {
     const filters: Partial<IBookmark> = {
-      user: req.query.userId as string,
+      user: req.query.user as string,
       entity: req.query.entity as string,
       type: req.query.type as bookmarkType,
     };
@@ -42,10 +42,8 @@ export async function getBookmarkById(req: Request, res: Response) {
 export async function createBookmark(req: Request, res: Response) {
   try {
     const bookmarkData: Partial<IBookmark> = req.body;
-    const bookmark = await bookmarkService.createBookmark(
-      bookmarkData
-    );
-    if(bookmark) {
+    const bookmark = await bookmarkService.createBookmark(bookmarkData);
+    if (bookmark) {
       res.status(STATUS_CODES.CREATED).json(bookmark);
     } else {
       res.status(STATUS_CODES.BAD_REQUEST).json({ message: ERROR_MESSAGES.BAD_REQUEST });
@@ -62,10 +60,9 @@ export async function updateBookmark(req: Request, res: Response) {
     const id = req.params.id;
     const bookmarkData: Partial<IBookmark> = req.body;
     const bookmark = await bookmarkService.updateBookmark(id, bookmarkData);
-    if(bookmark) {
+    if (bookmark) {
       res.status(STATUS_CODES.STATUS_OK).json(bookmark);
-    }
-    else {
+    } else {
       res.status(STATUS_CODES.NOT_FOUND).json({ message: ERROR_MESSAGES.NOT_FOUND });
     }
   } catch (error: unknown) {
@@ -91,8 +88,7 @@ export async function deleteBookmarkById(req: Request, res: Response) {
   }
 }
 
-export async function deleteBookmark(req: Request, res: Response){
-
+export async function deleteBookmark(req: Request, res: Response) {
   try {
     const bookmark = await bookmarkService.deleteBookmark(req.query);
     if (bookmark) {

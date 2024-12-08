@@ -73,6 +73,8 @@ function BookmarksPage() {
         )}
 
         {isSuccess &&
+          bookmarks &&
+          bookmarks.length > 0 &&
           bookmarks.map((item) => (
             <EntertainmentCard
               key={item.entity._id}

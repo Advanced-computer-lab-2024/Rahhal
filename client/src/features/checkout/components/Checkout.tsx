@@ -10,8 +10,8 @@ import { PaymentOptions } from "./PaymentOptions";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { constructReceiptData, createOrderInstance } from "../utils/helpers";
-import { fetchUserCart } from "@/api-calls/cart-api-calls";
+import { constructReceiptData, createOrderInstance, updateProductsStock } from "../utils/helpers";
+import { emptyCart, fetchUserCart } from "@/api-calls/cart-api-calls";
 import { usePromocode } from "@/api-calls/promocode-api-calls";
 import { sendReceipt } from "@/api-calls/payment-api-calls";
 import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
@@ -67,7 +67,7 @@ export default function Checkout() {
   const [activePromotion, setActivePromotion] = useState<ActivePromotion | null>(null);
   const [totalAmount, setTotalAmount] = useState(0);
 
-  const [currentCheckoutStep, setCurrentCheckoutStep] = useState(2);
+  const [currentCheckoutStep, setCurrentCheckoutStep] = useState(1);
   const [stripePaymentTrigger, setStripePaymentTrigger] = useState(false);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
 
@@ -134,13 +134,19 @@ export default function Checkout() {
     try {
       if (user && cart) {
         const fullAddress = `${newAddress}, ${city}`;
+        const updatedPromocode =
+          activePromotion?.promotion.type === "shipping" ? "DELIVERY" : activePromotion?.code || "";
+
+        await updateProductsStock(cart);
+
         const order = await createOrderInstance(
           cart,
           selectedPaymentMethod,
           discountAmount,
-          activePromotion?.code || "",
+          updatedPromocode,
           fullAddress,
         );
+
         if (selectedPaymentMethod === "wallet") {
           await updateUser(user, { balance: (user.balance as number) - totalAmount });
         }
@@ -150,10 +156,10 @@ export default function Checkout() {
 
         const orderReceipt = constructReceiptData(order, deliveryFee, currency, currencyConvertor);
         await sendReceipt(id!, orderReceipt);
+        await emptyCart(cart.user);
 
         if (saveInfo) {
           const updatedAddresses = [...(user.addresses || []), fullAddress];
-          console.log(updatedAddresses);
           await updateUser(user, { addresses: updatedAddresses });
         }
         setCompleted(true);
@@ -176,7 +182,6 @@ export default function Checkout() {
   const handleGoToPrevStep = () => {
     setCurrentCheckoutStep(1);
   };
-
   return (
     <>
       <div className="min-h-screen flex">
@@ -264,7 +269,7 @@ export default function Checkout() {
                 <Button
                   className="mt-6 w-full bg-complimentary-color hover:bg-complementary-hover disabled:bg-[--complimentary-color-fade] text-white py-3 px-4 rounded-md font-medium transition-colors"
                   onClick={currentCheckoutStep == 2 ? handleCompleteOrder : handleContinueToPayment}
-                  disabled={selectedPaymentMethod === ""}
+                  disabled={currentCheckoutStep == 2 && selectedPaymentMethod === ""}
                 >
                   {isPaymentLoading
                     ? "Processing..."
