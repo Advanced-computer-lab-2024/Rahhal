@@ -67,7 +67,7 @@ export default function Checkout() {
   const [activePromotion, setActivePromotion] = useState<ActivePromotion | null>(null);
   const [totalAmount, setTotalAmount] = useState(0);
 
-  const [currentCheckoutStep, setCurrentCheckoutStep] = useState(2);
+  const [currentCheckoutStep, setCurrentCheckoutStep] = useState(1);
   const [stripePaymentTrigger, setStripePaymentTrigger] = useState(false);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
 
@@ -153,7 +153,6 @@ export default function Checkout() {
 
         if (saveInfo) {
           const updatedAddresses = [...(user.addresses || []), fullAddress];
-          console.log(updatedAddresses);
           await updateUser(user, { addresses: updatedAddresses });
         }
         setCompleted(true);
@@ -176,7 +175,6 @@ export default function Checkout() {
   const handleGoToPrevStep = () => {
     setCurrentCheckoutStep(1);
   };
-
   return (
     <>
       <div className="min-h-screen flex">
@@ -264,7 +262,7 @@ export default function Checkout() {
                 <Button
                   className="mt-6 w-full bg-complimentary-color hover:bg-complementary-hover disabled:bg-[--complimentary-color-fade] text-white py-3 px-4 rounded-md font-medium transition-colors"
                   onClick={currentCheckoutStep == 2 ? handleCompleteOrder : handleContinueToPayment}
-                  disabled={selectedPaymentMethod === ""}
+                  disabled={currentCheckoutStep == 2 && selectedPaymentMethod === ""}
                 >
                   {isPaymentLoading
                     ? "Processing..."
