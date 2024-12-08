@@ -17,8 +17,6 @@ import { DateRange } from "react-day-picker";
 import { IoCloseOutline } from "react-icons/io5";
 import { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { set } from "lodash";
-import { on } from "events";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import CircularSlider from "@fseehawer/react-circular-slider";
 import { TimePicker12HSearchBar } from "@/features/home/components/search-bar/time-picker-12hour-search-bar.tsx";
@@ -352,14 +350,14 @@ export function DualDatePickerSearchBar({
       </div>
       {open && (
         <div
-          className="absolute w-2/5 h-[55%] rounded-[2rem] bg-white top-40 z-20 left-1/2 transform -translate-x-1/2 shadow-[0_0_12px_0_rgba(0,0,0,0.16)] flex justify-center items-center"
+          className="absolute w-3/6 h-[55%] rounded-[2rem] bg-white top-40 z-20 left-1/2 transform -translate-x-1/2 shadow-[0_0_12px_0_rgba(0,0,0,0.16)] flex justify-center items-center"
           ref={popoverRef}
           tabIndex={0}
           onFocus={() => console.log("GainedFocus")}
           onBlur={handleBlur}
         >
           <div
-            className={cn("flex flex-col w-full h-full p-6", activeType || !hour ? "gap-10" : "")}
+            className={cn("flex flex-col w-full h-full py-6", activeType || !hour ? "gap-10" : "")}
           >
             <div className={"flex w-full justify-center"}>
               <div className="rounded-3xl w-1/3 h-12 flex p-1 bg-gray-300/65">
@@ -495,7 +493,7 @@ export function DualDatePickerSearchBar({
                   Months: ({ ...props }) => {
                     console.log(props.children);
                     return (
-                      <div className={"flex justify-between p-4 w-full h-full"}>
+                      <div className={"flex justify-between px-5 w-full h-full"}>
                         {" "}
                         {props.children}
                       </div>

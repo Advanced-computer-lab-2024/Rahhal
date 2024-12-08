@@ -91,6 +91,7 @@ function FlightSearchBar({ onIconClick }: FlightSearchBarProps) {
       searchPartsPlaceholders={searchPartsPlaceholders}
       searchPartsOnValueChange={[handlePickUpChange, handleDropOffChange]}
       onIconClick={onIconClick}
+      displayHours={true}
     />
   );
 }
