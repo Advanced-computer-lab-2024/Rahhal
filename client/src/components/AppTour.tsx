@@ -9,8 +9,9 @@ import { Itinerary } from '@/features/home/types/home-page-types';
 interface TourContextType {
     startTour: () => void;
     driverObj: Driver | null;
-    isLoading: boolean;
+    isLoadingTour: boolean;
     setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    setSearchButtonClicked: React.Dispatch<React.SetStateAction<boolean>>;
     toggleLoading: () => void; // Add the new method
 }
 
@@ -18,10 +19,11 @@ interface TourContextType {
 const TourContext = createContext<TourContextType>({
     startTour: () => { },
     driverObj: null,
-    isLoading: false,
+    isLoadingTour: false,
     setIsLoading: () => { },
+    setSearchButtonClicked: () => { },
     toggleLoading: () => { }
-    
+
 });
 
 
@@ -32,16 +34,18 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [driverObj, setDriverObj] = useState<Driver | null>(null);
     const navigate = useNavigate();
     const [specificItinerary, setSpecificItinerary] = useState<Itinerary | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
+    const [isLoadingTour, setIsLoading] = useState<boolean>(false);
+    const [searchPressed, setSearchPressed] = useState<boolean>(false);
+    const [travelSearchHelper, setTravelSearchHelper] = useState<boolean>(false);
+    const [searchButtonClicked, setSearchButtonClicked] = useState<boolean>(false);
 
 
     const toggleLoading = useCallback(() => {
-        setIsLoading(isLoading => !isLoading);
+        setIsLoading(isLoadingTour => !isLoadingTour);
     }, []);
     useEffect(() => {
-        console.log("isLoading in context:", isLoading);
-    }, [isLoading]);
+        console.log("isLoadingTour in context:", isLoadingTour);
+    }, [isLoadingTour]);
 
     useEffect(() => {
         const fetchItineraries = async () => {
@@ -77,36 +81,53 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const observer = new MutationObserver(() => {
             const nextButton = document.querySelector('.driver-popover-next-btn');
             if (nextButton) {
-                if (isLoading) {
+                if (isLoadingTour || (!searchPressed && travelSearchHelper)) {
                     nextButton.classList.add('driver-popover-btn-disabled');
                 } else {
                     nextButton.classList.remove('driver-popover-btn-disabled');
+
+                }
+            }
+            const searchButton = document.querySelector('.search-tour');
+            if (searchButton) {
+                if (searchButtonClicked) {
+                    searchButton.classList.add('driver-popover-btn-disabled');
+                } else {
+                    searchButton.classList.remove('driver-popover-btn-disabled');
                 }
             }
         });
-    
+
         const targetNode = document.body; // Assuming the buttons are dynamically added to the body
         const config = { childList: true, subtree: true }; // Observe all DOM additions/removals
-    
+
         observer.observe(targetNode, config);
-    
-        // Directly update the button's class whenever isLoading changes
+
+        // Directly update the button's class whenever isLoadingTour changes
         const nextButton = document.querySelector('.driver-popover-next-btn');
         if (nextButton) {
-            if (isLoading) {
+            if (isLoadingTour || (!searchPressed && travelSearchHelper)) {
                 nextButton.classList.add('driver-popover-btn-disabled');
             } else {
                 nextButton.classList.remove('driver-popover-btn-disabled');
             }
         }
-    
+        const searchButton = document.querySelector('.search-tour');
+        if (searchButton) {
+            if (searchButtonClicked) {
+                searchButton.classList.add('driver-popover-btn-disabled');
+            } else {
+                searchButton.classList.remove('driver-popover-btn-disabled');
+            }
+        }
+
         return () => {
             observer.disconnect(); // Clean up observer on component unmount
         };
-    }, [isLoading]);
-    
+    }, [isLoadingTour, searchPressed, travelSearchHelper]);
 
-    
+
+
     // useEffect(() => {
     //     if (driverObj) {
     //       //destroys the driver object when the user navigates to a different page using browser controls
@@ -181,7 +202,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         description: "If you like an experience, you can book it from here!",
                         onNextClick: () => {
                             // setIsLoading(true);
-                            navigate("/stays");
+                            navigate("/stays/");
                             setTimeout(() => {
                                 tourDriver.moveNext();
                             }, 50);
@@ -287,6 +308,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         title: "Navigation",
                         description: "Now we look at ways of travel!",
                         onNextClick: () => {
+                            setTravelSearchHelper(true);
                             setTimeout(() => {
                                 tourDriver.moveNext();
                             }, 50);
@@ -301,22 +323,35 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 },
                 {
                     element: "#travel-searchBar-tour",
+
                     popover: {
+                        onPopoverRender: (popover) => {
+                            const firstButton = document.createElement("button");
+                            firstButton.innerText = "Search";
+                            popover.footerButtons.insertBefore(firstButton, popover.footerButtons.children[1]);
+                            firstButton.classList.add("search-tour");
+                            firstButton.addEventListener("click", () => {
+                                setSearchButtonClicked(true);
+                                setSearchPressed(true);
+                                if ((window as any).tourTaxiSearch) {
+                                    (window as any).tourTaxiSearch();
+                                }
+                                setSearchPressed(false);
+                                setTravelSearchHelper(false);
+                            });
+
+                        },
                         title: "Search for Travel",
                         description: "Search for your perfect travel, either using Airport Taxis, Flights or Buses!",
                         onNextClick: () => {
                             // Directly call the globally exposed function from TravelPage
                             // This function was set up in the useEffect in TravelPage
-                            if ((window as any).tourTaxiSearch) {
-                                (window as any).tourTaxiSearch();
-                            }
-                            setTimeout(() => {
-                                tourDriver.moveNext();
-                            }, 8000);
+                            tourDriver.moveNext();
+
                         },
                         onPrevClick: () => {
-                            navigate("stays/hotel/1");
                             setTimeout(() => {
+                                setTravelSearchHelper(false);
                                 tourDriver.movePrevious();
                             }, 50);
                         },
@@ -336,12 +371,12 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                                         description: "You have completed the tour! You can now plan you first vacation!",
                                         showButtons: [
                                             'close'
-                                          ],
-                                          onCloseClick: () => {
+                                        ],
+                                        onCloseClick: () => {
                                             tourDriver.destroy();
-                                          }
+                                        }
                                     }
-                                  });
+                                });
                             }, 50);
                         },
                         onPrevClick: () => {
@@ -370,7 +405,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, [driverObj, initializeTour]);
 
     return (
-        <TourContext.Provider value={{ startTour, driverObj, toggleLoading, setIsLoading, isLoading }}>
+        <TourContext.Provider value={{ startTour, driverObj, toggleLoading, setIsLoading, isLoadingTour, setSearchButtonClicked }}>
             {children}
         </TourContext.Provider>
     );

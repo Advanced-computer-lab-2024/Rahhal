@@ -27,7 +27,7 @@ export default function HotelsLandingComponent() {
   const { hotels, setHotels } = useHotelStore();
   const { setFocusIndex } = useGeneralSearchBarStore();
 
-  const { toggleLoading, isLoading, setIsLoading } = useTour();
+  const { toggleLoading, isLoadingTour, setIsLoading } = useTour();
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) {
@@ -76,12 +76,7 @@ export default function HotelsLandingComponent() {
     setFocusIndex(1);
   };
   useEffect(() => {
-    console.log("Hotels loading before toggle in useEffect", loading);
-    console.log("tour loading before toggle in useEffect", isLoading);
-
     toggleLoading(); // Correctly calling the toggle function
-    console.log("loading before after in useEffect", loading);
-    console.log("tour loading after toggle in useEffect", isLoading);
   }, [toggleLoading, loading]);
 
   useEffect(() => {

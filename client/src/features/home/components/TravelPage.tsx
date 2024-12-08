@@ -22,6 +22,7 @@ import { PiTaxi } from "react-icons/pi";
 import flightIcon from "@/assets/flight-Icon.png";
 import busIcon from "@/assets/Bus Icon.png";
 import { toast } from "@/hooks/use-toast";
+import { useTour } from "@/components/AppTour";
 
 interface TravelPageProps {
   loggedIn: boolean;
@@ -34,6 +35,7 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   const [taxiSkeleton, setTaxiSkeleton] = useState<boolean>(false);
   const [flightSkeleton, setFlightSkeleton] = useState<boolean>(false);
   const [autoSearchTour, setAutoSearchTour] = useState<boolean>(false);
+  const { toggleLoading, isLoadingTour, setIsLoading } = useTour();
   const { id } = useParams<{ id: string }>();
   const userId = id ? id : "";
   const { data: userData } = useQuery({
@@ -198,6 +200,7 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     const tourDepartureTime = new Date("2024-12-31T00:00:00+02:00");
     setDepartureTime(tourDepartureTime);
     setPassengers(2);
+
   };
   
 
@@ -244,6 +247,19 @@ function TravelPage({ loggedIn }: TravelPageProps) {
       setFlightSkeleton(false);
     }
   }, [isFlightsLoading, isFlightsSuccess, isFLightError]);
+
+  useEffect(() => {
+    console.log("Travel loading before toggle in useEffect", taxiSkeleton);
+    console.log("tour loading before toggle in useEffect", isLoadingTour);
+
+    toggleLoading(); // Correctly calling the toggle function
+    console.log("Travel loading before after in useEffect", taxiSkeleton);
+    console.log("tour loading after toggle in useEffect", isLoadingTour);
+  }, [toggleLoading, taxiSkeleton]);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, []); 
 
   const prepareTransferRequest = async () => {
     let airportCode = "";

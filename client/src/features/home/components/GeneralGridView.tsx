@@ -37,6 +37,7 @@ import { getUserById } from "@/api-calls/users-api-calls";
 import FilterButton from "./FilterButton";
 import SortButton from "./SortButton";
 import { bookmarkType } from "@/utils/enums";
+import { useTour } from "@/components/AppTour";
 
 
 function GeneralGridView() {
@@ -55,6 +56,8 @@ function GeneralGridView() {
   const [selectedHistoricalTags, setSelectedHistoricalTags] = useState<Option[]>([]);
   const [sortOption, setSortOption] = useState<SortOption | null>(null);
   const [loaded, setLoaded] = useState(false);
+  const { toggleLoading, isLoadingTour, setIsLoading } = useTour();
+
 
   const { id } = useParams<{ id: string }>();
   // useQueries
@@ -204,6 +207,10 @@ function GeneralGridView() {
     isSuccessItineraries,
     isSuccessHistorical,
   ]);
+
+  useEffect(() => {
+    setIsLoading(false);
+  },[]);
 
   const handleSort = (sortOption: SortOption) => {
     setSortOption(sortOption);

@@ -48,12 +48,12 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
     { component: <CurrencyDropdown />, route: null },
     { component: <ProfileAvatar />, route: null },
   ];
-  const { toggleLoading, isLoading } = useTour();
+  const { toggleLoading, isLoadingTour } = useTour();
 
   useEffect(() => {
-    console.log(isLoading);
+    console.log(isLoadingTour);
     
-  },[isLoading]);
+  },[isLoadingTour]);
 
 
   return (
@@ -78,7 +78,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
         ))}
         <div>
           <button onClick={toggleLoading}>
-            Toggle Loading (Current: {isLoading ? 'Loading' : 'Not Loading'})
+            Toggle Loading (Current: {isLoadingTour ? 'Loading' : 'Not Loading'})
           </button>
         </div>
       </div>

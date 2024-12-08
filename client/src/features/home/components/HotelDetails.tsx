@@ -26,10 +26,12 @@ import { bookingType } from "@/utils/enums";
 import type { TBookingType } from "../types/home-page-types";
 import { createBooking } from "@/api-calls/booking-api-calls";
 import SignUpModal from "./SignupModal";
+import { useTour } from "@/components/AppTour";
 export default function HotelDetails({ hotels }: HotelDetailsProps) {
   const { index, id } = useParams();
   const [isAboveEighteen, setIsAboveEighteen] = useState(false);
   const [login, setLogin] = useState(false);
+  const {setSearchButtonClicked, setIsLoading } = useTour();
   useEffect(() => {
     if (id) {
       const user = getUserById(id);
@@ -42,6 +44,12 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
       setLogin(false);
     }
   }, [id]);
+
+  useEffect(() => {
+
+    setSearchButtonClicked(false);
+    setIsLoading(false);
+  },[]);
 
   const { rates } = useRatesStore();
   const { currency } = useCurrencyStore();
