@@ -8,7 +8,6 @@ import { useToast } from "@/hooks/use-toast";
 import { SERVICES_URLS } from "@/lib/constants";
 import { TUser } from "@/types/user";
 import { HomeIcon } from "lucide-react";
-import { UserRoleEnum } from "@/utils/enums";
 export enum Role {
   admin = "admin",
   tourist = "tourist",
@@ -59,26 +58,7 @@ export default function SettingsView() {
       });
   }, []);
 
-  let home = "/";
-  switch (user.role) {
-    case UserRoleEnum.advertiser:
-      home = `/advertiser/${id}`;
-      break;
-    case UserRoleEnum.seller:
-      home = `/seller/${id}`;
-      break;
-    case UserRoleEnum.tourGuide:
-      home = `/tour-guide/${id}`;
-      break;
-    case UserRoleEnum.tourismGovernor:
-      home = `/tourism-governor/${id}`;
-      break;
-    case UserRoleEnum.tourist:
-      home = `/entertainment/${id}`;
-      break;
-    default:
-      break;
-  }
+
 
 
   return (
@@ -98,7 +78,7 @@ export default function SettingsView() {
           </div>
           <Link
             className="text-gray-600 hover:text-gray-900 flex items-center"
-            to={home}
+            to={`/entertainment/${id}`}
           >
             <HomeIcon className="h-6 w-6 mr-2" />
             <span className="ml-2 text-lg hover:underline">Home</span>
