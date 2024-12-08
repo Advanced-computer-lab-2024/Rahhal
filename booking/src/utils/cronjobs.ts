@@ -8,7 +8,7 @@ export async function hourlyUpdate() {
     await getBookings({ status: bookingStatus.Upcoming }).then((bookings) => {
         bookings.forEach((booking) => {
             if (booking.selectedDate! < currentDate) {
-                updateBooking(booking._id.toString(), { status: bookingStatus.Completed });
+              updateBooking(booking._id.toString(), { status: bookingStatus.Completed });
             }
         });
     });
@@ -17,9 +17,9 @@ export async function hourlyUpdate() {
 export async function eventReminder() {
   const currentDate = new Date();
   currentDate.setHours(currentDate.getHours() + 2);
-  await getBookings({ status: bookingStatus.Upcoming, selectedDate: currentDate }).then((bookings) => {
+  await getBookings({ status: bookingStatus.Upcoming}).then((bookings) => {
       bookings.forEach((booking) => {
-        if(booking.type == 'activity' || booking.type == 'itinerary') {
+        if((booking.type == 'activity' || booking.type == 'itinerary') && booking.selectedDate?.getDate() == currentDate.getDate() && booking.selectedDate?.getMonth() == currentDate.getMonth() && booking.selectedDate?.getFullYear() == currentDate.getFullYear()) {
           const data = {
             entityId: booking.entity,
             userId: booking.user,
