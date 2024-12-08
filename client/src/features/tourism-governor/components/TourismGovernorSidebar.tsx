@@ -55,11 +55,11 @@ export function TourismGovernerSidebar({ id }: TourismGovernerSidebarProps) {
                     <SidebarMenuButton
                       asChild
                       isActive={
-                        window.location.pathname === `/tourism-governor/${id}/historical-places`
+                        window.location.pathname === `http//localhost:5173/historical-places`
                       }
                       tooltip="Historical Places"
                     >
-                      <a href={`/tourism-governor/${id}/historical-places`}>
+                      <a href={`http//localhost:5173/historical-places`}>
                         <Pyramid />
                         Historical Places
                       </a>
@@ -70,11 +70,11 @@ export function TourismGovernerSidebar({ id }: TourismGovernerSidebarProps) {
                     <SidebarMenuButton
                       asChild
                       isActive={
-                        window.location.pathname === `/tourism-governor/${id}/historical-tags`
+                        window.location.pathname === `http//localhost:5173/historical-tags`
                       }
                       tooltip="Historical Tags"
                     >
-                      <a href={`/tourism-governor/${id}/historical-tags`}>
+                      <a href={`http//localhost:5173/historical-tags`}>
                         <Tags />
                         Historical Tags
                       </a>
@@ -102,10 +102,10 @@ export function TourismGovernerSidebar({ id }: TourismGovernerSidebarProps) {
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                  <a href={`/tourism-governor/${id}/user-settings/account`}>
+                  <a href={`http//localhost:5173/user-settings/account`}>
                     <DropdownMenuItem>Account</DropdownMenuItem>
                   </a>
-                  <a href={`/tourism-governor/${id}/user-settings`}>
+                  <a href={`http//localhost:5173/user-settings`}>
                     <DropdownMenuItem>Profile</DropdownMenuItem>
                   </a>
                 </DropdownMenuContent>

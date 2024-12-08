@@ -193,8 +193,6 @@ const ActivityDetailsPage: React.FC = () => {
               egpPrice={selectedPrice}
             />
           )}
-
-          <TouristHomePageNavigation loggedIn={id ? true : false} />
           <DetailsPageTemplateProps
             _id={_id}
             name={name}
@@ -221,7 +219,7 @@ const ActivityDetailsPage: React.FC = () => {
               footerText={text}
             />
           </DetailsPageTemplateProps>
-        </>
+        </Outlet>
       )}
       <TouristHomePageNavigation /*loggedIn={id ? id !== "undefined" : false}*/ />
       <DetailsPageTemplateProps

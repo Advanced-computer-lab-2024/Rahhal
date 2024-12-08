@@ -76,7 +76,6 @@ export function TripDetails() {
 
   return (
     <>
-      <TouristHomePageNavigation /*loggedIn={true}*/ />
       {booking.type === bookingType.Activity && (
         <BookedActivityDetailsPage
           activity={booking.entity as TActivity}
