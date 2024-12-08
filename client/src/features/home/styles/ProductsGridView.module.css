@@ -21,9 +21,10 @@
 
 .product-grid-view__header {
   display: flex;
-  align-items: center;
-  flex-direction: row;
-  padding: 20px;
+  justify-content: space-between; /* Distributes space between elements */
+  align-items: center; /* Aligns items vertically in the center */
+  flex-direction: row; /* Ensures items are laid out in a row */
+  padding: 20px; /* Adds padding around the header */
 }
 
 .product-grid-view__header h1 {
