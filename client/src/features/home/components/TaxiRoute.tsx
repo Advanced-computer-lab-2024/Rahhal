@@ -46,7 +46,7 @@ function TaxiRoute({
   const { currency } = useCurrencyStore();
   const { rates } = useRatesStore();
 
-  const egpPrice = currencyExchangeDefault("EUR", amount);
+  const egpPrice = currencyExchangeDefault(originalCurrency, amount);
 
   const convertedPrice = currencyExchange(originalCurrency, amount);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
