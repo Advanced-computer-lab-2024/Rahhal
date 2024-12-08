@@ -3,6 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 import promocodeRoutes from "./api/routes/promocode-routes";
 import stripeRoutes from "./api/routes/stripe-routes";
+import { sendReceipt } from "@/api/controllers/payment-notification-controller";
 
 const app = express();
 
@@ -15,5 +16,8 @@ app.use(cors());
 // Routes
 app.use("/promocode", promocodeRoutes);
 app.use("/stripe", stripeRoutes);
+
+// Notification
+app.post("/receipt", sendReceipt);
 
 export default app;

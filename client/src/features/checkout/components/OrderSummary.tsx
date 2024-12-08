@@ -17,16 +17,18 @@ export function OrderSummary({
   setTotal,
   setDiscountAmount,
   setActivePromotion,
+  onFreeDelivery,
   userId,
 }: {
   cart: PopulatedCart;
   activePromotion: ActivePromotion | null;
   discountAmount: number;
   total: number;
+  userId: string;
   setTotal: (value: number) => void;
   setActivePromotion: (value: ActivePromotion | null) => void;
   setDiscountAmount: (value: number) => void;
-  userId: string;
+  onFreeDelivery: () => void;
 }) {
   const { currency } = useCurrencyStore();
   const { rates } = useRatesStore();
@@ -41,7 +43,10 @@ export function OrderSummary({
   const subTotalDisplayed = subTotalConverted ? subTotalConverted.toFixed(2) : "N/A";
 
   const getShippingCost = () => {
-    if (activePromotion?.promotion.type === "shipping") return 0;
+    if (activePromotion?.promotion.type === "shipping") {
+      onFreeDelivery();
+      return 0;
+    }
     return defaultShipping;
   };
 

@@ -10,9 +10,12 @@ import { PaymentOptions } from "./PaymentOptions";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { createOrderInstance } from "../utils/helpers";
+import { constructReceiptData, createOrderInstance } from "../utils/helpers";
 import { fetchUserCart } from "@/api-calls/cart-api-calls";
 import { usePromocode } from "@/api-calls/promocode-api-calls";
+import { sendReceipt } from "@/api-calls/payment-api-calls";
+import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
+import { currencyExchangeSpec } from "@/utils/currency-exchange";
 
 function useIdFromParamsOrQuery() {
   const { id: paramId } = useParams<{ id?: string }>();
@@ -39,6 +42,8 @@ export default function Checkout() {
 
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { currency } = useCurrencyStore();
+  const { rates } = useRatesStore();
 
   const [selectedAddress, setSelectedAddress] = useState("");
   const [newAddress, setNewAddress] = useState("");
@@ -55,6 +60,9 @@ export default function Checkout() {
     phone?: string;
   }>({});
 
+  const BASE_DELIVERY_FEE = 100;
+  const [deliveryFee, setDeliveryFee] = useState(BASE_DELIVERY_FEE);
+
   const [discountAmount, setDiscountAmount] = useState(0);
   const [activePromotion, setActivePromotion] = useState<ActivePromotion | null>(null);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -62,6 +70,10 @@ export default function Checkout() {
   const [currentCheckoutStep, setCurrentCheckoutStep] = useState(2);
   const [stripePaymentTrigger, setStripePaymentTrigger] = useState(false);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+
+  const currencyConvertor = (originalPrice: number) => {
+    return currencyExchangeSpec("EGP", originalPrice, rates, currency) ?? 0;
+  };
 
   const handleContinueToPayment = () => {
     const newErrors: { address?: string; city?: string; postalCode?: string; phone?: string } = {};
@@ -93,6 +105,10 @@ export default function Checkout() {
     setCurrentCheckoutStep(2);
   };
 
+  const handleFreeDelivery = () => {
+    setDeliveryFee(0);
+  };
+
   const handleCompleteOrder = () => {
     if (selectedPaymentMethod === "creditCard") {
       setStripePaymentTrigger(true);
@@ -118,7 +134,7 @@ export default function Checkout() {
     try {
       if (user && cart) {
         const fullAddress = `${newAddress}, ${city}`;
-        await createOrderInstance(
+        const order = await createOrderInstance(
           cart,
           selectedPaymentMethod,
           discountAmount,
@@ -131,6 +147,10 @@ export default function Checkout() {
         if (activePromotion) {
           await usePromocode(activePromotion.code, user._id);
         }
+
+        const orderReceipt = constructReceiptData(order, deliveryFee, currency, currencyConvertor);
+        await sendReceipt(id!, orderReceipt);
+
         if (saveInfo) {
           const updatedAddresses = [...(user.addresses || []), fullAddress];
           console.log(updatedAddresses);
@@ -235,10 +255,11 @@ export default function Checkout() {
                   discountAmount={discountAmount}
                   activePromotion={activePromotion}
                   total={totalAmount}
+                  userId={id!}
                   setDiscountAmount={setDiscountAmount}
                   setActivePromotion={setActivePromotion}
                   setTotal={setTotalAmount}
-                  userId={id!}
+                  onFreeDelivery={handleFreeDelivery}
                 />
                 <Button
                   className="mt-6 w-full bg-complimentary-color hover:bg-complementary-hover disabled:bg-[--complimentary-color-fade] text-white py-3 px-4 rounded-md font-medium transition-colors"
