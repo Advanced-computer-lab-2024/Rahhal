@@ -60,7 +60,7 @@ export function PaymentOptions({
 }: PaymentSelectorProps) {
   const { currency } = useCurrencyStore();
 
-  const convertedWalletBalance = currencyExchange("EGP", walletBalance);
+  const convertedWalletBalance: number = currencyExchange("EGP", walletBalance) ?? 0;
   const formattedWalletBalance = `${convertedWalletBalance?.toFixed(2)} ${currency}`;
 
   return (
@@ -85,39 +85,39 @@ export function PaymentOptions({
                 className={`border-l-2 transition-colors ${
                   selectedPaymentMethod === method.id
                     ? "border-complementary"
-                    : "border-transparent"
-                } ${isDisabled ? "" : "hover:bg-gray-50"}`}
+                    : "border-transparent hover:bg-gray-50"
+                }`}
               >
-                <label
-                  onClick={() => !isDisabled && setSelectedPaymentMethod(method.id)}
-                  htmlFor={method.id}
-                  className={`block p-4 ${
-                    isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
-                  } flex flex-col`}
+                <div
+                  className={`p-4 flex items-center justify-between ${
+                    isDisabled
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:bg-gray-50 transition-colors"
+                  }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <RadioGroupItem
-                        value={method.id}
-                        id={method.id}
-                        className="text-complementary disabled:cursor-not-allowed disabled:opacity-50"
-                        disabled={isDisabled}
-                      />
-                      <Label htmlFor={method.id} className="text-sm font-medium">
-                        {method.label}
-                      </Label>
-                      {method.icon}
-                    </div>
-                    <div className="flex flex-col items-end justify-center">
-                      <span className={isDisabled ? "text-gray-400" : "text-gray-500"}>
-                        {method.id === "wallet" && formattedWalletBalance}
-                      </span>
-                      {isDisabled && method.id === "wallet" && (
-                        <p className="text-[0.7rem] text-red-800 ">Insufficient balance</p>
-                      )}
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <RadioGroupItem
+                      value={method.id}
+                      id={method.id}
+                      className="text-complementary"
+                      disabled={isDisabled} // The RadioGroupItem is still disabled
+                    />
+                    <Label htmlFor={method.id} className="text-sm font-medium">
+                      {method.label}
+                    </Label>
+                    {method.icon}
                   </div>
-                </label>
+                  <div className="flex flex-col items-end">
+                    {method.id === "wallet" && (
+                      <div className="flex flex-col items-end">
+                        <span className="text-sm text-gray-500">{formattedWalletBalance}</span>
+                        {isDisabled && (
+                          <p className="text-[0.7rem] text-red-800 mt-1">Insufficient balance</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
                 {method.expandable && selectedPaymentMethod === method.id && (
                   <div className="p-4 border-t bg-white">
                     {method.id === "creditCard" && (
