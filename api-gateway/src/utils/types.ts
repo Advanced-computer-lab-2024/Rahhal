@@ -1,5 +1,16 @@
 import type { z } from "zod";
 import type { RatingSchema } from "@/utils/zod-schemas";
+import type { ObjectId } from "mongoose";
+
+export interface IPayload{
+  id:ObjectId,
+  username:string,
+  password:string,
+  otp?:string,
+  role:string,
+  dob?:Date
+}
+
 
 export enum RateableEntityType {
   ACTIVITY = "activity",

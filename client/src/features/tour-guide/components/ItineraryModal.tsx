@@ -14,6 +14,7 @@ import ItineraryActivities from "@/features/tour-guide/components/itinerary-acti
 import ItineraryAvailableDatesAndTimes from "@/features/tour-guide/components/itinerary-available-dates-times/ItineraryAvailableDatesAndTimes";
 import ItineraryLocations from "@/features/tour-guide/components/itinerary-locations/ItineraryLocations";
 import { useParams } from "react-router-dom";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/hooks/use-toast";
 import { STATUS_CODES } from "@/lib/constants";
 import { deleteItinerary } from "@/api-calls/itineraries-api-calls";
@@ -25,6 +26,9 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { AxiosError } from "axios";
 import ItineraryPictureCard from "./ItineraryPictureCard";
+import { FaTrash } from "react-icons/fa";
+import { Button } from "@/components/ui/button";
+import useUserStore from "@/stores/user-state-store";
 
 interface ItinerariesModalProps {
   itineraryData?: TItinerary;
@@ -38,7 +42,7 @@ export function ItinerariesModal({
   dialogTrigger,
   username,
 }: ItinerariesModalProps) {
-  const { id } = useParams();
+  const { id } = useUserStore();
   const isNewItinerary: boolean = itineraryData === undefined;
   const [step, setStep] = useState(1);
   const modalContentRef = useRef<HTMLDivElement | null>(null); // Ref so i always return to the top of the modal

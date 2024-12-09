@@ -1,9 +1,9 @@
-export default function SecondaryLogo() {
+export default function SecondaryLogo({ width = 120, height = 40 }) {
     return(
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="120"
-          height="40"
+          width={width}
+          height={height}
           viewBox="0 0 120 45"
           fill="none"
         >

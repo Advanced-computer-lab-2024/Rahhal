@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import currencyExchange from "@/utils/currency-exchange";
-import { useParams } from "react-router-dom";
 import {
   addToWishlist,
   isProductWishlisted,
@@ -26,6 +25,7 @@ import {
 } from "@/api-calls/cart-api-calls";
 import useCartStore from "@/stores/nav-bar-icon-stores/cart-count-store";
 import useProductRefreshStore from "@/stores/refresh-product-store";
+import useUserStore from "@/stores/user-state-store";
 
 interface ProductCardProps {
   id: string;
@@ -44,7 +44,7 @@ export default function ProductCard({
   rating,
   sellername,
 }: ProductCardProps) {
-  const userId = useParams().id;
+  const { id: userId } = useUserStore();
   const [isInCart, setIsInCart] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [isHovered, setIsHovered] = useState(false);

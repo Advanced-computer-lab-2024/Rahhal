@@ -50,6 +50,13 @@ const paymentAxiosInstance = axios.create({
   },
 });
 
+const authAxiosInstance = axios.create({
+  baseURL: "http://authentication:3000",
+  validateStatus: (status) => {
+    return status < STATUS_CODES.GATEWAY_TIMEOUT;
+  },
+});
+
 export {
   userAxiosInstance,
   entertainmentAxiosInstance,
@@ -58,4 +65,5 @@ export {
   exchangeratesAxiosInstance,
   orderAxiosInstance,
   paymentAxiosInstance,
+  authAxiosInstance,
 };

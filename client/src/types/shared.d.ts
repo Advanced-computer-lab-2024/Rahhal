@@ -60,3 +60,19 @@ export interface INotification {
   message: string;
   seen: boolean;
 }
+export interface IPayload{
+  id: string;
+  username: string;
+  role: string;
+  dob?: Date;
+}
+
+export enum Roles {
+  ADMIN = "admin",
+  TOURIST = "tourist",
+  TOURGUIDE = "tourGuide",
+  ADVERTISER = "advertiser",
+  SELLER = "seller",
+  TOURISMGOVERNOR = "tourismGovernor",
+  GUEST = "guest"
+}

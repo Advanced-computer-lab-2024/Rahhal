@@ -1,20 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { getUserById } from "@/api-calls/users-api-calls";
+import { getUserById, logoutUser } from "@/api-calls/users-api-calls";
 import AvatarStyles from "../styles/ProfileAvatar.module.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { useTour } from '@/components/AppTour';
-function useIdFromParamsOrQuery() {
-  const { id: paramId } = useParams<{ id?: string }>();
-  const location = useLocation();
-
-  const queryParams = new URLSearchParams(location.search);
-  const queryId = queryParams.get("userId");
-
-  return paramId || queryId;
-}
+import useUserStore,{ UserState } from "@/stores/user-state-store";
 
 export const ProfileAvatar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,8 +15,12 @@ export const ProfileAvatar = () => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+  const handleLogoutUser = async () => {
+    await logoutUser();
+    await UserState();
+  };
 
-  const id = useIdFromParamsOrQuery();
+  const { id } = useUserStore();
 
   const {
     data: user,
@@ -55,44 +52,50 @@ export const ProfileAvatar = () => {
       </button>
       {isOpen && (
         <div className={AvatarStyles["menu"]}>
-          <Link to={`/user-settings/${id}`} onClick={toggleDropdown}>
+          <Link to={`/user-settings`} onClick={toggleDropdown}>
             {" "}
             <div className={AvatarStyles["menuItem"]}>Account</div>
           </Link>
-          <Link to={`/my-trips/${id}`} onClick={toggleDropdown}>
+          <Link to={`/my-trips`} onClick={toggleDropdown}>
             {" "}
             <div className={AvatarStyles["menuItem"]}>Trips</div>
           </Link>
 
-          <Link to={`/my-wishlist/${id}`} onClick={toggleDropdown}>
+          <Link to={`/my-wishlist`} onClick={toggleDropdown}>
             <div className={AvatarStyles["menuItem"]}>Wishlist</div>
           </Link>
 
-          <Link to={`/my-orders/${id}`}>
+          <Link to={`/my-orders`}>
             {" "}
             <div className={AvatarStyles["menuItem"]} onClick={toggleDropdown}>
               My Orders
             </div>
           </Link>
-          <Link to={`/my-bookmarks/${id}`}>
+          <Link to={`/my-bookmarks`}>
             {" "}
             <div className={AvatarStyles["menuItem"]} onClick={toggleDropdown}>
               Bookmarks
             </div>
           </Link>
-          <Link to={`/user-settings/wallet/${id}`}>
+          <Link to={`/user-settings/wallet`}>
             <div className={AvatarStyles["menuItem"]}>Wallet</div>
           </Link>
-          <Link to={`/entertainment/${id}`} onClick={() => {
+          <Link to={`/entertainment`} onClick={() => {
             toggleDropdown();
             setTimeout(startTour, 50);
           }}>
             <div className={AvatarStyles["menuItem"]}>Restart Tour</div>
           </Link>
-          <Link to={`/complaints/${id}`} onClick={toggleDropdown}>
+          <Link to={`/help-center`} onClick={toggleDropdown}>
             <div className={AvatarStyles["menuItem"]}>Help Center</div>
           </Link>
-          <Link to="/entertainment" onClick={toggleDropdown}>
+          <Link
+            to="/"
+            onClick={() => {
+              toggleDropdown();
+              handleLogoutUser();
+            }}
+          >
             <div className={AvatarStyles["logout"]}>Log Out</div>
           </Link>
         </div>

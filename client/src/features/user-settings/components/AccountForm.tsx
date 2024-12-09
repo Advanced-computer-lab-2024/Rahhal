@@ -22,39 +22,40 @@ import { EditContextTourGov } from "@/features/tourism-governor/components/Touri
 import { EditContextAdvertiser } from "@/features/advertiser/components/AdvertiserHomePage";
 import { useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { deleteUserNoReload, updateUser } from "@/api-calls/users-api-calls";
+import { deleteUserNoReload, updateUser, changeuserPassword } from "@/api-calls/users-api-calls";
 import DoubleCheckPopupWrapper from "../../../components/DoubleCheckPopUpWrapper";
+
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { Checkbox } from "@/components/ui/checkbox";
+import useUserStore from "@/stores/user-state-store";
+import { Roles } from "@/types/enums";
 export default function AccountForm() {
   const [preferenceTags, setPreferenceTags] = useState<{ _id: string; name: string }[]>([]);
+  const { id, role } = useUserStore();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [editForm, setEditForm] = useState(false);
   const [isDoubleCheckDialogOpen, setIsDoubleCheckDialogOpen] = useState(false);
 
-  const url = window.location.href;
-  const context = url.includes("admin")
-    ? EditContextAdmin
-    : url.includes("seller")
-      ? EditContextSeller
-      : url.includes("tour-guide")
-        ? EditContextTourGuide
-        : url.includes("tourism-governor")
-          ? EditContextTourGov
-          : url.includes("advertiser")
-            ? EditContextAdvertiser
-            : EditContext;
+  const context =
+    role === Roles.ADMIN
+      ? EditContextAdmin
+      : role === Roles.SELLER
+        ? EditContextSeller
+        : role === Roles.TOURGUIDE
+          ? EditContextTourGuide
+          : role === Roles.TOURISMGOVERNOR
+            ? EditContextTourGov
+            : role === Roles.ADVERTISER
+              ? EditContextAdvertiser
+              : EditContext;
 
   const { user } = useContext(context);
-  const { id } = useParams();
+  console.log("AccountForm -> user", user);
 
   const passwordValidator = z.object({
     oldPassword: z
       .string()
-      .refine((val) => val === user.password, {
-        message: "Old password does not match.",
-      })
       .optional(),
     newPassword: z
       .string()
@@ -66,9 +67,6 @@ export default function AccountForm() {
       })
       .regex(/[0-9]/, {
         message: "Password must contain at least one number.",
-      })
-      .refine((val) => val !== user.password, {
-        message: "New password must be different from the old password.",
       })
       .optional(),
   });
@@ -156,9 +154,9 @@ export default function AccountForm() {
 
     if (changePassword) {
       const isOldPasswordValid = await oldPasswordForm.trigger();
-
+      await changeuserPassword(id! , oldPasswordForm.getValues().oldPassword as string, oldPasswordForm.getValues().newPassword as string);
       if (isOldPasswordValid) {
-        update({ ...data, password: oldPasswordForm.getValues().newPassword });
+        update({ ...data });
         setChangePassword(false);
         oldPasswordForm.reset();
       } else {

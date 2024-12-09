@@ -15,19 +15,29 @@ import ratingRoutes from "@/api/routes/rating-routes";
 import orderRoutes from "@/api/routes/order-routes";
 import externalApiRoutes from "@/api/routes/external-api-routes";
 import paymentRoutes from "@/api/routes/payment-routes";
-import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './api/swagger/swagger-output.json'
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./api/swagger/swagger-output.json";
+import authRoutes from "@/api/routes/auth-routes";
+import generalRoutes from "@/api/routes/general-routes";
+import { authStateMiddleware } from "@/api/controllers/auth-controller";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:5173'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH'],
+    credentials: true
+  }));
 app.use(fileUpload({ preservePath: true }));
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(cookieParser());
+app.use(authStateMiddleware);
 
 // Setup Swagger UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Routes
 app.use("/api/user", userRoutes);
@@ -43,5 +53,7 @@ app.use("/api/rating", ratingRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/external-api", externalApiRoutes);
 app.use("/api/payment", paymentRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/", generalRoutes);
 
 export default app;

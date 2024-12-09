@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRatesStore } from "@/stores/currency-exchange-store";
 import { currencyExchangeSpec } from "@/utils/currency-exchange";
+import useUserStore from "@/stores/user-state-store";
 
 const paymentMethods: TPaymentMethod[] = [
   {
@@ -60,7 +61,7 @@ interface BookingFormProps {
 }
 
 function useIdFromParamsOrQuery() {
-  const { id: paramId } = useParams<{ id?: string }>();
+  const { id: paramId } = useUserStore();
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
@@ -198,10 +199,10 @@ function BookingForm({
           selectedPaymentMethod === "wallet"
             ? `You have ${remainingBalanceFormatted} ${currency} left in your wallet, enjoy them 🥳`
             : "Payment Successful",
-        style: {
-          backgroundColor: "#34D399",
-          color: "white",
-        },
+        // style: {
+        //   backgroundColor: "#34D399",
+        //   color: "white",
+        // },
         duration: 5000,
       });
     } catch (e) {

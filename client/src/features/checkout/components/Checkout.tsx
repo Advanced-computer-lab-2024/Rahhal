@@ -2,7 +2,7 @@ import { OrderSummary } from "./OrderSummary";
 import { Input } from "@/components/ui/input";
 import { DeliveryForm } from "./DeliveryForm";
 import { getUserById, updateUser } from "@/api-calls/users-api-calls";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { CompletionPopup } from "./CompletionPopup";
@@ -16,19 +16,11 @@ import { usePromocode } from "@/api-calls/promocode-api-calls";
 import { sendReceipt } from "@/api-calls/payment-api-calls";
 import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
 import { currencyExchangeSpec } from "@/utils/currency-exchange";
-
-function useIdFromParamsOrQuery() {
-  const { id: paramId } = useParams<{ id?: string }>();
-  const location = useLocation();
-
-  const queryParams = new URLSearchParams(location.search);
-  const queryId = queryParams.get("userId");
-
-  return paramId || queryId;
-}
+import useUserStore from "@/stores/user-state-store";
+import useCartStore from "@/stores/nav-bar-icon-stores/cart-count-store";
 
 export default function Checkout() {
-  const id = useIdFromParamsOrQuery();
+  const { id } = useUserStore();
   const { data: user } = useQuery({
     queryKey: ["user", id],
     queryFn: () => getUserById(id as string),
@@ -70,6 +62,7 @@ export default function Checkout() {
   const [currentCheckoutStep, setCurrentCheckoutStep] = useState(1);
   const [stripePaymentTrigger, setStripePaymentTrigger] = useState(false);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+  const { setCount } = useCartStore();
 
   const currencyConvertor = (originalPrice: number) => {
     return currencyExchangeSpec("EGP", originalPrice, rates, currency) ?? 0;
@@ -157,6 +150,7 @@ export default function Checkout() {
         const orderReceipt = constructReceiptData(order, deliveryFee, currency, currencyConvertor);
         await sendReceipt(id!, orderReceipt);
         await emptyCart(cart.user);
+        setCount(0);
 
         if (saveInfo) {
           const updatedAddresses = [...(user.addresses || []), fullAddress];
@@ -165,7 +159,7 @@ export default function Checkout() {
         setCompleted(true);
         setTimeout(() => {
           setCompleted(false);
-          navigate(`/my-orders/${user._id}`);
+          navigate(`/my-orders`);
         }, 7000);
       }
     } catch (e) {
