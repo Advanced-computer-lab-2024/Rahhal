@@ -42,6 +42,7 @@
     "mongoose": "^7.6.8",
     "morgan": "^1.10.0",
     "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1",
     "zod": "^3.23.8"
   }
 }
