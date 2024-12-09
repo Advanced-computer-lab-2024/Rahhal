@@ -174,7 +174,7 @@ export default function AccountForm() {
   async function handleDeleteAccount() {
     try {
       await deleteUserNoReload(user);
-      // navigate("/");
+      navigate("/");
     } catch (error) {
       if (error instanceof AxiosError) {
         setIsDoubleCheckDialogOpen(false);
