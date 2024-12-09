@@ -89,7 +89,7 @@ export const ProfileAvatar = () => {
           }}>
             <div className={AvatarStyles["menuItem"]}>Restart Tour</div>
           </Link>
-          <Link to={`/complaints/${id}`} onClick={toggleDropdown}>
+          <Link to={`/help-center/${id}`} onClick={toggleDropdown}>
             <div className={AvatarStyles["menuItem"]}>Help Center</div>
           </Link>
           <Link to="/entertainment" onClick={toggleDropdown}>
