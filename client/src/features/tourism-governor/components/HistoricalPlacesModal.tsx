@@ -77,7 +77,7 @@ export function HistoricalPlacesModal({
           {
             ...rest,
             owner: userId!,
-            category: extractIds(modalDBData.categories),
+            category: extractIds([modalHistoricalPlaceData.category]),
             preferenceTags: extractIds(modalHistoricalPlaceData.preferenceTags),
             tags: extractIds(modalHistoricalPlaceData.tags),
           } as TNewHistoricalPlace,
@@ -176,7 +176,9 @@ export function HistoricalPlacesModal({
             value={modalHistoricalPlaceData?.name ?? ""}
             onChange={(e) =>
               setModalHistoricalPlaceData(
-                modalHistoricalPlaceData ? { ...modalHistoricalPlaceData, name: e.target.value } : undefined,
+                modalHistoricalPlaceData
+                  ? { ...modalHistoricalPlaceData, name: e.target.value }
+                  : undefined,
               )
             }
             placeholder="Enter Historical Place Name"
