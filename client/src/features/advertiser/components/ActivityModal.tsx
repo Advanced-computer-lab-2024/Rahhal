@@ -4,7 +4,6 @@ import { ToggleableSwitchCard } from "@//components/ToggleableSwitchCard";
 import { DoorOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import PictureCard from "@/components/PictureCard";
-import ShortText from "@/components/ShortText";
 import PriceCategories from "@/components/price-categories";
 import TagsSelector from "@//components/TagsSelector";
 import { GenericSelect } from "@//components/GenericSelect";
@@ -15,13 +14,18 @@ import { fetchCategories } from "@/api-calls/categories-api-calls";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { DEFAULTS } from "@/lib/constants";
 import LocationMap from "@/components/google-maps/LocationMap";
-import LongText from "@/components/LongText";
+import { Label } from "@/components/ui/label";
+import { toast } from "@/hooks/use-toast";
+import { STATUS_CODES } from "@/lib/constants";
+import { Input } from "@/components/ui/input";
 
 interface ActivitiesModalProps {
   activityData?: TActivity;
   dialogTrigger?: React.ReactNode;
   userId?: string;
   username?: string;
+  onSubmit?: (activity: TActivity) => void;
+  onDelete?: (id: string) => void;
 }
 
 export function ActivitiesModal({
@@ -29,6 +33,8 @@ export function ActivitiesModal({
   dialogTrigger,
   userId,
   username,
+  onDelete,
+  onSubmit,
 }: ActivitiesModalProps) {
   const isNewActivity: boolean = activityData === undefined; // check if the activity is new or existing
   const [modalActivityData, setModalActivitiesData] = useState<TActivity | undefined>(activityData); // current activity data present in the modal
@@ -48,28 +54,63 @@ export function ActivitiesModal({
     return ids;
   };
 
+  const handleDelete = () => {
+    if (modalActivityData && onDelete) {
+      onDelete(modalActivityData._id!);
+    }
+  };
+
   const handleSubmit = async () => {
-    const { _id, ...rest } = modalActivityData!;
+    if (!modalActivityData) return;
 
-    if (isNewActivity) {
-      // For fields that are referenced in the database by ids, we need to extract them first
-      // since the database will only accept for these field an id or list of ids
-      const categoryId = extractIds([modalActivityData!.category]) as string;
-      const preferenceTagsIds = extractIds(modalActivityData!.preferenceTags) as string[];
+    try {
+      let response;
+      if (isNewActivity) {
+        toast({
+          title: "Saving",
+          description: "Saving activity...",
+          style: {
+            backgroundColor: "#3B82F6",
+            color: "white",
+          },
+        });
+        const newActivityData = {
+          ...modalActivityData,
+          preferenceTags: extractIds(modalActivityData.preferenceTags),
+          category: extractIds([modalActivityData.category]),
+          tags: extractIds(modalActivityData.tags),
+          owner: userId!,
+        };
+        
+        response = await createActivity(newActivityData, userId!, username!, activityPictures);
+      } else {
+        response = await updateActivity(modalActivityData, activityPictures);
+      }
 
-      const newActivity: TNewActivity = {
-        ...rest,
-        category: categoryId,
-        preferenceTags: preferenceTagsIds,
-
-        // TODO - should be removed later when we settle down on its removal
-        tags: preferenceTagsIds,
-      };
-      // I am sure that userId is not null when the modal open from table add button
-      // otherwise it opens from an edit action and in that situation userId is not null
-      // and already stored in the database and it's not needed in updates
-      await createActivity(newActivity, userId!, username!, activityPictures);
-    } else await updateActivity(modalActivityData!, activityPictures);
+      if (
+        response?.status === STATUS_CODES.STATUS_OK ||
+        response?.status === STATUS_CODES.CREATED
+      ) {
+        toast({
+          title: "Success",
+          description: "Activity saved successfully",
+          style: {
+            backgroundColor: "#34D399",
+            color: "white",
+          },
+        });
+        if (onSubmit) {
+          onSubmit(modalActivityData);
+          setModalActivitiesData(DEFAULTS.ACTIVITY);
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save activity",
+        variant: "destructive",
+      });
+    }
   };
 
   useEffect(() => {
@@ -94,31 +135,40 @@ export function ActivitiesModal({
       description="Activity Details"
       dialogTrigger={dialogTrigger}
       onSubmit={handleSubmit}
+      showDeleteButton={!isNewActivity}
+      onDelete={handleDelete}
     >
-      <ShortText
-        title="Name"
-        type={"text"}
-        initialValue={modalActivityData?.name ?? ""}
-        onSave={(value) =>
-          setModalActivitiesData(
-            modalActivityData ? { ...modalActivityData, name: value } : undefined,
-          )
-        }
-        placeholder={"Enter name"}
-        initialDisabled={!isNewActivity}
-      />
+      <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-2">
+          <Label>Activity Name</Label>
+          <Input
+            type="text"
+            value={modalActivityData?.name}
+            onChange={(e) =>
+              setModalActivitiesData(
+                modalActivityData ? { ...modalActivityData, name: e.target.value } : undefined,
+              )
+            }
+            placeholder="Enter activity name"
+          />
+        </div>
+      </div>
 
-      <LongText
-        title="Description"
-        initialValue={modalActivityData?.description ?? ""}
-        onSave={(value) =>
-          setModalActivitiesData(
-            modalActivityData ? { ...modalActivityData, description: value } : undefined,
-          )
-        }
-        placeholder={"Enter a detailed description"}
-        initialDisabled={!isNewActivity}
-      />
+      <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-2">
+          <Label>Description</Label>
+          <Input
+            type="text"
+            value={modalActivityData?.description}
+            onChange={(e) =>
+              setModalActivitiesData(
+                modalActivityData ? { ...modalActivityData, description: e.target.value } : undefined,
+              )
+            }
+            placeholder="Enter a detailed description"
+          />
+        </div>
+      </div>
 
       <EditableDatePicker
         date={modalActivityData?.date ?? new Date()}
@@ -194,20 +244,24 @@ export function ActivitiesModal({
         }}
         initialValue={modalActivityData?.category._id ?? ""}
       />
-      <ShortText
-        title="Special Discounts"
-        type={"number"}
-        initialValue={modalActivityData?.specialDiscount.toString() ?? "0"}
-        onSave={(value) => {
-          setModalActivitiesData(
-            modalActivityData
-              ? { ...modalActivityData, specialDiscount: Number(value) }
-              : undefined,
-          );
-        }}
-        placeholder={"Enter special discounts"}
-        initialDisabled={!isNewActivity}
-      />
+
+      <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-2">
+          <Label>Special Discounts</Label>
+          <Input
+            type="number"
+            value={modalActivityData?.specialDiscount.toString()}
+            onChange={(e) =>
+              setModalActivitiesData(
+                modalActivityData
+                  ? { ...modalActivityData, specialDiscount: Number(e.target.value) }
+                  : undefined,
+              )
+            }
+            placeholder="Enter special discounts"
+          />
+        </div>
+      </div>
       <div>
         <ToggleableSwitchCard
           title="Is Booking Open"

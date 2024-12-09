@@ -5,7 +5,6 @@ import {
   TNewHistoricalPlace,
 } from "@/features/tourism-governor/utils/tourism-governor-columns";
 import { uploadToFirebase } from "@/utils/firebase";
-import { rename } from "fs";
 import { renameHistoricalPlaceImage } from "@/features/tourism-governor/utils/tourism-governer-firebase";
 
 export async function fetchHistoricalPlaces() {
@@ -28,15 +27,17 @@ export async function fetchHistoricalPlaceById(historicalPlaceId: string) {
   return response.data;
 }
 
-export async function deleteHistoricalPlace(historicalPlace: THistoricalPlace) {
-  console.log(historicalPlace);
-  await axios.delete(`${SERVICES_URLS.ENTERTAINMENT}/historical-places/${historicalPlace._id}`);
-  alert("Historical Place deleted successfully");
-  window.location.reload();
+export async function deleteHistoricalPlace(historicalPlaceId: string) {
+  const response = await axios.delete(
+    `${SERVICES_URLS.ENTERTAINMENT}/historical-places/${historicalPlaceId}`,
+  );
+  return response;
 }
 
-export async function updateHistoricalPlace(historicalPlaceData: THistoricalPlace, historicalPlaceImages: FileList | null) {
-
+export async function updateHistoricalPlace(
+  historicalPlaceData: THistoricalPlace,
+  historicalPlaceImages: FileList | null,
+) {
   const urls: string[] = await uploadToFirebase(
     historicalPlaceImages,
     historicalPlaceData.owner,
@@ -46,14 +47,12 @@ export async function updateHistoricalPlace(historicalPlaceData: THistoricalPlac
 
   historicalPlaceData.images = [...historicalPlaceData.images, ...urls];
 
-  
-
-  await axios.patch(
+  const {_id, ...data} = historicalPlaceData;
+  const response = await axios.patch(
     `${SERVICES_URLS.ENTERTAINMENT}/historical-places/${historicalPlaceData!._id}`,
-    historicalPlaceData,
+    data,
   );
-  alert("Historical Place updated successfully");
-  window.location.reload();
+  return response;
 }
 
 export async function createHistoricalPlace(
@@ -61,13 +60,12 @@ export async function createHistoricalPlace(
   userId: string,
   historicalPlaceImages: FileList | null,
 ) {
-
   newHistoricalPlaceData.owner = userId;
 
-  
-
-  
-  const response = await axios.post<THistoricalPlace>(SERVICES_URLS.ENTERTAINMENT + "/historical-places", newHistoricalPlaceData);
+  const response = await axios.post<THistoricalPlace>(
+    SERVICES_URLS.ENTERTAINMENT + "/historical-places",
+    newHistoricalPlaceData,
+  );
 
   if (historicalPlaceImages) {
     const urls: string[] = await uploadToFirebase(
@@ -82,6 +80,5 @@ export async function createHistoricalPlace(
     });
   }
 
-  alert("Historical Place created successfully");
-  window.location.reload();
+  return response;
 }

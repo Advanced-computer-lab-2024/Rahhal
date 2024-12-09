@@ -17,19 +17,12 @@ export const submitHistoricalTags = async (
   isNewHistoricalTag: boolean,
 ) => {
   if (isNewHistoricalTag) {
-    try {
-      const response = await axios.post(SERVICES_URLS.ENTERTAINMENT + "/historical-tags", tagData);
-      console.log(response.data);
-      alert("Historical Tag created successfully");
-      window.location.reload();
-    } catch (error) {
-      console.log(tagData);
-    }
+    const response = await axios.post(SERVICES_URLS.ENTERTAINMENT + "/historical-tags", tagData);
+    return response;
   } else {
     if (tagData) {
-      await axios.patch(`${SERVICES_URLS.ENTERTAINMENT}/historical-tags/${tagData._id}`, tagData);
-      alert("Historical Tag updated successfully");
-      window.location.reload();
+      const response = await axios.patch(`${SERVICES_URLS.ENTERTAINMENT}/historical-tags/${tagData._id}`, tagData);
+      return response;
     }
   }
 };

@@ -4,9 +4,12 @@ import { activitiesColumns, TActivity } from "@/features/advertiser/utils/advert
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { ActivitiesModal } from "./ActivityModal";
 import { useParams } from "react-router-dom";
-import { fetchUserActivities } from "@/api-calls/activities-api-calls";
+import { fetchUserActivities, deleteActivity } from "@/api-calls/activities-api-calls";
 import { TUser } from "@/types/user";
 import { getUserById } from "@/api-calls/users-api-calls";
+import { toast } from "@/hooks/use-toast";
+import { STATUS_CODES } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 
 function AdvertiserView() {
   const [activities, setActivities] = useState<TActivity[]>([]);
@@ -31,25 +34,72 @@ function AdvertiserView() {
     init();
   }, []);
 
+  const handleActivityDelete = async (id: string) => {
+    try {
+      const response = await deleteActivity(id);
+      if (response.status === STATUS_CODES.STATUS_OK) {
+        toast({
+          title: "Success",
+          description: "Activity deleted successfully",
+          style: {
+            backgroundColor: "#34D399",
+            color: "white",
+          },
+        });
+
+        const newActivities = activities.filter((activity) => activity._id !== id);
+        setActivities(newActivities);
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as any).response?.data?.message || "Error deleting activity",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleActivityUpdate = (activity: TActivity) => {
+    const newActivities = activities.map((oldActivity) => {
+      if (oldActivity._id === activity._id) {
+        return activity;
+      }
+      return oldActivity;
+    });
+    setActivities(newActivities);
+  };
+
   return (
-    <>
+    <div className="container m-auto">
+      <h1
+        className={cn(
+          "text-3xl font-bold tracking-tight",
+          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent",
+        )}
+      >
+        Activities
+      </h1>
       {id ? (
         <DataTable
           data={activities}
-          columns={activitiesColumns}
+          columns={activitiesColumns(handleActivityDelete, handleActivityUpdate)}
           newRowModal={
             <ActivitiesModal
               userId={id}
               username={user?.companyName}
               activityData={undefined}
-              dialogTrigger={<DataTableAddButton />}
+              dialogTrigger={<DataTableAddButton className="bg-[#1d3c51]" />}
+              onSubmit={(newActivity) => {
+                setActivities((prev) => [...prev, newActivity]);
+              }}
+              onDelete={handleActivityDelete}
             />
           }
         />
       ) : (
         <p>Resource not found</p>
       )}
-    </>
+    </div>
   );
 }
 
