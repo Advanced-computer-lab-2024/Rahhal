@@ -10,6 +10,7 @@ import { toast } from "@/hooks/use-toast";
 import { STATUS_CODES } from "@/lib/constants";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ProductModalProps {
   productData?: TProduct;
@@ -165,7 +166,7 @@ export function ProductModal({
       <div className="flex flex-col gap-4 p-4">
         <div className="flex flex-col gap-2">
           <Label>Description</Label>
-          <Input
+          <Textarea
             value={modalProductData?.description ?? ""}
             onChange={(e) =>
               setModalProductData(

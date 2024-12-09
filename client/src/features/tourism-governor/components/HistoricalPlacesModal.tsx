@@ -22,6 +22,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { STATUS_CODES } from "@/lib/constants";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 interface HistoricalPlacesModalProps {
   historicalPlaceData?: THistoricalPlace;
@@ -202,8 +203,7 @@ export function HistoricalPlacesModal({
       <div className="flex flex-col gap-4 p-4">
         <div className="flex flex-col gap-2">
           <Label>Description</Label>
-          <Input
-            type="text"
+          <Textarea
             value={modalHistoricalPlaceData?.description ?? ""}
             onChange={(e) =>
               setModalHistoricalPlaceData(
