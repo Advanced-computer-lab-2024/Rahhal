@@ -30,9 +30,10 @@
    - [Naming Conventions](#naming-conventions)
    - [RESTful API Conventions](#restful-api-conventions)
 11. [Contribute](#contribute)
-12. [Screenshots](#screenshots)
-13. [Credits](#credits)
-14. [License](#license)
+12. [Contributors](#contributors)
+13. [Screenshots](#screenshots)
+14. [Credits](#credits)
+15. [License](#license)
 
 
 <a id="motivation"></a>
@@ -86,6 +87,7 @@ We are using `vitest`. To run the tests, execute the following commands in the r
 - [Docker](https://www.docker.com/)
 - [ESlint](https://eslint.org/)
 - [Husky](https://github.com/typicode/husky/tree/main)
+- [RabbitMQ](https://www.rabbitmq.com/)
 
 <a id="how-to-use"></a>
 ## How To Use
@@ -972,6 +974,20 @@ We welcome contributions to Rahhal! if you wish to contribute , it's as simple a
 9. Wait for your pull request to be reviewed and merged
 
 
+## Contributors
+
+Thanks to all the amazing people who have contributed to this project:
+
+- [Abdelrahman Talaat](https://github.com/Talaat-jr)
+- [Abdullah Mahmoud](https://github.com/dodzii)
+- [Abdullah Ahmed](https://github.com/AbdallahAhmadd)
+- [Ahmed Hawater](https://github.com/AhmedHawater2003)
+- [Ahd Mostafa](https://github.com/AhdMostafa0)
+- [Ali Shokry](https://github.com/AliShokryy)
+- [Amr Hegazy](https://github.com/Amr-Hegazy1)
+- [Farah Faisal](https://github.com/FarahFaisall)
+- [Youssef ElBorolosy](https://github.com/YousefElbrolosy)
+- [Ziad Abdelrahman](https://github.com/Ziad-Abdelrahman)
 
 
 <a id="screenshots"></a>
@@ -1055,7 +1071,7 @@ We welcome contributions to Rahhal! if you wish to contribute , it's as simple a
 - [Vite Crash Course](https://www.youtube.com/watch?v=89NJdbYTgJ8&pp=ygUEVml0ZQ%3D%3D)
 - [React Query Hook + Zod](https://www.youtube.com/watch?v=u6PQ5xZAv7Q)
 - [MongoDB Crash Course](https://www.youtube.com/watch?v=DZBGEVgL2eE&pp=ygUUTW9uZ29zZSBjcmFzaCBjb3Vyc2U%3D)
-- [How to build NodeJS Microservice - NodeJS Monolithic to Microservice Architecture](https://www.youtube.com/watch?v=EXDkgjU8DDU&list=PLaLqLOj2bk9ZV2RhqXzABUP5QSg42uJEs&index=1&pp=iAQB)
+- [NodeJS Monolithic to Microservice Architecture](https://www.youtube.com/watch?v=EXDkgjU8DDU&list=PLaLqLOj2bk9ZV2RhqXzABUP5QSg42uJEs&index=1&pp=iAQB)
 
 <a id="license"></a>
 ## License
