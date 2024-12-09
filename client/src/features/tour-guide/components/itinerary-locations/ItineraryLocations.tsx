@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ItineraryLocationsEdit from "./ItineraryLocationsEdit";
 import ItineraryLocationsNonEdit from "./ItineraryLocationsNonEdit";
+import { Label } from "@/components/ui/label";
+import { Settings2 } from "lucide-react";
 
 interface LocationEntry {
   lat: number;
@@ -22,23 +23,27 @@ const ItineraryLocations: React.FC<ItineraryLocationsProps> = ({ locations, onSa
     setIsEditing(false); // Close editing after saving
   };
 
+  const handleAdd = () => {
+    setIsEditing(true); // Open the editing form
+  };
+
   return (
-    <Card>
-      <CardHeader className="flex justify-between items-center">
-        <span>Available Locations</span>
-        <Button onClick={() => setIsEditing(!isEditing)}>{isEditing ? "Cancel" : "Edit"}</Button>
-      </CardHeader>
-      <CardContent>
-        {isEditing ? (
-          <ItineraryLocationsEdit
-            locations={locations}
-            onSave={handleSave} // Pass the handleSave to ItineraryLocationsEdit
-          />
-        ) : (
-          <ItineraryLocationsNonEdit locations={locations} />
-        )}
-      </CardContent>
-    </Card>
+    <div>
+      <div className="flex gap-3 items-center">
+        <Label className="text-lg">Available Dates and Times</Label>
+        <Button variant="link" className="p-0" onClick={handleAdd}>
+          <Settings2 className="h-5 w-5 text-primary-color" />
+        </Button>
+      </div>
+      {isEditing ? (
+        <ItineraryLocationsEdit
+          locations={locations}
+          onSave={handleSave} // Pass the handleSave to ItineraryLocationsEdit
+        />
+      ) : (
+        <ItineraryLocationsNonEdit locations={locations} />
+      )}
+    </div>
   );
 };
 

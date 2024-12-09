@@ -20,16 +20,18 @@ import { EditContextSeller } from "@/features/seller/components/SellerHomePage";
 import { EditContextTourGuide } from "@/features/tour-guide/components/TourGuideHomePage";
 import { EditContextTourGov } from "@/features/tourism-governor/components/TourismGovernorHomepage";
 import { EditContextAdvertiser } from "@/features/advertiser/components/AdvertiserHomePage";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { updateUser } from "@/api-calls/users-api-calls";
-import DeleteAccountButton from "./DeleteAccountButton";
+import { deleteUserNoReload, updateUser } from "@/api-calls/users-api-calls";
+import DoubleCheckPopupWrapper from "../../../components/DoubleCheckPopUpWrapper";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { Checkbox } from "@/components/ui/checkbox";
 export default function AccountForm() {
   const [preferenceTags, setPreferenceTags] = useState<{ _id: string; name: string }[]>([]);
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [editForm, setEditForm] = useState(false);
+  const [isDoubleCheckDialogOpen, setIsDoubleCheckDialogOpen] = useState(false);
 
   const url = window.location.href;
   const context = url.includes("admin")
@@ -167,6 +169,22 @@ export default function AccountForm() {
     }
     form.reset(data);
     oldPasswordForm.reset();
+  }
+
+  async function handleDeleteAccount() {
+    try {
+      await deleteUserNoReload(user);
+      // navigate("/");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        setIsDoubleCheckDialogOpen(false);
+        toast({
+          title: "Ops, something went wrong!",
+          description: error.response?.data.error,
+          variant: "destructive",
+        });
+      }
+    }
   }
 
   return (
@@ -358,7 +376,20 @@ export default function AccountForm() {
                 </div>
                 <div className="col-span-8"></div>
                 <div className="col-span-2 ml-auto">
-                  <DeleteAccountButton user={{ ...user, _id: id }} />
+                  <DoubleCheckPopupWrapper
+                    customMessage="This will permanently delete your account."
+                    isOpen={isDoubleCheckDialogOpen}
+                    onAction={handleDeleteAccount}
+                    onCancel={() => setIsDoubleCheckDialogOpen(false)}
+                  >
+                    <Button
+                      variant="destructive"
+                      className="rounded-md text-sm font-medium h-9 px-4 py-2"
+                      onClick={() => setIsDoubleCheckDialogOpen(true)}
+                    >
+                      Delete My Account
+                    </Button>
+                  </DoubleCheckPopupWrapper>
                 </div>
               </div>
             </div>
