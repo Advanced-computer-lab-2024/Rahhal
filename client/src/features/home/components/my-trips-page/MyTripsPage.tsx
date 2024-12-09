@@ -77,7 +77,7 @@ export const MyTripsPage = () => {
     return dateTimestamp < currentTimestamp && status === "upcoming";
   }
 
-  const { id: userId} = useUserStore();
+  const { id: userId } = useUserStore();
 
   const {
     data: booking,
@@ -107,9 +107,11 @@ export const MyTripsPage = () => {
     return navigate(`/my-trips-details`, { state: { booking } });
   };
 
-  const [selectedMainFilter, setSelectedMainFilter] = useState("experiences");
-  const [selectedSubFilter, setSelectedSubFilter] = useState("activity");
-  const [filteredBookings, setFilteredBookings] = useState<TPopulatedBooking[]>(booking as TPopulatedBooking[]);
+  const [selectedMainFilter, setSelectedMainFilter] = useState("");
+  const [selectedSubFilter, setSelectedSubFilter] = useState("");
+  const [filteredBookings, setFilteredBookings] = useState<TPopulatedBooking[]>(
+    booking as TPopulatedBooking[],
+  );
 
   useEffect(() => {
     // update the main filter when the sub filter changes
@@ -121,11 +123,11 @@ export const MyTripsPage = () => {
     if (!booking) return;
     // filter bookings based on the selected sub filter
     setFilteredBookings(
-      (booking as TPopulatedBooking[]).filter((booking) => booking.type === selectedSubFilter),
+      (booking as TPopulatedBooking[]).filter(
+        (booking) =>
+          (!selectedOption && selectedMainFilter === "") || booking.type === selectedSubFilter,
+      ),
     );
-
-
-
   }, [selectedSubFilter, booking]);
 
   return (
@@ -160,9 +162,8 @@ export const MyTripsPage = () => {
 
       <div className={PageStyles["trip-list"]}>
         {filteredBookings && filteredBookings.length > 0
-          ? filteredBookings.map(
-              (booking: TPopulatedBooking) => {
-                let price;
+          ? filteredBookings.map((booking: TPopulatedBooking) => {
+              let price;
               if (booking.type === bookmarkType.Activity) {
                 price =
                   booking.selectedPrice -
@@ -184,17 +185,15 @@ export const MyTripsPage = () => {
               const image = booking.entity.images ? booking.entity.images[0] : undefined;
 
               return (
-                booking.type === selectedSubFilter && (
-                  <MyTripsCard
-                    key={booking.entity._id}
-                    title={booking.entity.name || `${booking.type}`}
-                    price={price}
-                    status={status}
-                    date={date}
-                    image={image}
-                    onClick={() => handleClick(booking)}
-                  />
-                )
+                <MyTripsCard
+                  key={booking.entity._id}
+                  title={booking.entity.name || `${booking.type}`}
+                  price={price}
+                  status={status}
+                  date={date}
+                  image={image}
+                  onClick={() => handleClick(booking)}
+                />
               );
             })
           : !isLoading &&
