@@ -1,5 +1,5 @@
 import { GenericModal } from "@//components/GenericModal";
-import { TActivity, TNewActivity } from "@/features/advertiser/utils/advertiser-columns";
+import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { ToggleableSwitchCard } from "@//components/ToggleableSwitchCard";
 import { DoorOpen } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -18,6 +18,9 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { STATUS_CODES } from "@/lib/constants";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { DatePicker } from "@/components/ui/date-picker";
+import { TimePicker } from "@/components/ui/TimePicker";
 
 interface ActivitiesModalProps {
   activityData?: TActivity;
@@ -81,7 +84,7 @@ export function ActivitiesModal({
           tags: extractIds(modalActivityData.tags),
           owner: userId!,
         };
-        
+
         response = await createActivity(newActivityData, userId!, username!, activityPictures);
       } else {
         response = await updateActivity(modalActivityData, activityPictures);
@@ -157,36 +160,47 @@ export function ActivitiesModal({
       <div className="flex flex-col gap-4 p-4">
         <div className="flex flex-col gap-2">
           <Label>Description</Label>
-          <Input
-            type="text"
+          <Textarea
             value={modalActivityData?.description}
             onChange={(e) =>
               setModalActivitiesData(
-                modalActivityData ? { ...modalActivityData, description: e.target.value } : undefined,
+                modalActivityData
+                  ? { ...modalActivityData, description: e.target.value }
+                  : undefined,
               )
             }
-            placeholder="Enter a detailed description"
+            placeholder="Enter activity description"
+          />
+        </div>
+      </div>
+      <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-2">
+          <Label>Date</Label>
+          <DatePicker
+            date={modalActivityData?.date ?? new Date()}
+            setDate={(date) =>
+              setModalActivitiesData(
+                modalActivityData ? { ...modalActivityData, date: date ?? new Date() } : undefined,
+              )
+            }
           />
         </div>
       </div>
 
-      <EditableDatePicker
-        date={modalActivityData?.date ?? new Date()}
-        onDateChange={(date) =>
-          setModalActivitiesData(
-            modalActivityData ? { ...modalActivityData, date: date } : undefined,
-          )
-        }
-      />
-
-      <EditableTimePicker
-        time={modalActivityData?.time ?? new Date()}
-        onTimeChange={(time: Date | undefined) =>
-          setModalActivitiesData(
-            modalActivityData ? { ...modalActivityData, time: time ?? new Date() } : undefined,
-          )
-        }
-      />
+      <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-2">
+          <Label>Time</Label>
+          <TimePicker
+            date={modalActivityData?.time ?? new Date()}
+            onChange={(time) =>
+              setModalActivitiesData(
+                modalActivityData ? { ...modalActivityData, time: time ?? new Date() } : undefined,
+              )
+            }
+            hourCycle={12}
+          />
+        </div>
+      </div>
 
       <LocationMap
         isEditingInitially={isNewActivity}
