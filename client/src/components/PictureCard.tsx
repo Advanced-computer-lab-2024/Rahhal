@@ -8,22 +8,26 @@ import { useRef } from "react";
 interface PictureCardProps {
   title: string;
   description: string;
-  initialImageSources: string[];
+  imageSources: string[];
   handleFileUploadCallback: (files: FileList) => void;
+  updateImageSources: (imageSources: string[]) => void;
 }
 
 // Function to handle file upload
-const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, imageSources: string[], imageSourcesCallback: (imageSources: string[]) => void, handleFileUploadCallback: (files: FileList) => void) => {
+const handleFileUpload = (
+  e: React.ChangeEvent<HTMLInputElement>,
+  imageSources: string[],
+  imageSourcesCallback: (imageSources: string[]) => void,
+  handleFileUploadCallback: (files: FileList) => void,
+) => {
   const files = e.target.files;
   if (files) {
-    
     // ADD FILE UPLOAD LOGIC HERE
 
     // Loop through the files and add the image sources to the image sources array
     const newPictures: string[] = [];
     for (let i = 0; i < files.length; i++) {
       newPictures.push(URL.createObjectURL(files[i]));
-      
     }
 
     // Update the image sources
@@ -31,10 +35,6 @@ const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, imageSources: 
 
     // Call the handle file upload callback
     handleFileUploadCallback(files);
-
-
-    
-  
   }
 };
 
@@ -45,12 +45,17 @@ const openFileUploadDialog = (pictureUploadFieldRef: React.RefObject<HTMLInputEl
   }
 };
 
-const PictureCard = ({ title, description, initialImageSources, handleFileUploadCallback }: PictureCardProps) => {
+const PictureCard = ({
+  title,
+  description,
+  imageSources,
+  handleFileUploadCallback,
+  updateImageSources,
+}: PictureCardProps) => {
   // CONSTANTS
   const MIN_NUMBER_OF_IMAGES: number = 0; // Minimum number of images
   const MAX_NUMBER_OF_IMAGES: number = 3; // Maximum number of images
-  
-  const [imageSources, setImageSources] = useState<string[]>(initialImageSources); // Image sources
+
   const pictureUploadFieldRef: React.RefObject<HTMLInputElement> = useRef(null); // Picture upload field reference to open the file dialog when the plus icon is clicked
 
   const thumbnailImages: string[] = imageSources.slice(MIN_NUMBER_OF_IMAGES, MAX_NUMBER_OF_IMAGES); // Thumbnail images
@@ -64,8 +69,6 @@ const PictureCard = ({ title, description, initialImageSources, handleFileUpload
   } else {
     plusIconRotation = "rotate-3";
   }
-
-  
 
   return (
     <Card>
@@ -117,7 +120,9 @@ const PictureCard = ({ title, description, initialImageSources, handleFileUpload
                 ref={pictureUploadFieldRef}
                 multiple={true}
                 accept="image/*"
-                onChange={(e) => handleFileUpload(e, imageSources, setImageSources, handleFileUploadCallback)}
+                onChange={(e) =>
+                  handleFileUpload(e, imageSources, updateImageSources, handleFileUploadCallback)
+                }
                 hidden
               />
             </div>

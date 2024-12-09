@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TrashIcon } from "lucide-react";
@@ -10,15 +10,11 @@ interface DateTimeEntry {
 
 interface ItineraryAvailableDatesAndTimesEditProps {
   availableDatesTime: DateTimeEntry[];
-  addTrigger: boolean;
-  triggerClenup: () => void;
   onSave: (newDatesTime: DateTimeEntry[]) => void;
 }
 
 const ItineraryAvailableDatesAndTimesEdit: React.FC<ItineraryAvailableDatesAndTimesEditProps> = ({
   availableDatesTime,
-  addTrigger,
-  triggerClenup,
   onSave,
 }) => {
   const [editedDatesTime, setEditedDatesTime] = useState<DateTimeEntry[]>(() =>
@@ -28,14 +24,6 @@ const ItineraryAvailableDatesAndTimesEdit: React.FC<ItineraryAvailableDatesAndTi
     })),
   );
 
-  useEffect(() => {
-    if (addTrigger) {
-      setEditedDatesTime([...editedDatesTime, { Date: new Date(), Time: new Date() }]);
-      onSave([...editedDatesTime, { Date: new Date(), Time: new Date() }]);
-    }
-    return triggerClenup;
-  }, [addTrigger]);
-
   const handleDateChange = (index: number, newDate: string) => {
     const updatedDatesTime = [...editedDatesTime];
     updatedDatesTime[index] = {
@@ -43,7 +31,6 @@ const ItineraryAvailableDatesAndTimesEdit: React.FC<ItineraryAvailableDatesAndTi
       Date: new Date(newDate),
       Time: new Date(updatedDatesTime[index].Time),
     };
-    setEditedDatesTime(updatedDatesTime);
     onSave(updatedDatesTime);
   };
 
@@ -53,7 +40,6 @@ const ItineraryAvailableDatesAndTimesEdit: React.FC<ItineraryAvailableDatesAndTi
     const newDateTime = new Date(updatedDatesTime[index].Date);
     newDateTime.setHours(parseInt(hours), parseInt(minutes));
     updatedDatesTime[index] = { ...updatedDatesTime[index], Time: newDateTime };
-    setEditedDatesTime(updatedDatesTime);
     onSave(updatedDatesTime);
   };
 
@@ -65,29 +51,33 @@ const ItineraryAvailableDatesAndTimesEdit: React.FC<ItineraryAvailableDatesAndTi
 
   return (
     <div>
-      {editedDatesTime.map((entry, index) => (
-        <div key={index} className="flex space-x-2 mb-2">
-          <Input
-            type="date"
-            value={entry.Date.toISOString().split("T")[0]}
-            onChange={(e) => {
-              handleDateChange(index, e.target.value);
-            }}
-          />
-          <Input
-            type="time"
-            value={entry.Time.toISOString().split("T")[1].substring(0, 5)}
-            onChange={(e) => {
-              handleTimeChange(index, e.target.value);
-            }}
-          />
-          <div className="flex">
-            <Button onClick={() => handleRemoveEntry(index)} variant="link">
-              <TrashIcon className="h-4 w-4 text-destructive hover:text-destructive/60" />
-            </Button>
+      {availableDatesTime.map((entry, index) => {
+        const date = new Date(entry.Date);
+        const time = new Date(entry.Time);
+        return (
+          <div key={index} className="flex space-x-2 mb-2">
+            <Input
+              type="date"
+              value={date.toISOString().split("T")[0]}
+              onChange={(e) => {
+                handleDateChange(index, e.target.value);
+              }}
+            />
+            <Input
+              type="time"
+              value={time.toISOString().split("T")[1].substring(0, 5)}
+              onChange={(e) => {
+                handleTimeChange(index, e.target.value);
+              }}
+            />
+            <div className="flex">
+              <Button onClick={() => handleRemoveEntry(index)} variant="link">
+                <TrashIcon className="h-4 w-4 text-destructive hover:text-destructive/60" />
+              </Button>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

@@ -87,7 +87,7 @@ const ItineraryActivities = ({
       <div className="flex gap-3 items-center">
         <Label className="text-lg">Activites</Label>
         <Button variant="link" className="p-0" onClick={() => setIsAdding(true)}>
-          <PlusCircle className="h-5 w-5 hover:text-gray-600" />
+          <PlusCircle className="h-5 w-5 text-primary-color" />
         </Button>
       </div>
       <div className="space-y-4">
