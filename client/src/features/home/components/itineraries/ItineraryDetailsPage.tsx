@@ -74,6 +74,7 @@ const ItineraryDetailsPage: React.FC = () => {
   const cardButtonText = "Book Itinerary";
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isNotifyAnimating, setIsNotifyAnimating] = React.useState(false);
+  const [promocodeDiscount, setPromocodeDiscount] = React.useState(0);
 
   const closeModal = () => setIsModalOpen(false);
 
@@ -114,6 +115,7 @@ const ItineraryDetailsPage: React.FC = () => {
         entity: itinerary._id ?? "",
         type: bookingType.Itinerary,
         selectedPrice: price,
+        discount: promocodeDiscount,
         selectedDate: selectedDate ? new Date(selectedDate) : new Date(),
       }).then((response) => {
         const booking = response as TPopulatedBooking;
@@ -128,7 +130,7 @@ const ItineraryDetailsPage: React.FC = () => {
     setIsNotifyAnimating(true);
     setTimeout(() => setIsNotifyAnimating(false), 1000);
 
-    if (id){
+    if (id) {
       createNotifyRequest({
         user: id,
         entity: _id,
@@ -143,7 +145,7 @@ const ItineraryDetailsPage: React.FC = () => {
         title: `You Must be logged in`,
         duration: 3500,
       });
-    } 
+    }
   };
 
   return (
@@ -171,6 +173,7 @@ const ItineraryDetailsPage: React.FC = () => {
               type={"Itinerary"}
               userId={id ?? ""}
               egpPrice={price}
+              setPromocodeDiscount={setPromocodeDiscount}
             />
           )}
 
@@ -199,7 +202,11 @@ const ItineraryDetailsPage: React.FC = () => {
               dropdownOptions={cardDropdownOptions}
               dateOptions={true}
               disabled={isButtonDisabled}
-              onButtonClick={(active && !isButtonDisabled && !isGuestAction) ? handleBookButtonClick : handleNotifyButtonClick}
+              onButtonClick={
+                active && !isButtonDisabled && !isGuestAction
+                  ? handleBookButtonClick
+                  : handleNotifyButtonClick
+              }
               onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
               footerText={text}
               isNotifyAnimating={isNotifyAnimating}

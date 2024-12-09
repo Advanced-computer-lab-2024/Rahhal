@@ -18,6 +18,7 @@ export interface IBooking {
   type: bookingType;
   status?: bookingStatus;
   selectedPrice?: number;
+  discount?: number;
   selectedDate?: Date;
   rating?: number;
   itineraryTourGuideRating?: number;
@@ -26,7 +27,7 @@ export interface IBooking {
 export enum bookmarkType {
   Activity = "activity",
   Itinerary = "itinerary",
-  HistoricalPlace = "historical-place"
+  HistoricalPlace = "historical-place",
 }
 
 export interface IBookmark {

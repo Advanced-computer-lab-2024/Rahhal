@@ -50,6 +50,7 @@ export interface IBooking {
   type: bookingType;
   status?: bookingStatus;
   selectedPrice?: number;
+  discount?: number;
   selectedDate?: Date;
   rating?: number;
   itineraryTourGuideRating?: number;
@@ -93,6 +94,7 @@ export interface PopulatedBooking {
   type: bookingType;
   status: bookingStatus;
   selectedPrice: number;
+  discount?: number;
   selectedDate?: Date;
   rating?: number;
   itineraryTourGuideRating?: number;

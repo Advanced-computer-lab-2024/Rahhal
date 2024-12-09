@@ -39,6 +39,7 @@ interface BookingModalProps {
   type: string;
   currency: string;
   discountPerc?: number;
+  setPromocodeDiscount?: (discount: number) => void;
   taxiPrice?: number;
   parentBookingFunc: () => void;
   userId: string;
@@ -50,6 +51,7 @@ interface BookingFormProps {
   type: string;
   currency: string;
   discountPerc?: number;
+  setPromocodeDiscount?: (discount: number) => void;
   userId: string;
   egpPrice: number;
 
@@ -77,6 +79,7 @@ function BookingForm({
   onClose,
   parentBookingFunc,
   userId,
+  setPromocodeDiscount,
 }: BookingFormProps) {
   const id = useIdFromParamsOrQuery();
 
@@ -98,8 +101,10 @@ function BookingForm({
   const { rates } = useRatesStore();
 
   // Apply both discounts
-  const totalPrice = price * (1 - (discountPerc ?? 0) / 100) * (1 - promoDiscountPerc / 100);
-  const egpTotalPrice = egpPrice * (1 - (discountPerc ?? 0) / 100) * (1 - promoDiscountPerc / 100);
+  const discountedPrice = price - price * ((discountPerc ?? 0) / 100);
+  const totalPrice = discountedPrice - discountedPrice * (promoDiscountPerc / 100);
+  const discountedPriceEGP = egpPrice - egpPrice * ((discountPerc ?? 0) / 100);
+  const egpTotalPrice = discountedPriceEGP - discountedPriceEGP * (promoDiscountPerc / 100);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -221,6 +226,7 @@ function BookingForm({
       if (promoCodeResponse.type == "percentage") {
         setPromoStatus("success");
         setPromoDiscountPerc(promoCodeResponse.value);
+        setPromocodeDiscount?.(promoCodeResponse.value);
       }
     } catch (error: unknown) {
       setPromoStatus("error");
@@ -237,6 +243,7 @@ function BookingForm({
   const handleRemovePromo = () => {
     setPromoCode("");
     setPromoDiscountPerc(0);
+    setPromocodeDiscount?.(0);
     setPromoStatus("idle");
     setIsRedeeming(false);
   };
@@ -322,6 +329,7 @@ function BookingForm({
         <Button
           type="submit"
           className="w-full max-w-md py-6 text-lg bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)]"
+          disabled={selectedPaymentMethod === ""}
         >
           {isLoading ? (
             <>
@@ -350,6 +358,7 @@ export default function BookingModal({
   discountPerc,
   parentBookingFunc,
   userId,
+  setPromocodeDiscount,
 }: BookingModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -360,16 +369,17 @@ export default function BookingModal({
 
         <div className="overflow-y-auto max-h-[90vh]">
           <BookingForm
-            price={price}
-            egpPrice={egpPrice}
-            name={name}
-            type={type}
-            currency={currency}
-            discountPerc={discountPerc}
-            onClose={onClose}
-            parentBookingFunc={parentBookingFunc}
-            userId={userId}
-          />
+          price={price}
+          egpPrice={egpPrice}
+          name={name}
+          type={type}
+          currency={currency}
+          discountPerc={discountPerc}
+          onClose={onClose}
+          parentBookingFunc={parentBookingFunc}
+          userId={userId}
+          setPromocodeDiscount={setPromocodeDiscount}
+        />
         </div>
       </DialogContent>
     </Dialog>
