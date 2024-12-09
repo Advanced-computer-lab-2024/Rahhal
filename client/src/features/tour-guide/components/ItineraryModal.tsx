@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { AxiosError } from "axios";
+import ItineraryPictureCard from "./ItineraryPictureCard";
 
 interface ItinerariesModalProps {
   itineraryData?: TItinerary;
@@ -439,7 +440,7 @@ export function ItinerariesModal({
               />
             </div>
 
-            <PictureCard
+            <ItineraryPictureCard
               title={"Itinerary Photos"}
               description={"Uploaded Photos"}
               imageSources={imageSources}
