@@ -18,12 +18,14 @@ import { DEFAULT_ITINERARY } from "../../utils/constants";
 import { fetchItineraryById } from "@/api-calls/itineraries-api-calls";
 import { toast } from "@/hooks/use-toast";
 import { createNotifyRequest } from "@/api-calls/notify-requests-api-calls";
+import { useTour } from "@/components/AppTour";
 
 const ItineraryDetailsPage: React.FC = () => {
   const loc = useLocation();
   const [searchParams] = useSearchParams();
   const eventId = searchParams.get("eventId");
   const [itinerary, setItinerary] = useState(loc.state?.item || DEFAULT_ITINERARY);
+  const { setIsLoading } = useTour();
 
   const empty = itinerary === DEFAULT_ITINERARY;
 
@@ -34,6 +36,10 @@ const ItineraryDetailsPage: React.FC = () => {
       });
     }
   }, [loc.state?.item, eventId]);
+  
+  useEffect(() => {
+    setIsLoading(false);
+  },[]);
 
   const {
     _id,
@@ -141,6 +147,7 @@ const ItineraryDetailsPage: React.FC = () => {
   };
 
   return (
+
     <div>
       {!empty && (
         <>
@@ -183,6 +190,7 @@ const ItineraryDetailsPage: React.FC = () => {
             languages={languages}
             accessibility={accessibility}
           >
+                        <div id="book-itinerary-tour">
             <OverviewCard
               currency={currency}
               originalPrice={price}
@@ -196,6 +204,7 @@ const ItineraryDetailsPage: React.FC = () => {
               footerText={text}
               isNotifyAnimating={isNotifyAnimating}
             />
+            </div>
           </ItinerariesPageTemplate>
         </>
       )}

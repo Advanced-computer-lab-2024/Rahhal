@@ -9,7 +9,6 @@ import { CartIcon } from "@/features/checkout/components/CartIcon";
 import BookmarkNavIcon from "./bookmarks/BookmarkNavIcon";
 import WishlistIcon from "./wishlist/WishListIcon";
 import NotificaionPopover from "../../../components/NotificationPopover";
-
 interface ButtonProps {
   navigation: number;
   setNavigation: (index: number) => void;
@@ -48,6 +47,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
     { component: <ProfileAvatar />, route: null },
   ];
 
+
   return (
     <div className="w-full h-16 flex items-center justify-between z-10 relative px-[16px]">
       {/* Left placeholder to balance layout */}
@@ -56,7 +56,7 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
       </div>
 
       {/* Centered Navigation Buttons */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 flex space-x-12 items-center">
+      <div className="absolute left-1/2 transform -translate-x-1/2 flex space-x-12 items-center" id="nav-bar-tour">
         {buttonNames.map((buttonName, index) => (
           <NavigationButton
             key={index}
@@ -112,21 +112,26 @@ export default function TouristHomePageNavigation(NavigationProps: NavigationPro
 }
 
 function NavigationButton(ButtonProps: ButtonProps) {
+  const subPaths = ["/stays", "/travel", "/shop", "/home"];
+
   return (
     <Link to={ButtonProps.path}>
       <div
         className={cn(
           "rounded-full flex justify-center transition-all duration-300",
-          ButtonProps.navigation === ButtonProps.index ? "bg-gray-300" : "hover:bg-gray-300/60",
+          location.pathname.includes(ButtonProps.path) ||
+            (ButtonProps.path === "/entertainment" && !subPaths.some(subPath => location.pathname.includes(subPath))) ? "bg-gray-300" : "hover:bg-gray-300/60",
         )}
         style={{
-          padding: ButtonProps.navigation === ButtonProps.index ? "0.5rem" : "0.25rem",
+          padding: location.pathname.includes(ButtonProps.path) ||
+            (ButtonProps.path === "/entertainment" && !subPaths.some(subPath => location.pathname.includes(subPath))) ? "0.5rem" : "0.25rem",
         }}
       >
         <Button
           className={cn(
-            "rounded-none rounded-t-md relative w-20 h-6 text-foreground bg-transparent hover:bg-transparent",
-            ButtonProps.navigation === ButtonProps.index
+            "rounded-none rounded-t-md relative w-20 text-foreground bg-transparent hover:bg-transparent",
+            location.pathname.includes(ButtonProps.path) ||
+              (ButtonProps.path === "/entertainment" && !subPaths.some(subPath => location.pathname.includes(subPath)))
               ? "font-semibold"
               : "text-muted-foreground",
           )}

@@ -71,15 +71,20 @@ function HotelsPage({ loggedIn }: HotelPageProps) {
 
   return (
     <>
-      <div className="w-[100%] flex justify-center">
-        <HotelSearchBar onIconClick={onIconClick} />
+      <div id="stays-searchBar-tour">
+        <div className="w-[100%] flex justify-center">
+          <HotelSearchBar onIconClick={onIconClick} />
+        </div>
       </div>
       <hr className="border bg-[var(--gray-scale)] w-full my-5" />
 
       {!hasSearched ? (
-        <HotelsLandingComponent />
+          <HotelsLandingComponent />
+
       ) : (
+
         <HotelGridView loading={loading} hotels={hotels} />
+
       )}
     </>
   );
