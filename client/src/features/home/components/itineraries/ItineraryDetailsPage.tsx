@@ -21,8 +21,7 @@ import { createNotifyRequest } from "@/api-calls/notify-requests-api-calls";
 import { useTour } from "@/components/AppTour";
 import useUserStore from "@/stores/user-state-store";
 
-
-const ItineraryDetailsPage: React.FC = () => { 
+const ItineraryDetailsPage: React.FC = () => {
   const loc = useLocation();
   const [searchParams] = useSearchParams();
   const eventId = searchParams.get("eventId");
@@ -38,10 +37,10 @@ const ItineraryDetailsPage: React.FC = () => {
       });
     }
   }, [loc.state?.item, eventId]);
-  
+
   useEffect(() => {
     setIsLoading(false);
-  },[]);
+  }, []);
 
   // const itinerary = await fetchItineraryById(us)
   const {
@@ -81,7 +80,7 @@ const ItineraryDetailsPage: React.FC = () => {
 
   const closeModal = () => setIsModalOpen(false);
 
-  const { id } = useUserStore();  
+  const { id } = useUserStore();
   const { currency } = useCurrencyStore();
 
   const convertedPrice = currencyExchange("EGP", price);
@@ -152,7 +151,6 @@ const ItineraryDetailsPage: React.FC = () => {
   };
 
   return (
-
     <div>
       {!empty && (
         <>
@@ -194,7 +192,6 @@ const ItineraryDetailsPage: React.FC = () => {
             languages={languages}
             accessibility={accessibility}
           >
-                        <div id="book-itinerary-tour">
             <OverviewCard
               currency={currency}
               originalPrice={price}
@@ -212,11 +209,9 @@ const ItineraryDetailsPage: React.FC = () => {
               footerText={text}
               isNotifyAnimating={isNotifyAnimating}
             />
-            </div>
           </ItinerariesPageTemplate>
         </>
       )}
-     
     </div>
   );
 };

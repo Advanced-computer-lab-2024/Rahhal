@@ -13,6 +13,7 @@ import useUserStore from "@/stores/user-state-store";
 export default function ActivityReport() {
   const [salesData, setSalesData] = useState<SalesItem[]>([]);
   const [filters, setFilters] = useState<ReportFilters | null>(null);
+  const [bookedActivities, setBookedActivities] = useState<SalesItem[]>([]);
 
   const { id } = useUserStore();
 
@@ -20,69 +21,74 @@ export default function ActivityReport() {
     const apiFilters = {
       type: "activity",
       status: "completed",
-      owner: id,
-      
     };
 
-    let salesItems: SalesItem[] = [];
-``
-    if (!filters) {
-      getBookingsWithFilters(apiFilters).then((value) => {
-        const bookings = value as TPopulatedBooking[];
-        salesItems = bookings
-          .filter((booking) => booking._id && booking.entity.owner === id)
-          .map((booking) => ({
-            id: booking.entity._id!,
-            name: booking.entity.name,
+    const fetchData = async () => {
+      let salesItems: SalesItem[] = [];
+      if (!filters) {
+        await getBookingsWithFilters(apiFilters).then((value) => {
+          const bookings = value as TPopulatedBooking[];
+          salesItems = bookings
+            .filter((booking) => booking._id && booking.entity.owner === id)
+            .map((booking) => ({
+              id: booking.entity._id!,
+              name: booking.entity.name,
+              type: "activity",
+              price: booking.selectedPrice,
+              date: new Date(booking.selectedDate).toISOString(),
+              quantity: 1,
+              status: booking.status,
+              tourists: 1,
+            }));
+          setBookedActivities(salesItems);
+        });
+      } else {
+        const startDate = filters.dateRange[0];
+        const endDate = filters.dateRange[1];
+
+        await fetchBookingsByDateRange(startDate, endDate, apiFilters).then((value) => {
+          const bookings = value as TPopulatedBooking[];
+
+          salesItems = bookings
+            .filter((booking) => booking._id)
+            .map((booking) => ({
+              id: booking.entity._id!,
+              name: booking.entity.name,
+              type: "activity",
+              price: booking.selectedPrice,
+              date: new Date(booking.selectedDate).toISOString(),
+              quantity: 1,
+              status: booking.status,
+              tourists: 1,
+            }));
+          setBookedActivities(salesItems);
+        });
+      }
+
+      // add activities without bookings
+      await fetchActivities().then((value) => {
+        const activities = value as TActivity[];
+
+        const activitiesNotInBookings: SalesItem[] = activities
+          .filter(
+            (activity) =>
+              !bookedActivities.find((item) => item.id === activity._id) && activity.owner === id,
+          )
+          .map((activity) => ({
+            id: activity._id,
+            name: activity.name,
             type: "activity",
-            price: booking.selectedPrice,
-            date: new Date(booking.selectedDate).toISOString(),
-            quantity: 1,
-            status: booking.status,
-            tourists: 1,
+            price: activity.price,
+            date: new Date().toISOString(),
+            quantity: 0,
+            status: "not_sold",
+            tourists: 0,
           }));
+
+        setSalesData([...activitiesNotInBookings, ...salesItems]);
       });
-    } else {
-      const startDate = filters.dateRange[0];
-      const endDate = filters.dateRange[1];
-
-      fetchBookingsByDateRange(startDate, endDate, apiFilters).then((value) => {
-        const bookings = value as TPopulatedBooking[];
-
-        salesItems = bookings
-          .filter((booking) => booking._id)
-          .map((booking) => ({
-            id: booking.entity._id!,
-            name: booking.entity.name,
-            type: "activity",
-            price: booking.selectedPrice,
-            date: new Date(booking.selectedDate).toISOString(),
-            quantity: 1,
-            status: booking.status,
-            tourists: 1,
-          }));
-      });
-    }
-
-    // add activities without bookings
-    fetchActivities().then((value) => {
-      const activities = value as TActivity[];
-
-      const activitiesNotInBookings: SalesItem[] = activities
-        .filter((activity) => (!salesData.find((item) => item.id === activity._id)) && activity.owner === id)
-        .map((activity) => ({
-          id: activity._id,
-          name: activity.name,
-          type: "activity",
-          price: activity.price,
-          date: new Date().toISOString(),
-          quantity: 0,
-          status: "not_sold",
-          tourists: 0,
-        }));
-
-      setSalesData([...salesData, ...activitiesNotInBookings, ...salesItems]);
-    });
+    };
+    fetchData();
   }, [filters]);
 
   return (

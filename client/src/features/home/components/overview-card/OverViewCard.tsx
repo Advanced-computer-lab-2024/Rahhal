@@ -54,7 +54,7 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({
   promocodeDiscount,
 }) => {
   return (
-    <div className={styles.card}>
+    <div className={styles.card} id="book-itinerary-tour">
       {/* Header Section */}
       <Header
         originalPrice={originalPrice}
