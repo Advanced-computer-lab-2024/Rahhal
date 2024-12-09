@@ -107,6 +107,7 @@ export default function App() {
               <Route path="/stays/:id" element={<HotelsPage loggedIn={true} />} />
               <Route path="/stays/:id/hotel/:index" element={<HotelDetails hotels={hotels} />} />
               <Route path="/my-wishlist/:id" element={<WishListPage />} />
+              <Route path="/help-center/:id" element={<ComplaintsTable />} />
             </Route>
             <Route element={<CheckoutPage />}>
               <Route path="/checkout/:id" element={<Checkout />} />
@@ -124,7 +125,7 @@ export default function App() {
               <Route path="/user-settings/account/:id" element={<AccountForm />} />
               <Route path="/user-settings/wallet/:id" element={<WalletForm />} />
             </Route>
-            <Route path="/help-center/:id" element={<ComplaintsTable />} />
+            
             <Route path="/user-settings/:id" element={<SettingsView />}>
               <Route index element={<ProfileForm />} />
               <Route path="account" element={<AccountForm />} />
