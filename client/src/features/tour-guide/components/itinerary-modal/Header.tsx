@@ -31,7 +31,7 @@ export default function Header({
         <Button onClick={onSave}> {isNew ? "Create" : "Save Changes"}</Button>
       </div>
       <DialogTitle className="text-xl xl:text-3xl mr-4 content-center">
-        Itinerary Detials
+        Itinerary Details
       </DialogTitle>
     </div>
   );
