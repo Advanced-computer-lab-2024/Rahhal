@@ -48,8 +48,7 @@ export function CompletionPopup({
           Thank you for making your order!
         </h2>
         <div className="text-gray-600">
-          <p className="mb-1">You have chosen the following:</p>
-          <p className="font-medium">{orderDetails}</p>
+          You will be redirected in a few seconds. Thanks for your patience 🙏
         </div>
       </div>
     </div>
