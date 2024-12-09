@@ -5,8 +5,6 @@ import {
 } from "@/features/tourism-governor/utils/tourism-governor-columns";
 import { useEffect, useState } from "react";
 import PictureCard from "@/components/PictureCard";
-import ShortText from "@/components/ShortText";
-import { IMAGES } from "@/lib/utils";
 import { fetchCategories } from "@/api-calls/categories-api-calls";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import {
@@ -19,19 +17,26 @@ import { GenericSelect } from "@/components/GenericSelect";
 import TagsSelector from "@/components/TagsSelector";
 import { DEFAULTS } from "@/lib/constants";
 import { fetchHistoricalTags } from "@/api-calls/historical-tags-api-calls";
-import LongText from "@/components/LongText";
 import PriceCategories from "@/components/price-categories";
+import { Label } from "@/components/ui/label";
+import { toast } from "@/hooks/use-toast";
+import { STATUS_CODES } from "@/lib/constants";
+import { Input } from "@/components/ui/input";
 
 interface HistoricalPlacesModalProps {
   historicalPlaceData?: THistoricalPlace;
   dialogTrigger?: React.ReactNode;
   userId?: string;
+  onDelete?: (id: string) => void;
+  onSubmit?: (historicalPlace: THistoricalPlace) => void;
 }
 
 export function HistoricalPlacesModal({
   historicalPlaceData,
   dialogTrigger,
   userId,
+  onDelete,
+  onSubmit,
 }: HistoricalPlacesModalProps) {
   const isNewHistoricalPlace: boolean = historicalPlaceData === undefined;
   const [modalHistoricalPlaceData, setModalHistoricalPlaceData] = useState<
@@ -54,24 +59,87 @@ export function HistoricalPlacesModal({
   };
 
   const handleSubmit = async () => {
-    if (isNewHistoricalPlace) {
-      // For fields that are referenced in the database by ids, we need to extract them first
-      // since the database will only accept for these field an id or list of ids
-      const categoryId = extractIds([modalHistoricalPlaceData!.category]) as string;
-      const preferenceTagsIds = extractIds(modalHistoricalPlaceData!.preferenceTags) as string[];
-      const tagsIds = extractIds(modalHistoricalPlaceData!.tags) as string[];
-      const { _id, ...rest } = modalHistoricalPlaceData!;
-      const newHistoricalPlace: TNewHistoricalPlace = {
-        ...rest,
-        category: categoryId,
-        preferenceTags: preferenceTagsIds,
-        tags: tagsIds,
-      };
-      // I am sure that userId is not null when the modal open from table add button
-      // otherwise it opens from an edit action and in that situation userId is not null
-      // and already stored in the database and it's not needed in updates
-      await createHistoricalPlace(newHistoricalPlace, userId!, historicalPlacesPictures);
-    } else await updateHistoricalPlace(modalHistoricalPlaceData!, historicalPlacesPictures);
+    if (!modalHistoricalPlaceData) return;
+
+    try {
+      if (isNewHistoricalPlace) {
+        toast({
+          title: "Saving",
+          description: "Saving Historical Place",
+          style: {
+            backgroundColor: "#3B82F6",
+            color: "white",
+          },
+        });
+        const { _id, ...rest } = modalHistoricalPlaceData;
+        const response = await createHistoricalPlace(
+          {
+            ...rest,
+            owner: userId!,
+            category: extractIds(modalDBData.categories),
+            preferenceTags: extractIds(modalHistoricalPlaceData.preferenceTags),
+            tags: extractIds(modalHistoricalPlaceData.tags),
+          } as TNewHistoricalPlace,
+          userId!,
+          historicalPlacesPictures,
+        );
+
+        if (
+          response?.status === STATUS_CODES.STATUS_OK ||
+          response?.status === STATUS_CODES.CREATED
+        ) {
+          toast({
+            title: "Success",
+            description: "Historical place saved successfully",
+            style: {
+              backgroundColor: "#34D399",
+              color: "white",
+            },
+          });
+          if (onSubmit) {
+            onSubmit(modalHistoricalPlaceData);
+            setModalHistoricalPlaceData(DEFAULTS.HISTORICAL_PLACE);
+          }
+        }
+      } else {
+        const response = await updateHistoricalPlace(
+          {
+            ...modalHistoricalPlaceData,
+            category: extractIds(modalDBData.categories),
+            preferenceTags: extractIds(modalHistoricalPlaceData.preferenceTags),
+            tags: extractIds(modalHistoricalPlaceData.tags),
+          },
+          historicalPlacesPictures,
+        );
+
+        if (response?.status === STATUS_CODES.STATUS_OK) {
+          toast({
+            title: "Success",
+            description: "Historical place updated successfully",
+            style: {
+              backgroundColor: "#34D399",
+              color: "white",
+            },
+          });
+          if (onSubmit) {
+            onSubmit(modalHistoricalPlaceData);
+            setModalHistoricalPlaceData(DEFAULTS.HISTORICAL_PLACE);
+          }
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save historical place",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDelete = () => {
+    if (modalHistoricalPlaceData && onDelete) {
+      onDelete(modalHistoricalPlaceData._id);
+    }
   };
 
   useEffect(() => {
@@ -96,19 +164,24 @@ export function HistoricalPlacesModal({
       description="Historical Place Details"
       dialogTrigger={dialogTrigger}
       onSubmit={handleSubmit}
+      showDeleteButton={!isNewHistoricalPlace}
+      onDelete={handleDelete}
     >
-      <ShortText
-        title="Name"
-        type={"text"}
-        initialValue={modalHistoricalPlaceData?.name ?? ""}
-        onSave={(value) =>
-          setModalHistoricalPlaceData(
-            modalHistoricalPlaceData ? { ...modalHistoricalPlaceData, name: value } : undefined,
-          )
-        }
-        placeholder={"Enter the name of the historical place"}
-        initialDisabled={!isNewHistoricalPlace}
-      />
+      <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-2">
+          <Label>Historical Place Name</Label>
+          <Input
+            type="text"
+            value={modalHistoricalPlaceData?.name ?? ""}
+            onChange={(e) =>
+              setModalHistoricalPlaceData(
+                modalHistoricalPlaceData ? { ...modalHistoricalPlaceData, name: e.target.value } : undefined,
+              )
+            }
+            placeholder="Enter Historical Place Name"
+          />
+        </div>
+      </div>
 
       <PriceCategories
         title="Prices"
@@ -126,19 +199,23 @@ export function HistoricalPlacesModal({
         }}
       />
 
-      <LongText
-        title="Description"
-        initialValue={modalHistoricalPlaceData?.description ?? ""}
-        onSave={(value) =>
-          setModalHistoricalPlaceData(
-            modalHistoricalPlaceData
-              ? { ...modalHistoricalPlaceData, description: value }
-              : undefined,
-          )
-        }
-        placeholder={"Enter a detailed description"}
-        initialDisabled={!isNewHistoricalPlace}
-      />
+      <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-2">
+          <Label>Description</Label>
+          <Input
+            type="text"
+            value={modalHistoricalPlaceData?.description ?? ""}
+            onChange={(e) =>
+              setModalHistoricalPlaceData(
+                modalHistoricalPlaceData
+                  ? { ...modalHistoricalPlaceData, description: e.target.value }
+                  : undefined,
+              )
+            }
+            placeholder="Enter Historical Place Description"
+          />
+        </div>
+      </div>
 
       <GenericSelect
         label="Category"

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import React, { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import DoubleCheckPopUpWrapper from "./DoubleCheckPopUpWrapper";
 
 interface GenericModalProps {
   title: string;
@@ -35,6 +36,7 @@ export function GenericModal({
   onDelete,
 }: GenericModalProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDoubleCheckDialogOpen, setIsDoubleCheckDialogOpen] = useState(false);
   const handleSubmit = (event: any) => {
     event.preventDefault();
     onSubmit();
@@ -64,9 +66,16 @@ export function GenericModal({
           <DialogFooter className="grid grid-cols-2 w-full px-4">
             <div className="justify-self-start">
               {showDeleteButton && (
-                <Button onClick={onDelete} variant="destructive">
-                  Delete
-                </Button>
+                <DoubleCheckPopUpWrapper
+                  isOpen={isDoubleCheckDialogOpen}
+                  onCancel={() => setIsDoubleCheckDialogOpen(false)}
+                  onAction={onDelete ?? (() => {})}
+                  customMessage="This will permanently delete this item." 
+                >
+                  <Button onClick={() => setIsDoubleCheckDialogOpen(true)} variant="destructive">
+                    Delete
+                  </Button>
+                </DoubleCheckPopUpWrapper>
               )}
             </div>
             <div className="justify-self-end">
