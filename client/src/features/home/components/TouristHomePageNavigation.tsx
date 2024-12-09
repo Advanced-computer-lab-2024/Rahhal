@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState,useEffect } from "react";
+import { Link, useLocation,useNavigate } from "react-router-dom";
 import { ProfileAvatar } from "./ProfileAvatar";
 import CurrencyDropdown from "./CurrencyDropdown";
 import SecondaryLogo from "../../logos/SecondaryLogo";
@@ -14,7 +14,6 @@ import useUserStore from "@/stores/user-state-store.ts";
 interface ButtonProps {
     navigation: number;
     setNavigation: (index: number) => void;
-    setActiveIndex: (index: number) => void;
     index: number;
     buttonName: string;
     path: string;
@@ -22,13 +21,29 @@ interface ButtonProps {
 
 
 export default function TouristHomePageNavigation() {
-
-
     const location = useLocation();
-    const [navigation, setNavigation] = useState(1);
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (location.pathname === "/entertainment") {
+            setActiveIndex(0);
+            setNavigation(1);
+        } else if (location.pathname === "/stays") {
+            setActiveIndex(1);
+            setNavigation(2);
+        } else if (location.pathname === "/travel") {
+            setActiveIndex(2);
+            setNavigation(3);
+        } else if (location.pathname === "/shop") {
+            setActiveIndex(3);
+            setNavigation(4);
+        }
+    }, []);
+
+   
+    const [navigation, setNavigation] = useState(location.pathname === "/entertainment" ? 1 : location.pathname === "/stays" ? 2 : location.pathname === "/travel" ? 3 : location.pathname === "/shop" ? 4 : -1);
     const buttonNames = ["Experiences", "Stays", "Travel", "Shop"];
     const paths = ["/entertainment", "/stays", "/travel", "/shop"];
-    const [activeIndex, setActiveIndex] = useState(0);
+    const [activeIndex, setActiveIndex] = useState(location.pathname === "/entertainment" ? 0 : location.pathname === "/stays" ? 1 : location.pathname === "/travel" ? 2 : location.pathname === "/shop" ? 3 : -1);
 
 
     const { id  } = useUserStore();
@@ -40,12 +55,13 @@ export default function TouristHomePageNavigation() {
         { component: <CurrencyDropdown />, route: null },
         { component: <ProfileAvatar />, route: null },
     ];
-
+    console.log("nav", navigation);
+    console.log("active", activeIndex);
     return (
         <div className="w-full h-16 flex items-center justify-between z-10 relative px-[16px]">
             {/* Left placeholder to balance layout */}
             <div className="flex-1">
-                <SecondaryLogo />
+                <SecondaryLogo onClick={() => {navigate("/")}} className={"cursor-pointer"}/>
             </div>
 
             {/* Centered Navigation Buttons */}
@@ -56,7 +72,6 @@ export default function TouristHomePageNavigation() {
                         index={index + 1}
                         navigation={navigation}
                         setNavigation={setNavigation}
-                        setActiveIndex={setActiveIndex}
                         path={paths[index]}
                         buttonName={buttonName}
                     />
@@ -82,9 +97,9 @@ export default function TouristHomePageNavigation() {
                     <>
                         <div className="flex space-x-4 items-center">
                             <NotificaionPopover userId={id} />
-                            {activeIndex === 1 ? (
+                            {navigation === 1 ? (
                                 <BookmarkNavIcon />
-                            ) : activeIndex === 4 ? (
+                            ) : navigation === 4 ? (
                                 <>
                                     <div className="flex items-center space-x-4">
                                         <CartIcon />
@@ -125,7 +140,6 @@ function NavigationButton(ButtonProps: ButtonProps) {
           )}
           onClick={() => {
             ButtonProps.setNavigation(ButtonProps.index);
-            ButtonProps.setActiveIndex(ButtonProps.index); // Ensure activeIndex is updated
           }}
         >
           {ButtonProps.buttonName}
