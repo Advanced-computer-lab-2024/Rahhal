@@ -367,6 +367,7 @@ export default function App() {
                   element={role === Roles.TOURIST ? <WalletForm /> : null}
                 />
               </Route>
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </TourProvider>
         </Router>
