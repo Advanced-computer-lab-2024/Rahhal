@@ -8,7 +8,7 @@ import { TUser } from "@/types/user";
 import { getUserById } from "@/api-calls/users-api-calls";
 import TourGuideReviews from "./TourGuideReviews";
 import ReviewDisplay from "@/components/Ratings";
-import { sampleReviews } from "@/lib/utils";
+import { cn, sampleReviews } from "@/lib/utils";
 import useUserStore from "@/stores/user-state-store";
 
 function TourGuideView() {
@@ -28,7 +28,15 @@ function TourGuideView() {
   }, []);
 
   return (
-    <>
+    <div className="container m-auto">
+    <h1
+        className={cn(
+          "text-3xl font-bold tracking-tight",
+          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent",
+        )}
+      >
+        Itineraries
+      </h1>
       <div className="flex flex-col container m-auto gap-10">
         <DataTable
           data={itineraries}
@@ -42,7 +50,7 @@ function TourGuideView() {
           }
         />
       </div>
-    </>
+    </div>
   );
 }
 
