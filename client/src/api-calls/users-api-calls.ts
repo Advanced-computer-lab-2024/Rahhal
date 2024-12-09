@@ -110,7 +110,7 @@ export async function logoutUser() {
   return response;
 }
 
-export async function changePassword(userId: string, oldPassword: string, newPassword: string) {
+export async function changeuserPassword(userId: string, oldPassword: string, newPassword: string) {
   const response = await axios.patch(`${SERVICES_URLS.AUTHENTICATION}/changePassword`, {
     id: userId,
     oldPassword,

@@ -22,8 +22,9 @@ import { EditContextTourGov } from "@/features/tourism-governor/components/Touri
 import { EditContextAdvertiser } from "@/features/advertiser/components/AdvertiserHomePage";
 import { useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { deleteUserNoReload, updateUser } from "@/api-calls/users-api-calls";
+import { deleteUserNoReload, updateUser, changeuserPassword } from "@/api-calls/users-api-calls";
 import DoubleCheckPopupWrapper from "../../../components/DoubleCheckPopUpWrapper";
+
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { Checkbox } from "@/components/ui/checkbox";
 import useUserStore from "@/stores/user-state-store";
@@ -55,9 +56,6 @@ export default function AccountForm() {
   const passwordValidator = z.object({
     oldPassword: z
       .string()
-      .refine((val) => val === user.password, {
-        message: "Old password does not match.",
-      })
       .optional(),
     newPassword: z
       .string()
@@ -69,9 +67,6 @@ export default function AccountForm() {
       })
       .regex(/[0-9]/, {
         message: "Password must contain at least one number.",
-      })
-      .refine((val) => val !== user.password, {
-        message: "New password must be different from the old password.",
       })
       .optional(),
   });
@@ -159,9 +154,9 @@ export default function AccountForm() {
 
     if (changePassword) {
       const isOldPasswordValid = await oldPasswordForm.trigger();
-
+      await changeuserPassword(id! , oldPasswordForm.getValues().oldPassword as string, oldPasswordForm.getValues().newPassword as string);
       if (isOldPasswordValid) {
-        update({ ...data, password: oldPasswordForm.getValues().newPassword });
+        update({ ...data });
         setChangePassword(false);
         oldPasswordForm.reset();
       } else {
