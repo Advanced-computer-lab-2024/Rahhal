@@ -4,7 +4,6 @@ import { DialogTitle } from "@/components/ui/dialog";
 import { useState } from "react";
 
 export default function Header({
-  onSave,
   onDelete,
   isNew = false,
 }: {
@@ -28,7 +27,6 @@ export default function Header({
             </Button>
           </DoubleCheckPopUpWrapper>
         )}
-        <Button onClick={onSave}> {isNew ? "Create" : "Save Changes"}</Button>
       </div>
       <DialogTitle className="text-xl xl:text-3xl mr-4 content-center">
         Itinerary Details

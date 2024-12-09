@@ -70,6 +70,14 @@ export function ItinerariesModal({
   const handleSubmit = async () => {
     try {
       if (isNewItinerary) {
+        toast({
+          title: "Saving",
+          description: "Saving activity...",
+          style: {
+            backgroundColor: "#3B82F6",
+            color: "white",
+          },
+        });
         // For fields that are referenced in the database by ids, we need to extract them first
         // since the database will only accept for these field an id or list of ids
         const categoryId = extractIds([modalItineraryData!.category]) as string;
@@ -197,7 +205,7 @@ export function ItinerariesModal({
           onSave={handleSubmit}
         />
       }
-      customFooter={<Footer step={step} onNextStep={handleNext} onPrevStep={handlePrevious} />}
+      customFooter={<Footer step={step} onNextStep={handleNext} onPrevStep={handlePrevious} onSave={handleSubmit} isNew={isNewItinerary}/>}
     >
       <></>
       <div ref={modalContentRef} className="my-4">

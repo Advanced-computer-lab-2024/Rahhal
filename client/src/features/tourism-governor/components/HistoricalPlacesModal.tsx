@@ -23,6 +23,8 @@ import { toast } from "@/hooks/use-toast";
 import { STATUS_CODES } from "@/lib/constants";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import MultipleSelector from "@/components/ui/multiple-selector";
+import { TimePicker } from "@/components/ui/TimePicker";
 
 interface HistoricalPlacesModalProps {
   historicalPlaceData?: THistoricalPlace;
@@ -188,8 +190,7 @@ export function HistoricalPlacesModal({
 
       <PriceCategories
         title="Prices"
-        priceCategories={modalHistoricalPlaceData?.price ?? {}}
-        initialIsDisabled={!isNewHistoricalPlace}
+        initialTicketTypes={modalHistoricalPlaceData?.price ?? {}}
         onPriceCategoriesChange={(value) => {
           setModalHistoricalPlaceData(
             modalHistoricalPlaceData
@@ -240,59 +241,59 @@ export function HistoricalPlacesModal({
         initialValue={modalHistoricalPlaceData?.category._id ?? ""}
       />
 
-      <TagsSelector
+      <MultipleSelector
         placeholder={"Select preference tags"}
-        isEditingInitially={isNewHistoricalPlace}
-        options={modalDBData?.preferenceTags.map((tag: any) => ({
+        defaultOptions={modalDBData.preferenceTags.map((tag: any) => ({
           label: tag.name,
           value: tag._id,
         }))}
-        onSave={(value) =>
+        emptyIndicator={<p className="text-gray-400 text-sm">No preference tags available</p>}
+        onChange={(selectedOptions) => {
           setModalHistoricalPlaceData(
             modalHistoricalPlaceData
               ? {
                   ...modalHistoricalPlaceData,
-                  preferenceTags: value.map((option) => ({
+                  preferenceTags: selectedOptions.map((option) => ({
                     _id: option.value,
                     name: option.label,
                   })),
                 }
               : undefined,
-          )
-        }
-        initialOptions={modalHistoricalPlaceData?.preferenceTags?.map((preferenceTag) => ({
-          label: preferenceTag.name,
-          value: preferenceTag._id,
+          );
+        }}
+        value={modalHistoricalPlaceData?.preferenceTags.map((tag) => ({
+          label: tag.name,
+          value: tag._id,
         }))}
       />
 
-      <TagsSelector
+      <MultipleSelector
         placeholder={"Select tags"}
-        isEditingInitially={isNewHistoricalPlace}
-        options={modalDBData?.historicalTags.map((tag: any) => ({
+        defaultOptions={modalDBData.historicalTags.map((tag: any) => ({
           label: tag.name,
           value: tag._id,
         }))}
-        onSave={(value) =>
+        emptyIndicator={<p className="text-gray-400 text-sm">No tags available</p>}
+        onChange={(selectedOptions) => {
           setModalHistoricalPlaceData(
             modalHistoricalPlaceData
               ? {
                   ...modalHistoricalPlaceData,
-                  tags: value.map((option) => ({
+                  tags: selectedOptions.map((option) => ({
                     _id: option.value,
                     name: option.label,
                   })),
                 }
               : undefined,
-          )
-        }
-        initialOptions={modalHistoricalPlaceData?.tags?.map((tag) => ({
+          );
+        }}
+        value={modalHistoricalPlaceData?.tags.map((tag) => ({
           label: tag.name,
           value: tag._id,
         }))}
       />
 
-      <TimeRange
+      {/* <TimeRange
         initialCheckInTime={modalHistoricalPlaceData?.openingHours.open}
         initialCheckOutTime={modalHistoricalPlaceData?.openingHours.close}
         isEditingInitially={isNewHistoricalPlace}
@@ -307,7 +308,50 @@ export function HistoricalPlacesModal({
               : undefined,
           );
         }}
-      />
+      /> */}
+
+      <div className="flex grid-cols-2 gap-6 p-4">
+        <div className="flex flex-col gap-2">
+          <Label>Opening Time</Label>
+          <TimePicker
+            date={modalHistoricalPlaceData?.openingHours.open ?? new Date()}
+            onChange={(date) => {
+              setModalHistoricalPlaceData(
+                modalHistoricalPlaceData
+                  ? {
+                      ...modalHistoricalPlaceData,
+                      openingHours: {
+                        open: date ?? new Date(),
+                        close: modalHistoricalPlaceData.openingHours.close,
+                      },
+                    }
+                  : undefined,
+              );
+            }}
+            hourCycle={12}
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label>Closing Time</Label>
+          <TimePicker
+            date={modalHistoricalPlaceData?.openingHours.close ?? new Date()}
+            onChange={(date) => {
+              setModalHistoricalPlaceData(
+                modalHistoricalPlaceData
+                  ? {
+                      ...modalHistoricalPlaceData,
+                      openingHours: {
+                        open: modalHistoricalPlaceData.openingHours.open,
+                        close: date ?? new Date(),
+                      },
+                    }
+                  : undefined,
+              );
+            }}
+            hourCycle={12}
+          />
+        </div>
+      </div>
 
       <PictureCard
         title={"Photo Tour"}
