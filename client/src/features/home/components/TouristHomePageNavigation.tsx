@@ -9,8 +9,6 @@ import { CartIcon } from "@/features/checkout/components/CartIcon";
 import BookmarkNavIcon from "./bookmarks/BookmarkNavIcon";
 import WishlistIcon from "./wishlist/WishListIcon";
 import NotificaionPopover from "../../../components/NotificationPopover";
-import { useTour } from "@/components/AppTour";
-
 interface ButtonProps {
   navigation: number;
   setNavigation: (index: number) => void;
@@ -121,10 +119,12 @@ function NavigationButton(ButtonProps: ButtonProps) {
       <div
         className={cn(
           "rounded-full flex justify-center transition-all duration-300",
-          ButtonProps.navigation === ButtonProps.index ? "bg-gray-300" : "hover:bg-gray-300/60",
+          location.pathname.includes(ButtonProps.path) ||
+            (ButtonProps.path === "/entertainment" && !subPaths.some(subPath => location.pathname.includes(subPath))) ? "bg-gray-300" : "hover:bg-gray-300/60",
         )}
         style={{
-          padding: ButtonProps.navigation === ButtonProps.index ? "0.5rem" : "0.25rem",
+          padding: location.pathname.includes(ButtonProps.path) ||
+            (ButtonProps.path === "/entertainment" && !subPaths.some(subPath => location.pathname.includes(subPath))) ? "0.5rem" : "0.25rem",
         }}
       >
         <Button
