@@ -17,6 +17,7 @@ import { sendReceipt } from "@/api-calls/payment-api-calls";
 import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
 import { currencyExchangeSpec } from "@/utils/currency-exchange";
 import useUserStore from "@/stores/user-state-store";
+import useCartStore from "@/stores/nav-bar-icon-stores/cart-count-store";
 
 export default function Checkout() {
   const { id } = useUserStore();
@@ -61,6 +62,7 @@ export default function Checkout() {
   const [currentCheckoutStep, setCurrentCheckoutStep] = useState(1);
   const [stripePaymentTrigger, setStripePaymentTrigger] = useState(false);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+  const { setCount } = useCartStore();
 
   const currencyConvertor = (originalPrice: number) => {
     return currencyExchangeSpec("EGP", originalPrice, rates, currency) ?? 0;
@@ -148,6 +150,7 @@ export default function Checkout() {
         const orderReceipt = constructReceiptData(order, deliveryFee, currency, currencyConvertor);
         await sendReceipt(id!, orderReceipt);
         await emptyCart(cart.user);
+        setCount(0);
 
         if (saveInfo) {
           const updatedAddresses = [...(user.addresses || []), fullAddress];
