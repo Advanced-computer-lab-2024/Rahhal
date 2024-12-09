@@ -169,7 +169,7 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
         <div className="space-y-6">
           <div>
             <h3 className="font-semibold mb-2">Products</h3>
-            {order.items.map((item, index) => {
+            {currentOrder.items.map((item, index) => {
               const isRated = !!item.rating; // Check if the item is rated (assumes `item.rating` contains the rating)
               const convertedPrice = currencyExchangeSpec(
                 "EGP",
