@@ -24,6 +24,7 @@ const ActivityDetailsPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const eventId = searchParams.get("eventId");
   const [activity, setActivity] = useState(loc.state?.item || DEFAULT_ACTIVITY);
+  const [promocodeDiscount, setPromocodeDiscount] = useState(0);
 
   const empty = activity === DEFAULT_ACTIVITY;
 
@@ -101,6 +102,7 @@ const ActivityDetailsPage: React.FC = () => {
           entity: activity._id ?? "",
           type: bookingType.Activity,
           selectedPrice: selectedPrice!,
+          discount: promocodeDiscount,
           selectedDate: activity.date,
         }).then((response) => {
           const booking = response as TPopulatedBooking;
@@ -122,7 +124,7 @@ const ActivityDetailsPage: React.FC = () => {
     setIsNotifyAnimating(true);
     setTimeout(() => setIsNotifyAnimating(false), 1000);
 
-    if (id){
+    if (id) {
       createNotifyRequest({
         user: id,
         entity: _id,
@@ -137,7 +139,7 @@ const ActivityDetailsPage: React.FC = () => {
         title: `You Must be logged in`,
         duration: 3500,
       });
-    } 
+    }
   };
 
   const onTicketSelect = (index: number) => {
@@ -164,6 +166,7 @@ const ActivityDetailsPage: React.FC = () => {
 
     return `${key} - ${currency} ${displayPrice}`;
   });
+
   return (
     <div>
       {!empty && (
@@ -189,6 +192,7 @@ const ActivityDetailsPage: React.FC = () => {
               type={"Activity"}
               userId={id ?? ""}
               egpPrice={selectedPrice}
+              setPromocodeDiscount={setPromocodeDiscount}
             />
           )}
 
@@ -211,7 +215,11 @@ const ActivityDetailsPage: React.FC = () => {
               date={formattedDate}
               time={formattedTime}
               disabled={isButtonDisabled && isBookingOpen}
-              onButtonClick={(isBookingOpen && !isButtonDisabled && !isGuestAction) ? handleBookButtonClick : handleNotifyButtonClick}
+              onButtonClick={
+                isBookingOpen && !isButtonDisabled && !isGuestAction
+                  ? handleBookButtonClick
+                  : handleNotifyButtonClick
+              }
               discount={specialDiscount}
               onTicketSelect={onTicketSelect}
               tickets={tickets}

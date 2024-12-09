@@ -36,6 +36,7 @@ export default function FlightAccordion({
 }: FlightAccordionProps) {
   const [isImageLoaded, setIsImageLoaded] = useState(true);
   const [isGuestAction, setIsGuestAction] = useState(false);
+  const [promocodeDiscount, setPromocodeDiscount] = useState(0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeModal = () => setIsModalOpen(false);
@@ -63,6 +64,7 @@ export default function FlightAccordion({
       entity: offer.id,
       type: bookingType.Flight,
       selectedDate: new Date(offer.departure.date),
+      discount: promocodeDiscount,
       selectedPrice: isNaN(parseFloat(dbPrice)) ? 0 : parseFloat(dbPrice),
     };
     const booking = await createBooking(bookingRequest);
@@ -95,6 +97,7 @@ export default function FlightAccordion({
           type={"Flight"}
           userId={userID}
           egpPrice={bookingPrice}
+          setPromocodeDiscount={setPromocodeDiscount}
         />
       )}
 
