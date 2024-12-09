@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PageStyles from "@/features/home/styles/MyTripsPage.module.css";
 import { MyTripsCard } from "./MyTripsCard";
 import { fetchUserBookings } from "@/api-calls/booking-api-calls";
@@ -9,6 +9,7 @@ import { toast } from "@/hooks/use-toast";
 import luggage from "@/assets/luggage.svg";
 import EmptyStatePlaceholder from "../EmptyStatePlaceholder";
 import { AiOutlineThunderbolt } from "react-icons/ai";
+import useUserStore from "@/stores/user-state-store";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -76,7 +77,7 @@ export const MyTripsPage = () => {
     return dateTimestamp < currentTimestamp && status === "upcoming";
   }
 
-  const { id: userId } = useParams<{ id: string }>();
+  const { id: userId} = useUserStore();
 
   const {
     data: booking,
@@ -103,7 +104,7 @@ export const MyTripsPage = () => {
       });
       return;
     }
-    return navigate(`/my-trips-details/${userId}`, { state: { booking } });
+    return navigate(`/my-trips-details`, { state: { booking } });
   };
 
   const [selectedMainFilter, setSelectedMainFilter] = useState("experiences");
@@ -204,7 +205,7 @@ export const MyTripsPage = () => {
                 textOne="No bookings yet—let's change that"
                 textTwo="Book things before you go, and get right to the good stuff when you're there."
                 buttonText="Start Planning"
-                navigateTo={`/entertainment/${userId}`}
+                navigateTo={`/entertainment`}
               />
             )}
       </div>

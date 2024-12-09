@@ -18,7 +18,6 @@ import { EditContextSeller } from "@/features/seller/components/SellerHomePage";
 import { EditContextTourGuide } from "@/features/tour-guide/components/TourGuideHomePage";
 import { EditContextTourGov } from "@/features/tourism-governor/components/TourismGovernorHomepage";
 import { EditContextAdvertiser } from "@/features/advertiser/components/AdvertiserHomePage";
-import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Role } from "./SettingsView";
 import { Button } from "@/components/ui/button";
@@ -27,25 +26,40 @@ import { uploadToFirebaseReady } from "@/utils/firebase";
 import UserDocuments from "@/components/UserDocuments";
 import { UserRoleEnum } from "@/utils/enums";
 import { updateUser } from "@/api-calls/users-api-calls";
+import useUserStore from "@/stores/user-state-store";
+import { Roles } from "@/types/enums";
 export default function ProfileForm() {
   const { toast } = useToast();
-  const { id } = useParams();
+  const { id, role } = useUserStore();
   const [editForm, setEditForm] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // get the url of tthe window
-  const url = window.location.href;
-  const context = url.includes("admin")
-    ? EditContextAdmin
-    : url.includes("seller")
-      ? EditContextSeller
-      : url.includes("tour-guide")
-        ? EditContextTourGuide
-        : url.includes("tourism-governor")
-          ? EditContextTourGov
-          : url.includes("advertiser")
-            ? EditContextAdvertiser
-            : EditContext;
+  // const url = window.location.href;
+  // const context = url.includes("admin")
+  //   ? EditContextAdmin
+  //   : url.includes("seller")
+  //     ? EditContextSeller
+  //     : url.includes("tour-guide")
+  //       ? EditContextTourGuide
+  //       : url.includes("tourism-governor")
+  //         ? EditContextTourGov
+  //         : url.includes("advertiser")
+  //           ? EditContextAdvertiser
+  //           : EditContext;
+
+  const context =
+    role === Roles.ADMIN
+      ? EditContextAdmin
+      : role === Roles.SELLER
+        ? EditContextSeller
+        : role === Roles.TOURGUIDE
+          ? EditContextTourGuide
+          : role === Roles.TOURISMGOVERNOR
+            ? EditContextTourGov
+            : role === Roles.ADVERTISER
+              ? EditContextAdvertiser
+              : EditContext;
 
   const { user } = useContext(context);
 

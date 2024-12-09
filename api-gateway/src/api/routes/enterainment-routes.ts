@@ -5,6 +5,7 @@ import * as preferenceTagsController from "@/api/controllers/entertainment-contr
 import * as historicalTagsController from "@/api/controllers/entertainment-controllers/historical-tags-controller";
 import * as historicalPlacesController from "@/api/controllers/entertainment-controllers/historical-places-controller";
 import * as categoriesController from "@/api/controllers/entertainment-controllers/categories-controller";
+import grantAccess, { Role } from "@/utils/auth";
 
 const router = express.Router();
 //activites routes
@@ -18,7 +19,7 @@ router.delete("/activities/:id", activitiesController.deleteActivity);
 //itineraries routes
 router.get("/itineraries", itinerariesController.getAllItineraries);
 router.get(
-  "/itineraries/active-appropriate",
+  "/itineraries/active-appropriate",grantAccess([Role.GUEST , Role.TOURIST]),
   itinerariesController.getActiveAppropriateItineraries,
 );
 router.get("/itineraries/:id", itinerariesController.getAItineraryById);

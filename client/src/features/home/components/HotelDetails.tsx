@@ -27,8 +27,11 @@ import { createBooking } from "@/api-calls/booking-api-calls";
 import SignUpModal from "./SignupModal";
 import { useTour } from "@/components/AppTour";
 import BookingModal from "./payment-modal/PaymentModal";
+import useUserStore from "@/stores/user-state-store";
 export default function HotelDetails({ hotels }: HotelDetailsProps) {
-  const { index, id } = useParams();
+  
+  const { index } = useParams();
+  const { id } = useUserStore();
   const [isAboveEighteen, setIsAboveEighteen] = useState(false);
   const [login, setLogin] = useState(false);
   const {setSearchButtonClicked, setIsLoading } = useTour();

@@ -5,9 +5,8 @@ import { HistoricalPlace } from "@/features/home/types/home-page-types";
 import { MapPin } from "lucide-react";
 import { TicketCheck } from "lucide-react";
 import { fetchLocationDetails } from "@/api-calls/google-maps-api-calls";
-import TouristHomePageNavigation from "../TouristHomePageNavigation";
 import HistoricalDetailsStyles from "./HistoricalDetailsPage.module.css";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import currencyExchange from "@/utils/currency-exchange";
@@ -89,7 +88,6 @@ export default function HistoricalDetailsPage() {
 
   return (
     <>
-      <TouristHomePageNavigation loggedIn={true} />
 
       {/* Hero Section */}
       <motion.section

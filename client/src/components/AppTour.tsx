@@ -223,7 +223,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         description: "If you like an experience, you can book it from here!",
                         onNextClick: () => {
                             // setIsLoading(true);
-                            navigate("/stays/");
+                            navigate("/stays");
                             setTimeout(() => {
                                 tourDriver.moveNext();
                             }, 50);

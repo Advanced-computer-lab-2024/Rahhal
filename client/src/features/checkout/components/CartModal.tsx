@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   decrementQuantity,
   fetchUserCart,
@@ -15,7 +15,7 @@ import useCartStore from "@/stores/nav-bar-icon-stores/cart-count-store";
 import useProductRefreshStore from "@/stores/refresh-product-store";
 import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
 import { currencyExchangeSpec } from "@/utils/currency-exchange";
-
+import useUserStore from "@/stores/user-state-store"
 interface CartModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -24,14 +24,15 @@ interface CartModalProps {
 export function CartModal({ open, onOpenChange }: CartModalProps) {
   const [cart, setCart] = useState<PopulatedCart | null>(null);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
-  const [prices, setPrices] = useState<Record<string, number>>([]);
+  // const [prices, setPrices] = useState<Record<string, number>>([]);
   const navigate = useNavigate();
-  const { id: paramId } = useParams<{ id?: string }>();
   const { incrementCount, decrementCount, setCount } = useCartStore();
   const { setRefresh } = useProductRefreshStore();
   const { currency } = useCurrencyStore();
   const { rates } = useRatesStore();
   const baseCurrency = "EGP";
+
+  const { id: paramId } = useUserStore();
 
   const { data: cartData, isSuccess } = useQuery({
     queryKey: ["cart", "products"],
@@ -94,7 +95,7 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
                 onClick={() => {
                   onOpenChange(false);
                   setRefresh(false);
-                  navigate(`/shop/${paramId}`);
+                  navigate(`/shop`);
                 }}
               >
                 Explore Our Products
@@ -172,7 +173,10 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
                 <Button
                   className="w-full bg-[--primary-color-dark] hover:bg-[--primary-color-fade]"
                   size="lg"
-                  onClick={() => navigate(`/checkout/${paramId}`)}
+                  onClick={() =>{
+                    onOpenChange(false);
+                    navigate("/checkout");
+                  }}
                 >
                   Check out
                 </Button>

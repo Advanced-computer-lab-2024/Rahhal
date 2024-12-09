@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import TouristHomePage from "@/features/home/components/TouristHomePage";
 import SignupSelector from "@/features/signup/components/SignupSelector";
 import AdvertiserView from "@/features/advertiser/components/AdvertiserView";
@@ -17,7 +17,7 @@ import { LoginPage } from "@/components/LoginPage";
 import PreferenceTagsAdminView from "@/features/admin/components/PreferenceTagsTable";
 import AdminComplaintsView from "@/features/admin/components/ComplaintsTable";
 import SellerView from "@/features/seller/components/SellerView";
-import TouristGovernerHomepage from "@/features/tourism-governor/components/TourismGovernorHomepage";
+import TourismGovernerHomepage from "@/features/tourism-governor/components/TourismGovernorHomepage";
 import AdminProductsView from "@/features/admin/components/AdminProductsView";
 import HistoricalPlacesView from "@/features/tourism-governor/components/HistoricalPlacesView";
 import HistoricalTagsView from "@/features/tourism-governor/components/HistoricalTagsTable";
@@ -39,7 +39,6 @@ import { useHotelStore } from "@/stores/hotel-store";
 import ActivityDetailsPage from "@/features/home/components/activities/ActivityDetailsPage";
 import ItineraryDetailsPage from "@/features/home/components/itineraries/ItineraryDetailsPage";
 import Checkout from "@/features/checkout/components/Checkout";
-import CheckoutPage from "@/features/home/components/CheckoutPage";
 import HistoricalDetailsPage from "@/features/home/components/historical-place-details-page/HistoricalDetailsPage";
 import WishListPage from "@/features/home/components/wishlist/WishListPage";
 import BookmarksPage from "@/features/home/components/bookmarks/BookmarksPage";
@@ -56,134 +55,322 @@ import SellerHomePage from "@/features/seller/components/SellerHomePage";
 import TourGuideHomePage from "@/features/tour-guide/components/TourGuideHomePage";
 import ReviewDisplay from "@/components/Ratings";
 import AdvertiserHomePage from "@/features/advertiser/components/AdvertiserHomePage";
+import useUserStore from "@/stores/user-state-store";
+import { Roles } from "@/types/enums";
+import ForgetPassword from "@/features/Login/components/ForgetPassword";
+import NotFound from "@/features/home/NotFound";
 
 export default function App() {
-  // const navigate = useNavigate();
-  // const driverObj = driver({
-  //   showProgress: true,
-  //   steps: [
-  //     {
-  //       element: "#nav-bar-tour", popover: {
-  //         title: 'Navigation', description: 'This is where you book you start your vacation!', onNextClick: () => {
-  //           navigate("/entertainment");
-  //         },
-  //       }
-  //     },
-  //     { element: "#experiences-tour", popover: { title: 'Navigation', description: 'This is where you book you start your vacation!' } },
-  //   ]
-  // });
-  // driverObj.drive();
   const { setRates } = useRatesStore();
   const { hotels } = useHotelStore();
   useEffect(() => {
     ApiCurrencyCall();
   }, []);
+  const { role } = useUserStore();
+
   const queryClient = new QueryClient();
+
   return (
     <div style={{ overflowY: "scroll", height: "100vh" }}>
-
       <QueryClientProvider client={queryClient}>
         <Router>
           <TourProvider>
             <Routes>
-              {/* <Route path="/" element={<Navigate to="/entertainment" replace />} /> */}
-              <Route path="/" element={<Navigate to="/home" replace />} />
-
-            <Route element={<TouristHomePage loggedIn={false} />}>
-              <Route path="/home" element={<AuroraHero />} />
-              <Route path="/entertainment" element={<GeneralGridView />} />
-              <Route path="/shop" element={<ProductGridView />} />
-              <Route path="/travel" element={<TravelPage loggedIn={false} />} />
-              <Route path="/stays" element={<HotelsPage loggedIn={false} />} />
-              <Route path="/stays/hotel/:index" element={<HotelDetails hotels={hotels} />} />
-            </Route>
-            <Route element={<TouristHomePage loggedIn={true} />}>
-              <Route path="/entertainment/:id" element={<GeneralGridView />} />
-              <Route path="/shop/:id" element={<ProductGridView />} />
-              <Route path="/my-trips/:id" element={<MyTripsPage />} />
-              <Route path="/travel/:id" element={<TravelPage loggedIn={true} />} />
-              <Route path="/my-orders/:id" element={<MyOrdersPage />} />
-              <Route path="/my-bookmarks/:id" element={<BookmarksPage />} />
-              <Route path="/stays/:id" element={<HotelsPage loggedIn={true} />} />
-              <Route path="/stays/:id/hotel/:index" element={<HotelDetails hotels={hotels} />} />
-              <Route path="/my-wishlist/:id" element={<WishListPage />} />
-            </Route>
-            <Route element={<CheckoutPage />}>
-              <Route path="/checkout/:id" element={<Checkout />} />
-            </Route>
-            <Route path="/activities/:id?" element={<ActivityDetailsPage />} />
-            <Route path="/itineraries/:id?" element={<ItineraryDetailsPage />} />
-            <Route path="/my-trips-details/:id" element={<TripDetails />} />
-
-            <Route path="/signup" element={<SignupSelector />} />
-            <Route path="/signin" element={<LoginPage />} />
-            <Route path="/:type/details/:placeid/:id" element={<HistoricalDetailsPage />} />
-            <Route path="/:type/details/:placeid/" element={<HistoricalDetailsPage />} />
-            <Route element={<SettingsView />}>
-              <Route path="/user-settings/:id" element={<ProfileForm />} />
-              <Route path="/user-settings/account/:id" element={<AccountForm />} />
-              <Route path="/user-settings/wallet/:id" element={<WalletForm />} />
-            </Route>
-            <Route path="/help-center/:id" element={<ComplaintsTable />} />
-            <Route path="/user-settings/:id" element={<SettingsView />}>
-              <Route index element={<ProfileForm />} />
-              <Route path="account" element={<AccountForm />} />
-            </Route>
-
-            <Route element={<AdvertiserHomePage />}>
-              <Route path="/advertiser/:id" element={<AdvertiserView />} />
-              <Route path="/advertiser/:id?/report" element={<ActivityReport />} />
-              <Route path="/advertiser/:id/user-settings" element={<ProfileForm />} />
-              <Route path="/advertiser/:id/user-settings/account" element={<AccountForm />} />
-            </Route>
-
-            <Route element={<TouristGovernerHomepage />}>
               <Route
-                path="/tourism-governor/:id/historical-places"
-                element={<HistoricalPlacesView />}
+                path="/"
+                element={
+                  role === Roles.GUEST ? (
+                    <Navigate to="/home" replace />
+                  ) : role === Roles.TOURIST ? (
+                    <Navigate to="/entertainment" replace />
+                  ) : role === Roles.ADMIN ? (
+                    <Navigate to="/home" replace />
+                  ) : role === Roles.ADVERTISER ? (
+                    <Navigate to="/home" replace />
+                  ) : role === Roles.SELLER ? (
+                    <Navigate to="/home" replace />
+                  ) : role === Roles.TOURGUIDE ? (
+                    <Navigate to="/home" replace />
+                  ) : role === Roles.TOURISMGOVERNOR ? (
+                    <Navigate to="/home" replace />
+                  ) : null
+                }
               />
+
               <Route
-                path="/tourism-governor/:id/historical-tags"
-                element={<HistoricalTagsView />}
+                element={
+                  role === Roles.GUEST || role === Roles.TOURIST ? (
+                    <TouristHomePage />
+                  ) : role === Roles.ADMIN ? (
+                    <AdminHomepage />
+                  ) : role === Roles.ADVERTISER ? (
+                    <AdvertiserHomePage />
+                  ) : role === Roles.SELLER ? (
+                    <SellerHomePage />
+                  ) : role === Roles.TOURGUIDE ? (
+                    <TourGuideHomePage />
+                  ) : role === Roles.TOURISMGOVERNOR ? (
+                    <TourismGovernerHomepage />
+                  ) : (
+                    <NotFound />
+                  )
+                }
+              >
+                <Route
+                  path="/entertainment"
+                  element={
+                    role === Roles.GUEST || role === Roles.TOURIST ? (
+                      <GeneralGridView />
+                    ) : (
+                      <NotFound />
+                    )
+                  }
+                />
+                <Route
+                  path="/shop"
+                  element={
+                    role === Roles.GUEST || role === Roles.TOURIST ? (
+                      <ProductGridView />
+                    ) : (
+                      <NotFound />
+                    )
+                  }
+                />
+                <Route
+                  path="/travel"
+                  element={
+                    role === Roles.GUEST || role === Roles.TOURIST ? <TravelPage /> : <NotFound />
+                  }
+                />
+                <Route
+                  path="/stays"
+                  element={
+                    role === Roles.GUEST || role === Roles.TOURIST ? <HotelsPage /> : <NotFound />
+                  }
+                />
+                <Route
+                  path="/stays/hotel/:index"
+                  element={
+                    role === Roles.GUEST || role === Roles.TOURIST ? (
+                      <HotelDetails hotels={hotels} />
+                    ) : (
+                      <NotFound />
+                    )
+                  }
+                />
+                <Route
+                  path="/my-trips"
+                  element={role === Roles.TOURIST ? <MyTripsPage /> : <NotFound />}
+                />
+                <Route
+                  path="/my-trips-details"
+                  element={role === Roles.TOURIST ? <TripDetails /> : <NotFound />}
+                />
+                <Route
+                  path="/my-orders"
+                  element={role === Roles.TOURIST ? <MyOrdersPage /> : <NotFound />}
+                />
+                <Route
+                  path="/my-bookmarks"
+                  element={role === Roles.TOURIST ? <BookmarksPage /> : <NotFound />}
+                />
+                <Route
+                  path="/my-wishlist"
+                  element={role === Roles.TOURIST ? <WishListPage /> : <NotFound />}
+                />
+                <Route
+                  path="/checkout"
+                  element={role === Roles.TOURIST ? <Checkout /> : <NotFound />}
+                />
+                <Route
+                  path="/:type/details/:placeid"
+                  element={
+                    role === Roles.GUEST || role === Roles.TOURIST ? (
+                      <HistoricalDetailsPage />
+                    ) : (
+                      <NotFound />
+                    )
+                  }
+                />
+                <Route
+                  path="/help-center/"
+                  element={role === Roles.TOURIST ? <ComplaintsTable /> : <NotFound />}
+                />
+
+                <Route
+                  path="/activities"
+                  element={
+                    role === Roles.GUEST || role === Roles.TOURIST ? (
+                      <ActivityDetailsPage />
+                    ) : role === Roles.ADMIN ? (
+                      <AdminActivitiesView />
+                    ) : (
+                      <NotFound />
+                    )
+                  }
+                />
+                <Route
+                  path="/itineraries"
+                  element={
+                    role === Roles.GUEST || role === Roles.TOURIST ? (
+                      <ItineraryDetailsPage />
+                    ) : role === Roles.ADMIN ? (
+                      <AdminItinerariesView />
+                    ) : (
+                      <NotFound />
+                    )
+                  }
+                />
+
+                <Route
+                  path="/home"
+                  element={
+                    role === Roles.ADVERTISER ? (
+                      <AdvertiserView />
+                    ) : role === Roles.SELLER ? (
+                      <SellerView />
+                    ) : role === Roles.TOURGUIDE ? (
+                      <TourGuideView />
+                    ) : role === Roles.ADMIN ? (
+                      <AdminReport />
+                    ) : role === Roles.TOURISMGOVERNOR ? (
+                      <HistoricalPlacesView />
+                    ) : role === Roles.GUEST ? (
+                      <AuroraHero />
+                    ) : (
+                      <NotFound />
+                    )
+                  }
+                />
+
+                <Route
+                  path="/report"
+                  element={
+                    role === Roles.ADVERTISER ? (
+                      <ActivityReport />
+                    ) : role === Roles.SELLER ? (
+                      <ProductReport />
+                    ) : role === Roles.TOURGUIDE ? (
+                      <ItineraryReport />
+                    ) : (
+                      <NotFound />
+                    )
+                  }
+                />
+
+                <Route
+                  path="/reviews"
+                  element={role === Roles.TOURGUIDE ? <ReviewDisplay /> : <NotFound />}
+                />
+
+                <Route
+                  path="/categories"
+                  element={role === Roles.ADMIN ? <CategoryView /> : <NotFound />}
+                />
+                <Route path="/users" element={role === Roles.ADMIN ? <UserView /> : <NotFound />} />
+                <Route
+                  path="/users/requests"
+                  element={role === Roles.ADMIN ? <UsersPendingRequests /> : <NotFound />}
+                />
+                <Route
+                  path="/products"
+                  element={role === Roles.ADMIN ? <AdminProductsView /> : <NotFound />}
+                />
+                <Route
+                  path="/preference-tags"
+                  element={role === Roles.ADMIN ? <PreferenceTagsAdminView /> : <NotFound />}
+                />
+                <Route
+                  path="/complaints"
+                  element={role === Roles.ADMIN ? <AdminComplaintsView /> : <NotFound />}
+                />
+                <Route
+                  path="/account"
+                  element={role === Roles.ADMIN ? <AccountForm /> : <NotFound />}
+                />
+                <Route
+                  path="/promocodes"
+                  element={role === Roles.ADMIN ? <PromocodeTable /> : <NotFound />}
+                />
+
+                <Route
+                  path="/historical-places"
+                  element={role === Roles.TOURISMGOVERNOR ? <HistoricalPlacesView /> : <NotFound />}
+                />
+                <Route
+                  path="/historical-tags"
+                  element={role === Roles.TOURISMGOVERNOR ? <HistoricalTagsView /> : <NotFound />}
+                />
+              </Route>
+
+              <Route
+                path="/signup"
+                element={role === Roles.GUEST ? <SignupSelector /> : <NotFound />}
               />
-              <Route path="/tourism-governor/:id/user-settings" element={<ProfileForm />} />
-              <Route path="/tourism-governor/:id/user-settings/account" element={<AccountForm />} />
-            </Route>
+              <Route path="/signin" element={role === Roles.GUEST ? <LoginPage /> : <NotFound />} />
+              <Route
+                path="/forgot-password"
+                element={role === Roles.GUEST ? <ForgetPassword /> : <NotFound />}
+              />
 
-            <Route element={<SellerHomePage />}>
-              <Route path="/seller/:id" element={<SellerView />} />
-              <Route path="/seller/:id?/report" element={<ProductReport />} />
-              <Route path="/seller/:id/user-settings" element={<ProfileForm />} />
-              <Route path="/seller/:id/user-settings/account" element={<AccountForm />} />
-            </Route>
-
-            <Route element={<TourGuideHomePage />}>
-              <Route path="/tour-guide/:id" element={<TourGuideView />} />
-              <Route path="/tour-guide/:id?/report" element={<ItineraryReport />} />
-              <Route path="/tour-guide/:id/user-settings" element={<ProfileForm />} />
-              <Route path="/tour-guide/:id/user-settings/account" element={<AccountForm />} />
-              <Route path="/tour-guide/:id/reviews" element={<ReviewDisplay />} />
-            </Route>
-
-            <Route element={<AdminHomepage />}>
-              <Route path="/admin/:id?/home" element={<AdminReport />} />
-              <Route path="/admin/:id?/categories" element={<CategoryView />} />
-              <Route path="/admin/:id?/users" element={<UserView />} />
-              <Route path="/admin/:id?/users/requests" element={<UsersPendingRequests />} />
-              <Route path="/admin/:id?/products" element={<AdminProductsView />} />
-              <Route path="/admin/:id?/preference-tags" element={<PreferenceTagsAdminView />} />
-              <Route path="/admin/:id?/complaints" element={<AdminComplaintsView />} />
-              <Route path="/admin/:id?/itineraries" element={<AdminItinerariesView />} />
-              <Route path="/admin/:id?/activities" element={<AdminActivitiesView />} />
-              <Route path="/admin/:id/user-settings" element={<ProfileForm />} />
-              <Route path="/admin/:id/user-settings/account" element={<AccountForm />} />
-              <Route path="/admin/:id?/promocodes" element={<PromocodeTable />} />
-            </Route>
-          </Routes>
+              <Route
+                element={
+                  role === Roles.TOURIST ? (
+                    <SettingsView />
+                  ) : role === Roles.ADMIN ? (
+                    <AdminHomepage />
+                  ) : role === Roles.ADVERTISER ? (
+                    <AdvertiserHomePage />
+                  ) : role === Roles.SELLER ? (
+                    <SellerHomePage />
+                  ) : role === Roles.TOURGUIDE ? (
+                    <TourGuideHomePage />
+                  ) : role === Roles.TOURISMGOVERNOR ? (
+                    <TourismGovernerHomepage />
+                  ) : (
+                    <NotFound />
+                  )
+                }
+              >
+                <Route
+                  path="/user-settings"
+                  element={
+                    role === Roles.TOURIST ||
+                    role === Roles.ADMIN ||
+                    role === Roles.ADVERTISER ||
+                    role === Roles.SELLER ||
+                    role === Roles.TOURGUIDE ||
+                    role === Roles.TOURISMGOVERNOR ? (
+                      <ProfileForm />
+                    ) : (
+                      <NotFound />
+                    )
+                  }
+                />
+                <Route
+                  path="/user-settings/account"
+                  element={
+                    role === Roles.TOURIST ||
+                    role === Roles.ADMIN ||
+                    role === Roles.ADVERTISER ||
+                    role === Roles.SELLER ||
+                    role === Roles.TOURGUIDE ||
+                    role === Roles.TOURISMGOVERNOR ? (
+                      <AccountForm />
+                    ) : (
+                      <NotFound />
+                    )
+                  }
+                />
+                <Route
+                  path="/user-settings/wallet"
+                  element={role === Roles.TOURIST ? <WalletForm /> : null}
+                />
+              </Route>
+            </Routes>
           </TourProvider>
         </Router>
       </QueryClientProvider>
-
     </div>
   );
 

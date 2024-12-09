@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Bookmark } from "lucide-react";
-import { useParams } from "react-router-dom";
 import { isEntityBookmarked, removeBookmark, addBookmark } from "@/api-calls/bookmark-api-calls";
 import { bookmarkType } from "@/utils/enums";
 import useBookmarkStore from "@/stores/nav-bar-icon-stores/bookmark-count-store";
 import SignUpModal from "../SignupModal";
 import { toast } from "@/hooks/use-toast";
+import useUserStore from "@/stores/user-state-store";
 
 interface AnimatedBookmarkProps {
   id: string;
@@ -18,7 +18,7 @@ interface AnimatedBookmarkProps {
 export default function AnimatedBookmark({ id, bookmarkType }: AnimatedBookmarkProps) {
   const [isBookmarked, setBookmarked] = useState(false);
   const [isGuestAction, setIsGuestAction] = useState(false);
-  const userId = useParams().id;
+  const {id : userId} = useUserStore();
   const { incrementCount, decrementCount } = useBookmarkStore();
 
   useEffect(() => {

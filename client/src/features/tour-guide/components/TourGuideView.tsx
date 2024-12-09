@@ -4,18 +4,21 @@ import { itinerariesColumns, TItinerary } from "@/features/tour-guide/utils/tour
 import { fetchItinerariesByOwner } from "@/api-calls/itineraries-api-calls";
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { ItinerariesModal } from "./ItineraryModal";
-import { useParams } from "react-router-dom";
 import { TUser } from "@/types/user";
 import { getUserById } from "@/api-calls/users-api-calls";
+import TourGuideReviews from "./TourGuideReviews";
+import ReviewDisplay from "@/components/Ratings";
+import { sampleReviews } from "@/lib/utils";
+import useUserStore from "@/stores/user-state-store";
 
 function TourGuideView() {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useUserStore();
   const [itineraries, setItineraries] = useState<TItinerary[]>([]);
   const [user, setUser] = useState<TUser>();
 
   useEffect(() => {
     const init = async () => {
-      const itinerariesData = await fetchItinerariesByOwner(id!);
+      const itinerariesData : any = await fetchItinerariesByOwner(id!);
       const userData = await getUserById(id!);
       setItineraries(itinerariesData);
       setUser(userData);

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { fetchUserBookmarks } from "@/api-calls/bookmark-api-calls";
 import NoBookMarks from "@/assets/NoBookMark.png";
 import type {
@@ -12,9 +12,10 @@ import type {
 import EntertainmentCard from "../EntertainmentCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { bookmarkType } from "@/utils/enums";
+import useUserStore from "@/stores/user-state-store";
 
 function BookmarksPage() {
-  const { id } = useParams();
+  const { id } =  useUserStore();
   const navigate = useNavigate();
 
   const handleCardClick = (item: Itinerary | Activity | HistoricalPlace) => {
@@ -22,15 +23,15 @@ function BookmarksPage() {
     const type =
       "languages" in item ? "itinerary" : "isBookingOpen" in item ? "activity" : "historicalPlace";
     if (type === "historicalPlace") {
-      navigate(`/hplace/details/${item._id}/${id ? id : ""}`, { state: { item } });
+      navigate(`/hplace/details/${item._id}`, { state: { item } });
       return;
     }
     if (type === "activity")
-      navigate(`/activities/${id}`, {
+      navigate(`/activities`, {
         state: { item },
       });
     if (type === "itinerary")
-      navigate(`/itineraries/${id}`, {
+      navigate(`/itineraries`, {
         state: { item },
       });
   };

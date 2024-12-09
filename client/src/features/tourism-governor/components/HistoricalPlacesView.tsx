@@ -7,14 +7,14 @@ import {
 import { fetchUserHistoricalPlaces, deleteHistoricalPlace } from "@/api-calls/historical-places-api-calls";
 import { HistoricalPlacesModal } from "./HistoricalPlacesModal";
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
-import { useParams } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { STATUS_CODES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import useUserStore from "@/stores/user-state-store";
 
 function HistoricalPlacesView() {
   const [historicalPlaces, setHistoricalPlaces] = useState<THistoricalPlace[]>([]);
-  const { id } = useParams();
+  const { id } = useUserStore();
 
   useEffect(() => {
     const init = async () => {
