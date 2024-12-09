@@ -161,7 +161,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const tourDriver = driver({
             showProgress: true,
             smoothScroll: true,
-            // disableActiveInteraction: true,
+            disableActiveInteraction: true,
             steps: [
                 {
                     element: "#nav-bar-tour",
