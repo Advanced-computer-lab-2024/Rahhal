@@ -17,15 +17,17 @@ const ItineraryAvailableDatesAndTimesEdit: React.FC<ItineraryAvailableDatesAndTi
   availableDatesTime,
   onSave,
 }) => {
-  const [editedDatesTime, setEditedDatesTime] = useState<DateTimeEntry[]>(() =>
-    availableDatesTime.map((entry) => ({
-      Date: new Date(entry.Date),
-      Time: new Date(entry.Time),
-    })),
-  );
+  const editedDatesTime = availableDatesTime.map((entry) => ({
+    Date: new Date(entry.Date),
+    Time: new Date(entry.Time),
+  }));
 
   const handleDateChange = (index: number, newDate: string) => {
+    console.log(newDate);
+    console.log(index);
     const updatedDatesTime = [...editedDatesTime];
+    console.log(availableDatesTime);
+
     updatedDatesTime[index] = {
       ...updatedDatesTime[index],
       Date: new Date(newDate),
@@ -45,7 +47,6 @@ const ItineraryAvailableDatesAndTimesEdit: React.FC<ItineraryAvailableDatesAndTi
 
   const handleRemoveEntry = (index: number) => {
     const updatedDatesTime = editedDatesTime.filter((_, i) => i !== index);
-    setEditedDatesTime(updatedDatesTime);
     onSave(updatedDatesTime);
   };
 
