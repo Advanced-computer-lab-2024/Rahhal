@@ -6,10 +6,12 @@ import { fetchBookingById, updateBookingRequest } from "@/api-calls/booking-api-
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import { useEffect, useRef, useState } from "react";
-import { bookingStatus } from "@/utils/enums";
+import { bookingStatus, RateableEntityType } from "@/utils/enums";
 import { toast } from "@/hooks/use-toast";
 import { formatDate, formatTime } from "../../utils/filter-lists/overview-card";
 import ItinerariesPageTemplate from "../ItinerariesPageTemplate";
+import { RatingFormDialog } from "../RatingFormDialog";
+import { handleTripRatingSubmit, tripRatingEntity } from "../TripDetails";
 
 interface BookedItineraryDetailsProps {
   itinerary: TItinerary;
@@ -62,6 +64,11 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
   useEffect(() => {
     getUserById(userId).then((user) => {
       // check if the itinerary is cancelled
+      if (booking && booking?.rating !== 0) {
+        setIsButtonDisabled(true);
+      }
+      
+
       if (booking && booking?.status === bookingStatus.Cancelled) {
         setIsButtonDisabled(true);
       }
@@ -134,6 +141,38 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
 
   return (
     <div>
+      <RatingFormDialog
+        buttonRef={itineraryRatingFormRef}
+        ratingEntities={tripRatingEntity}
+        onSubmit={(values: Record<string, any>) =>
+          itinerary._id
+            ? handleTripRatingSubmit(
+                values,
+                itinerary._id,
+                RateableEntityType.ITINERARY,
+                userId,
+                booking?._id ?? "",
+                itineraryRatingFormRef,
+              )
+            : null
+        }
+      />
+      <RatingFormDialog
+        buttonRef={tourGuideRatingFormRef}
+        ratingEntities={tripRatingEntity}
+        onSubmit={(values) => {
+          itinerary.owner &&
+            handleTripRatingSubmit(
+              values,
+              itinerary.owner,
+              RateableEntityType.USER,
+              userId,
+              booking?._id ?? "",
+              tourGuideRatingFormRef,
+            );
+        }}
+      />
+      
       <ItinerariesPageTemplate
         _id={_id ?? ""}
         name={name}
@@ -164,7 +203,7 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
           date={booking ? formatDate(new Date(booking.selectedDate)) : undefined}
           time={booking ? formatTime(new Date(booking.selectedDate)) : undefined}
           disabled={isButtonDisabled}
-          disabled2={booking ? booking.itineraryTourGuideRating !== 0 : false}
+          disabled2={booking ? booking.itineraryTourGuideRating !== 0 : false}  
           onButtonClick={handleButtonClick}
           onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
           footerText={text}
