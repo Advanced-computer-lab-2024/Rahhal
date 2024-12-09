@@ -84,7 +84,4 @@ export async function createItinerary(
   newItineraryData.images = urls;
 
   await axios.patch(`${SERVICES_URLS.ENTERTAINMENT}/itineraries/${itineraryId}`, newItineraryData);
-
-  alert("Itinerary created successfully");
-  window.location.reload();
 }
