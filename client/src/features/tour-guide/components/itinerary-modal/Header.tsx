@@ -1,5 +1,7 @@
+import DoubleCheckPopUpWrapper from "@/components/DoubleCheckPopUpWrapper";
 import { Button } from "@/components/ui/button";
 import { DialogTitle } from "@/components/ui/dialog";
+import { useState } from "react";
 
 export default function Header({
   onSave,
@@ -10,13 +12,21 @@ export default function Header({
   onDelete: () => void;
   isNew: boolean;
 }) {
+  const [isDoubleCheckDialogOpen, setIsDoubleCheckDialogOpen] = useState(false);
   return (
     <div className="flex justify-between px-2 items-center">
       <div className="flex gap-3 items-center">
         {!isNew && (
-          <Button onClick={onDelete} variant="destructive">
-            Delete
-          </Button>
+          <DoubleCheckPopUpWrapper
+            isOpen={isDoubleCheckDialogOpen}
+            onAction={onDelete}
+            onCancel={() => setIsDoubleCheckDialogOpen(false)}
+            customMessage="Your itinerary will be permanently deleted."
+          >
+            <Button onClick={() => setIsDoubleCheckDialogOpen(true)} variant="destructive">
+              Delete
+            </Button>
+          </DoubleCheckPopUpWrapper>
         )}
         <Button onClick={onSave}> {isNew ? "Create" : "Save Changes"}</Button>
       </div>

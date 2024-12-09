@@ -187,7 +187,7 @@ export function ItinerariesModal({
       onSubmit={handleSubmit}
       customHeader={
         <Header
-          isNew={false}
+          isNew={isNewItinerary}
           onDelete={() => handleDeleteItinerary(itineraryData!)}
           onSave={handleSubmit}
         />
