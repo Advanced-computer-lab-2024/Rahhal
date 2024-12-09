@@ -22,12 +22,17 @@ import { EditContextTourGov } from "@/features/tourism-governor/components/Touri
 import { EditContextAdvertiser } from "@/features/advertiser/components/AdvertiserHomePage";
 import { useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { deleteUserNoReload, updateUser, changeuserPassword } from "@/api-calls/users-api-calls";
+import {
+  deleteUserNoReload,
+  updateUser,
+  changeuserPassword,
+  logoutUser,
+} from "@/api-calls/users-api-calls";
 import DoubleCheckPopupWrapper from "../../../components/DoubleCheckPopUpWrapper";
 
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { Checkbox } from "@/components/ui/checkbox";
-import useUserStore from "@/stores/user-state-store";
+import useUserStore, { UserState } from "@/stores/user-state-store";
 import { Roles } from "@/types/enums";
 export default function AccountForm() {
   const [preferenceTags, setPreferenceTags] = useState<{ _id: string; name: string }[]>([]);
@@ -54,9 +59,7 @@ export default function AccountForm() {
   console.log("AccountForm -> user", user);
 
   const passwordValidator = z.object({
-    oldPassword: z
-      .string()
-      .optional(),
+    oldPassword: z.string().optional(),
     newPassword: z
       .string()
       .min(8, {
@@ -151,27 +154,40 @@ export default function AccountForm() {
       title: "Updating ... ",
     });
     setTimeout(() => {}, 1500);
-
-    if (changePassword) {
-      const isOldPasswordValid = await oldPasswordForm.trigger();
-      await changeuserPassword(id! , oldPasswordForm.getValues().oldPassword as string, oldPasswordForm.getValues().newPassword as string);
-      if (isOldPasswordValid) {
-        update({ ...data });
-        setChangePassword(false);
-        oldPasswordForm.reset();
+    try {
+      if (changePassword) {
+        const isOldPasswordValid = await oldPasswordForm.trigger();
+        await changeuserPassword(
+          id!,
+          oldPasswordForm.getValues().oldPassword as string,
+          oldPasswordForm.getValues().newPassword as string,
+        );
+        if (isOldPasswordValid) {
+          update({ ...data });
+          setChangePassword(false);
+          oldPasswordForm.reset();
+        } else {
+          console.log("Form errors:", oldPasswordForm.formState.errors);
+        }
       } else {
-        console.log("Form errors:", oldPasswordForm.formState.errors);
+        update(data);
       }
-    } else {
-      update(data);
+      form.reset(data);
+      oldPasswordForm.reset();
+    } catch (error) {
+      toast({
+        title: "Oops, something went wrong!",
+        variant: "destructive",
+        description: error.response?.data.error,
+      });
     }
-    form.reset(data);
-    oldPasswordForm.reset();
   }
 
   async function handleDeleteAccount() {
     try {
       await deleteUserNoReload(user);
+      await logoutUser();
+      await UserState();
       navigate("/");
     } catch (error) {
       if (error instanceof AxiosError) {
