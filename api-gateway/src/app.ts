@@ -15,6 +15,8 @@ import ratingRoutes from "@/api/routes/rating-routes";
 import orderRoutes from "@/api/routes/order-routes";
 import externalApiRoutes from "@/api/routes/external-api-routes";
 import paymentRoutes from "@/api/routes/payment-routes";
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './api/swagger/swagger-output.json'
 
 const app = express();
 
@@ -23,6 +25,9 @@ app.use(cors());
 app.use(fileUpload({ preservePath: true }));
 app.use(express.json());
 app.use(morgan("dev"));
+
+// Setup Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Routes
 app.use("/api/user", userRoutes);
