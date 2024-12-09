@@ -26,10 +26,12 @@ import { bookingType } from "@/utils/enums";
 import type { TBookingType } from "../types/home-page-types";
 import { createBooking } from "@/api-calls/booking-api-calls";
 import SignUpModal from "./SignupModal";
+import { useTour } from "@/components/AppTour";
 export default function HotelDetails({ hotels }: HotelDetailsProps) {
   const { index, id } = useParams();
   const [isAboveEighteen, setIsAboveEighteen] = useState(false);
   const [login, setLogin] = useState(false);
+  const {setSearchButtonClicked, setIsLoading } = useTour();
   useEffect(() => {
     if (id) {
       const user = getUserById(id);
@@ -42,6 +44,12 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
       setLogin(false);
     }
   }, [id]);
+
+  useEffect(() => {
+
+    setSearchButtonClicked(false);
+    setIsLoading(false);
+  },[]);
 
   const { rates } = useRatesStore();
   const { currency } = useCurrencyStore();
@@ -126,146 +134,149 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
               {hotel.address.addressCountry && hotel.address.addressCountry.name}{" "}
             </span>
           </div>
+
           <div className="flex flex-col gap-12">
-            <div className="w-full h-[30rem] border-2 border-color-gray-200 rounded-2xl flex overflow-hidden">
-              <div className="relative group h-[30rem] flex justify-center w-8/12">
-                <Carousel className="w-full h-full">
-                  <CarouselContent className="w-full h-full ml-0">
-                    {hotel.images.map((image, index) => (
-                      <CarouselItem key={index} className=" h-full w-full pl-0">
-                        <img
-                          src={image}
-                          alt={hotel.name}
-                          className=" w-full h-[29.75rem] object-cover"
-                        />
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
+            <div id="stay-reservation-details-tour">
+              <div className="w-full h-[30rem] border-2 border-color-gray-200 rounded-2xl flex overflow-hidden">
+                <div className="relative group h-[30rem] flex justify-center w-8/12">
+                  <Carousel className="w-full h-full">
+                    <CarouselContent className="w-full h-full ml-0">
+                      {hotel.images.map((image, index) => (
+                        <CarouselItem key={index} className=" h-full w-full pl-0">
+                          <img
+                            src={image}
+                            alt={hotel.name}
+                            className=" w-full h-[29.75rem] object-cover"
+                          />
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
 
-                  <CarouselPrevious className="text-xs group bg-transparent border-0 rounded-full bg-gray-300 bg-opacity-50 translate-x-[250%] h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:opacity-0 disabled:group-hover:opacity-0" />
+                    <CarouselPrevious className="text-xs group bg-transparent border-0 rounded-full bg-gray-300 bg-opacity-50 translate-x-[250%] h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:opacity-0 disabled:group-hover:opacity-0" />
 
-                  <CarouselNext className="text-xs group bg-transparent border-0 rounded-full bg-gray-300 bg-opacity-50 translate-x-[-250%] h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:opacity-0 disabled:group-hover:opacity-0" />
-                </Carousel>
-              </div>
-              <div className="flex flex-col gap-2 pb-5 w-4/12 justify-end">
-                <div className="flex justify-end w-full pr-4 h-16 items-start">
-                  <SharePopover link={window.location.href} />
+                    <CarouselNext className="text-xs group bg-transparent border-0 rounded-full bg-gray-300 bg-opacity-50 translate-x-[-250%] h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:opacity-0 disabled:group-hover:opacity-0" />
+                  </Carousel>
                 </div>
-                <div className="h-2"></div>
-                <div className="flex justify-center w-full ">
-                  <div className="flex justify-start w-64 p-1">
-                    <span className="text-left font-semibold">{newPrice + " " + currency} </span>{" "}
-                    <span className="pl-1 ">/night</span>
+
+                <div className="flex flex-col gap-2 pb-5 w-4/12 justify-end">
+                  <div className="flex justify-end w-full pr-4 h-16 items-start">
+                    <SharePopover link={window.location.href} />
                   </div>
-                </div>
+                  <div className="h-2"></div>
+                  <div className="flex justify-center w-full ">
+                    <div className="flex justify-start w-64 p-1">
+                      <span className="text-left font-semibold">{newPrice + " " + currency} </span>{" "}
+                      <span className="pl-1 ">/night</span>
+                    </div>
+                  </div>
 
-                <div className="w-[100%] flex justify-center h-fit">
-                  <ReservationDetails date={date} setDate={setDate} />
-                </div>
 
-                <div className="flex justify-center">
-                  {!login && (
-                    <button
-                      onClick={() => handleHotelBooking(parseInt(newPrice!))}
-                      className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12"
-                    >
-                      Reserve Room
-                    </button>
-                  )}
+                  <div className="w-[100%] flex justify-center h-fit">
+                    <ReservationDetails date={date} setDate={setDate} />
+                  </div>
 
-                  {login && (
-                    <button
-                      className={cn(
-                        "bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12",
-                        !isAboveEighteen || !date.to || adults <= 0
-                          ? "hover:bg-[var(--primary-color-fade)] bg-[var(--primary-color-fade)]"
-                          : "",
-                      )}
-                      disabled={!isAboveEighteen || !date.to || adults <= 0}
-                      onClick={() => {
-                        toast({
-                          title: "Booking successful",
-                          description: "Loyality points added to your account!",
-                          style: {
-                            backgroundColor: "#34D399",
-                            color: "#FFFFFF",
-                          },
-                          duration: 3000,
-                        });
-                        handleHotelBooking(
-                          currencyExchangeDefaultSpec(
-                            currency,
-                            differenceInDays(date.to!, date.from!) * parseInt(newPrice!) +
-                              parseInt(newPrice!) * 0.1,
-                            rates,
-                          )!,
-                        );
-                      }}
-                    >
-                      Reserve Room
-                    </button>
-                  )}
-                </div>
-                <div className="h-4 flex justify-center">
-                  {login && !isAboveEighteen && (
-                    <span className="text-red-500 text-xs">
-                      You must be 18 years or older to book this hotel
-                    </span>
-                  )}
-                </div>
+                  <div className="flex justify-center">
+                    {!login && (
 
-                <div className="flex justify-center h-28">
-                  <div className="flex flex-col justify-end items-center w-fit gap-3 h-fit">
-                    {date.to && (
-                      <>
-                        <div className="w-full">
-                          <div className="flex justify-between w-full gap-10">
-                            {date.to && (
-                              <>
-                                <span className="underline">
-                                  {newPrice +
-                                    " x " +
-                                    differenceInDays(date.to, date.from!) +
-                                    " nights"}
-                                </span>
-                                <span>
-                                  {differenceInDays(date.to, date.from!) * parseInt(newPrice!) +
-                                    " " +
-                                    currency}
-                                </span>
-                              </>
-                            )}
-                          </div>
-                        </div>
+                      <button onClick={() => handleHotelBooking(parseInt(newPrice!))} className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12">
+                        Reserve Room
+                      </button>
 
-                        <div className="w-full">
-                          <div className="flex justify-between w-full gap-10">
-                            <span className="underline"> Rahhal service fee </span>
-                            <span> {(parseInt(newPrice!) * 0.1).toFixed(0) + " " + currency} </span>
-                          </div>
-                        </div>
-                        <hr className="border-1 border-gray-300 w-full" />
-                        <div className="w-full">
-                          <div className="flex justify-between w-full gap-10">
-                            <span className="font-medium"> Total </span>
-                            <span>
-                              {" "}
-                              {(
-                                differenceInDays(date.to, date.from!) * parseInt(newPrice!) +
-                                parseInt(newPrice!) * 0.1
-                              ).toFixed(0) +
-                                " " +
-                                currency}{" "}
-                            </span>
-                          </div>
-                        </div>
-                      </>
                     )}
+
+                    {login && (
+                      <button
+                        className={cn(
+                          "bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12",
+                          !isAboveEighteen || !date.to || adults <= 0
+                            ? "hover:bg-[var(--primary-color-fade)] bg-[var(--primary-color-fade)]"
+                            : "",
+                        )}
+                        disabled={!isAboveEighteen || !date.to || adults <= 0}
+                        onClick={() => {
+                          toast({
+                            title: "Booking successful",
+                            description: "Loyality points added to your account!",
+                            style: {
+                              backgroundColor: "#34D399",
+                              color: "#FFFFFF",
+                            },
+                            duration: 3000,
+                          });
+                          handleHotelBooking(
+                            currencyExchangeDefaultSpec(
+                              currency,
+                              differenceInDays(date.to!, date.from!) * parseInt(newPrice!) +
+                              parseInt(newPrice!) * 0.1,
+                              rates,
+                            )!,
+                          );
+                        }}
+                      >
+                        Reserve Room
+                      </button>
+                    )}
+                  </div>
+                  <div className="h-4 flex justify-center">
+                    {login && !isAboveEighteen && (
+                      <span className="text-red-500 text-xs">
+                        You must be 18 years or older to book this hotel
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex justify-center h-28">
+                    <div className="flex flex-col justify-end items-center w-fit gap-3 h-fit">
+                      {date.to && (
+                        <>
+                          <div className="w-full">
+                            <div className="flex justify-between w-full gap-10">
+                              {date.to && (
+                                <>
+                                  <span className="underline">
+                                    {newPrice +
+                                      " x " +
+                                      differenceInDays(date.to, date.from!) +
+                                      " nights"}
+                                  </span>
+                                  <span>
+                                    {differenceInDays(date.to, date.from!) * parseInt(newPrice!) +
+                                      " " +
+                                      currency}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="w-full">
+                            <div className="flex justify-between w-full gap-10">
+                              <span className="underline"> Rahhal service fee </span>
+                              <span> {(parseInt(newPrice!) * 0.1).toFixed(0) + " " + currency} </span>
+                            </div>
+                          </div>
+                          <hr className="border-1 border-gray-300 w-full" />
+                          <div className="w-full">
+                            <div className="flex justify-between w-full gap-10">
+                              <span className="font-medium"> Total </span>
+                              <span>
+                                {" "}
+                                {(
+                                  differenceInDays(date.to, date.from!) * parseInt(newPrice!) +
+                                  parseInt(newPrice!) * 0.1
+                                ).toFixed(0) +
+                                  " " +
+                                  currency}{" "}
+                              </span>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-
             <div className="w-full h-fit border-2 border-color-gray-200 rounded-2xl flex overflow-hidden p-5 flex-col">
               <span className="text-3xl font-medium">About</span>
               <hr className="border-1 border-gray-300 my-4" />

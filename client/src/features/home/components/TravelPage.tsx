@@ -22,6 +22,7 @@ import { PiTaxi } from "react-icons/pi";
 import flightIcon from "@/assets/flight-Icon.png";
 import busIcon from "@/assets/Bus Icon.png";
 import { toast } from "@/hooks/use-toast";
+import { useTour } from "@/components/AppTour";
 
 interface TravelPageProps {
   loggedIn: boolean;
@@ -33,7 +34,8 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   const [flightRequest, setFlightRequest] = useState<FlightRequest | null>(null);
   const [taxiSkeleton, setTaxiSkeleton] = useState<boolean>(false);
   const [flightSkeleton, setFlightSkeleton] = useState<boolean>(false);
-
+  const [autoSearchTour, setAutoSearchTour] = useState<boolean>(false);
+  const { toggleLoading, isLoadingTour, setIsLoading } = useTour();
   const { id } = useParams<{ id: string }>();
   const userId = id ? id : "";
   const { data: userData } = useQuery({
@@ -41,6 +43,8 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     queryFn: () => getUserById(userId ? userId : ""),
     enabled: !!userId,
   });
+
+
 
   useEffect(() => {
     if (userData) {
@@ -61,6 +65,10 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     passengers,
     setSelectedPickupLocation,
     setSelectedDropOffLocation,
+    setPickupLocation,
+    setDropOffLocation,
+    setDepartureTime,
+    setPassengers,
   } = useSearchBarStore();
   const {
     data: taxiData,
@@ -108,6 +116,7 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   };
 
   const onIconClickTaxis = async () => {
+    console.log("Manual", pickupLocation);
     if (!pickupLocation.length) {
       toast({
         title: "Please specify the pickup location",
@@ -182,6 +191,42 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     }
   };
 
+  const setupTourTaxiSearch = async () => {
+    setAutoSearchTour(true);
+  
+    // Set state values
+    setPickupLocation("Cairo International Airport (CAI), El Nozha, Egypt");
+    setDropOffLocation("Banafseg 5, New Cairo 1, Egypt");
+    const tourDepartureTime = new Date("2024-12-31T00:00:00+02:00");
+    setDepartureTime(tourDepartureTime);
+    setPassengers(2);
+
+  };
+  
+
+
+  useEffect(() => {
+    if (
+      autoSearchTour &&
+      pickupLocation.length > 0 &&
+      dropOffLocation.length > 0 &&
+      departureTime &&
+      passengers > 0
+    ) {
+      onIconClickTaxis();
+    }
+  }, [pickupLocation, dropOffLocation, departureTime, passengers, autoSearchTour]);
+  
+
+
+  // Expose global function for tour
+  useEffect(() => {
+    (window as any).tourTaxiSearch = setupTourTaxiSearch;
+    return () => {
+      delete (window as any).tourTaxiSearch;
+    };
+  }, [setAutoSearchTour,autoSearchTour,pickupLocation, dropOffLocation, departureTime, passengers]);
+
   useEffect(() => {
     if (transportationError) {
       alert(`Error fetching transfer requests: ${transportationError.message}`);
@@ -203,6 +248,19 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     }
   }, [isFlightsLoading, isFlightsSuccess, isFLightError]);
 
+  useEffect(() => {
+    console.log("Travel loading before toggle in useEffect", taxiSkeleton);
+    console.log("tour loading before toggle in useEffect", isLoadingTour);
+
+    toggleLoading(); // Correctly calling the toggle function
+    console.log("Travel loading before after in useEffect", taxiSkeleton);
+    console.log("tour loading after toggle in useEffect", isLoadingTour);
+  }, [toggleLoading, taxiSkeleton]);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, []); 
+
   const prepareTransferRequest = async () => {
     let airportCode = "";
     let start = true;
@@ -211,19 +269,37 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     let pickUpCountryCode: string | undefined;
     let dropOffCountryCode: string | undefined;
 
-    // Get pickup details
-    const pickUpSelectedIndex = pickupSuggestions.indexOf(pickupLocation[0]);
-    const pickUpPlaceId = pickupSuggestionsPlaceId[pickUpSelectedIndex];
-    const pickUpDetails = await fetchPlaceDetails(pickUpPlaceId);
+    console.log("pickupLocation[0]", pickupLocation[0]);
 
+
+    console.log("pickupSuggestions", pickupSuggestions);
+
+
+
+
+    let pickUpPlaceId: string;
+    let dropOffPlaceId: string;
+    if (autoSearchTour) {
+      pickUpPlaceId = "ChIJQU-oLggXWBQRhhPiUSGvZeA";
+      dropOffPlaceId = "ChIJOxGgaoQZWBQRkGnseVrnH5s";
+    } else {
+      console.log("enteredElse");
+      console.log("tour?: ", autoSearchTour);
+      
+      const pickUpSelectedIndex = pickupSuggestions.indexOf(pickupLocation[0]);
+      pickUpPlaceId = pickupSuggestionsPlaceId[pickUpSelectedIndex];
+      const dropOffSelectedIndex = dropOffSuggestions.indexOf(dropOffLocation[0]);
+      dropOffPlaceId = dropOffSuggestionsPlaceId[dropOffSelectedIndex];
+    }
+    setAutoSearchTour(false);
+    // Get pickup details
+    const pickUpDetails = await fetchPlaceDetails(pickUpPlaceId);
+    console.log("pickUpDetails", pickUpDetails);
     if (pickUpDetails) {
       pickUpGeocode = pickUpDetails.location;
       pickUpCountryCode = pickUpDetails.countryCode;
     }
-
     // Get dropoff details
-    const dropOffSelectedIndex = dropOffSuggestions.indexOf(dropOffLocation[0]);
-    const dropOffPlaceId = dropOffSuggestionsPlaceId[dropOffSelectedIndex];
     const dropOffDetails = await fetchPlaceDetails(dropOffPlaceId);
     if (dropOffDetails) {
       dropOffGeocode = dropOffDetails.location;
@@ -251,23 +327,23 @@ function TravelPage({ loggedIn }: TravelPageProps) {
     return pickUpGeocode && dropOffGeocode
       ? start
         ? {
-            startLocationCode: airportCode,
-            endGeoCode: `${dropOffGeocode.lat},${dropOffGeocode.lng}`,
-            endAddressLine: dropOffLocation[0],
-            endCountryCode: dropOffCountryCode,
-            transferType: "PRIVATE",
-            startDateTime: departureTime[0].toISOString(),
-            passengers: passengers,
-          }
+          startLocationCode: airportCode,
+          endGeoCode: `${dropOffGeocode.lat},${dropOffGeocode.lng}`,
+          endAddressLine: dropOffLocation[0],
+          endCountryCode: dropOffCountryCode,
+          transferType: "PRIVATE",
+          startDateTime: departureTime[0].toISOString(),
+          passengers: passengers,
+        }
         : {
-            startGeoCode: `${pickUpGeocode.lat},${pickUpGeocode.lng}`,
-            startAddressLine: pickupLocation[0],
-            startCountryCode: pickUpCountryCode,
-            endLocationCode: airportCode,
-            transferType: "PRIVATE",
-            startDateTime: departureTime[0].toISOString(),
-            passengers: passengers,
-          }
+          startGeoCode: `${pickUpGeocode.lat},${pickUpGeocode.lng}`,
+          startAddressLine: pickupLocation[0],
+          startCountryCode: pickUpCountryCode,
+          endLocationCode: airportCode,
+          transferType: "PRIVATE",
+          startDateTime: departureTime[0].toISOString(),
+          passengers: passengers,
+        }
       : null;
   };
   const prepareFlightRequest = async () => {
@@ -329,12 +405,14 @@ function TravelPage({ loggedIn }: TravelPageProps) {
   };
   return (
     <>
-      <TravelPageHeader
-        transferType={transferType}
-        setTransferType={setTransferType}
-        onIconClickTaxis={onIconClickTaxis}
-        onIconClickFlights={onIconClickFlights}
-      />
+      <div id="travel-searchBar-tour">
+        <TravelPageHeader
+          transferType={transferType}
+          setTransferType={setTransferType}
+          onIconClickTaxis={onIconClickTaxis}
+          onIconClickFlights={onIconClickFlights}
+        />
+      </div>
       <div className="flex justify-end px-16 py-[1%]">
         <Button
           className={`ml-2 rounded-full bg-transparent text-black hover:bg-gray-200 px-6 py-3 text-md ${transferType === "taxis" && "bg-gray-200"} `}
