@@ -8,25 +8,29 @@ import { TPopulatedBooking } from "@/features/home/types/home-page-types";
 import { fetchBookingsByDateRange, getBookingsWithFilters } from "@/api-calls/booking-api-calls";
 import { fetchActivities } from "@/api-calls/activities-api-calls";
 import { TActivity } from "../utils/advertiser-columns";
+import useUserStore from "@/stores/user-state-store";
 
 export default function ActivityReport() {
   const [salesData, setSalesData] = useState<SalesItem[]>([]);
   const [filters, setFilters] = useState<ReportFilters | null>(null);
 
+  const { id } = useUserStore();
+
   useEffect(() => {
     const apiFilters = {
       type: "activity",
       status: "completed",
+      owner: id,
+      
     };
 
     let salesItems: SalesItem[] = [];
-
+``
     if (!filters) {
       getBookingsWithFilters(apiFilters).then((value) => {
         const bookings = value as TPopulatedBooking[];
-
         salesItems = bookings
-          .filter((booking) => booking._id)
+          .filter((booking) => booking._id && booking.entity.owner === id)
           .map((booking) => ({
             id: booking.entity._id!,
             name: booking.entity.name,
@@ -63,9 +67,9 @@ export default function ActivityReport() {
     // add activities without bookings
     fetchActivities().then((value) => {
       const activities = value as TActivity[];
-      
+
       const activitiesNotInBookings: SalesItem[] = activities
-        .filter((activity) => !salesData.find((item) => item.id === activity._id))
+        .filter((activity) => (!salesData.find((item) => item.id === activity._id)) && activity.owner === id)
         .map((activity) => ({
           id: activity._id,
           name: activity.name,
@@ -76,8 +80,6 @@ export default function ActivityReport() {
           status: "not_sold",
           tourists: 0,
         }));
-
-      
 
       setSalesData([...salesData, ...activitiesNotInBookings, ...salesItems]);
     });

@@ -23,12 +23,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import NotificaionPopover from "@/components/NotificationPopover";
 import { Pyramid, Tags } from "lucide-react";
+import { logoutUser } from "@/api-calls/users-api-calls";
+import { UserState } from "@/stores/user-state-store";
+import { useNavigate } from "react-router-dom";
 
 interface TourismGovernerSidebarProps {
   id?: string;
 }
 
 export function TourismGovernerSidebar({ id }: TourismGovernerSidebarProps) {
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    await logoutUser();
+    await UserState();
+    navigate("/signin");
+  };
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -55,11 +64,11 @@ export function TourismGovernerSidebar({ id }: TourismGovernerSidebarProps) {
                     <SidebarMenuButton
                       asChild
                       isActive={
-                        window.location.pathname === `/tourism-governor/${id}/historical-places`
+                        window.location.pathname === `http://localhost:5173/historical-places`
                       }
                       tooltip="Historical Places"
                     >
-                      <a href={`/tourism-governor/${id}/historical-places`}>
+                      <a href={`/historical-places`}>
                         <Pyramid />
                         Historical Places
                       </a>
@@ -69,12 +78,10 @@ export function TourismGovernerSidebar({ id }: TourismGovernerSidebarProps) {
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
-                      isActive={
-                        window.location.pathname === `/tourism-governor/${id}/historical-tags`
-                      }
+                      isActive={window.location.pathname === `http://localhost:5173/historical-tags`}
                       tooltip="Historical Tags"
                     >
-                      <a href={`/tourism-governor/${id}/historical-tags`}>
+                      <a href={`/historical-tags`}>
                         <Tags />
                         Historical Tags
                       </a>
@@ -102,11 +109,14 @@ export function TourismGovernerSidebar({ id }: TourismGovernerSidebarProps) {
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                  <a href={`/tourism-governor/${id}/user-settings/account`}>
+                  <a href={`http//localhost:5173/user-settings/account`}>
                     <DropdownMenuItem>Account</DropdownMenuItem>
                   </a>
-                  <a href={`/tourism-governor/${id}/user-settings`}>
+                  <a href={`http//localhost:5173/user-settings`}>
                     <DropdownMenuItem>Profile</DropdownMenuItem>
+                  </a>
+                  <a>
+                    <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                   </a>
                 </DropdownMenuContent>
               </DropdownMenu>

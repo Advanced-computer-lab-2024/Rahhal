@@ -7,15 +7,18 @@ import { fetchBookingsByDateRange, getBookingsWithFilters } from "@/api-calls/bo
 import { TPopulatedBooking } from "@/features/home/types/home-page-types";
 import { fetchItineraries } from "@/api-calls/itineraries-api-calls";
 import { TItinerary } from "@/features/admin/utils/columns-definitions/itineraries-columns";
+import useUserStore from "@/stores/user-state-store";
 
 export default function ItineraryReport() {
   const [salesData, setSalesData] = useState<SalesItem[]>([]);
   const [filters, setFilters] = useState<ReportFilters | null>(null);
+  const { id } = useUserStore();
 
   useEffect(() => {
     const apiFilters = {
       type: "itinerary",
       status: "completed",
+      owner: id,
     };
 
     let salesItems: SalesItem[] = [];
@@ -25,7 +28,7 @@ export default function ItineraryReport() {
         const bookings = value as TPopulatedBooking[];
 
         salesItems = bookings
-          .filter((booking) => booking._id)
+          .filter((booking) => booking._id && booking.entity.owner === id)
           .map((booking) => ({
             id: booking.entity._id!,
             name: booking.entity.name,
@@ -36,7 +39,6 @@ export default function ItineraryReport() {
             status: booking.status,
             tourists: 1,
           }));
-        
       });
     } else {
       const startDate = filters.dateRange[0];
@@ -57,7 +59,6 @@ export default function ItineraryReport() {
             status: booking.status,
             tourists: 1,
           }));
-        
       });
     }
 
@@ -66,7 +67,7 @@ export default function ItineraryReport() {
       const itineraries = value as TItinerary[];
 
       const itinerariesNotInBookings: SalesItem[] = itineraries
-        .filter((itinerary) => !salesData.find((item) => item.id === itinerary._id))
+        .filter((itinerary) => (!salesData.find((item) => item.id === itinerary._id)) && itinerary.owner === id)``
         .map((itinerary) => ({
           id: itinerary._id,
           name: itinerary.name,

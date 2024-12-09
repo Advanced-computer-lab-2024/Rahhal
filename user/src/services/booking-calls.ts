@@ -1,6 +1,6 @@
 import type {  PopulatedBooking, IItinerary, IActivity, IProduct } from "@/types";
-import type { bookingStatus} from "@/utils/constants";
-import {  MIN_LENGTH, bookingType , Role } from "@/utils/constants";
+import type { bookingStatus, bookingType } from "@/utils/constants";
+import {  MIN_LENGTH , Role } from "@/utils/constants";
 import {
   entertainmentAxiosInstance,
   gatewayAxiosInstance,

@@ -26,12 +26,12 @@ export const getUserById = async (id: string): Promise<TUser> => {
 
 // delete user from users endpoint
 export async function deleteUser(id: string) {
-  const response = await axios.delete(`${SERVICES_URLS.USER}/users/${id}`);
+  const response = await axios.delete(`${SERVICES_URLS.GENERAL}/deleteAccount/${id}`);
   return response;
 }
 
 export async function deleteUserNoReload(user: TUser) {
-  await axios.delete(`${SERVICES_URLS.USER}/users/${user._id}`);
+  await axios.delete(`${SERVICES_URLS.GENERAL}/deleteAccount/${user._id}`);
 }
 
 // submit user to the users endpoint
@@ -46,7 +46,7 @@ export async function submitUser(user: TUser | undefined, isNewUser: boolean) {
       approved: true,
     };
 
-    const response = await axios.post(SERVICES_URLS.USER + "/users", newUser);
+    const response = await axios.post(SERVICES_URLS.GENERAL + "/signup", newUser);
     return response;
   } else {
     if (user) {
@@ -57,11 +57,7 @@ export async function submitUser(user: TUser | undefined, isNewUser: boolean) {
 }
 
 export async function createUser(newUser: any) {
-  const response = await axios.post(SERVICES_URLS.USER + "/users", newUser, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await axios.post(SERVICES_URLS.GENERAL + "/signup", newUser);
   return response.data;
 }
 
@@ -99,4 +95,49 @@ export async function getNumberOfUsers(startDate?: Date, endDate?: Date) {
     },
   });
   return response.data;
+}
+export async function loginUser(credentials: any) {
+  const response = await axios.post(SERVICES_URLS.AUTHENTICATION + "/login", credentials, {
+    withCredentials: true,
+  });
+  return response;
+}
+
+export async function logoutUser() {
+  const response = await axios.post(SERVICES_URLS.GENERAL + "/logout", {
+    withCredentials: true,
+  });
+  return response;
+}
+
+export async function changeuserPassword(userId: string, oldPassword: string, newPassword: string) {
+  const response = await axios.patch(`${SERVICES_URLS.AUTHENTICATION}/changePassword`, {
+    id: userId,
+    oldPassword,
+    newPassword,
+  });
+  return response;
+}
+
+export async function forgotPassword(username:string){
+  const response = await axios.post(`${SERVICES_URLS.AUTHENTICATION}/forgotPassword`, {
+    username
+  });
+  return response;
+}
+
+export async function verifyOTP(username:string, otp:string){
+  const response = await axios.patch(`${SERVICES_URLS.AUTHENTICATION}/verifyOTP`, {
+    username,
+    otp
+  });
+  return response;
+}
+
+export async function resetPassword(username:string, password:string){
+  const response = await axios.patch(`${SERVICES_URLS.AUTHENTICATION}/resetPassword`, {
+    username,
+    password
+  });
+  return response;
 }

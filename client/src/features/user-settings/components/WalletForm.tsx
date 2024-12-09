@@ -34,7 +34,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-import { useParams } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { GetCardType } from "../utils/CheckCardType";
 import { redeemLoyalityPoints } from "@/api-calls/users-api-calls";
@@ -43,6 +42,7 @@ import SilverRBadge from "@/assets/SilverRFavi.png";
 import GoldRBadge from "@/assets/GoldRFavi.png";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import currencyExchange from "@/utils/currency-exchange";
+import useUserStore from "@/stores/user-state-store";
 export const editCardContext = createContext({ editingCard: false, editedIndex: 0 });
 
 export default function AccountForm() {
@@ -90,7 +90,7 @@ export default function AccountForm() {
   const displayPrice = convertedPrice ? convertedPrice.toFixed(2) : "N/A";
 
   type balanceValues = z.infer<typeof redeemValidator>;
-  const { id } = useParams();
+  const { id } = useUserStore();
   const form = useForm<balanceValues>({
     resolver: zodResolver(redeemValidator),
     mode: "onChange",

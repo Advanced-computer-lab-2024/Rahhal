@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/features/admin/components/AdminSidebar";
 import { createContext, useEffect, useState } from "react";
@@ -6,21 +5,21 @@ import { TUser } from "@/types/user";
 import { DEFAULTS } from "@/lib/constants";
 import { getUserById } from "@/api-calls/users-api-calls";
 import { Outlet } from "react-router-dom";
+import useUserStore from "@/stores/user-state-store";
 
 export const EditContextAdmin = createContext<{ user: TUser }>({ user: DEFAULTS.ADMIN_DATA });
 
 export default function AdminHomepage() {
-  const { id } = useParams<{ id: string }>();
-  const [user, setUser] = useState<TUser>(DEFAULTS.ADMIN_DATA);
+  const { id } = useUserStore();
+    const [user, setUser] = useState<TUser>(DEFAULTS.ADMIN_DATA);
 
-  useEffect(() => {
-    if (id) {
-      getUserById(id).then((data) => {
-        setUser(data);
-      });
-    }
-  }, [id]);
-
+    useEffect(() => {
+        if (id) {
+            getUserById(id).then((data) => {
+                setUser(data);
+            });
+        }
+    }, [id]);
   return (
     <SidebarProvider>
       <AdminSidebar id={id} />

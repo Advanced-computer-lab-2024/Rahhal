@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { STATUS_CODES } from "@/utils/constants";
 import * as userService from "@/services/user-services/user-service";
+import * as authService from "@/services/auth-service";
 
 export async function getApprovedUsers(req: Request, res: Response) {
   try {
@@ -22,6 +23,7 @@ export async function getUsersPendingRequests(req: Request, res: Response) {
 
 export async function getUserById(req: Request, res: Response) {
   const userId = req.params.id;
+  // const userId = res.locals.id;
   try {
     const user = await userService.getUserById(userId);
     res.status(user.status).json(user.data);
@@ -32,6 +34,7 @@ export async function getUserById(req: Request, res: Response) {
 
 export async function getUserActivities(req: Request, res: Response) {
   const userId = req.params.id;
+  // const userId = res.locals.id;
   try {
     const activities = await userService.getUserActivities(userId);
     res.status(activities.status).json(activities.data);
@@ -42,6 +45,7 @@ export async function getUserActivities(req: Request, res: Response) {
 
 export async function getUserHistoricalPlaces(req: Request, res: Response) {
   const userId = req.params.id;
+  // const userId = res.locals.id;
   try {
     const historicalPlaces = await userService.getUserHistoricalPlaces(userId);
     res.status(historicalPlaces.status).json(historicalPlaces.data);
@@ -52,6 +56,7 @@ export async function getUserHistoricalPlaces(req: Request, res: Response) {
 
 export async function getUserProducts(req: Request, res: Response) {
   const userId = req.params.id;
+  // const userId = res.locals.id;
   try {
     const products = await userService.getUserProducts(userId);
     res.status(products.status).json(products.data);
@@ -60,15 +65,6 @@ export async function getUserProducts(req: Request, res: Response) {
   }
 }
 
-export async function createUser(req: Request, res: Response) {
-  const userData = req.body;
-  try {
-    const user = await userService.createUser(userData);
-    res.status(user.status).json(user.data);
-  } catch (error) {
-    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
-  }
-}
 
 export async function updateUser(req: Request, res: Response) {
   const userId = req.params.id;
@@ -76,27 +72,14 @@ export async function updateUser(req: Request, res: Response) {
   const amountRetrieved = req.query.amountRetrieved as string | undefined;
   const userData = req.body;
   try {
+    if (userData.hasOwnProperty('approved') ) {
+      const payload = {
+      id: userId,
+      approved: userData.approved
+      };
+      await authService.approveUser(payload);
+    }
     const user = await userService.updateUser(userId, userData, amountPaid, amountRetrieved);
-    res.status(user.status).json(user.data);
-  } catch (error) {
-    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
-  }
-}
-
-export async function deleteUser(req: Request, res: Response) {
-  const userId = req.params.id;
-  try {
-    const user = await userService.deleteUser(userId);
-    res.status(user.status).json(user.data);
-  } catch (error) {
-    res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);
-  }
-}
-
-export async function loginUser(req: Request, res: Response) {
-  const userData = req.body;
-  try {
-    const user = await userService.loginUser(userData);
     res.status(user.status).json(user.data);
   } catch (error) {
     res.status(STATUS_CODES.GATEWAY_TIMEOUT).json(error);

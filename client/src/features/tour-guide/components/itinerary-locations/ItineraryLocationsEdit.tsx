@@ -16,7 +16,7 @@ const ItineraryLocationsEdit: React.FC<ItineraryLocationsEditProps> = ({ locatio
   const [editedLocations, setEditedLocations] = useState<LocationEntry[]>(locations);
 
   const handleAddEntry = () => {
-    setEditedLocations([...editedLocations, { lat: 0, lng: 0 }]); // Initialize new location
+    setEditedLocations([...editedLocations, { lat: 29.986828500000012, lng: 31.441345800000015 }]); // Initialize new location
   };
 
   const handleRemoveEntry = (index: number) => {

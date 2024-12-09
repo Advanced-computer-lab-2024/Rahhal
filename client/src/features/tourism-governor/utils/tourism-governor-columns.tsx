@@ -2,9 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { FaTrash } from "react-icons/fa6";
 import { HistoricalPlacesModal } from "../components/HistoricalPlacesModal";
-import { deleteHistoricalPlace } from "@/api-calls/historical-places-api-calls";
 import type { TRating } from "@/types/shared";
 
 export type TCategory = {
@@ -38,16 +36,15 @@ export type TNewHistoricalPlace = Omit<
   tags: string[];
 };
 
-function deleteRow(row: any) {
-  deleteHistoricalPlace(row.original);
-}
-
 function calculateAverageRating(ratings: TRating[]) {
   const totalRating = ratings.reduce((acc, rating) => acc + rating.rating, 0);
   return totalRating / ratings.length;
 }
 
-export const historicalPlacesColumns: ColumnDef<THistoricalPlace>[] = [
+export const historicalPlacesColumns= (
+  onDelete: (id: string) => void,
+  onSubmit: (historicalPlace: THistoricalPlace) => void,
+): ColumnDef<THistoricalPlace>[] => [
   {
     accessorKey: "name",
     header: "name",
@@ -95,10 +92,6 @@ export const historicalPlacesColumns: ColumnDef<THistoricalPlace>[] = [
     cell: ({ row }) => {
       return (
         <div className="text-right">
-          <Button variant="destructive" className="h-8 w-8 p-0" onClick={() => deleteRow(row)}>
-            <span className="sr-only">Delete</span>
-            <FaTrash className="h-4 w-4" />
-          </Button>
           <HistoricalPlacesModal
             historicalPlaceData={row.original}
             dialogTrigger={
@@ -107,6 +100,8 @@ export const historicalPlacesColumns: ColumnDef<THistoricalPlace>[] = [
                 <ChevronRight className="h-4 w-4" />
               </Button>
             }
+            onDelete={(id) => onDelete(id)}
+            onSubmit={(historicalPlace) => onSubmit(historicalPlace)}
           />
         </div>
       );

@@ -11,6 +11,7 @@ export const STATUS_CODES = {
 
 export const CONSTANTS = {
   ZERO: 0,
+  MAXAGE : 86400000
 };
 
 export const ERROR_MESSAGES = {
@@ -20,3 +21,5 @@ export const ERROR_MESSAGES = {
   GATEWAY_TIMEOUT: "Gateway Timeout",
   BAD_GATEWAY: "Bad Gateway",
 };
+
+

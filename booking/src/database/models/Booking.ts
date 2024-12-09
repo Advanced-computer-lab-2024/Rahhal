@@ -24,6 +24,9 @@ const bookingSchema = new mongoose.Schema({
   selectedPrice: {
     type: Number,
   },
+  discount: {
+    type: Number,
+  },
   selectedDate: {
     type: Date,
   },

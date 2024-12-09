@@ -5,15 +5,15 @@ import { CartModal } from "./CartModal";
 import { useQuery } from "@tanstack/react-query";
 import { fetchUserCart } from "@/api-calls/cart-api-calls";
 import { PopulatedCart } from "@/features/home/types/home-page-types";
-import { useParams } from "react-router-dom";
 import useCartStore from "@/stores/nav-bar-icon-stores/cart-count-store";
 import useProductRefreshStore from "@/stores/refresh-product-store";
+import useUserStore from "@/stores/user-state-store";
 
 export function CartIcon() {
   const [isOpen, setIsOpen] = useState(false);
   const { count, setCount } = useCartStore();
 
-  const { id: paramId } = useParams<{ id?: string }>();
+  const { id: paramId } = useUserStore();
   const { setRefresh } = useProductRefreshStore();
 
   const { data: cartData, isSuccess } = useQuery({

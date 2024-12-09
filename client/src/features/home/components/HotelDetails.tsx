@@ -19,17 +19,22 @@ import { useParams } from "react-router-dom";
 import { useHotelSearchBarStore } from "@/stores/search-bar-stores/hotel-search-bar-slice";
 import { getUserById, addLoyalityPoints } from "@/api-calls/users-api-calls";
 import { calculateAge } from "@/utils/age-calculator";
-import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { bookingType } from "@/utils/enums";
 import type { TBookingType } from "../types/home-page-types";
 import { createBooking } from "@/api-calls/booking-api-calls";
 import SignUpModal from "./SignupModal";
+import { useTour } from "@/components/AppTour";
+import BookingModal from "./payment-modal/PaymentModal";
+import useUserStore from "@/stores/user-state-store";
 export default function HotelDetails({ hotels }: HotelDetailsProps) {
-  const { index, id } = useParams();
+  
+  const { index } = useParams();
+  const { id } = useUserStore();
   const [isAboveEighteen, setIsAboveEighteen] = useState(false);
   const [login, setLogin] = useState(false);
+  const {setSearchButtonClicked, setIsLoading } = useTour();
   useEffect(() => {
     if (id) {
       const user = getUserById(id);
@@ -43,10 +48,17 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
     }
   }, [id]);
 
+  useEffect(() => {
+
+    setSearchButtonClicked(false);
+    setIsLoading(false);
+  },[]);
+
   const { rates } = useRatesStore();
   const { currency } = useCurrencyStore();
   const parsedIndex = parseInt(index!);
   const hotel = hotels[parsedIndex];
+
   const newPrice = currencyExchangeSpec("USD", parseInt(hotel.averagePrice), rates, currency)
     ?.toFixed(0)!
     .toLocaleString();
@@ -70,14 +82,28 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
   const [showMoreFeat, setShowMoreFeat] = useState(false);
   const [showMoreType, setShowMoreType] = useState(false);
   const [isGuestAction, setIsGuestAction] = useState(false);
+  const [promocodeDiscount, setPromocodeDiscount] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModal = () => setIsModalOpen(false);
 
   const propertyAmenities = chunkArray(hotel.features.propertyAmenities, 2);
   const roomFeatures = chunkArray(hotel.features.roomFeatures, 2);
   const roomTypes = chunkArray(hotel.features.roomTypes, 2);
 
-  const handleHotelBooking = async (price: number) => {
+  const egpPrice = currencyExchangeDefaultSpec(
+    currency,
+    differenceInDays(date.to!, date.from!) * parseInt(newPrice!) + parseInt(newPrice!) * 0.1,
+    rates,
+  )!;
+
+  const handleHotelBooking = async () => {
     if (!login) {
       setIsGuestAction(true);
+      return;
+    }
+
+    if (!isModalOpen && id) {
+      setIsModalOpen(true);
       return;
     }
 
@@ -86,10 +112,11 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
       entity: index!,
       type: bookingType.Hotel,
       selectedDate: new Date(date.from!),
-      selectedPrice: price,
+      discount: promocodeDiscount,
+      selectedPrice: egpPrice,
     };
     const booking = await createBooking(bookingRequest);
-    if (booking) await addLoyalityPoints(id!, price);
+    if (booking) await addLoyalityPoints(id!, egpPrice);
   };
 
   return (
@@ -101,6 +128,24 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
             setIsGuestAction(false);
           }}
           text={"Planning your stay? Sign in to book the perfect hotel effortlessly!"}
+        />
+      )}
+
+      {isModalOpen && (
+        <BookingModal
+          parentBookingFunc={handleHotelBooking}
+          currency={currency}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          price={Number(
+            differenceInDays(date.to!, date.from!) * parseInt(newPrice!) +
+              parseInt(newPrice!) * 0.1,
+          )}
+          name={hotel.name}
+          type={"Hotel"}
+          userId={id ?? ""}
+          egpPrice={egpPrice ?? 0}
+          setPromocodeDiscount={setPromocodeDiscount}
         />
       )}
 
@@ -126,85 +171,61 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
               {hotel.address.addressCountry && hotel.address.addressCountry.name}{" "}
             </span>
           </div>
+
           <div className="flex flex-col gap-12">
-            <div className="w-full h-[30rem] border-2 border-color-gray-200 rounded-2xl flex overflow-hidden">
-              <div className="relative group h-[30rem] flex justify-center w-8/12">
-                <Carousel className="w-full h-full">
-                  <CarouselContent className="w-full h-full ml-0">
-                    {hotel.images.map((image, index) => (
-                      <CarouselItem key={index} className=" h-full w-full pl-0">
-                        <img
-                          src={image}
-                          alt={hotel.name}
-                          className=" w-full h-[29.75rem] object-cover"
-                        />
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
+            <div id="stay-reservation-details-tour">
+              <div className="w-full h-[30rem] border-2 border-color-gray-200 rounded-2xl flex overflow-hidden">
+                <div className="relative group h-[30rem] flex justify-center w-8/12">
+                  <Carousel className="w-full h-full">
+                    <CarouselContent className="w-full h-full ml-0">
+                      {hotel.images.map((image, index) => (
+                        <CarouselItem key={index} className=" h-full w-full pl-0">
+                          <img
+                            src={image}
+                            alt={hotel.name}
+                            className=" w-full h-[29.75rem] object-cover"
+                          />
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
 
-                  <CarouselPrevious className="text-xs group bg-transparent border-0 rounded-full bg-gray-300 bg-opacity-50 translate-x-[250%] h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:opacity-0 disabled:group-hover:opacity-0" />
+                    <CarouselPrevious className="text-xs group bg-transparent border-0 rounded-full bg-gray-300 bg-opacity-50 translate-x-[250%] h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:opacity-0 disabled:group-hover:opacity-0" />
 
-                  <CarouselNext className="text-xs group bg-transparent border-0 rounded-full bg-gray-300 bg-opacity-50 translate-x-[-250%] h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:opacity-0 disabled:group-hover:opacity-0" />
-                </Carousel>
-              </div>
-              <div className="flex flex-col gap-2 pb-5 w-4/12 justify-end">
-                <div className="flex justify-end w-full pr-4 h-16 items-start">
-                  <SharePopover link={window.location.href} />
+                    <CarouselNext className="text-xs group bg-transparent border-0 rounded-full bg-gray-300 bg-opacity-50 translate-x-[-250%] h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:opacity-0 disabled:group-hover:opacity-0" />
+                  </Carousel>
                 </div>
-                <div className="h-2"></div>
-                <div className="flex justify-center w-full ">
-                  <div className="flex justify-start w-64 p-1">
-                    <span className="text-left font-semibold">{newPrice + " " + currency} </span>{" "}
-                    <span className="pl-1 ">/night</span>
+
+                <div className="flex flex-col gap-2 pb-5 w-4/12 justify-end">
+                  <div className="flex justify-end w-full pr-4 h-16 items-start">
+                    <SharePopover link={window.location.href} />
                   </div>
-                </div>
+                  <div className="h-2"></div>
+                  <div className="flex justify-center w-full ">
+                    <div className="flex justify-start w-64 p-1">
+                      <span className="text-left font-semibold">{newPrice + " " + currency} </span>{" "}
+                      <span className="pl-1 ">/night</span>
+                    </div>
+                  </div>
 
-                <div className="w-[100%] flex justify-center h-fit">
-                  <ReservationDetails date={date} setDate={setDate} />
-                </div>
 
+                  <div className="w-[100%] flex justify-center h-fit">
+                    <ReservationDetails date={date} setDate={setDate} />
+                  </div>
                 <div className="flex justify-center">
-                  {!login && (
-                    <button
-                      onClick={() => handleHotelBooking(parseInt(newPrice!))}
-                      className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12"
-                    >
-                      Reserve Room
-                    </button>
-                  )}
-
-                  {login && (
-                    <button
-                      className={cn(
-                        "bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12",
-                        !isAboveEighteen || !date.to || adults <= 0
-                          ? "hover:bg-[var(--primary-color-fade)] bg-[var(--primary-color-fade)]"
-                          : "",
-                      )}
-                      disabled={!isAboveEighteen || !date.to || adults <= 0}
-                      onClick={() => {
-                        toast({
-                          title: "Booking successful",
-                          description: "Loyality points added to your account!",
-                          style: {
-                            backgroundColor: "#34D399",
-                            color: "#FFFFFF",
-                          },
-                          duration: 3000,
-                        });
-                        handleHotelBooking(
-                          currencyExchangeDefaultSpec(
-                            currency,
-                            differenceInDays(date.to!, date.from!) * parseInt(newPrice!) +
-                              parseInt(newPrice!) * 0.1,
-                            rates,
-                          )!,
-                        );
-                      }}
-                    >
-                      Reserve Room
-                    </button>
-                  )}
+                  <button
+                    className={cn(
+                      "bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] rounded-lg text-white p-2 text-sm w-64 h-12",
+                      (login && !isAboveEighteen) || !date.to || adults <= 0
+                        ? "hover:bg-[var(--primary-color-fade)] bg-[var(--primary-color-fade)]"
+                        : "",
+                    )}
+                    disabled={(login && !isAboveEighteen) || !date.to || adults <= 0}
+                    onClick={() => {
+                      handleHotelBooking();
+                    }}
+                  >
+                    Reserve Room
+                  </button>
                 </div>
                 <div className="h-4 flex justify-center">
                   {login && !isAboveEighteen && (
@@ -214,58 +235,58 @@ export default function HotelDetails({ hotels }: HotelDetailsProps) {
                   )}
                 </div>
 
-                <div className="flex justify-center h-28">
-                  <div className="flex flex-col justify-end items-center w-fit gap-3 h-fit">
-                    {date.to && (
-                      <>
-                        <div className="w-full">
-                          <div className="flex justify-between w-full gap-10">
-                            {date.to && (
-                              <>
-                                <span className="underline">
-                                  {newPrice +
-                                    " x " +
-                                    differenceInDays(date.to, date.from!) +
-                                    " nights"}
-                                </span>
-                                <span>
-                                  {differenceInDays(date.to, date.from!) * parseInt(newPrice!) +
-                                    " " +
-                                    currency}
-                                </span>
-                              </>
-                            )}
+                  <div className="flex justify-center h-28">
+                    <div className="flex flex-col justify-end items-center w-fit gap-3 h-fit">
+                      {date.to && (
+                        <>
+                          <div className="w-full">
+                            <div className="flex justify-between w-full gap-10">
+                              {date.to && (
+                                <>
+                                  <span className="underline">
+                                    {newPrice +
+                                      " x " +
+                                      differenceInDays(date.to, date.from!) +
+                                      " nights"}
+                                  </span>
+                                  <span>
+                                    {differenceInDays(date.to, date.from!) * parseInt(newPrice!) +
+                                      " " +
+                                      currency}
+                                  </span>
+                                </>
+                              )}
+                            </div>
                           </div>
-                        </div>
 
-                        <div className="w-full">
-                          <div className="flex justify-between w-full gap-10">
-                            <span className="underline"> Rahhal service fee </span>
-                            <span> {(parseInt(newPrice!) * 0.1).toFixed(0) + " " + currency} </span>
+                          <div className="w-full">
+                            <div className="flex justify-between w-full gap-10">
+                              <span className="underline"> Rahhal service fee </span>
+                              <span> {(parseInt(newPrice!) * 0.1).toFixed(0) + " " + currency} </span>
+                            </div>
                           </div>
-                        </div>
-                        <hr className="border-1 border-gray-300 w-full" />
-                        <div className="w-full">
-                          <div className="flex justify-between w-full gap-10">
-                            <span className="font-medium"> Total </span>
-                            <span>
-                              {" "}
-                              {(
-                                differenceInDays(date.to, date.from!) * parseInt(newPrice!) +
-                                parseInt(newPrice!) * 0.1
-                              ).toFixed(0) +
-                                " " +
-                                currency}{" "}
-                            </span>
+                          <hr className="border-1 border-gray-300 w-full" />
+                          <div className="w-full">
+                            <div className="flex justify-between w-full gap-10">
+                              <span className="font-medium"> Total </span>
+                              <span>
+                                {" "}
+                                {(
+                                  differenceInDays(date.to, date.from!) * parseInt(newPrice!) +
+                                  parseInt(newPrice!) * 0.1
+                                ).toFixed(0) +
+                                  " " +
+                                  currency}{" "}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      </>
-                    )}
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-
             <div className="w-full h-fit border-2 border-color-gray-200 rounded-2xl flex overflow-hidden p-5 flex-col">
               <span className="text-3xl font-medium">About</span>
               <hr className="border-1 border-gray-300 my-4" />

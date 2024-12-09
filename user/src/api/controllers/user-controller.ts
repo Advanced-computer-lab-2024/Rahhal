@@ -99,7 +99,7 @@ export async function updateUser(req: Request, res: Response) {
 export async function createUser(req: Request, res: Response) {
   try {
     const userData = req.body;
-    if (userData.username && userData.password) {
+    if (userData.username) {
       const shouldCheckEmail =
         userData.role !== Role.admin && userData.role !== Role.tourismGovernor;
       const userUsername = await userService.getUser({ username: userData.username });
@@ -145,28 +145,6 @@ export async function deleteUser(req: Request, res: Response) {
     const userId = req.params.id;
     const deletedUser = await userService.deleteUser(userId);
     res.status(STATUS_CODES.STATUS_OK).json(deletedUser);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });
-    }
-  }
-}
-
-export async function loginUser(req: Request, res: Response) {
-  try {
-    const { password } = req.body;
-    const user = await userService.getUser(req.body);
-    if (!user) {
-      res.status(STATUS_CODES.NOT_FOUND).json({ error: "Username or Password is incorrect" });
-      return;
-    } else if (user.password !== password) {
-      res.status(STATUS_CODES.NOT_FOUND).json({ error: "Username or Password is incorrect" });
-      return;
-    } else if (user.approved === false) {
-      res.status(STATUS_CODES.NOT_FOUND).json({ error: "User is not approved yet" });
-      return;
-    }
-    res.status(STATUS_CODES.STATUS_OK).json(user);
   } catch (error) {
     if (error instanceof Error) {
       res.status(STATUS_CODES.SERVER_ERROR).json({ error: error.message });

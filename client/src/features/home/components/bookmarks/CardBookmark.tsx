@@ -5,10 +5,10 @@ import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import useBookmarkStore from "@/stores/nav-bar-icon-stores/bookmark-count-store";
 import { addBookmark, isEntityBookmarked, removeBookmark } from "@/api-calls/bookmark-api-calls";
-import { useParams } from "react-router-dom";
 import { bookmarkType } from "@/utils/enums";
 import SignUpModal from "../SignupModal";
 import { toast } from "@/hooks/use-toast";
+import useUserStore from "@/stores/user-state-store";
 
 interface BookmarkButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   id: string;
@@ -16,7 +16,7 @@ interface BookmarkButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
 }
 
 export default function CardBookmark({ id, entityType }: BookmarkButtonProps) {
-  const { id: userId } = useParams();
+  const { id: userId } = useUserStore();
   const [isBookmarked, setBookmarked] = useState(false);
   const { incrementCount, decrementCount } = useBookmarkStore();
   const [isGuestAction, setIsGuestAction] = useState(false);

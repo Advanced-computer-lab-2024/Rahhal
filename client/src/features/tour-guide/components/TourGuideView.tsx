@@ -4,18 +4,21 @@ import { itinerariesColumns, TItinerary } from "@/features/tour-guide/utils/tour
 import { fetchItinerariesByOwner } from "@/api-calls/itineraries-api-calls";
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { ItinerariesModal } from "./ItineraryModal";
-import { useParams } from "react-router-dom";
 import { TUser } from "@/types/user";
 import { getUserById } from "@/api-calls/users-api-calls";
+import TourGuideReviews from "./TourGuideReviews";
+import ReviewDisplay from "@/components/Ratings";
+import { cn, sampleReviews } from "@/lib/utils";
+import useUserStore from "@/stores/user-state-store";
 
 function TourGuideView() {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useUserStore();
   const [itineraries, setItineraries] = useState<TItinerary[]>([]);
   const [user, setUser] = useState<TUser>();
 
   useEffect(() => {
     const init = async () => {
-      const itinerariesData = await fetchItinerariesByOwner(id!);
+      const itinerariesData : any = await fetchItinerariesByOwner(id!);
       const userData = await getUserById(id!);
       setItineraries(itinerariesData);
       setUser(userData);
@@ -25,7 +28,15 @@ function TourGuideView() {
   }, []);
 
   return (
-    <>
+    <div className="container m-auto">
+    <h1
+        className={cn(
+          "text-3xl font-bold tracking-tight",
+          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent",
+        )}
+      >
+        Itineraries
+      </h1>
       <div className="flex flex-col container m-auto gap-10">
         <DataTable
           data={itineraries}
@@ -39,7 +50,7 @@ function TourGuideView() {
           }
         />
       </div>
-    </>
+    </div>
   );
 }
 

@@ -5,12 +5,12 @@ import { HistoricalPlace } from "@/features/home/types/home-page-types";
 import { MapPin } from "lucide-react";
 import { TicketCheck } from "lucide-react";
 import { fetchLocationDetails } from "@/api-calls/google-maps-api-calls";
-import TouristHomePageNavigation from "../TouristHomePageNavigation";
 import HistoricalDetailsStyles from "./HistoricalDetailsPage.module.css";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import currencyExchange from "@/utils/currency-exchange";
+import SharePopover from "@/components/SharePopover";
 
 export default function HistoricalDetailsPage() {
   const { placeid } = useParams();
@@ -65,32 +65,38 @@ export default function HistoricalDetailsPage() {
   const StudentConvertedPrice = currencyExchange("EGP", historicalPlace?.price.student!);
 
   const NativeDisplayPrice = NativeConvertedPrice ? NativeConvertedPrice.toFixed(0) : "N/A";
-  const ForeignerDisplayPrice = ForeignerConvertedPrice ? ForeignerConvertedPrice.toFixed(0) : "N/A";
+  const ForeignerDisplayPrice = ForeignerConvertedPrice
+    ? ForeignerConvertedPrice.toFixed(0)
+    : "N/A";
   const StudentDisplayPrice = StudentConvertedPrice ? StudentConvertedPrice.toFixed(0) : "N/A";
 
-
   const textVariants = {
-    hidden: { opacity: 0, y: 50 }, 
+    hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
-      y: 0, 
+      y: 0,
       transition: { duration: 0.6 },
     },
   };
 
   const imageVariants = {
-    hidden: { opacity: 0, scale: 0.9 }, 
+    hidden: { opacity: 0, scale: 0.9 },
     visible: {
       opacity: 1,
-      scale: 1, 
+      scale: 1,
       transition: { duration: 0.8 },
     },
   };
 
   return (
     <>
-      <TouristHomePageNavigation loggedIn={true} />
-
+      <div className="flex justify-end mr-[16px]">
+        <SharePopover
+          link={`http://localhost:5173/hplace/details/${historicalPlace?._id}`}
+          size={18}
+          shareText={true}
+        />
+      </div>
       {/* Hero Section */}
       <motion.section
         className={HistoricalDetailsStyles.sectionRelative}
@@ -98,10 +104,7 @@ export default function HistoricalDetailsPage() {
         animate="visible"
         variants={imageVariants}
       >
-        <img
-          src={historicalPlace?.images[0]}
-          className={HistoricalDetailsStyles.sectionImage}
-        />
+        <img src={historicalPlace?.images[0]} className={HistoricalDetailsStyles.sectionImage} />
         <div className={HistoricalDetailsStyles.sectionOverlay}>
           <h1 className={HistoricalDetailsStyles.sectionOverlayTitle}>{historicalPlace?.name}</h1>
         </div>
@@ -145,7 +148,7 @@ export default function HistoricalDetailsPage() {
           viewport={{ once: true, amount: 0.3 }}
           variants={imageVariants}
         >
-          <img src={historicalPlace?.images[1]}  className={HistoricalDetailsStyles.image} />
+          <img src={historicalPlace?.images[1]} className={HistoricalDetailsStyles.image} />
         </motion.div>
       </section>
       <section className={HistoricalDetailsStyles.ticketIconSection}>
@@ -160,10 +163,7 @@ export default function HistoricalDetailsPage() {
           viewport={{ once: true, amount: 0.3 }}
           variants={imageVariants}
         >
-          <img
-            src={historicalPlace?.images[2]}
-            className={HistoricalDetailsStyles.ticketImage}
-          />
+          <img src={historicalPlace?.images[2]} className={HistoricalDetailsStyles.ticketImage} />
         </motion.div>
 
         <motion.div

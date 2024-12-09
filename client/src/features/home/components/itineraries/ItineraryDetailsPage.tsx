@@ -4,7 +4,7 @@ import { TPopulatedBooking } from "../../types/home-page-types";
 import { addLoyalityPoints, getUserById } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
 import { createBooking } from "@/api-calls/booking-api-calls";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import TouristHomePageNavigation from "../TouristHomePageNavigation";
 import ItinerariesPageTemplate from "../ItinerariesPageTemplate";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
@@ -18,12 +18,16 @@ import { DEFAULT_ITINERARY } from "../../utils/constants";
 import { fetchItineraryById } from "@/api-calls/itineraries-api-calls";
 import { toast } from "@/hooks/use-toast";
 import { createNotifyRequest } from "@/api-calls/notify-requests-api-calls";
+import { useTour } from "@/components/AppTour";
+import useUserStore from "@/stores/user-state-store";
 
-const ItineraryDetailsPage: React.FC = () => {
+
+const ItineraryDetailsPage: React.FC = () => { 
   const loc = useLocation();
   const [searchParams] = useSearchParams();
   const eventId = searchParams.get("eventId");
   const [itinerary, setItinerary] = useState(loc.state?.item || DEFAULT_ITINERARY);
+  const { setIsLoading } = useTour();
 
   const empty = itinerary === DEFAULT_ITINERARY;
 
@@ -34,7 +38,12 @@ const ItineraryDetailsPage: React.FC = () => {
       });
     }
   }, [loc.state?.item, eventId]);
+  
+  useEffect(() => {
+    setIsLoading(false);
+  },[]);
 
+  // const itinerary = await fetchItineraryById(us)
   const {
     _id,
     name,
@@ -68,10 +77,11 @@ const ItineraryDetailsPage: React.FC = () => {
   const cardButtonText = "Book Itinerary";
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isNotifyAnimating, setIsNotifyAnimating] = React.useState(false);
+  const [promocodeDiscount, setPromocodeDiscount] = React.useState(0);
 
   const closeModal = () => setIsModalOpen(false);
 
-  const { id } = useParams();
+  const { id } = useUserStore();  
   const { currency } = useCurrencyStore();
 
   const convertedPrice = currencyExchange("EGP", price);
@@ -108,6 +118,7 @@ const ItineraryDetailsPage: React.FC = () => {
         entity: itinerary._id ?? "",
         type: bookingType.Itinerary,
         selectedPrice: price,
+        discount: promocodeDiscount,
         selectedDate: selectedDate ? new Date(selectedDate) : new Date(),
       }).then((response) => {
         const booking = response as TPopulatedBooking;
@@ -122,7 +133,7 @@ const ItineraryDetailsPage: React.FC = () => {
     setIsNotifyAnimating(true);
     setTimeout(() => setIsNotifyAnimating(false), 1000);
 
-    if (id){
+    if (id) {
       createNotifyRequest({
         user: id,
         entity: _id,
@@ -137,10 +148,11 @@ const ItineraryDetailsPage: React.FC = () => {
         title: `You Must be logged in`,
         duration: 3500,
       });
-    } 
+    }
   };
 
   return (
+
     <div>
       {!empty && (
         <>
@@ -164,10 +176,9 @@ const ItineraryDetailsPage: React.FC = () => {
               type={"Itinerary"}
               userId={id ?? ""}
               egpPrice={price}
+              setPromocodeDiscount={setPromocodeDiscount}
             />
           )}
-
-          <TouristHomePageNavigation loggedIn={id ? true : false} />
           <ItinerariesPageTemplate
             _id={_id}
             name={name}
@@ -183,6 +194,7 @@ const ItineraryDetailsPage: React.FC = () => {
             languages={languages}
             accessibility={accessibility}
           >
+                        <div id="book-itinerary-tour">
             <OverviewCard
               currency={currency}
               originalPrice={price}
@@ -191,14 +203,20 @@ const ItineraryDetailsPage: React.FC = () => {
               dropdownOptions={cardDropdownOptions}
               dateOptions={true}
               disabled={isButtonDisabled}
-              onButtonClick={(active && !isButtonDisabled && !isGuestAction) ? handleBookButtonClick : handleNotifyButtonClick}
+              onButtonClick={
+                active && !isButtonDisabled && !isGuestAction
+                  ? handleBookButtonClick
+                  : handleNotifyButtonClick
+              }
               onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
               footerText={text}
               isNotifyAnimating={isNotifyAnimating}
             />
+            </div>
           </ItinerariesPageTemplate>
         </>
       )}
+     
     </div>
   );
 };

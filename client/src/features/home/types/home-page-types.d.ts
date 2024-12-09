@@ -66,6 +66,7 @@ export type TPopulatedBooking = {
   type: bookingType;
   status: TBookingStatus;
   selectedPrice: number;
+  discount?: number;
   selectedDate: Date;
   rating?: number;
   itineraryTourGuideRating?: number;
@@ -78,6 +79,7 @@ export type TBookingType = {
   status?: TBookingStatus;
   selectedPrice?: number;
   selectedDate?: Date;
+  discount?: number;
   rating?: number;
   itineraryTourGuideRating?: number;
 };

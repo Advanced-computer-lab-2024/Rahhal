@@ -20,40 +20,46 @@ import { EditContextSeller } from "@/features/seller/components/SellerHomePage";
 import { EditContextTourGuide } from "@/features/tour-guide/components/TourGuideHomePage";
 import { EditContextTourGov } from "@/features/tourism-governor/components/TourismGovernorHomepage";
 import { EditContextAdvertiser } from "@/features/advertiser/components/AdvertiserHomePage";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { updateUser } from "@/api-calls/users-api-calls";
-import DeleteAccountButton from "./DeleteAccountButton";
+import {
+  deleteUserNoReload,
+  updateUser,
+  changeuserPassword,
+  logoutUser,
+} from "@/api-calls/users-api-calls";
+import DoubleCheckPopupWrapper from "../../../components/DoubleCheckPopUpWrapper";
+
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { Checkbox } from "@/components/ui/checkbox";
+import useUserStore, { UserState } from "@/stores/user-state-store";
+import { Roles } from "@/types/enums";
 export default function AccountForm() {
   const [preferenceTags, setPreferenceTags] = useState<{ _id: string; name: string }[]>([]);
+  const { id, role } = useUserStore();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [editForm, setEditForm] = useState(false);
+  const [isDoubleCheckDialogOpen, setIsDoubleCheckDialogOpen] = useState(false);
 
-  const url = window.location.href;
-  const context = url.includes("admin")
-    ? EditContextAdmin
-    : url.includes("seller")
-      ? EditContextSeller
-      : url.includes("tour-guide")
-        ? EditContextTourGuide
-        : url.includes("tourism-governor")
-          ? EditContextTourGov
-          : url.includes("advertiser")
-            ? EditContextAdvertiser
-            : EditContext;
+  const context =
+    role === Roles.ADMIN
+      ? EditContextAdmin
+      : role === Roles.SELLER
+        ? EditContextSeller
+        : role === Roles.TOURGUIDE
+          ? EditContextTourGuide
+          : role === Roles.TOURISMGOVERNOR
+            ? EditContextTourGov
+            : role === Roles.ADVERTISER
+              ? EditContextAdvertiser
+              : EditContext;
 
   const { user } = useContext(context);
-  const { id } = useParams();
+  console.log("AccountForm -> user", user);
 
   const passwordValidator = z.object({
-    oldPassword: z
-      .string()
-      .refine((val) => val === user.password, {
-        message: "Old password does not match.",
-      })
-      .optional(),
+    oldPassword: z.string().optional(),
     newPassword: z
       .string()
       .min(8, {
@@ -64,9 +70,6 @@ export default function AccountForm() {
       })
       .regex(/[0-9]/, {
         message: "Password must contain at least one number.",
-      })
-      .refine((val) => val !== user.password, {
-        message: "New password must be different from the old password.",
       })
       .optional(),
   });
@@ -151,22 +154,51 @@ export default function AccountForm() {
       title: "Updating ... ",
     });
     setTimeout(() => {}, 1500);
-
-    if (changePassword) {
-      const isOldPasswordValid = await oldPasswordForm.trigger();
-
-      if (isOldPasswordValid) {
-        update({ ...data, password: oldPasswordForm.getValues().newPassword });
-        setChangePassword(false);
-        oldPasswordForm.reset();
+    try {
+      if (changePassword) {
+        const isOldPasswordValid = await oldPasswordForm.trigger();
+        await changeuserPassword(
+          id!,
+          oldPasswordForm.getValues().oldPassword as string,
+          oldPasswordForm.getValues().newPassword as string,
+        );
+        if (isOldPasswordValid) {
+          update({ ...data });
+          setChangePassword(false);
+          oldPasswordForm.reset();
+        } else {
+          console.log("Form errors:", oldPasswordForm.formState.errors);
+        }
       } else {
-        console.log("Form errors:", oldPasswordForm.formState.errors);
+        update(data);
       }
-    } else {
-      update(data);
+      form.reset(data);
+      oldPasswordForm.reset();
+    } catch (error) {
+      toast({
+        title: "Oops, something went wrong!",
+        variant: "destructive",
+        description: error.response?.data.error,
+      });
     }
-    form.reset(data);
-    oldPasswordForm.reset();
+  }
+
+  async function handleDeleteAccount() {
+    try {
+      await deleteUserNoReload(user);
+      await logoutUser();
+      await UserState();
+      navigate("/");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        setIsDoubleCheckDialogOpen(false);
+        toast({
+          title: "Ops, something went wrong!",
+          description: error.response?.data.error,
+          variant: "destructive",
+        });
+      }
+    }
   }
 
   return (
@@ -358,7 +390,20 @@ export default function AccountForm() {
                 </div>
                 <div className="col-span-8"></div>
                 <div className="col-span-2 ml-auto">
-                  <DeleteAccountButton user={{ ...user, _id: id }} />
+                  <DoubleCheckPopupWrapper
+                    customMessage="This will permanently delete your account."
+                    isOpen={isDoubleCheckDialogOpen}
+                    onAction={handleDeleteAccount}
+                    onCancel={() => setIsDoubleCheckDialogOpen(false)}
+                  >
+                    <Button
+                      variant="destructive"
+                      className="rounded-md text-sm font-medium h-9 px-4 py-2"
+                      onClick={() => setIsDoubleCheckDialogOpen(true)}
+                    >
+                      Delete My Account
+                    </Button>
+                  </DoubleCheckPopupWrapper>
                 </div>
               </div>
             </div>

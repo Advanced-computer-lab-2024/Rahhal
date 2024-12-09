@@ -7,7 +7,7 @@ import { createBooking } from "@/api-calls/booking-api-calls";
 import { formatDate, formatTime } from "../../utils/filter-lists/overview-card";
 import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
 import DetailsPageTemplateProps from "../DetailsPageTemplate";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import TouristHomePageNavigation from "../TouristHomePageNavigation";
 import { bookingType } from "@/utils/enums";
 import SignUpModal from "../SignupModal";
@@ -18,12 +18,14 @@ import { DEFAULT_ACTIVITY } from "../../utils/constants";
 import { toast } from "@/hooks/use-toast";
 import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { createNotifyRequest } from "@/api-calls/notify-requests-api-calls";
+import useUserStore from "@/stores/user-state-store";
 
 const ActivityDetailsPage: React.FC = () => {
   const loc = useLocation();
   const [searchParams] = useSearchParams();
   const eventId = searchParams.get("eventId");
   const [activity, setActivity] = useState(loc.state?.item || DEFAULT_ACTIVITY);
+  const [promocodeDiscount, setPromocodeDiscount] = useState(0);
 
   const empty = activity === DEFAULT_ACTIVITY;
 
@@ -64,7 +66,8 @@ const ActivityDetailsPage: React.FC = () => {
 
   const { currency } = useCurrencyStore();
   const { rates } = useRatesStore();
-  const { id } = useParams();
+
+  const { id } = useUserStore();
 
   const closeModal = () => setIsModalOpen(false);
 
@@ -101,6 +104,7 @@ const ActivityDetailsPage: React.FC = () => {
           entity: activity._id ?? "",
           type: bookingType.Activity,
           selectedPrice: selectedPrice!,
+          discount: promocodeDiscount,
           selectedDate: activity.date,
         }).then((response) => {
           const booking = response as TPopulatedBooking;
@@ -122,7 +126,7 @@ const ActivityDetailsPage: React.FC = () => {
     setIsNotifyAnimating(true);
     setTimeout(() => setIsNotifyAnimating(false), 1000);
 
-    if (id){
+    if (id) {
       createNotifyRequest({
         user: id,
         entity: _id,
@@ -137,7 +141,7 @@ const ActivityDetailsPage: React.FC = () => {
         title: `You Must be logged in`,
         duration: 3500,
       });
-    } 
+    }
   };
 
   const onTicketSelect = (index: number) => {
@@ -164,6 +168,7 @@ const ActivityDetailsPage: React.FC = () => {
 
     return `${key} - ${currency} ${displayPrice}`;
   });
+
   return (
     <div>
       {!empty && (
@@ -189,10 +194,9 @@ const ActivityDetailsPage: React.FC = () => {
               type={"Activity"}
               userId={id ?? ""}
               egpPrice={selectedPrice}
+              setPromocodeDiscount={setPromocodeDiscount}
             />
           )}
-
-          <TouristHomePageNavigation loggedIn={id ? true : false} />
           <DetailsPageTemplateProps
             _id={_id}
             name={name}
@@ -211,7 +215,11 @@ const ActivityDetailsPage: React.FC = () => {
               date={formattedDate}
               time={formattedTime}
               disabled={isButtonDisabled && isBookingOpen}
-              onButtonClick={(isBookingOpen && !isButtonDisabled && !isGuestAction) ? handleBookButtonClick : handleNotifyButtonClick}
+              onButtonClick={
+                isBookingOpen && !isButtonDisabled && !isGuestAction
+                  ? handleBookButtonClick
+                  : handleNotifyButtonClick
+              }
               discount={specialDiscount}
               onTicketSelect={onTicketSelect}
               tickets={tickets}
@@ -219,7 +227,8 @@ const ActivityDetailsPage: React.FC = () => {
               footerText={text}
             />
           </DetailsPageTemplateProps>
-        </>
+          </>
+        
       )}
     </div>
   );

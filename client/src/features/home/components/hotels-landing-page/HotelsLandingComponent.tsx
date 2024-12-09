@@ -15,14 +15,17 @@ import { fetchHotels } from "@/api-calls/hotel-api-calls";
 import { useHotelStore } from "@/stores/hotel-store";
 import HotelCard from "../HotelCard";
 import { Skeleton } from "@/components/ui/skeleton";
-
-
+import { useGeneralSearchBarStore } from "@/stores/general-search-bar-store";
+import { useTour } from "@/components/AppTour";
 
 export default function HotelsLandingComponent() {
   const [loading, setLoading] = useState<boolean>(true);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [slidesPerView, setSlidesPerView] = useState(1);
   const { hotels, setHotels } = useHotelStore();
+  const { setFocusIndex } = useGeneralSearchBarStore();
+
+  const { toggleLoading, isLoadingTour, setIsLoading } = useTour();
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) {
@@ -62,6 +65,18 @@ export default function HotelsLandingComponent() {
     fetchData();
   }, []);
 
+  const openSearchBar = (e) => {
+    e.stopPropagation();
+    setFocusIndex(1);
+  };
+  useEffect(() => {
+    toggleLoading(); // Correctly calling the toggle function
+  }, [toggleLoading, loading]);
+
+  useEffect(() => {
+    setIsLoading(true);
+  }, []);
+
   return (
     <div className="w-full px-0 sm:px-8 lg:px-16 py-4">
       {/* Hero Section */}
@@ -81,48 +96,50 @@ export default function HotelsLandingComponent() {
         </div>
       </div>
 
-      {/* Carousel Section */}
-      <div className="px-4 sm:px-0 py-8">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">Trending destinations</h1>
-        <div className="relative">
-          <Carousel
-            opts={{
-              align: "start",
-              loop: true,
-            }}
-            className="w-full"
-            ref={emblaRef}
-          >
-            <CarouselContent className="flex gap-0">
-              {loading
-                ? Array.from({ length: slidesPerView }).map((_, index) => (
-                    <CarouselItem
-                      key={index}
-                      className="pl-0 md:pl-4 cursor-pointer"
-                      style={{ flex: `0 0 ${100 / slidesPerView}%` }}
-                    >
-                      <div className="flex flex-col gap-4 w-full h-[24rem] justify-center">
-                        <Skeleton className="w-full h-[24rem]" />
-                        <div className="space-y-2">
-                          <Skeleton className="h-4 w-full" />
-                          <Skeleton className="h-4 w-64" />
+      <div id="trending-stays-tour">
+        {/* Carousel Section */}
+        <div className="px-4 sm:px-0 py-8">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">Trending destinations</h1>
+          <div className="relative">
+            <Carousel
+              opts={{
+                align: "start",
+                loop: true,
+              }}
+              className="w-full"
+              ref={emblaRef}
+            >
+              <CarouselContent className="flex gap-0">
+                {loading
+                  ? Array.from({ length: slidesPerView }).map((_, index) => (
+                      <CarouselItem
+                        key={index}
+                        className="pl-0 md:pl-4 cursor-pointer"
+                        style={{ flex: `0 0 ${100 / slidesPerView}%` }}
+                      >
+                        <div className="flex flex-col gap-4 w-full h-[24rem] justify-center">
+                          <Skeleton className="w-full h-[24rem]" />
+                          <div className="space-y-2">
+                            <Skeleton className="h-4 w-full" />
+                            <Skeleton className="h-4 w-64" />
+                          </div>
                         </div>
-                      </div>
-                    </CarouselItem>
-                  ))
-                : hotels.map((hotel, index) => (
-                    <CarouselItem
-                      key={index}
-                      className="pl-0 md:pl-4 cursor-pointer"
-                      style={{ flex: `0 0 ${100 / slidesPerView}%` }}
-                    >
-                      <HotelCard hotel={hotel} index={index} />
-                    </CarouselItem>
-                  ))}
-            </CarouselContent>
-            <CarouselPrevious className="hidden sm:flex left-0 sm:-left-12" />
-            <CarouselNext className="hidden sm:flex right-0 sm:-right-12" />
-          </Carousel>
+                      </CarouselItem>
+                    ))
+                  : hotels.map((hotel, index) => (
+                      <CarouselItem
+                        key={index}
+                        className="pl-0 md:pl-4 cursor-pointer"
+                        style={{ flex: `0 0 ${100 / slidesPerView}%` }}
+                      >
+                        <HotelCard hotel={hotel} index={index} />
+                      </CarouselItem>
+                    ))}
+              </CarouselContent>
+              <CarouselPrevious className="hidden sm:flex left-0 sm:-left-12" />
+              <CarouselNext className="hidden sm:flex right-0 sm:-right-12" />
+            </Carousel>
+          </div>
         </div>
       </div>
     </div>

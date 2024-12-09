@@ -12,7 +12,8 @@ export async function getAllComplaints(req: Request, res: Response) {
 }
 
 export async function getComplaintByOwner(req: Request, res: Response) {
-  const ownerId = req.params.ownerId;
+  //const ownerId = req.params.ownerId;
+  const ownerId = res.locals.id;
   try {
     const complaint = await complaintService.getComplaintByOwner(ownerId);
     res.status(complaint.status).json(complaint.data);
@@ -23,6 +24,7 @@ export async function getComplaintByOwner(req: Request, res: Response) {
 
 export async function createComplaint(req: Request, res: Response) {
   const complaintData = req.body;
+  complaintData.owner = res.locals.id;
   try {
     const complaint = await complaintService.createComplaint(complaintData);
     res.status(complaint.status).json(complaint.data);

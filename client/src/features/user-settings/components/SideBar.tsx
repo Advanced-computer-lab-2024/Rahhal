@@ -1,22 +1,23 @@
 import { useState, useEffect, useContext } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { EditContext } from "./SettingsView";
+import useUserStore from "@/stores/user-state-store";
 export default function SideBar() {
   const location = useLocation();
   const [currentPath, setCurrentPath] = useState("");
-  const { id } = useParams();
+  const { id } = useUserStore();
   const { user } = useContext(EditContext);
   useEffect(() => {
     setCurrentPath(location.pathname);
   }, [location.pathname]);
 
   const sideBarElements = [
-    { title: "Profile", to: `/user-settings/${id}` },
-    { title: "Account", to: `/user-settings/account/${id}` },
+    { title: "Profile", to: `/user-settings` },
+    { title: "Account", to: `/user-settings/account` },
   ];
 
   if (user.role === "tourist") {
-    sideBarElements.push({ title: "Payment", to: `/user-settings/wallet/${id}` });
+    sideBarElements.push({ title: "Payment", to: `/user-settings/wallet` });
   }
 
   return (

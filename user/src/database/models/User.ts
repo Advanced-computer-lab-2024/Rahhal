@@ -25,7 +25,7 @@ export interface IUser {
   lastName?: string;
   username: string;
   email: string;
-  password: string;
+  // password: string;
   role: Role;
   approved: boolean;
   dob?: Date;
@@ -113,14 +113,14 @@ const userSchema: Schema = new Schema<IUser>(
         return this.role !== Role.tourismGovernor && this.role !== Role.admin;
       },
     },
-    password: {
-      type: String,
-      required: true,
-      validate: {
-        validator: userValidators.validatePassword,
-        message: "Invalid password entry, must be at least 8 characters long",
-      },
-    },
+    // password: {
+    //   type: String,
+    //   required: true,
+    //   validate: {
+    //     validator: userValidators.validatePassword,
+    //     message: "Invalid password entry, must be at least 8 characters long",
+    //   },
+    // },
     role: {
       type: String,
       enum: Object.values(Role),

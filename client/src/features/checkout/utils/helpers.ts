@@ -1,6 +1,7 @@
 import { PopulatedCart, TOrder } from "@/features/home/types/home-page-types";
 import { createOrder } from "@/api-calls/order-api-calls";
 import { updateProductStock } from "@/api-calls/products-api-calls";
+import { addLoyalityPoints } from "@/api-calls/users-api-calls";
 
 export async function createOrderInstance(
   cart: PopulatedCart,
@@ -33,7 +34,9 @@ export async function createOrderInstance(
     billingAddress: selectedAddress,
   };
 
-  return (await createOrder(order)) as TOrder;
+  const response = (await createOrder(order)) as TOrder;
+  await addLoyalityPoints(cart.user, totalPriceWithoutTax + 0.12 * totalPriceWithoutTax);
+  return response;
 }
 
 export async function updateProductsStock(cart: PopulatedCart) {

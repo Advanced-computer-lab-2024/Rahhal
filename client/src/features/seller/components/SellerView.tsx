@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/data-table/DataTable";
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
-import { useParams } from "react-router-dom";
 import { ProductModal } from "./ProductsModal";
 import { productsColumns, TProduct } from "@/features/seller/utils/seller-columns";
 import { fetchUserProducts, deleteProduct } from "@/api-calls/products-api-calls";
@@ -11,10 +10,11 @@ import { toast } from "@/hooks/use-toast";
 import { STATUS_CODES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
+import useUserStore from "@/stores/user-state-store";
 function SellerView() {
   const [products, setProducts] = useState<TProduct[]>([]);
   const [username, setUsername] = useState<string>("");
-  const { id } = useParams();
+  const { id } = useUserStore();
 
   useEffect(() => {
     const init = async () => {

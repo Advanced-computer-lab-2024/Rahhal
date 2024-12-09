@@ -1,14 +1,15 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PageStyles from "@/features/home/styles/MyTripsPage.module.css";
 import { MyTripsCard } from "./MyTripsCard";
 import { fetchUserBookings } from "@/api-calls/booking-api-calls";
 import { useQuery } from "@tanstack/react-query";
 import { TPopulatedBooking } from "@/features/home/types/home-page-types";
-import { bookingType } from "@/utils/enums";
+import { bookingType, bookmarkType } from "@/utils/enums";
 import { toast } from "@/hooks/use-toast";
 import luggage from "@/assets/luggage.svg";
 import EmptyStatePlaceholder from "../EmptyStatePlaceholder";
 import { AiOutlineThunderbolt } from "react-icons/ai";
+import useUserStore from "@/stores/user-state-store";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MdLocalHotel, MdOutlineEmojiTransportation } from "react-icons/md";
 import { useEffect, useState } from "react";
+import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 
 const transferOptions = [
   {
@@ -75,7 +77,7 @@ export const MyTripsPage = () => {
     return dateTimestamp < currentTimestamp && status === "upcoming";
   }
 
-  const { id: userId } = useParams<{ id: string }>();
+  const { id: userId } = useUserStore();
 
   const {
     data: booking,
@@ -102,15 +104,16 @@ export const MyTripsPage = () => {
       });
       return;
     }
-    return navigate(`/my-trips-details/${userId}`, { state: { booking } });
+    return navigate(`/my-trips-details`, { state: { booking } });
   };
 
-  const [selectedMainFilter, setSelectedMainFilter] = useState("experiences");
-  const [selectedSubFilter, setSelectedSubFilter] = useState("activity");
-  const [filteredBookings, setFilteredBookings] = useState<TPopulatedBooking[]>(booking as TPopulatedBooking[]);
+  const [selectedMainFilter, setSelectedMainFilter] = useState("");
+  const [selectedSubFilter, setSelectedSubFilter] = useState("");
+  const [filteredBookings, setFilteredBookings] = useState<TPopulatedBooking[]>(
+    booking as TPopulatedBooking[],
+  );
 
   useEffect(() => {
-    
     // update the main filter when the sub filter changes
     const selectedOption = transferOptions.find((option) =>
       option.dropdownItems.some((item) => item.value === selectedSubFilter),
@@ -120,11 +123,11 @@ export const MyTripsPage = () => {
     if (!booking) return;
     // filter bookings based on the selected sub filter
     setFilteredBookings(
-      (booking as TPopulatedBooking[]).filter((booking) => booking.type === selectedSubFilter),
+      (booking as TPopulatedBooking[]).filter(
+        (booking) =>
+          (!selectedOption && selectedMainFilter === "") || booking.type === selectedSubFilter,
+      ),
     );
-
-
-
   }, [selectedSubFilter, booking]);
 
   return (
@@ -132,54 +135,67 @@ export const MyTripsPage = () => {
       <div className={PageStyles["trip-page-header"]}>
         <p>Trips & Booking</p>
         <div className="flex justify-end px-16 py-[1%] space-x-2">
-        {transferOptions.map((option) => (
-          <DropdownMenu key={option.type}>
-            <DropdownMenuTrigger asChild>
-              <Button
-                className={`rounded-full bg-transparent text-black hover:bg-gray-200 px-6 py-3 text-md ${selectedMainFilter === option.type ? "bg-gray-200" : ""}`}
-                
-              >
-                {option.icon}
-                {option.label}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {option.dropdownItems.map((item) => (
-                <DropdownMenuItem key={item.value} onClick={() => setSelectedSubFilter(item.value)}>
-                  {item.label}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ))}
+          {transferOptions.map((option) => (
+            <DropdownMenu key={option.type}>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  className={`rounded-full bg-transparent text-black hover:bg-gray-200 px-6 py-3 text-md ${selectedMainFilter === option.type ? "bg-gray-200" : ""}`}
+                >
+                  {option.icon}
+                  {option.label}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {option.dropdownItems.map((item) => (
+                  <DropdownMenuItem
+                    key={item.value}
+                    onClick={() => setSelectedSubFilter(item.value)}
+                  >
+                    {item.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ))}
+        </div>
       </div>
-      </div>
-      
+
       <div className={PageStyles["trip-list"]}>
         {filteredBookings && filteredBookings.length > 0
-          ? filteredBookings.map(
-              (booking: TPopulatedBooking) =>
-                booking.type === selectedSubFilter && (
-                  <MyTripsCard
-                    key={booking.entity._id}
-                    title={booking.entity.name || `${booking.type}`}
-                    price={booking.selectedPrice}
-                    status={
-                      isDateInPast(
-                        booking.selectedDate ? booking.selectedDate : booking.selectedDate,
-                        booking.status,
-                      )
-                        ? "completed"
-                        : booking.status
-                    }
-                    date={formatDate(
-                      booking.selectedDate ? booking.selectedDate : booking.selectedDate,
-                    )}
-                    image={booking.entity.images ? booking.entity.images[0] : undefined}
-                    onClick={() => handleClick(booking)}
-                  />
-                ),
-            )
+          ? filteredBookings.map((booking: TPopulatedBooking) => {
+              let price;
+              if (booking.type === bookmarkType.Activity) {
+                price =
+                  booking.selectedPrice -
+                  (booking.selectedPrice * (booking.entity as TActivity).specialDiscount) / 100;
+                price -= price * ((booking.discount ?? 0) / 100);
+              } else
+                price =
+                  booking.selectedPrice - booking.selectedPrice * ((booking.discount ?? 0) / 100);
+
+              const status = isDateInPast(
+                booking.selectedDate ? booking.selectedDate : booking.selectedDate,
+                booking.status,
+              )
+                ? "completed"
+                : booking.status;
+              const date = formatDate(
+                booking.selectedDate ? booking.selectedDate : booking.selectedDate,
+              );
+              const image = booking.entity.images ? booking.entity.images[0] : undefined;
+
+              return (
+                <MyTripsCard
+                  key={booking.entity._id}
+                  title={booking.entity.name || `${booking.type}`}
+                  price={price}
+                  status={status}
+                  date={date}
+                  image={image}
+                  onClick={() => handleClick(booking)}
+                />
+              );
+            })
           : !isLoading &&
             !isError && (
               <EmptyStatePlaceholder
@@ -188,7 +204,7 @@ export const MyTripsPage = () => {
                 textOne="No bookings yet—let's change that"
                 textTwo="Book things before you go, and get right to the good stuff when you're there."
                 buttonText="Start Planning"
-                navigateTo={`/entertainment/${userId}`}
+                navigateTo={`/entertainment`}
               />
             )}
       </div>

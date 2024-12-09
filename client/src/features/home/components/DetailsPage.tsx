@@ -15,9 +15,11 @@ import { HistoricalPlace } from "../types/home-page-types";
 import { fetchProductById } from "@/api-calls/products-api-calls";
 import { useEffect } from "react";
 import SharePopover from "@/components/SharePopover";
+import useUserStore from "@/stores/user-state-store";
 
 const DetailsPage = () => {
-  const { id, placeid, type } = useParams();
+  const { placeid, type } = useParams();
+  const { id } = useUserStore();
   const { data: item, isPending: isItemPending } = useQuery({
     queryKey: [`${type == "hplace" ? "historical-places" : "product"}`, placeid],
     queryFn: () => {
@@ -55,7 +57,7 @@ const DetailsPage = () => {
   }, [item]);
   return (
     <div className={DetailsPageStyles["full-page-container"]}>
-      <TouristHomePageNavigation loggedIn={id ? true : false} />
+      <TouristHomePageNavigation /*loggedIn={id ? true : false}*/ />
       {!isItemPending && (
         <div className={DetailsPageStyles["details-page-content-container"]}>
           <div className={DetailsPageStyles["item-details"]}>

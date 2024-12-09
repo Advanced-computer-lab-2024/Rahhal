@@ -9,17 +9,21 @@ function SupportedType(type: string): boolean {
 }
 
 function is3rdPartyBooking(type: string): boolean {
-  return type === bookingType.Flight || type === bookingType.Hotel || type === bookingType.Transportation;
+  return (
+    type === bookingType.Flight || type === bookingType.Hotel || type === bookingType.Transportation
+  );
 }
 
-async function populateEntity(entity: string, type: string): Promise<IActivity | IItinerary | string> {
+async function populateEntity(
+  entity: string,
+  type: string,
+): Promise<IActivity | IItinerary | string> {
   let populatedEntity: AxiosResponse<IActivity | IItinerary> | undefined;
   if (type === bookingType.Activity)
     populatedEntity = await entertainmentAxiosInstance.get<IActivity>(`/activities/${entity}`);
   else if (type === bookingType.Itinerary)
     populatedEntity = await entertainmentAxiosInstance.get<IItinerary>(`/itineraries/${entity}`);
-  else
-    return entity;
+  else return entity;
 
   return populatedEntity.data;
 }
@@ -54,17 +58,26 @@ export async function populateBookings(
 
   // Filter out any null values from the final array
   return populatedBookings.filter(
-    (booking) => booking !== null &&  (ownerId == "" || ((!is3rdPartyBooking(booking.type) && (booking.entity as (IActivity| IItinerary)).owner == ownerId))),
+    (booking) =>
+      booking !== null &&
+      (ownerId == "" ||
+        (!is3rdPartyBooking(booking.type) &&
+          (booking.entity as IActivity | IItinerary).owner == ownerId)),
   ) as PopulatedBooking[];
 }
 
-export async function populateBookingHelper(booking: IBooking, user: IUser | undefined, entity: IActivity | IItinerary | string | undefined): Promise<PopulatedBooking | null> {
-
+export async function populateBookingHelper(
+  booking: IBooking,
+  user: IUser | undefined,
+  entity: IActivity | IItinerary | string | undefined,
+): Promise<PopulatedBooking | null> {
   if (!SupportedType(booking.type)) return null;
 
-  const populatedUser = (!user) ? (await userAxiosInstance.get<IUser>(`/users/${booking.user}`)).data : user;
+  const populatedUser = !user
+    ? (await userAxiosInstance.get<IUser>(`/users/${booking.user}`)).data
+    : user;
 
-  const populatedEntity = (!entity) ? await populateEntity(booking.entity, booking.type) : entity;
+  const populatedEntity = !entity ? await populateEntity(booking.entity, booking.type) : entity;
 
   return {
     _id: booking._id,
@@ -82,6 +95,7 @@ export async function populateBookingHelper(booking: IBooking, user: IUser | und
     type: booking.type,
     status: booking.status ?? bookingStatus.Upcoming,
     selectedPrice: booking.selectedPrice ?? CONSTANTS.ZERO,
+    discount: booking.discount ?? CONSTANTS.ZERO,
     selectedDate: booking.selectedDate,
     rating: booking.rating,
     itineraryTourGuideRating: booking.itineraryTourGuideRating,

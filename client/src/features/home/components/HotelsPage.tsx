@@ -8,11 +8,8 @@ import { useHotelStore } from "@/stores/hotel-store";
 import HotelsLandingComponent from "@/features/home/components/hotels-landing-page/HotelsLandingComponent"; // Import the landing page
 import { toast } from "@/hooks/use-toast";
 
-interface HotelPageProps {
-  loggedIn: boolean;
-}
 
-function HotelsPage({ loggedIn }: HotelPageProps) {
+function HotelsPage() {
   const {
     destinationLocation,
     destinationSuggestions,
@@ -71,15 +68,20 @@ function HotelsPage({ loggedIn }: HotelPageProps) {
 
   return (
     <>
-      <div className="w-[100%] flex justify-center">
-        <HotelSearchBar onIconClick={onIconClick} />
+      <div id="stays-searchBar-tour">
+        <div className="w-[100%] flex justify-center">
+          <HotelSearchBar onIconClick={onIconClick} />
+        </div>
       </div>
       <hr className="border bg-[var(--gray-scale)] w-full my-5" />
 
       {!hasSearched ? (
-        <HotelsLandingComponent />
+          <HotelsLandingComponent />
+
       ) : (
+
         <HotelGridView loading={loading} hotels={hotels} />
+
       )}
     </>
   );

@@ -83,8 +83,10 @@ export default function ItinerariesPageTemplate({
   });
 
   return (
+
     <div className="px-32 py-4">
-      <h1 className="text-3xl font-semibold ">{name}</h1>
+      <div id="itinerary-tour">
+        <h1 className="text-3xl font-semibold ">{name}</h1>
 
       {/* Rating */}
       <div className="flex justify-between mb-4">
@@ -106,25 +108,25 @@ export default function ItinerariesPageTemplate({
       {/* Image Gallery */}
       <ImageGallery images={images} />
 
-      {/* Tags */}
-      <div className="flex space-x-2 py-3">
-        {preferenceTagNames.map((tag, index) => (
+        {/* Tags */}
+        <div className="flex space-x-2 py-3">
+          {preferenceTagNames.map((tag, index) => (
+            <div
+              key={index}
+              className={"flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700"}
+            >
+              <Tag className="w-4 h-4 mr-1" />
+              {tag}
+            </div>
+          ))}
+          {/* Accessibility */}
           <div
-            key={index}
             className={"flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700"}
           >
-            <Tag className="w-4 h-4 mr-1" />
-            {tag}
+            {accessibility}
           </div>
-        ))}
-        {/* Accessibility */}
-        <div
-          className={"flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700"}
-        >
-          {accessibility}
         </div>
       </div>
-
       {/* Horizontal line */}
       <hr className="border-t border-gray-200" />
       <div className="grid grid-cols-3 gap-8 px-2 py-5">
@@ -166,7 +168,7 @@ export default function ItinerariesPageTemplate({
           <GoogleMap
             isEditable={false}
             location={{ lat: location.latitude, lng: location.longitude }}
-            setLocation={() => {}}
+            setLocation={() => { }}
             className="rounded-full"
           />
           {/* Location */}
@@ -191,5 +193,6 @@ export default function ItinerariesPageTemplate({
       <h2 className="text-xl font-semibold mt-4">Reviews</h2>
       <Review reviews={ratings} />
     </div>
+
   );
 }

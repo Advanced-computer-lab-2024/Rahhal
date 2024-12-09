@@ -1,15 +1,64 @@
 # Rahhal
+## Table of Contents
+1. [Motivation](#motivation)
+2. [API Reference](#api-reference)
+3. [Testing](#testing)
+4. [Installation](#installation)
+5. [Tech and Frameworks used](#tech-and-frameworks-used)
+6. [How To Use](#how-to-use)
+  - [Client (Frontend)](#client-frontend)
+  - [API-Gateway](#api-gateway)
+  - [Authentication](#authentication)
+  - [User](#user)
+  - [Product](#product)
+  - [Order](#order)
+  - [Payment](#payment)
+  - [Notification](#notification)
+  - [Entertainment](#entertainment)
+  - [Booking](#booking)
+7. [Build Status](#build-status)
+8. [Features](#features)
+  - [Guest Features](#as-a-guest-i-can)
+  - [Tourist Features](#as-a-tourist-i-can)
+  - [Admin Features](#as-an-admin-i-can)
+  - [Tour Guide Features](#as-a-tour-guide-i-can)
+  - [Advertiser Features](#as-an-advertiser-i-can)
+  - [Seller Features](#as-a-seller-i-can)
+  - [Tourism Governor Features](#as-a-tourism-governor-i-can)
+9. [Code Examples](#code-examples)
+10. [Code Style](#code-style)
+   - [Naming Conventions](#naming-conventions)
+   - [RESTful API Conventions](#restful-api-conventions)
+11. [Contribute](#contribute)
+12. [Contributors](#contributors)
+13. [Screenshots](#screenshots)
+14. [Credits](#credits)
+15. [License](#license)
 
+
+<a id="motivation"></a>
+## Motivation
+
+Welcome to Rahhal, your all-in-one travel planner! We created Rahhal to simplify vacation planning by offering personalized itineraries, seamless bookings, and budget-friendly suggestions all in one platform. Whether you’re exploring historic sites, relaxing on beaches, or discovering local gems, Rahhal makes it easy to plan and enjoy your perfect trip. Stay organized with real-time updates, expert tours, and exclusive local experiences. Start your journey stress-free with Rahhal!
+
+<a id="api-reference"></a>
+## API Reference
+![API Reference](https://github.com/user-attachments/assets/f9e9c678-9571-473f-9a37-088ad59a21a1)
+
+### Note
+You can also access the API reference by visiting the following link: `http://localhost:${PORT}/api-docs`
+where `${PORT}` is the port number assigned to your api-gateway service.
+
+<a id="testing"></a>
 ## Testing
-We are using `vitest`. To run the tests.
-Execute the following commands in the root directory of the project.
-  
+We are using `vitest`. To run the tests, execute the following commands in the root directory of the project.
 
 ```bash
 > chmod +x run-tests.sh
->./run-tests.sh
+> ./run-tests.sh
 ```
 
+<a id="installation"></a>
 ## Installation
 ```bash
 > git clone https://github.com/Advanced-computer-lab-2024/Rahhal.git
@@ -17,55 +66,37 @@ Execute the following commands in the root directory of the project.
 > docker compose up --build
 ```
 
-## Credits
-- [shadcn](https://ui.shadcn.com)
-- [RabbitMQ Docs](https://www.rabbitmq.com/docs)
-- [Stripe docs](https://stripe.com/docs)
-- [TypeScript Crash Course](https://www.youtube.com/watch?v=BCg4U1FzODs)
-- [React Crash Course](https://www.youtube.com/watch?v=LDB4uaJ87e0&pp=ygUbcmVhY3QgY291cnNlIHRyYXZlcnN5IG1lZGlh)
-- [Tailwind CSS Crash Course](https://www.youtube.com/watch?v=dFgzHOX84xQ)
-- [Vite Crash Course](https://www.youtube.com/watch?v=89NJdbYTgJ8&pp=ygUEVml0ZQ%3D%3D)
-- [React Query Hook + Zod](https://www.youtube.com/watch?v=u6PQ5xZAv7Q)
-- [MongoDB Crash Course](https://www.youtube.com/watch?v=DZBGEVgL2eE&pp=ygUUTW9uZ29zZSBjcmFzaCBjb3Vyc2U%3D)
-- [How to build NodeJS Microservice - NodeJS Monolithic to Microservice Architecture](https://www.youtube.com/watch?v=EXDkgjU8DDU&list=PLaLqLOj2bk9ZV2RhqXzABUP5QSg42uJEs&index=1&pp=iAQB)
 
-
-
-
-## Motivation
-
-Welcome to Rahhal, your all-in-one travel planner! We created Rahhal to simplify vacation planning by offering personalized itineraries, seamless bookings, and budget-friendly suggestions all in one platform. Whether you’re exploring historic sites, relaxing on beaches, or discovering local gems, Rahhal makes it easy to plan and enjoy your perfect trip. Stay organized with real-time updates, expert tours, and exclusive local experiences. Start your journey stress-free with Rahhal!
-
-
+<a id="tech-and-frameworks-used"></a>
 ## Tech and Frameworks used
 
--   [Node.js](https://nodejs.org/en/)
--   [Express](https://expressjs.com/)
--   [React](https://reactjs.org/)
--   [MongoDB](https://www.mongodb.com/)
--   [Mongoose](https://mongoosejs.com/)
--   [firebase](https://firebase.google.com/)
--   [swagger](https://swagger.io/)
--   [Stripe](https://stripe.com/)
--   [prettier](https://prettier.io/)
--   [Git](https://git-scm.com/)
--   [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
--   [Postman](https://www.postman.com/)
--   [VSCode](https://code.visualstudio.com/)
--   [JWT](https://jwt.io/)
--   [Docker](https://www.docker.com/)
--   [ESlint](https://eslint.org/)
--   [Husky](https://github.com/typicode/husky/tree/main)
+- [Node.js](https://nodejs.org/en/)
+- [Express](https://expressjs.com/)
+- [React](https://reactjs.org/)
+- [MongoDB](https://www.mongodb.com/)
+- [Mongoose](https://mongoosejs.com/)
+- [firebase](https://firebase.google.com/)
+- [swagger](https://swagger.io/)
+- [Stripe](https://stripe.com/)
+- [prettier](https://prettier.io/)
+- [Git](https://git-scm.com/)
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+- [Postman](https://www.postman.com/)
+- [VSCode](https://code.visualstudio.com/)
+- [JWT](https://jwt.io/)
+- [Docker](https://www.docker.com/)
+- [ESlint](https://eslint.org/)
+- [Husky](https://github.com/typicode/husky/tree/main)
+- [RabbitMQ](https://www.rabbitmq.com/)
 
-
+<a id="how-to-use"></a>
 ## How To Use
 
+- Add a `.env` file for the environment variables in the root directory of the project for each service
 
-- Add a `.env` file for the environment variables in the root directory of the project each service
-
+<a id="client-frontend"></a>
 ### Client (Frontend)
 ```bash
-
 PORT
 GOOGLE_MAPS_API_KEY
 EXCHANGE_RATES_API_KEY
@@ -77,6 +108,7 @@ STORAGE_BUCKET
 GOOGLE_MAPS_API_KEY
 ```
 
+<a id="api-gateway"></a>
 ### API-Gateway
 ```bash
 PORT
@@ -84,31 +116,32 @@ GOOGLE_MAPS_API_KEY
 EXCHANGE_RATES_API_KEY
 STORAGE_BUCKET
 ```
-
+<a id="authentication"></a>
 ### Authentication
 ```bash
 SECRETKEY
 PORT
 MONGODB_URI
 ```
+<a id="user"></a>
 ### User
 ```bash
-
 PORT
 MONGODB_URI
 ```
-
+<a id="product"></a>
 ### Product
 ```bash
-
 PORT
 MONGODB_URI
 ```
+<a id="order"></a>
 ### Order
 ```bash
 PORT
 MONGODB_URI
 ```
+<a id="payment"></a>
 ### Payment
 ```bash
 PORT
@@ -116,7 +149,7 @@ MONGODB_URI
 STRIPE_SECRET_KEY
 STRIPE_PUBLISH_KEY
 ```
-
+<a id="notification"></a>
 ### Notification
 ```bash
 PORT
@@ -126,12 +159,13 @@ SMTP_PORT
 SMTP_USER
 SMTP_PASS
 ```
-
+<a id="entertainment"></a>
 ### Entertainment
 ```bash
 PORT
 MONGODB_URI
 ```
+<a id="booking"></a>
 ### Booking
 ```bash
 PORT
@@ -139,15 +173,8 @@ MONGODB_URI
 ```
 
 
-## License
 
-The software is open source under the Apache 2.0 License.
-
--   [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-
-
-
-
+<a id="build-status"></a>
 ## Build Status
 
 - Our project is currently under active development and not recommended for production environments.
@@ -157,35 +184,34 @@ The software is open source under the Apache 2.0 License.
 - Additional automated tests to be implemented.
 - Performance and scalability optimizations in progress.
 
-
+<a id="features"></a>
 ## Features
-Our system serves different type of users (Guest,Tourist, Admin, Seller, Tour Guide, Advertiser,Tourism Governor)
+Our system serves different types of users (Guest, Tourist, Admin, Seller, Tour Guide, Advertiser, Tourism Governor)
 
+<details>
 <summary> As a Guest I can </summary>
 
 - Register as a tourist with essential details.
-- Register as a seller/tour guide/advertiser with username, email and password
-- upload and submit required documents upon registrationas as a seller/tour guide/advertiser.
+- Register as a seller/tour guide/advertiser with username, email, and password.
+- Upload and submit required documents upon registration as a seller/tour guide/advertiser.
 - View step-by-step vacation guide.
 - Choose a category of activities.
-- Browse all upcoming activities, itineraries and historial places/museums.
+- Browse all upcoming activities, itineraries, and historical places/museums.
 - Filter historical places/museums by tag.
 - Sort and filter all upcoming activities/itineraries by various criteria.
 
 </details>
 
-
 <details>
-
 <summary> As a Tourist I can </summary>
 
 - Register and log in to the platform using username/email and password.
-- Update personal profile, including preferences, contact details, wallet and password.
+- Update personal profile, including preferences, contact details, wallet, and password.
 - Delete my account.
 - Reset password by receiving an OTP sent to the registered email address.
 - View step-by-step vacation guide.
 - Choose a category of activities.
-- Browse all upcoming activities, itineraries and historial places/museums.
+- Browse all upcoming activities, itineraries, and historical places/museums.
 - Filter historical places/museums by tag.
 - Sort and filter all upcoming activities/itineraries.
 - Receive personalized recommendations based on my preferences.
@@ -215,11 +241,8 @@ Our system serves different type of users (Guest,Tourist, Admin, Seller, Tour Gu
 
 </details>
 
-
-
 <details>
-
-<summary> As a Admin I can </summary>
+<summary> As an Admin I can </summary>
 
 - Add tourism governors and admins.
 - View and manage user registrations.
@@ -239,10 +262,7 @@ Our system serves different type of users (Guest,Tourist, Admin, Seller, Tour Gu
 
 </details>
 
-
-
 <details>
-
 <summary> As a Tour Guide I can </summary>
 
 - Create and manage professional profile.
@@ -258,8 +278,7 @@ Our system serves different type of users (Guest,Tourist, Admin, Seller, Tour Gu
 </details>
 
 <details>
-
-<summary> As a Advertiser I can </summary>
+<summary> As an Advertiser I can </summary>
 
 - Create and manage company profile.
 - Upload company logo.
@@ -273,7 +292,6 @@ Our system serves different type of users (Guest,Tourist, Admin, Seller, Tour Gu
 </details>
 
 <details>
-
 <summary> As a Seller I can </summary>
 
 - Create and manage seller profile.
@@ -291,10 +309,9 @@ Our system serves different type of users (Guest,Tourist, Admin, Seller, Tour Gu
 </details>
 
 <details>
-
 <summary> As a Tourism Governor I can </summary>
 
-- create and manage my profile.
+- Create and manage my profile.
 - Create, update, and delete museums and historical places.
 - Add detailed location information.
 - Define ticket prices for different visitor categories (foreigner, native, student).
@@ -307,7 +324,7 @@ Our system serves different type of users (Guest,Tourist, Admin, Seller, Tour Gu
 
 
 
-
+<a id="code-examples"></a>
 ## Code Examples
 
 
@@ -901,9 +918,48 @@ export default function NotificaionPopover({ userId, isAdmin = false }: Notifica
 ```
 </details>
 
+<a id="code-style"></a>
+## Code Style
+<a id="naming-conventions"></a>
+### Naming Conventions
+- We use camel case for variable names and function names.
+- We use kabab case for file names.
+- We use Pascal case for class names.
+<a id="restful-api-conventions"></a>
+### RESTful API Conventions
+- Use nouns (not verbs) to represent resources
+```typescript
+✅ http://api.example.com/v1/store/items/{item-id}
+❌ http://api.example.com/v1/store/CreateItems/{item-id}
+```
+
+- Use plural nouns for collections
+```typescript
+✅ http://api.example.com/v1/store/items/{item-id}
+❌ http://api.example.com/v1/store/item/{item-id}
+```
+
+- Use hyphens (-) to improve readability
+```typescript
+✅ http://api.example.com/v1/store/inventory-management
+❌ http://api.example.com/v1/store/inventory_management
+```
+
+- Use forward slashes for hierarchy, avoid trailing slashes
+```typescript
+✅ http://api.example.com/v1/store/items
+❌ http://api.example.com/v1/store/items/
+```
+
+- Avoid file extensions in URIs
+```typescript
+✅ http://api.example.com/v1/store/items
+❌ http://api.example.com/v1/store/items.json
+```
 
 
 
+<a id="contribute"></a>
 ## Contribute 
 We welcome contributions to Rahhal! if you wish to contribute , it's as simple as:
 
@@ -916,4 +972,111 @@ We welcome contributions to Rahhal! if you wish to contribute , it's as simple a
 7. Push to the branch (git push origin my-new-feature)
 8. Create a pull request
 9. Wait for your pull request to be reviewed and merged
+
+
+## Contributors
+
+Thanks to all the amazing people who have contributed to this project:
+
+- [Abdelrahman Talaat](https://github.com/Talaat-jr)
+- [Abdullah Mahmoud](https://github.com/dodzii)
+- [Abdullah Ahmed](https://github.com/AbdallahAhmadd)
+- [Ahmed Hawater](https://github.com/AhmedHawater2003)
+- [Ahd Mostafa](https://github.com/AhdMostafa0)
+- [Ali Shokry](https://github.com/AliShokryy)
+- [Amr Hegazy](https://github.com/Amr-Hegazy1)
+- [Farah Faisal](https://github.com/FarahFaisall)
+- [Youssef ElBorolosy](https://github.com/YousefElbrolosy)
+- [Ziad Abdelrahman](https://github.com/Ziad-Abdelrahman)
+
+
+<a id="screenshots"></a>
+## Screenshots
+
+<details>
+<summary>Tourist Sign Up</summary>  
+	
+ ![SignUp](screenshots/tourist-sign-up.png)
+ 
+</details>
+
+<details>
+<summary>Home Page</summary>  
+	
+ ![Home](screenshots/home.webp)
+ 
+</details>
+
+<details>
+<summary>Itinerary Details Page</summary>  
+	
+ ![Itinerary](screenshots/itinerary.webp)
+
+ ![Itinerary1](screenshots/itinerary1.webp)
+
+ 
+</details>
+
+
+<details>
+<summary>Filter Sidebar</summary>  
+	
+ ![Filter](screenshots/filter.png)
+
+ 
+</details>
+
+
+
+<details>
+<summary>Flights Home Page</summary>  
+	
+ ![Flight](screenshots/flight.webp)
+ 
+</details>
+
+
+<details>
+<summary>Taxi Home Page</summary>  
+	
+ ![Taxi](screenshots/taxi.webp)
+ 
+</details>
+
+
+<details>
+<summary>Add Payment Method</summary>  
+	
+ ![Payment](screenshots/payment.png)
+ 
+</details>
+
+
+
+<details>
+<summary>Admin Products View</summary>  
+	
+ ![Products](screenshots/products.png)
+ 
+</details>
+
+<a id="credits"></a>
+## Credits
+- [shadcn](https://ui.shadcn.com)
+- [RabbitMQ Docs](https://www.rabbitmq.com/docs)
+- [Stripe docs](https://stripe.com/docs)
+- [TypeScript Crash Course](https://www.youtube.com/watch?v=BCg4U1FzODs)
+- [React Crash Course](https://www.youtube.com/watch?v=LDB4uaJ87e0&pp=ygUbcmVhY3QgY291cnNlIHRyYXZlcnN5IG1lZGlh)
+- [Tailwind CSS Crash Course](https://www.youtube.com/watch?v=dFgzHOX84xQ)
+- [Vite Crash Course](https://www.youtube.com/watch?v=89NJdbYTgJ8&pp=ygUEVml0ZQ%3D%3D)
+- [React Query Hook + Zod](https://www.youtube.com/watch?v=u6PQ5xZAv7Q)
+- [MongoDB Crash Course](https://www.youtube.com/watch?v=DZBGEVgL2eE&pp=ygUUTW9uZ29zZSBjcmFzaCBjb3Vyc2U%3D)
+- [NodeJS Monolithic to Microservice Architecture](https://www.youtube.com/watch?v=EXDkgjU8DDU&list=PLaLqLOj2bk9ZV2RhqXzABUP5QSg42uJEs&index=1&pp=iAQB)
+
+<a id="license"></a>
+## License
+
+The software is open source under the Apache 2.0 License.
+
+- [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 

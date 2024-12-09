@@ -7,7 +7,9 @@ import { uploadToFirebase } from "@/utils/firebase";
 
 // fetch data from the server
 export const fetchItineraries = async () => {
-  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + "/itineraries");
+  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + "/itineraries" , {
+    withCredentials: true, 
+  });
   return response.data;
 };
 
@@ -19,12 +21,16 @@ export const fetchItineraryById = async (itineraryId: string) => {
 
 // fetch only active-appropriate itineraries
 export const fetchActiveAppropriateItineraries = async () => {
-  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + "/itineraries/active-appropriate");
+  const response = await axios.get(SERVICES_URLS.ENTERTAINMENT + "/itineraries/active-appropriate" , {
+    withCredentials: true, 
+  });
   return response.data;
 };
 
 export const fetchUserItineraries = async (userId: string) => {
-  const response = await axios.get(SERVICES_URLS.USER + `/users/${userId}/itineraries`);
+  const response = await axios.get(SERVICES_URLS.USER + `/users/${userId}/itineraries` , {
+    withCredentials: true, 
+  });
   return response.data;
 };
 
@@ -84,7 +90,4 @@ export async function createItinerary(
   newItineraryData.images = urls;
 
   await axios.patch(`${SERVICES_URLS.ENTERTAINMENT}/itineraries/${itineraryId}`, newItineraryData);
-
-  alert("Itinerary created successfully");
-  window.location.reload();
 }

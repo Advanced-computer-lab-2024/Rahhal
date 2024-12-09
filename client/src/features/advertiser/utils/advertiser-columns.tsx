@@ -3,8 +3,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronRight } from "lucide-react";
 import { ActivitiesModal } from "@/features/advertiser/components/ActivityModal";
 import { Badge } from "@/components/ui/badge";
-import { FaTrash } from "react-icons/fa6";
-import { deleteActivity } from "@/api-calls/activities-api-calls";
 import type { TRating } from "@/types/shared";
 
 export type TCategory = {
@@ -40,10 +38,6 @@ export type TNewActivity = Omit<TActivity, "preferenceTags" | "category" | "tags
   tags: string[];
 };
 
-function deleteRow(row: any) {
-  deleteActivity(row.original);
-}
-
 function displayMinMaxPrice(price: Record<string, number>) {
   const prices = Object.values(price);
   if (prices.length === 0) {
@@ -68,7 +62,10 @@ function calculateAverageRating(ratings: TRating[]) {
   return totalRating / ratings.length;
 }
 
-export const activitiesColumns: ColumnDef<TActivity>[] = [
+export const activitiesColumns= (
+  onDelete: (id: string) => void,
+  onSubmit: (activity: TActivity) => void,
+): ColumnDef<TActivity>[] => [
   {
     accessorKey: "name",
     header: "name",
@@ -137,10 +134,6 @@ export const activitiesColumns: ColumnDef<TActivity>[] = [
     cell: ({ row }) => {
       return (
         <div className="text-right">
-          <Button variant="destructive" className="h-8 w-8 p-0" onClick={() => deleteRow(row)}>
-            <span className="sr-only">Delete</span>
-            <FaTrash className="h-4 w-4" />
-          </Button>
           <ActivitiesModal
             activityData={row.original}
             dialogTrigger={
@@ -149,6 +142,8 @@ export const activitiesColumns: ColumnDef<TActivity>[] = [
                 <ChevronRight className="h-4 w-4" />
               </Button>
             }
+            onDelete={(id) => onDelete(id)}
+            onSubmit={(activity) => onSubmit(activity)}
           />
         </div>
       );
