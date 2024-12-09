@@ -15,7 +15,7 @@ import { fetchHotels } from "@/api-calls/hotel-api-calls";
 import { useHotelStore } from "@/stores/hotel-store";
 import HotelCard from "../HotelCard";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useGeneralSearchBarStore } from "@/stores/general-search-bar-store";
+// import { useGeneralSearchBarStore } from "@/stores/general-search-bar-store";
 import { useTour } from "@/components/AppTour";
 
 export default function HotelsLandingComponent() {
@@ -23,7 +23,7 @@ export default function HotelsLandingComponent() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [slidesPerView, setSlidesPerView] = useState(1);
   const { hotels, setHotels } = useHotelStore();
-  const { setFocusIndex } = useGeneralSearchBarStore();
+  // const { setFocusIndex } = useGeneralSearchBarStore();
 
   const { toggleLoading, isLoadingTour, setIsLoading } = useTour();
   useEffect(() => {
@@ -67,7 +67,7 @@ export default function HotelsLandingComponent() {
 
   const openSearchBar = (e) => {
     e.stopPropagation();
-    setFocusIndex(1);
+    // setFocusIndex(1);
   };
   useEffect(() => {
     toggleLoading(); // Correctly calling the toggle function
