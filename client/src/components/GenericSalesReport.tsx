@@ -269,29 +269,12 @@ const GenericSalesReport: React.FC<SalesReportProps> = ({
           />
 
           <BarChartCard
-            title={type === "gift_shop" ? "Daily Sales Quantity" : "Daily Tourist Count"}
+            title="Daily Sales Quantity"
             data={dailyData}
             dataKey="date"
           />
 
-          {/* Status Distribution */}
-          <div className="bg-white p-4 rounded-lg shadow">
-            <h2 className="text-xl font-bold mb-4">Status Distribution</h2>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="text-center">
-                <div className="text-lg font-bold text-blue-500">{stats.pendingCount}</div>
-                <div className="text-gray-500">Pending</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-bold text-green-500">{stats.completedCount}</div>
-                <div className="text-gray-500">Completed</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-bold text-red-500">{stats.cancelledCount}</div>
-                <div className="text-gray-500">Cancelled</div>
-              </div>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>
