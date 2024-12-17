@@ -45,6 +45,8 @@ Welcome to Rahhal, your all-in-one travel planner! We created Rahhal to simplify
 ## API Reference
 ![API Reference](https://github.com/user-attachments/assets/f9e9c678-9571-473f-9a37-088ad59a21a1)
 
+### Feel free to check out the entire API <a href="https://app.swaggerhub.com/apis/AmrHegazy/rahhal-api/1.0.0">here</a>
+
 ### Note
 You can also access the API reference by visiting the following link: `http://localhost:${PORT}/api-docs`
 where `${PORT}` is the port number assigned to your api-gateway service.
