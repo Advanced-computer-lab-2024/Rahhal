@@ -1017,6 +1017,16 @@ Thanks to all the amazing people who have contributed to this project:
  
 </details>
 
+<details>
+<summary>Historical Place Details Page</summary>  
+	
+ ![Historical](screenshots/historical-place1.jpg)
+
+ ![Historical1](screenshots/historical-place2.jpg)
+
+ 
+</details>
+
 
 <details>
 <summary>Filter Sidebar</summary>  
@@ -1035,6 +1045,15 @@ Thanks to all the amazing people who have contributed to this project:
  
 </details>
 
+<details>
+<summary>Hotels Home Page</summary>
+
+ ![Hotel](screenshots/hotels-page1.jpg)
+
+ ![Hotel2](screenshots/hotels-page2.jpg)
+
+</details>
+
 
 <details>
 <summary>Taxi Home Page</summary>  
@@ -1051,6 +1070,25 @@ Thanks to all the amazing people who have contributed to this project:
  
 </details>
 
+<details>
+<summary>Shop Home Page</summary>  
+	
+ ![Shop](screenshots/shop1.jpg)
+
+ ![Shop1](screenshots/shop2.jpg)
+ 
+</details>
+
+<details>
+<summary>My Orders Page</summary>  
+	
+ ![Order](screenshots/my-orders1.jpg)
+
+ ![Order1](screenshots/my-orders2.jpg)
+ 
+ ![Order2](screenshots/my-orders3.jpg)
+
+</details>
 
 
 <details>
