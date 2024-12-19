@@ -62,37 +62,12 @@ We are using `vitest`. To run the tests, execute the following commands in the r
 
 <a id="installation"></a>
 ## Installation
+- Clone the repo
+
 ```bash
 > git clone https://github.com/Advanced-computer-lab-2024/Rahhal.git
 > cd Rahhal
-> docker compose up --build
 ```
-
-
-<a id="tech-and-frameworks-used"></a>
-## Tech and Frameworks used
-
-- [Node.js](https://nodejs.org/en/)
-- [Express](https://expressjs.com/)
-- [React](https://reactjs.org/)
-- [MongoDB](https://www.mongodb.com/)
-- [Mongoose](https://mongoosejs.com/)
-- [firebase](https://firebase.google.com/)
-- [swagger](https://swagger.io/)
-- [Stripe](https://stripe.com/)
-- [prettier](https://prettier.io/)
-- [Git](https://git-scm.com/)
-- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-- [Postman](https://www.postman.com/)
-- [VSCode](https://code.visualstudio.com/)
-- [JWT](https://jwt.io/)
-- [Docker](https://www.docker.com/)
-- [ESlint](https://eslint.org/)
-- [Husky](https://github.com/typicode/husky/tree/main)
-- [RabbitMQ](https://www.rabbitmq.com/)
-
-<a id="how-to-use"></a>
-## How To Use
 
 - Add a `.env` file for the environment variables in the root directory of the project for each service
 
@@ -173,7 +148,68 @@ MONGODB_URI
 PORT
 MONGODB_URI
 ```
+- Build the containers
+```bash
+> docker compose up --build
+```
 
+
+<a id="tech-and-frameworks-used"></a>
+## Tech and Frameworks used
+
+- [Node.js](https://nodejs.org/en/)
+- [Express](https://expressjs.com/)
+- [React](https://reactjs.org/)
+- [MongoDB](https://www.mongodb.com/)
+- [Mongoose](https://mongoosejs.com/)
+- [firebase](https://firebase.google.com/)
+- [swagger](https://swagger.io/)
+- [Stripe](https://stripe.com/)
+- [prettier](https://prettier.io/)
+- [Git](https://git-scm.com/)
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+- [Postman](https://www.postman.com/)
+- [VSCode](https://code.visualstudio.com/)
+- [JWT](https://jwt.io/)
+- [Docker](https://www.docker.com/)
+- [ESlint](https://eslint.org/)
+- [Husky](https://github.com/typicode/husky/tree/main)
+- [RabbitMQ](https://www.rabbitmq.com/)
+
+<a id="how-to-use"></a>
+## How To Use
+### Tourist Tour
+
+https://github.com/user-attachments/assets/bcfe5f9f-1e8c-4d16-93eb-c358d7b20189
+
+### Admin Tour
+
+
+https://github.com/user-attachments/assets/0df973c0-eefb-450f-8309-a8a55a684a39
+
+
+### Seller Tour
+
+
+https://github.com/user-attachments/assets/11cdafbf-450e-4093-a28d-3b07cd9b5b0f
+
+
+### Tourguide Tour
+
+
+https://github.com/user-attachments/assets/db0aed47-3fb5-4cfe-880e-72b1e0efa10c
+
+
+### Advertiser Tour
+
+
+https://github.com/user-attachments/assets/242e7f39-e2a4-421a-af27-cf5791b90377
+
+
+### Tourism Governor Tour
+
+
+https://github.com/user-attachments/assets/d7d3d801-1107-4208-a200-4cb69767b52a
 
 
 <a id="build-status"></a>
