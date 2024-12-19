@@ -1,45 +1,47 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { PlusCircle } from "lucide-react";
 import PriceCategoryEdit from "./PriceCategoryEdit";
 import PriceCategoryNonEdit from "./PriceCategoryNonEdit";
 import EditSaveButton from "../EditSaveButton";
 
-interface TicketType {
+interface PriceCategoriesProps {
   title: string;
-  priceCategories: Record<string, number>;
-  initialIsDisabled?: boolean;
-  onPriceCategoriesChange: (priceCategories: Record<string, number>) => void;
+  initialTicketTypes: Record<string, number>;
+  onPriceCategoriesChange: (ticketTypes: Record<string, number>) => void;
 }
 
-const PriceCategories = ({
+export default function PriceCategories({
   title,
-  priceCategories,
-  initialIsDisabled = false,
+  initialTicketTypes = {}, // Default empty object
   onPriceCategoriesChange,
-}: TicketType) => {
-  const [isDisabled, setIsDisabled] = useState(initialIsDisabled);
-  const [ticketTypes, setTicketTypes] = useState(priceCategories);
-  const [newType, setNewType] = useState("");
-  const [newPrice, setNewPrice] = useState("");
+}: PriceCategoriesProps) {
+  const [ticketTypes, setTicketTypes] = useState<Record<string, number>>(initialTicketTypes || {});
   const [editingType, setEditingType] = useState<string | null>(null);
   const [editType, setEditType] = useState("");
   const [editPrice, setEditPrice] = useState("");
 
-  const addTicketType = () => {
+  const [newType, setNewType] = useState("");
+  const [newPrice, setNewPrice] = useState("");
+
+  const addNewTicketType = () => {
     if (newType && newPrice) {
-      const updatedTicketTypes = { ...ticketTypes, [newType]: parseFloat(newPrice) };
+      const updatedTicketTypes = {
+        ...ticketTypes,
+        [newType]: parseFloat(newPrice),
+      };
       setTicketTypes(updatedTicketTypes);
+      onPriceCategoriesChange(updatedTicketTypes);
+      // Reset inputs
       setNewType("");
       setNewPrice("");
-      onPriceCategoriesChange(updatedTicketTypes);
     }
   };
 
   const removeTicketType = (type: string) => {
-    const { [type]: removed, ...rest } = ticketTypes;
+    const { [type]: removed, ...rest } = ticketTypes || {};
     setTicketTypes(rest);
     onPriceCategoriesChange(rest);
   };
@@ -73,13 +75,8 @@ const PriceCategories = ({
 
   return (
     <Card>
-      <div className="p-3 flex justify-between">
+      <div className="p-3">
         <CardTitle className="text-sm">{title}</CardTitle>
-        <EditSaveButton
-          isDisabled={isDisabled}
-          saveChanges={() => setIsDisabled(true)}
-          toggleEditMode={() => setIsDisabled(false)}
-        />
       </div>
       <CardContent>
         <div className="space-y-4">
@@ -90,7 +87,13 @@ const PriceCategories = ({
                   editType={editType}
                   setEditType={setEditType}
                   editPrice={editPrice}
-                  setEditPrice={setEditPrice}
+                  setEditPrice={(newPrice) => {
+                    setEditPrice(newPrice);
+                    const updatedTicketTypes = { ...ticketTypes };
+                    updatedTicketTypes[editType || type] = Number(newPrice);
+                    setTicketTypes(updatedTicketTypes);
+                    onPriceCategoriesChange(updatedTicketTypes);
+                  }}
                   saveEdit={saveEdit}
                   cancelEditing={cancelEditing}
                 />
@@ -103,29 +106,26 @@ const PriceCategories = ({
               )}
             </div>
           ))}
-          {!isDisabled && (
-            <div className="flex space-x-2">
-              <Input
-                placeholder="Type"
-                value={newType}
-                onChange={(e) => setNewType(e.target.value)}
-              />
-              <Input
-                type="number"
-                placeholder="Price"
-                value={newPrice}
-                onChange={(e) => setNewPrice(e.target.value)}
-              />
-              <Button onClick={addTicketType}>
-                <Plus className="h-4 w-4 mr-2" />
-                Add
-              </Button>
-            </div>
-          )}
+
+          {/* Add new ticket type */}
+          <div className="flex space-x-2 mt-4">
+            <Input
+              placeholder="Ticket type"
+              value={newType}
+              onChange={(e) => setNewType(e.target.value)}
+            />
+            <Input
+              type="number"
+              placeholder="Price"
+              value={newPrice}
+              onChange={(e) => setNewPrice(e.target.value)}
+            />
+            <Button variant="ghost" onClick={addNewTicketType} disabled={!newType || !newPrice}>
+              <PlusCircle className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
   );
-};
-
-export default PriceCategories;
+}

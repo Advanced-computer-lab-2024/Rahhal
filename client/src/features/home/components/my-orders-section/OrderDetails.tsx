@@ -35,7 +35,7 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
   const [isRated, setIsRated] = useState(false);
   const [currentOrder, setCurrentOrder] = useState(order);
 
-  const { id } =useUserStore();
+  const { id } = useUserStore();
 
   useEffect(() => {
     setCurrentOrder(order);
@@ -63,6 +63,10 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
           order.paymentMethod === PaymentMethod.wallet)
       ) {
         await refundMoney(id, order.totalPrice);
+        toast({
+          title: `Order cancelled successfully and an amount of ${order.totalPrice} ${currency} has been refunded to your account`,
+          duration: 3500,
+        });
       }
       order.items.forEach(async (item) => {
         const product = await fetchProductById(item.productId);
@@ -169,7 +173,7 @@ export function OrderDetails({ order, onClose, onUpdateOrder }: OrderDetailsProp
         <div className="space-y-6">
           <div>
             <h3 className="font-semibold mb-2">Products</h3>
-            {order.items.map((item, index) => {
+            {currentOrder.items.map((item, index) => {
               const isRated = !!item.rating; // Check if the item is rated (assumes `item.rating` contains the rating)
               const convertedPrice = currencyExchangeSpec(
                 "EGP",

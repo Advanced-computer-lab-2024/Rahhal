@@ -32,6 +32,7 @@ export const handleTripRatingSubmit = async (
   };
 
   await createRating(ratingData, eventType, eventId);
+  window.location.reload();
 
   toast({
     title: "Success",

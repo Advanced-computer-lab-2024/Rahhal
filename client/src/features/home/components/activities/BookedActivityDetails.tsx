@@ -170,7 +170,7 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
           setIsButtonDisabled(true);
           toast({
             title: "Success",
-            description: `You have successfully cancelled the Activity, your wallet has been refunded by ${currency} ${price}`,
+            description: `You have successfully cancelled the Activity, your wallet has been refunded by ${currency} ${promocodeDiscountedPrice}`,
             duration: 5000,
           });
         }

@@ -6,18 +6,14 @@
 4. [Installation](#installation)
 5. [Tech and Frameworks used](#tech-and-frameworks-used)
 6. [How To Use](#how-to-use)
-  - [Client (Frontend)](#client-frontend)
-  - [API-Gateway](#api-gateway)
-  - [Authentication](#authentication)
-  - [User](#user)
-  - [Product](#product)
-  - [Order](#order)
-  - [Payment](#payment)
-  - [Notification](#notification)
-  - [Entertainment](#entertainment)
-  - [Booking](#booking)
-7. [Build Status](#build-status)
-8. [Features](#features)
+   - [Tourist](#tourist-tour)
+   - [Admin](#admin-tour)
+   - [Seller](#seller-tour)
+   - [Tourguide](#tourguide-tour)
+   - [Advertiser](#advertiser-tour)
+   - [Tourism Governor](#tourismgov-tour)
+8. [Build Status](#build-status)
+9. [Features](#features)
   - [Guest Features](#as-a-guest-i-can)
   - [Tourist Features](#as-a-tourist-i-can)
   - [Admin Features](#as-an-admin-i-can)
@@ -45,6 +41,8 @@ Welcome to Rahhal, your all-in-one travel planner! We created Rahhal to simplify
 ## API Reference
 ![API Reference](https://github.com/user-attachments/assets/f9e9c678-9571-473f-9a37-088ad59a21a1)
 
+### Feel free to check out the entire API <a href="https://app.swaggerhub.com/apis/AmrHegazy/rahhal-api/1.0.0">here</a>
+
 ### Note
 You can also access the API reference by visiting the following link: `http://localhost:${PORT}/api-docs`
 where `${PORT}` is the port number assigned to your api-gateway service.
@@ -58,39 +56,17 @@ We are using `vitest`. To run the tests, execute the following commands in the r
 > ./run-tests.sh
 ```
 
+We also tested the routes manually using postman
+#### Feel free to check out the postman collection <a href="https://www.postman.com/dodzii/workspace/rahhal-test-routes/collection/28915840-b8fadf98-b1c6-4d08-882b-ab4bd97364d2?action=share&creator=28915840" target="_blank"> here </a>
+
 <a id="installation"></a>
 ## Installation
+- Clone the repo
+
 ```bash
 > git clone https://github.com/Advanced-computer-lab-2024/Rahhal.git
 > cd Rahhal
-> docker compose up --build
 ```
-
-
-<a id="tech-and-frameworks-used"></a>
-## Tech and Frameworks used
-
-- [Node.js](https://nodejs.org/en/)
-- [Express](https://expressjs.com/)
-- [React](https://reactjs.org/)
-- [MongoDB](https://www.mongodb.com/)
-- [Mongoose](https://mongoosejs.com/)
-- [firebase](https://firebase.google.com/)
-- [swagger](https://swagger.io/)
-- [Stripe](https://stripe.com/)
-- [prettier](https://prettier.io/)
-- [Git](https://git-scm.com/)
-- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-- [Postman](https://www.postman.com/)
-- [VSCode](https://code.visualstudio.com/)
-- [JWT](https://jwt.io/)
-- [Docker](https://www.docker.com/)
-- [ESlint](https://eslint.org/)
-- [Husky](https://github.com/typicode/husky/tree/main)
-- [RabbitMQ](https://www.rabbitmq.com/)
-
-<a id="how-to-use"></a>
-## How To Use
 
 - Add a `.env` file for the environment variables in the root directory of the project for each service
 
@@ -171,7 +147,70 @@ MONGODB_URI
 PORT
 MONGODB_URI
 ```
+- Build the containers
+```bash
+> docker compose up --build
+```
 
+
+<a id="tech-and-frameworks-used"></a>
+## Tech and Frameworks used
+
+- [Node.js](https://nodejs.org/en/)
+- [Express](https://expressjs.com/)
+- [React](https://reactjs.org/)
+- [MongoDB](https://www.mongodb.com/)
+- [Mongoose](https://mongoosejs.com/)
+- [firebase](https://firebase.google.com/)
+- [swagger](https://swagger.io/)
+- [Stripe](https://stripe.com/)
+- [prettier](https://prettier.io/)
+- [Git](https://git-scm.com/)
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+- [Postman](https://www.postman.com/)
+- [VSCode](https://code.visualstudio.com/)
+- [JWT](https://jwt.io/)
+- [Docker](https://www.docker.com/)
+- [ESlint](https://eslint.org/)
+- [Husky](https://github.com/typicode/husky/tree/main)
+- [RabbitMQ](https://www.rabbitmq.com/)
+
+<a id="how-to-use"></a>
+## How To Use
+<a id="tourist-tour"></a>
+### Tourist Tour
+
+https://github.com/user-attachments/assets/bcfe5f9f-1e8c-4d16-93eb-c358d7b20189
+
+<a id="admin-tour"></a>
+### Admin Tour
+
+
+https://github.com/user-attachments/assets/0df973c0-eefb-450f-8309-a8a55a684a39
+
+<a id="seller-tour"></a>
+### Seller Tour
+
+
+https://github.com/user-attachments/assets/11cdafbf-450e-4093-a28d-3b07cd9b5b0f
+
+<a id="tourguide-tour"></a>
+### Tourguide Tour
+
+
+https://github.com/user-attachments/assets/db0aed47-3fb5-4cfe-880e-72b1e0efa10c
+
+<a id="advertiser-tour"></a>
+### Advertiser Tour
+
+
+https://github.com/user-attachments/assets/242e7f39-e2a4-421a-af27-cf5791b90377
+
+<a id="tourismgov-tour"></a>
+### Tourism Governor Tour
+
+
+https://github.com/user-attachments/assets/d7d3d801-1107-4208-a200-4cb69767b52a
 
 
 <a id="build-status"></a>
@@ -1017,6 +1056,16 @@ Thanks to all the amazing people who have contributed to this project:
  
 </details>
 
+<details>
+<summary>Historical Place Details Page</summary>  
+	
+ ![Historical](screenshots/historical-place1.jpg)
+
+ ![Historical1](screenshots/historical-place2.jpg)
+
+ 
+</details>
+
 
 <details>
 <summary>Filter Sidebar</summary>  
@@ -1035,6 +1084,15 @@ Thanks to all the amazing people who have contributed to this project:
  
 </details>
 
+<details>
+<summary>Hotels Home Page</summary>
+
+ ![Hotel](screenshots/hotels-page1.jpg)
+
+ ![Hotel2](screenshots/hotels-page2.jpg)
+
+</details>
+
 
 <details>
 <summary>Taxi Home Page</summary>  
@@ -1051,6 +1109,25 @@ Thanks to all the amazing people who have contributed to this project:
  
 </details>
 
+<details>
+<summary>Shop Home Page</summary>  
+	
+ ![Shop](screenshots/shop1.jpg)
+
+ ![Shop1](screenshots/shop2.jpg)
+ 
+</details>
+
+<details>
+<summary>My Orders Page</summary>  
+	
+ ![Order](screenshots/my-orders1.jpg)
+
+ ![Order1](screenshots/my-orders2.jpg)
+ 
+ ![Order2](screenshots/my-orders3.jpg)
+
+</details>
 
 
 <details>

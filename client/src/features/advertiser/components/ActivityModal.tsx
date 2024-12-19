@@ -5,10 +5,7 @@ import { DoorOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import PictureCard from "@/components/PictureCard";
 import PriceCategories from "@/components/price-categories";
-import TagsSelector from "@//components/TagsSelector";
 import { GenericSelect } from "@//components/GenericSelect";
-import EditableTimePicker from "@//components/EditableTimePicker";
-import EditableDatePicker from "@//components/EditableDatePicker";
 import { createActivity, updateActivity } from "@/api-calls/activities-api-calls";
 import { fetchCategories } from "@/api-calls/categories-api-calls";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
@@ -21,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { DatePicker } from "@/components/ui/date-picker";
 import { TimePicker } from "@/components/ui/TimePicker";
+import MultipleSelector from "@/components/ui/multiple-selector";
 
 interface ActivitiesModalProps {
   activityData?: TActivity;
@@ -227,20 +225,20 @@ export function ActivitiesModal({
         }
       />
       <PriceCategories
-        title="Prices"
-        priceCategories={modalActivityData?.price ?? {}}
-        initialIsDisabled={!isNewActivity}
-        onPriceCategoriesChange={(value) => {
+        title="Activity Prices"
+        initialTicketTypes={modalActivityData?.price ?? {}}
+        onPriceCategoriesChange={(newPrices) => {
           setModalActivitiesData(
             modalActivityData
               ? {
                   ...modalActivityData,
-                  price: value,
+                  price: newPrices,
                 }
               : undefined,
           );
         }}
       />
+
       <GenericSelect
         label="Category"
         placeholder="Select a category"
@@ -291,30 +289,33 @@ export function ActivitiesModal({
           }
         />
       </div>
-      <TagsSelector
+      <MultipleSelector
         placeholder={"Select preference tags"}
-        isEditingInitially={isNewActivity}
-        options={modalDBData?.preferenceTags.map((tag: any) => ({
+        defaultOptions={modalDBData?.preferenceTags.map((tag: any) => ({
           label: tag.name,
           value: tag._id,
         }))}
-        onSave={(value) =>
+        emptyIndicator={
+          <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+            no results found.
+          </p>
+        }
+        onChange={(selectedOptions) => {
           setModalActivitiesData(
             modalActivityData
               ? {
                   ...modalActivityData,
-                  preferenceTags: value.map((option) => ({
+                  preferenceTags: selectedOptions.map((option) => ({
                     _id: option.value,
                     name: option.label,
                   })),
                 }
               : undefined,
-          )
-        }
-        initialOptions={modalActivityData?.preferenceTags?.map((preferenceTag) => ({
-          label: preferenceTag.name,
-          value: preferenceTag._id,
-        }))}
+          );
+        }}
+        value={modalActivityData?.preferenceTags.map((tag) => {
+          return { label: tag.name, value: tag._id };
+        })}
       />
 
       <PictureCard
