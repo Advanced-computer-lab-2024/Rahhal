@@ -60,6 +60,9 @@ We are using `vitest`. To run the tests, execute the following commands in the r
 > ./run-tests.sh
 ```
 
+We also tested the routes manually using postman
+#### Feel free to check out the postman collection <a href="https://www.postman.com/dodzii/workspace/rahhal-test-routes/collection/28915840-b8fadf98-b1c6-4d08-882b-ab4bd97364d2?action=share&creator=28915840" target="_blank"> here </a>
+
 <a id="installation"></a>
 ## Installation
 - Clone the repo
