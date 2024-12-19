@@ -6,18 +6,14 @@
 4. [Installation](#installation)
 5. [Tech and Frameworks used](#tech-and-frameworks-used)
 6. [How To Use](#how-to-use)
-  - [Client (Frontend)](#client-frontend)
-  - [API-Gateway](#api-gateway)
-  - [Authentication](#authentication)
-  - [User](#user)
-  - [Product](#product)
-  - [Order](#order)
-  - [Payment](#payment)
-  - [Notification](#notification)
-  - [Entertainment](#entertainment)
-  - [Booking](#booking)
-7. [Build Status](#build-status)
-8. [Features](#features)
+   - [Tourist](#tourist-tour)
+   - [Admin](#admin-tour)
+   - [Seller](#seller-tour)
+   - [Tourguide](#tourguide-tour)
+   - [Advertiser](#advertiser-tour)
+   - [Tourism Governor](#tourismgov-tour)
+8. [Build Status](#build-status)
+9. [Features](#features)
   - [Guest Features](#as-a-guest-i-can)
   - [Tourist Features](#as-a-tourist-i-can)
   - [Admin Features](#as-an-admin-i-can)
@@ -181,34 +177,35 @@ MONGODB_URI
 
 <a id="how-to-use"></a>
 ## How To Use
+<a id="tourist-tour"></a>
 ### Tourist Tour
 
 https://github.com/user-attachments/assets/bcfe5f9f-1e8c-4d16-93eb-c358d7b20189
-
+<a id="admin-tour"></a>
 ### Admin Tour
 
 
 https://github.com/user-attachments/assets/0df973c0-eefb-450f-8309-a8a55a684a39
 
-
+<a id="seller-tour"></a>
 ### Seller Tour
 
 
 https://github.com/user-attachments/assets/11cdafbf-450e-4093-a28d-3b07cd9b5b0f
 
-
+<a id="tourguide-tour"></a>
 ### Tourguide Tour
 
 
 https://github.com/user-attachments/assets/db0aed47-3fb5-4cfe-880e-72b1e0efa10c
 
-
+<a id="advertiser-tour"></a>
 ### Advertiser Tour
 
 
 https://github.com/user-attachments/assets/242e7f39-e2a4-421a-af27-cf5791b90377
 
-
+<a id="tourismgov-tour"></a>
 ### Tourism Governor Tour
 
 
