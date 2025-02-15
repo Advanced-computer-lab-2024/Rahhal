@@ -11,9 +11,13 @@
     "noEmit": true /* Prevent TypeScript from emitting JavaScript files. */,
     "resolveJsonModule": true,
     "baseUrl": "./src",
+    "outDir": "./dist",
     "paths": {
       "@/*": ["*"]
     }
+  },
+  "tsc-alias": {
+    "resolveFullPaths": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
