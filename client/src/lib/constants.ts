@@ -1,22 +1,25 @@
 import { UserRoleEnum } from "@/utils/enums";
 
+const gatewayServiceUrl = process.env.GATEWAY_SERVICE_URL;
+const notificationServiceUrl = process.env.NOTIFICATION_SERVICE_URL;
+
 export const SERVICES_URLS = {
-  ENTERTAINMENT: "http://localhost:3000/api/entertainment",
-  USER: "http://localhost:3000/api/user",
-  PAYMENT: "http://localhost:3000/api/payment",
-  PRODUCT: "http://localhost:3000/api/product",
-  FIREBASE: "http://localhost:3000/api/firebase",
-  BOOKING: "http://localhost:3000/api/booking",
-  TRANSPORTATION: "http://localhost:3000/api/transportation",
-  GOOGLE_MAPS: "http://localhost:3000/api/google-maps",
-  EXCHANGERATES: "http://localhost:3000/api/exchange-rates",
-  ORDER: "http://localhost:3000/api/order",
-  RATING: "http://localhost:3000/api/rating",
-  FLIGHTS: "http://localhost:3000/api/flights-search",
-  EXTERNALAPI: "http://localhost:3000/api/external-api",
-  NOTIFICATION: "http://localhost:3008",
-  GENERAL : "http://localhost:3000/api",
-  AUTHENTICATION : "http://localhost:3000/api/auth"
+  ENTERTAINMENT: `${gatewayServiceUrl}/api/entertainment`,
+  USER: `${gatewayServiceUrl}/api/user`,
+  PAYMENT: `${gatewayServiceUrl}/api/payment`,
+  PRODUCT: `${gatewayServiceUrl}/api/product`,
+  FIREBASE: `${gatewayServiceUrl}/api/firebase`,
+  BOOKING: `${gatewayServiceUrl}/api/booking`,
+  TRANSPORTATION: `${gatewayServiceUrl}/api/transportation`,
+  GOOGLE_MAPS: `${gatewayServiceUrl}/api/google-maps`,
+  EXCHANGERATES: `${gatewayServiceUrl}/api/exchange-rates`,
+  ORDER: `${gatewayServiceUrl}/api/order`,
+  RATING: `${gatewayServiceUrl}/api/rating`,
+  FLIGHTS: `${gatewayServiceUrl}/api/flights-search`,
+  EXTERNALAPI: `${gatewayServiceUrl}/api/external-api`,
+  GENERAL: `${gatewayServiceUrl}/api`,
+  AUTHENTICATION: `${gatewayServiceUrl}/api/auth`,
+  NOTIFICATION: `${notificationServiceUrl}`,
 };
 
 export const STATUS_CODES = {

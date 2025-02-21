@@ -1,21 +1,21 @@
 services:
-  backend:
-    image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/backend:latest
-    build:
-      context: ./api-gateway
-      dockerfile: Dockerfile.prod
+  # backend:
+  #   image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/backend:latest
+  #   build:
+  #     context: ./api-gateway
+  #     dockerfile: Dockerfile.prod
 
-  product:
-    image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/product:latest
-    build:
-      context: ./product
-      dockerfile: Dockerfile.prod
+  # product:
+  #   image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/product:latest
+  #   build:
+  #     context: ./product
+  #     dockerfile: Dockerfile.prod
 
-  order:
-    image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/order:latest
-    build:
-      context: ./order
-      dockerfile: Dockerfile.prod
+  # order:
+  #   image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/order:latest
+  #   build:
+  #     context: ./order
+  #     dockerfile: Dockerfile.prod
 
   user:
     image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/user:latest
@@ -23,26 +23,26 @@ services:
       context: ./user
       dockerfile: Dockerfile.prod
 
-  booking:
-    image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/booking:latest
-    build:
-      context: ./booking
-      dockerfile: Dockerfile.prod
+  # booking:
+  #   image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/booking:latest
+  #   build:
+  #     context: ./booking
+  #     dockerfile: Dockerfile.prod
 
-  payment:
-    image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/payment:latest
-    build:
-      context: ./payment
-      dockerfile: Dockerfile.prod
+  # payment:
+  #   image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/payment:latest
+  #   build:
+  #     context: ./payment
+  #     dockerfile: Dockerfile.prod
 
-  authentication:
-    image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/authentication:latest
-    build:
-      context: ./authentication
-      dockerfile: Dockerfile.prod
+  # authentication:
+  #   image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/authentication:latest
+  #   build:
+  #     context: ./authentication
+  #     dockerfile: Dockerfile.prod
 
-  notification:
-    image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/notification:latest
-    build:
-      context: ./notification
-      dockerfile: Dockerfile.prod
+  # notification:
+  #   image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/notification:latest
+  #   build:
+  #     context: ./notification
+  #     dockerfile: Dockerfile.prod
