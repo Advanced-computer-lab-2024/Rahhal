@@ -26,10 +26,10 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: ['http://localhost:5173'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH'],
-    credentials: true
-  }));
+  origin: (origin, callback) => callback(null, true),
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  credentials: true
+}));
 app.use(fileUpload({ preservePath: true }));
 app.use(express.json());
 app.use(morgan("dev"));
