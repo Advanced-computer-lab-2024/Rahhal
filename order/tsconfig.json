@@ -8,7 +8,6 @@
     "skipLibCheck": true,
     "moduleResolution": "node" /* Ensure Node.js-style module resolution. */,
     "allowJs": true /* Allow JavaScript files to be included. */,
-    "noEmit": true /* Prevent TypeScript from emitting JavaScript files. */,
     "resolveJsonModule": true,
     "baseUrl": "./src",
     "outDir": "./dist",
