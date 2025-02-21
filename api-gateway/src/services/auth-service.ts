@@ -19,7 +19,7 @@ export async function changePassword(body: Partial<IPayload>) {
     return await authAxiosInstance.patch("/auth/changepassword", body);
 }
 
-export async function approveUser(body: string) {
+export async function approveUser(body: Partial<IPayload>) {
     return await authAxiosInstance.patch("/auth/", body);
 }
 

@@ -105,7 +105,9 @@ export async function verifyOTP(req: Request, res: Response) {
         const response = await authService.verifyOTP({username, otp});
         res.status(response.status).json(response.data);
     }
-    catch (error) {
-        res.status(STATUS_CODES.BAD_GATEWAY).json(error.message);
+    catch (error:unknown) {
+        if (error instanceof Error) {
+            res.status(STATUS_CODES.BAD_GATEWAY).json(error.message);
+        }
     }
 }

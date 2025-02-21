@@ -3,9 +3,10 @@ import type { RatingSchema } from "@/utils/zod-schemas";
 import type { ObjectId } from "mongoose";
 
 export interface IPayload{
-  id:ObjectId,
+  id:ObjectId | string,
   username:string,
   password:string,
+  approved?:boolean,
   otp?:string,
   role:string,
   dob?:Date
