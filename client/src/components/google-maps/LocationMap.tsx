@@ -14,7 +14,7 @@ type LocationMapProps = {
 
 async function fetchLocationDetails(location: { lat: number; lng: number }) {
   const { data } = await axios.get(
-    `http://localhost:3000/api/google-maps/place-details/location?latitude=${location.lat}&longitude=${location.lng}`,
+    `${import.meta.env.VITE_GATEWAY_SERVICE_URL}/api/google-maps/place-details/location?latitude=${location.lat}&longitude=${location.lng}`,
   );
   return data;
 }

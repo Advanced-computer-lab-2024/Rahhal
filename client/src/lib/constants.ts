@@ -1,7 +1,7 @@
 import { UserRoleEnum } from "@/utils/enums";
 
-const gatewayServiceUrl = process.env.GATEWAY_SERVICE_URL;
-const notificationServiceUrl = process.env.NOTIFICATION_SERVICE_URL;
+const gatewayServiceUrl = import.meta.env.VITE_GATEWAY_SERVICE_URL;
+const notificationServiceUrl = import.meta.env.VITE_NOTIFICATION_SERVICE_URL;
 
 export const SERVICES_URLS = {
   ENTERTAINMENT: `${gatewayServiceUrl}/api/entertainment`,

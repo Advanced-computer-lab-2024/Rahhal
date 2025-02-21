@@ -22,7 +22,7 @@ type PlacesAutocompleteProps = {
 
 async function fetchPlacesAutocomplete(inputValue: string) {
   const { data } = await axios.get(
-    `http://localhost:3000/api/google-maps/autocomplete?input=${inputValue}`,
+    `${import.meta.env.VITE_GATEWAY_SERVICE_URL}/api/google-maps/autocomplete?input=${inputValue}`,
   );
   console.log(data);
   return data;
@@ -30,7 +30,7 @@ async function fetchPlacesAutocomplete(inputValue: string) {
 
 async function fetchPlaceLocation(placeId: string) {
   const { data } = await axios.get(
-    `http://localhost:3000/api/google-maps/place-details?placeId=${placeId}`,
+    `${import.meta.env.VITE_GATEWAY_SERVICE_URL}/api/google-maps/place-details?placeId=${placeId}`,
   );
   return data.location;
 }
