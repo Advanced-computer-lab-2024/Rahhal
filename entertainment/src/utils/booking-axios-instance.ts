@@ -3,7 +3,7 @@ import { CONSTANTS } from "./constants";
 import  { type PopulatedBooking  } from "@/utils/types";
 
 export const bookingAxiosInstance = axios.create({
-  baseURL: "http://booking:3000",
+  baseURL: process.env.BOOKING_SERVICE_URL || "http://booking:3000",
 });
 
 export async function hasBookings(id: string, type: string) {

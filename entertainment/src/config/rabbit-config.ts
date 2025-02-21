@@ -25,7 +25,7 @@ class RabbitMQConnection {
       // Declare queues
       await this.channel.assertQueue(RABBITMQ.QUEUE.NOTIFICATION, { durable: true });
       await this.channel.assertQueue(RABBITMQ.QUEUE.EVENT_REMINDER, { durable: true });
-
+      console.log(this.connection);
       return this.connection;
     } catch (error) {
       console.error('RabbitMQ Connection Error:', error);

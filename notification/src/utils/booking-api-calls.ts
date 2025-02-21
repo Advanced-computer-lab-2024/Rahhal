@@ -3,7 +3,7 @@ import { STATUS_CODES } from "@/utils/constants";
 import { IBooking, INotifyRequest } from "./types";
 
 const bookingAxiosInstance = axios.create({
-  baseURL: "http://booking:3000",
+  baseURL: process.env.BOOKING_SERVICE_URL || "http://booking:3000",
   validateStatus: (status) => {
     return status < STATUS_CODES.GATEWAY_TIMEOUT;
   },

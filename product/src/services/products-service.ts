@@ -3,6 +3,7 @@ import type { IProduct } from "../database/models/Product";
 import * as productsRepository from "../database/repositories/products-repository";
 import { publishNotification } from "@/publishers/notification-publisher";
 import { publishAdminAlert } from "@/publishers/admin-alert-publisher";
+import { CONSTANTS } from "@/utils/constants";
 
 // Get all products
 export async function getAllProducts(filter: Partial<IProduct>): Promise<IProduct[]> {
@@ -31,16 +32,16 @@ export async function addRating(userRating: IRating, productId: string) {
 // Update an existing product
 export async function updateProduct(id: string, product: IProduct) {
   const newProduct = await productsRepository.getProductById(id);
-  if (product.quantity === 0) {
-    const outOfStockmessage = `Product ${newProduct.name} is out of stock`;
+  if (product.quantity === CONSTANTS.ZERO) {
+    const outOfStockmessage = `Product ${newProduct?.name} is out of stock`;
 
     publishNotification({
-      userId: newProduct.seller,
-      message: outOfStockmessage
+      userId: newProduct!.seller,
+      message: outOfStockmessage,
     });
 
     publishAdminAlert({
-      message: outOfStockmessage
+      message: outOfStockmessage,
     });
   }
   return await productsRepository.updateProduct(id, product);
