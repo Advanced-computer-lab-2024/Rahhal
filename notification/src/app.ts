@@ -2,7 +2,7 @@ import cors from "cors";
 import morgan from "morgan";
 import express from "express";
 import swaggerUi from "swagger-ui-express";
-import swaggerFile from "@/api/swagger/swagger-output.json";
+import swaggerFile from "@/api/swagger/swagger-output.json" assert { type: "json" };
 import notificationRoutes from "@/api/routes/notification-routes";
 
 const app = express();

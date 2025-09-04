@@ -7,7 +7,7 @@ import categoryRoutes from "./api/routes/category-routes";
 import historicalPlacesRoutes from "./api/routes/historical-places-routes";
 import historicalTagsRoutes from "./api/routes/historical-tags-routes";
 import swaggerUi from "swagger-ui-express";
-import swaggerFile from "./api/swagger/swagger-output.json";
+import swaggerFile from "./api/swagger/swagger-output.json" assert { type: "json" };
 import cors from "cors";
 
 const app = express();
