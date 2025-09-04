@@ -16,6 +16,7 @@ export const STATUS_CODES = {
     STATUS_OK: 200,
     SERVER_ERROR: 500,
     UNPROCESSABLE_ENTITY: 422,
+    UNAUTHORIZED: 401,
   };
 
 

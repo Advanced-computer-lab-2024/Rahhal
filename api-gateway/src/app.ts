@@ -16,7 +16,7 @@ import orderRoutes from "@/api/routes/order-routes";
 import externalApiRoutes from "@/api/routes/external-api-routes";
 import paymentRoutes from "@/api/routes/payment-routes";
 import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "./api/swagger/swagger-output.json";
+import swaggerDocument from "./api/swagger/swagger-output.json" assert { type: "json" };;
 import authRoutes from "@/api/routes/auth-routes";
 import generalRoutes from "@/api/routes/general-routes";
 import { authStateMiddleware } from "@/api/controllers/auth-controller";

@@ -10,11 +10,11 @@ export async function login(req: Request, res: Response) {
         // console.log(cookie.data);
         if (cookie.status === STATUS_CODES.STATUS_OK) {
             res.cookie("jwt", cookie.data, {
-                sameSite:'lax' , 
-                 
+                secure: true,         // required for SameSite=None
+                sameSite: "none",
+                httpOnly: true,
                 maxAge: CONSTANTS.MAXAGE 
             });
-            // const token = cookie.data;
             res.status(STATUS_CODES.STATUS_OK).json();
         }
         else {
