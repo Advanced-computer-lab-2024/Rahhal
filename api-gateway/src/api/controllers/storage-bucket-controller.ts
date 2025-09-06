@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { STATUS_CODES } from '@/utils/constants';
-import * as firebaseService from '@/services/firebase-service';
 import fileUpload from 'express-fileupload';
+import * as storageBucketService from '@/services/storage-bucket-service';
 
 
 export async function uploadFile(Request: Request, Response: Response) {
@@ -12,7 +12,7 @@ export async function uploadFile(Request: Request, Response: Response) {
     if(file === undefined){
       throw new Error('No file found');
     }
-    const url = await firebaseService.uploadFile(file);
+    const url = await storageBucketService.uploadFile(file);
 
     Response.status(STATUS_CODES.STATUS_OK).json(url);
   } catch (error) {
@@ -29,7 +29,7 @@ export async function uploadMultipleFiles(Request: Request, Response: Response) 
       throw new Error('No files found');
     }
 
-    const urls = await firebaseService.uploadMultipleFiles(convertFileArray(files));
+    const urls = await storageBucketService.uploadMultipleFiles(convertFileArray(files));
     Response.status(STATUS_CODES.STATUS_OK).json(urls);
   } catch (error) {
     Response.status(STATUS_CODES.BAD_GATEWAY).json(error);
