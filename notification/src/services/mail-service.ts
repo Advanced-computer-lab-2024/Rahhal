@@ -7,7 +7,7 @@ export async function sendEmailNotification(notification: INotification) {
       from: process.env.SMTP_USER,
       to: notification.email,
       subject: "New Notification",
-      text: "Hello Dear User, \n"+notification.message+"\n\nRegards, \nRahhal Team",
+      text: notification.message+"\n\nRegards, \nRahhal Team",
     });
     console.log("Email sent: ", info.response);
   } catch (error) {
