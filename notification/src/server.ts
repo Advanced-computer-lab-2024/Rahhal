@@ -22,9 +22,13 @@ async function connectToDB() {
 
 await connectToDB();
 NotificationWorker.start();
+console.log("Notification Worker started");
 EventReminderWorker.start();
+console.log("Event Reminder Worker started");
 AdminAlertWorker.start();
+console.log("Admin Alert Worker started");
 EventOpenWorker.start();
+console.log("Event Open Worker started");
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

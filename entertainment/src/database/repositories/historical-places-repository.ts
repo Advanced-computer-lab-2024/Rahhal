@@ -8,11 +8,6 @@ export async function getAllHistoricalPlaces() {
     .populate("category")
     .populate("preferenceTags")
     .exec();
-  return await HistoricalPlace.find()
-    .populate("tags")
-    .populate("category")
-    .populate("preferenceTags")
-    .exec();
 }
 
 // Get historical place by id
