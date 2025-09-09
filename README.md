@@ -34,7 +34,7 @@ Rahhal is a **microservices project**, and in this repository you can find the c
 ![Google Maps](https://img.shields.io/badge/google%20maps-4285F4?style=for-the-badge&logo=googlemaps&logoColor=white)
 ![Figma](https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
 ![Stripe](https://img.shields.io/badge/stripe-635BFF?style=for-the-badge&logo=stripe&logoColor=white)
-
+ 
 
 ## Table of Contents
 1. [API Reference](#api-reference)
@@ -43,7 +43,8 @@ Rahhal is a **microservices project**, and in this repository you can find the c
 4. [Local Development](#local-development)
 5. [Usage](#usage)
 6. [Contributing](#contributing)
-7. [License](#license)
+7. [Special Thanks](#special-thanks)
+8. [License](#license)
 
 <a id="api-reference"></a>
 
@@ -176,7 +177,15 @@ When adding your changes, please make sure to follow these code styling rules to
 ❌ http://api.example.com/v1/store/items.json
 ```
 
----
+<a id="special-thanks"></a>
+
+## Special Thanks
+
+Special thanks are extended to all the team members. Their exceptional efforts, dedication, and attention to detail are what made these achievements possible. High standards were already set for completing this project, yet they managed to exceed them by miles.
+
+All love, gratitude, and appreciation go to [Abdelrahman Talaat](https://github.com/Talaat-jr), [Abdullah Mahmoud](https://github.com/dodzii), [Abdullah Ahmed](https://github.com/AbdallahAhmadd), [Ahmed Hawater](https://www.linkedin.com/in/ahmed-hawater), [Ahd Mostafa](https://github.com/AhdMostafa0), [Ali Shokry](https://github.com/AliShokryy), [Amr Hegazy](https://github.com/Amr-Hegazy1), [Farah Faisal](https://github.com/FarahFaisall), [Youssef ElBorolosy](https://github.com/YousefElbrolosy), and [Ziad Abdelrahman](https://github.com/Ziad-Abdelrahman) ♥️
+
+<img width="689" height="416" alt="image" src="https://github.com/user-attachments/assets/2fb165f1-1091-4b57-a50c-7acb9b45fc47" />  
 
 <a id="license"></a>
 
