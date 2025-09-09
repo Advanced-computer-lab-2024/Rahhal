@@ -18,7 +18,7 @@ export async function getLatestExchangeRates() {
       rates = data.conversion_rates;
     }
   } catch (error) {
-    console.error("Failed to fetch exchange rates:", error.message);
+    console.error("Failed to fetch exchange rates:", error.toString());
   }
 
   const date = new Date();
