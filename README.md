@@ -39,10 +39,11 @@ Rahhal is a **microservices project**, and in this repository you can find the c
 ## Table of Contents
 1. [API Reference](#api-reference)
 2. [Test Suites](#test-suites)
-3. [Run It Locally](#run-it-locally)
-4. [How To Use](#how-to-use)
-5. [Contribute](#contribute)
-6. [License](#license)
+3. [UI Design](#ui-design)
+4. [Local Development](#local-development)
+5. [Usage](#usage)
+6. [Contributing](#contributing)
+7. [License](#license)
 
 <a id="api-reference"></a>
 
@@ -51,8 +52,6 @@ Rahhal is a **microservices project**, and in this repository you can find the c
 <img width="2530" height="1346" alt="image" src="https://github.com/user-attachments/assets/b48d1303-e0dc-4855-acaf-166130bb8b47" />
 
 All backend services are running behind an **API Gateway**, which handles requests from the client-side through a **REST API**. You can check the [Swagger OpenAPI Specification](https://swagger.io/specification/) of the entire API [here](https://app.swaggerhub.com/apis/AmrHegazy/rahhal-api/1.0.0).
-
----
 
 <a id="test-suites"></a>
 
@@ -68,11 +67,18 @@ chmod +x run-tests.sh
 
 We also tested some of the routes manually using **Postman Collections**. You can check the collection we used [here](https://www.postman.com/dodzii/workspace/rahhal-test-routes/collection/28915840-b8fadf98-b1c6-4d08-882b-ab4bd97364d2?action=share&creator=28915840).
 
----
-
 <a id="run-it-locally"></a>
 
-## Run It Locally
+## UI Design
+
+<img width="1681" height="1093" alt="image" src="https://github.com/user-attachments/assets/399013e1-393a-49ae-8313-20f057bf1e87" />
+
+The website’s UI design was created in **Figma**, following a custom design system. The Figma project includes the main color palette, design sketches for different pages of the system, custom-designed logos, and more.
+You can view the Figma design system [here](https://www.figma.com/design/Cs0qZl2MJJk4wwUw40lFWr/Rahhal-Website-Design?node-id=0-1&p=f&t=fMssLu5sV32Y0Gas-0).
+
+<a id="local-development"></a>
+
+## Local Development
 
 In the project structure, each directory represents a separate **microservice**. After cloning the repo to your local machine, the first step is to go to each service directory and create a new `.env` file (if required). These `.env` files should contain all the necessary environment variables for the service to operate. You can find a `.env.example` file in each directory to guide you, which specifies the required variables along with brief descriptions.
 
@@ -88,9 +94,9 @@ Once all containers are up, you can check if they are running properly using `do
 
 Finally, you can open the client-side frontend locally in your browser at `http://localhost:5173` and monitor the Docker containers using **Docker Desktop**.
 
-<a id="how-to-use"></a>
+<a id="usage"></a>
 
-## How To Use
+## Usage
 
 This section includes short videos that briefly illustrate how to navigate and use the system as different stakeholders:
 
@@ -120,9 +126,9 @@ This section includes short videos that briefly illustrate how to navigate and u
 
 ---
 
-<a id="contribute"></a>
+<a id="contributing"></a>
 
-## Contribute
+## Contributing
 
 We welcome contributions to **Rahhal**! If you wish to contribute, simply fork the repository and create a pull request.
 When adding your changes, please make sure to follow these code styling rules to maintain consistency across the codebase:
