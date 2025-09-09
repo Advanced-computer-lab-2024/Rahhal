@@ -8,8 +8,8 @@ import EventOpenWorker from "@/workers/event-open-worker";
 
 dotenv.config();
 
-const PORT = process.env.PORT;
-const MONGODB_URI = process.env.MONGODB_URI;
+const PORT = process.env.PORT || "3000";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://notification_database";
 
 async function connectToDB() {
   try {
@@ -31,5 +31,5 @@ EventOpenWorker.start();
 console.log("Event Open Worker started");
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
