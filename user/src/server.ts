@@ -3,6 +3,7 @@ import app from "./app";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cron from "node-cron";
+
 dotenv.config();
 
 const PORT = process.env.PORT || "3000";

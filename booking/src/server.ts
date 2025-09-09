@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cron from "node-cron";
 import { hourlyUpdate, eventReminder } from "./utils/cronjobs";
-// Load environment variables
+
 dotenv.config();
 
 const PORT = process.env.PORT || "3000";

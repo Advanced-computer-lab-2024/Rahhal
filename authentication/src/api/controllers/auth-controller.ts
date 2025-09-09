@@ -2,6 +2,9 @@ import type { Request, Response } from "express";
 import { STATUS_CODES } from "@/utils/constants";
 import * as authService from "@/services/auth-service";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export async function login(req: Request, res: Response) {
   try {

@@ -1,5 +1,8 @@
 import amqp from 'amqplib';
 import { RABBITMQ } from '@/utils/constants';
+import dotenv from "dotenv";
+
+dotenv.config();
 
 class RabbitMQConnection {
   private static instance: RabbitMQConnection;

@@ -3,6 +3,7 @@ import * as cheerio from 'cheerio';
 import dotenv from "dotenv";
 
 dotenv.config();
+
 const API_KEY = process.env.SCRAPER_API_KEY_1 || '';
 const API_KEY_2 = process.env.SCRAPER_API_KEY_2 || '';
 const API_KEY_3 = process.env.SCRAPER_API_KEY_3 || '';

@@ -1,6 +1,9 @@
 import axios from "axios";
 import { STATUS_CODES } from "@/utils/constants";
 import { IBooking, INotifyRequest } from "./types";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const bookingAxiosInstance = axios.create({
   baseURL: process.env.BOOKING_SERVICE_URL || "http://booking:3000",

@@ -1,6 +1,9 @@
 import axios from "axios";
 import { CONSTANTS } from "./constants";
-import  { type PopulatedBooking  } from "@/utils/types";
+import { type PopulatedBooking } from "@/utils/types";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const bookingAxiosInstance = axios.create({
   baseURL: process.env.BOOKING_SERVICE_URL || "http://booking:3000",

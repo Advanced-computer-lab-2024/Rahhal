@@ -1,6 +1,9 @@
 import axios from "axios";
 import { STATUS_CODES } from "@/utils/constants";
 import { addDays, startOfDay, isWithinInterval } from "date-fns";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const userAxiosInstance = axios.create({
   baseURL: process.env.USER_SERVICE_URL || "http://user:3000",

@@ -1,5 +1,8 @@
 import axios from "axios";
 import { STATUS_CODES } from "@/utils/constants";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const axiosInstance = axios.create({
   baseURL: process.env.ENTERTAINMENT_SERVICE_URL || "http://entertainment:3000",
