@@ -23,7 +23,7 @@ const productAxiosInstance = axios.create({
 });
 
 const exchangeratesAxiosInstance = axios.create({
-  baseURL: "https://api.exchangeratesapi.io/v1",
+  baseURL: "https://v6.exchangerate-api.com/v6",
   validateStatus: (status) => {
     return status < STATUS_CODES.GATEWAY_TIMEOUT;
   },
