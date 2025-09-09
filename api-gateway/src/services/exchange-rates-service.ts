@@ -7,12 +7,21 @@ dotenv.config();
 const EXCHANGE_RATES_API_KEY = process.env.EXCHANGE_RATES_API_KEY;
 
 export async function getLatestExchangeRates() {
-  const { data } = await exchangeratesAxiosInstance.get(
-    `/${EXCHANGE_RATES_API_KEY}/latest/EUR`,
-  );
+  let rates = BACKUP_EXCHANGE_RATES;
+
+  try {
+    const { data } = await exchangeratesAxiosInstance.get(
+      `/${EXCHANGE_RATES_API_KEY}/latest/EUR`,
+    );
+
+    if (data && data.result === "success") {
+      rates = data.conversion_rates;
+    }
+  } catch (error) {
+    console.error("Failed to fetch exchange rates:", error.message);
+  }
 
   const date = new Date();
-  const rates = (data.result == "success") ? data.conversion_rates : BACKUP_EXCHANGE_RATES;
 
   return {
     date: date,
