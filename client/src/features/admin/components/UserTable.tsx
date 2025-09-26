@@ -11,17 +11,22 @@ import { cn } from "@/lib/utils";
 
 function UserView() {
   const [users, setUsers] = useState<TUser[]>([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const loadUsers = async () => {
+      setLoading(true);
       try {
         const data = await fetchUsers();
         setUsers(data);
       } catch (error) {
         toast({
           title: "Error",
-          description: (error as any).response?.data?.message || "Error loading users",
+          description:
+            (error as any).response?.data?.message || "Error loading users",
           variant: "destructive",
         });
+      } finally {
+        setLoading(false);
       }
     };
     loadUsers();
@@ -46,7 +51,8 @@ function UserView() {
     } catch (error) {
       toast({
         title: "Error",
-        description: (error as any).response?.data?.message || "Error deleting user",
+        description:
+          (error as any).response?.data?.message || "Error deleting user",
         variant: "destructive",
       });
     }
@@ -62,12 +68,13 @@ function UserView() {
     setUsers(newUsers);
   };
 
+  if (loading) return <div className="w-full text-center py-8">Loading...</div>;
   return (
-    <div className="container m-auto">
+    <div className="w-full max-w-full mx-auto">
       <h1
         className={cn(
-          "text-3xl font-bold tracking-tight",
-          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent",
+          "text-2xl sm:text-3xl font-bold tracking-tight mb-6",
+          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
         )}
       >
         Users
@@ -77,7 +84,9 @@ function UserView() {
         columns={userColumns(handleUserDelete, handleUserUpdate)}
         newRowModal={
           <UserModal
-            dialogTrigger={<DataTableAddButton className="bg-[#1d3c51] text-white rounded" />}
+            dialogTrigger={
+              <DataTableAddButton className="bg-[#1d3c51] text-white rounded" />
+            }
             onDelete={handleUserDelete}
             onSubmit={(newUser) => {
               setUsers((prev) => [...prev, newUser]);

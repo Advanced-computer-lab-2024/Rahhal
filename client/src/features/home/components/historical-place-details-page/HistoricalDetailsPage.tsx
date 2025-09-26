@@ -60,15 +60,28 @@ export default function HistoricalDetailsPage() {
   });
 
   const { currency } = useCurrencyStore();
-  const NativeConvertedPrice = currencyExchange("EGP", historicalPlace?.price.native!);
-  const ForeignerConvertedPrice = currencyExchange("EGP", historicalPlace?.price.foreigner!);
-  const StudentConvertedPrice = currencyExchange("EGP", historicalPlace?.price.student!);
+  const NativeConvertedPrice = currencyExchange(
+    "EGP",
+    historicalPlace?.price.native!
+  );
+  const ForeignerConvertedPrice = currencyExchange(
+    "EGP",
+    historicalPlace?.price.foreigner!
+  );
+  const StudentConvertedPrice = currencyExchange(
+    "EGP",
+    historicalPlace?.price.student!
+  );
 
-  const NativeDisplayPrice = NativeConvertedPrice ? NativeConvertedPrice.toFixed(0) : "N/A";
+  const NativeDisplayPrice = NativeConvertedPrice
+    ? NativeConvertedPrice.toFixed(0)
+    : "N/A";
   const ForeignerDisplayPrice = ForeignerConvertedPrice
     ? ForeignerConvertedPrice.toFixed(0)
     : "N/A";
-  const StudentDisplayPrice = StudentConvertedPrice ? StudentConvertedPrice.toFixed(0) : "N/A";
+  const StudentDisplayPrice = StudentConvertedPrice
+    ? StudentConvertedPrice.toFixed(0)
+    : "N/A";
 
   const textVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -90,9 +103,9 @@ export default function HistoricalDetailsPage() {
 
   return (
     <>
-      <div className="flex justify-end mr-[16px]">
+      <div className="flex justify-end m-[16px]">
         <SharePopover
-          link={`http://localhost:5173/hplace/details/${historicalPlace?._id}`}
+          link={`${window.location.origin}/hplace/details/${historicalPlace?._id}`}
           size={18}
           shareText={true}
         />
@@ -104,9 +117,14 @@ export default function HistoricalDetailsPage() {
         animate="visible"
         variants={imageVariants}
       >
-        <img src={historicalPlace?.images[0]} className={HistoricalDetailsStyles.sectionImage} />
+        <img
+          src={historicalPlace?.images[0]}
+          className={HistoricalDetailsStyles.sectionImage}
+        />
         <div className={HistoricalDetailsStyles.sectionOverlay}>
-          <h1 className={HistoricalDetailsStyles.sectionOverlayTitle}>{historicalPlace?.name}</h1>
+          <h1 className={HistoricalDetailsStyles.sectionOverlayTitle}>
+            {historicalPlace?.name}
+          </h1>
         </div>
       </motion.section>
 
@@ -131,8 +149,12 @@ export default function HistoricalDetailsPage() {
           viewport={{ once: true, amount: 0.3 }}
           variants={textVariants}
         >
-          <h2 className={HistoricalDetailsStyles.textSectionTitle}>{historicalPlace?.name}</h2>
-          <p className={HistoricalDetailsStyles.textSectionSubtitle}>Opening Hours</p>
+          <h2 className={HistoricalDetailsStyles.textSectionTitle}>
+            {historicalPlace?.name}
+          </h2>
+          <p className={HistoricalDetailsStyles.textSectionSubtitle}>
+            Opening Hours
+          </p>
           <p className={HistoricalDetailsStyles.textSectionTime}>
             {historicalPlace?.openingHours
               ? formatTimeRange(historicalPlace.openingHours)
@@ -148,7 +170,10 @@ export default function HistoricalDetailsPage() {
           viewport={{ once: true, amount: 0.3 }}
           variants={imageVariants}
         >
-          <img src={historicalPlace?.images[1]} className={HistoricalDetailsStyles.image} />
+          <img
+            src={historicalPlace?.images[1]}
+            className={HistoricalDetailsStyles.image}
+          />
         </motion.div>
       </section>
       <section className={HistoricalDetailsStyles.ticketIconSection}>
@@ -163,7 +188,10 @@ export default function HistoricalDetailsPage() {
           viewport={{ once: true, amount: 0.3 }}
           variants={imageVariants}
         >
-          <img src={historicalPlace?.images[2]} className={HistoricalDetailsStyles.ticketImage} />
+          <img
+            src={historicalPlace?.images[2]}
+            className={HistoricalDetailsStyles.ticketImage}
+          />
         </motion.div>
 
         <motion.div
@@ -197,8 +225,12 @@ export default function HistoricalDetailsPage() {
             visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
           }}
         >
-          <h1 className={HistoricalDetailsStyles.descriptionTitle}>Description</h1>
-          <p className={HistoricalDetailsStyles.descriptionText}>{historicalPlace?.description}</p>
+          <h1 className={HistoricalDetailsStyles.descriptionTitle}>
+            Description
+          </h1>
+          <p className={HistoricalDetailsStyles.descriptionText}>
+            {historicalPlace?.description}
+          </p>
         </motion.div>
       </section>
     </>

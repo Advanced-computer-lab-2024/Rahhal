@@ -1,4 +1,4 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdvertiserSidebar } from "./AdvertiserSidebar";
 import { createContext, useEffect, useState } from "react";
 import { TUser } from "@/types/user";
@@ -22,13 +22,22 @@ export default function AdvertiserHomepage() {
   }, [id]);
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={false}>
       <AdvertiserSidebar id={id} />
-      <div className="flex-1 p-4">
-        <EditContextAdvertiser.Provider value={{ user }}>
-          <Outlet />
-        </EditContextAdvertiser.Provider>
-      </div>
+      <main className="flex-1 flex flex-col min-h-screen">
+        {/* Mobile Header with Burger Menu */}
+        <div className="md:hidden flex items-center justify-between border-b pb-4 p-4">
+          <SidebarTrigger />
+          <h1 className="text-lg font-semibold">Advertiser Panel</h1>
+          <div className="w-8"></div> {/* Spacer for centering */}
+        </div>
+
+        <div className="flex-1 p-4 md:p-6 lg:p-8">
+          <EditContextAdvertiser.Provider value={{ user }}>
+            <Outlet />
+          </EditContextAdvertiser.Provider>
+        </div>
+      </main>
     </SidebarProvider>
   );
 }

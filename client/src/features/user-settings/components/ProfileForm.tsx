@@ -206,7 +206,7 @@ export default function ProfileForm() {
     }
 
     if (data.profilePicture) {
-      const profileImage: string = `images/profile_pictures/${id}/profile.jpg`;
+      const profileImage: string = `images/profile_pictures/${id}/${data.profilePicture.name}`;
       const newProfilePic = new File([data.profilePicture], profileImage, {
         type: data.profilePicture?.type,
       });

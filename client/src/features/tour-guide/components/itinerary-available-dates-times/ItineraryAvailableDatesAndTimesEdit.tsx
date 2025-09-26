@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TrashIcon } from "lucide-react";
@@ -13,10 +13,9 @@ interface ItineraryAvailableDatesAndTimesEditProps {
   onSave: (newDatesTime: DateTimeEntry[]) => void;
 }
 
-const ItineraryAvailableDatesAndTimesEdit: React.FC<ItineraryAvailableDatesAndTimesEditProps> = ({
-  availableDatesTime,
-  onSave,
-}) => {
+const ItineraryAvailableDatesAndTimesEdit: React.FC<
+  ItineraryAvailableDatesAndTimesEditProps
+> = ({ availableDatesTime, onSave }) => {
   const editedDatesTime = availableDatesTime.map((entry) => ({
     Date: new Date(entry.Date),
     Time: new Date(entry.Time),
@@ -56,13 +55,17 @@ const ItineraryAvailableDatesAndTimesEdit: React.FC<ItineraryAvailableDatesAndTi
         const date = new Date(entry.Date);
         const time = new Date(entry.Time);
         return (
-          <div key={index} className="flex space-x-2 mb-2">
+          <div
+            key={index}
+            className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mb-2 p-2 border rounded-md"
+          >
             <Input
               type="date"
               value={date.toISOString().split("T")[0]}
               onChange={(e) => {
                 handleDateChange(index, e.target.value);
               }}
+              className="flex-1"
             />
             <Input
               type="time"
@@ -70,9 +73,14 @@ const ItineraryAvailableDatesAndTimesEdit: React.FC<ItineraryAvailableDatesAndTi
               onChange={(e) => {
                 handleTimeChange(index, e.target.value);
               }}
+              className="flex-1"
             />
-            <div className="flex">
-              <Button onClick={() => handleRemoveEntry(index)} variant="link">
+            <div className="flex justify-end sm:justify-start">
+              <Button
+                onClick={() => handleRemoveEntry(index)}
+                variant="link"
+                size="sm"
+              >
                 <TrashIcon className="h-4 w-4 text-destructive hover:text-destructive/60" />
               </Button>
             </div>

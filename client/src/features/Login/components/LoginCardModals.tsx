@@ -6,22 +6,27 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { loginUser } from "@/api-calls/users-api-calls";
 import { UserState } from "@/stores/user-state-store";
+import { Eye, EyeOff } from "lucide-react"; // 👈 for toggle
 
 interface LoginPageProps {
-    redirectLink?: string;
-    onLogin: (e: React.MouseEvent) => void;
-  }
+  redirectLink?: string;
+  onLogin: (e: React.MouseEvent) => void;
+}
 
-export default function LoginCardModals({ redirectLink,onLogin }: LoginPageProps) {
+export default function LoginCardModals({
+  redirectLink,
+  onLogin,
+}: LoginPageProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [disabled, setDisabled] = useState(false);
   const [errors, setErrors] = useState({ username: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false); // 👈 toggle state
 
   const handleSubmit = async (e: any) => {
     e.stopPropagation();
@@ -46,7 +51,7 @@ export default function LoginCardModals({ redirectLink,onLogin }: LoginPageProps
       const response = await loginUser(reqBody);
       await UserState();
       setDisabled(true);
-      
+
       toast({
         title: "Login Successfull",
         description: "You have successfully logged in.",
@@ -62,11 +67,10 @@ export default function LoginCardModals({ redirectLink,onLogin }: LoginPageProps
       if (response.role === "tourist") {
         if (redirectLink) {
           navigate(redirectLink);
-        } 
-        else{
-          navigate('/');
+        } else {
+          navigate("/");
         }
-      } else  {
+      } else {
         navigate(`/`);
       }
     } catch (error) {
@@ -75,7 +79,7 @@ export default function LoginCardModals({ redirectLink,onLogin }: LoginPageProps
         if (axiosError.response) {
           toast({
             title: "Error",
-            description: axiosError.response.data.error,
+            description: (axiosError.response.data as any).error,
             variant: "destructive",
             duration: 3000,
           });
@@ -118,11 +122,14 @@ export default function LoginCardModals({ redirectLink,onLogin }: LoginPageProps
                   }}
                   onKeyDown={(e) => {
                     e.stopPropagation();
-                    if (e.key === "Enter") setErrors({ ...errors, username: "", password: "" });
+                    if (e.key === "Enter")
+                      setErrors({ ...errors, username: "", password: "" });
                   }}
                   className={`border ${errors.username ? "border-red-500" : "border-gray-300"}`}
                 />
-                {errors.username && <p className="text-sm text-red-500">{errors.username}</p>}
+                {errors.username && (
+                  <p className="text-sm text-red-500">{errors.username}</p>
+                )}
               </div>
               <div className="grid gap-1">
                 <div className="flex items-center justify-between">
@@ -140,25 +147,40 @@ export default function LoginCardModals({ redirectLink,onLogin }: LoginPageProps
                     Forgot Password?
                   </button>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Please enter your password"
-                  value={password}
-                  onChange={(e) => {
-                    e.stopPropagation();
-                    setPassword(e.target.value);
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                  onKeyDown={(e) => {
-                    e.stopPropagation();
-                    if (e.key === "Enter") setErrors({ ...errors, username: "", password: "" });
-                  }}
-                  className={`border ${errors.password ? "border-red-500" : "border-gray-300"}`}
-                />
-                {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"} // 👈 toggle
+                    placeholder="Please enter your password"
+                    value={password}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      setPassword(e.target.value);
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                    onKeyDown={(e) => {
+                      e.stopPropagation();
+                      if (e.key === "Enter")
+                        setErrors({ ...errors, username: "", password: "" });
+                    }}
+                    className={`border pr-10 ${errors.password ? "border-red-500" : "border-gray-300"}`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 hover:text-gray-800"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="text-sm text-red-500">{errors.password}</p>
+                )}
               </div>
             </div>
 
@@ -168,8 +190,7 @@ export default function LoginCardModals({ redirectLink,onLogin }: LoginPageProps
               className="w-full py-2 text-lg"
               style={{ backgroundColor: "#E1BC6D" }}
               onClick={(e) => {
-                e.stopPropagation(); 
-              
+                e.stopPropagation();
               }}
             >
               Login

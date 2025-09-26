@@ -7,7 +7,10 @@ import { CiGlobe } from "react-icons/ci";
 import TouristHomePageNavigation from "@/features/home/components/TouristHomePageNavigation";
 import GoogleMap from "@/components/google-maps/GoogleMap";
 
-import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
+import {
+  useCurrencyStore,
+  useRatesStore,
+} from "@/stores/currency-exchange-store";
 import { currencyExchangeSpec } from "@/utils/currency-exchange";
 import { fetchHistoricalPlaceById } from "@/api-calls/historical-places-api-calls";
 import { useQuery } from "@tanstack/react-query";
@@ -21,7 +24,10 @@ const DetailsPage = () => {
   const { placeid, type } = useParams();
   const { id } = useUserStore();
   const { data: item, isPending: isItemPending } = useQuery({
-    queryKey: [`${type == "hplace" ? "historical-places" : "product"}`, placeid],
+    queryKey: [
+      `${type == "hplace" ? "historical-places" : "product"}`,
+      placeid,
+    ],
     queryFn: () => {
       if (type === "hplace") {
         return fetchHistoricalPlaceById(placeid!);
@@ -39,7 +45,10 @@ const DetailsPage = () => {
     return ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
   };
 
-  const getLocationOnMap = (location: { longitude: number; latitude: number }) => {
+  const getLocationOnMap = (location: {
+    longitude: number;
+    latitude: number;
+  }) => {
     return (
       <GoogleMap
         isEditable={false}
@@ -64,38 +73,49 @@ const DetailsPage = () => {
             {/* details goes here */}
             <div className="flex justify-between">
               <h1>{item!.name} </h1>
-              <SharePopover link={`localhost:5173/${type}/details/${placeid}`} />
+              <SharePopover
+                link={`${window.location.origin}/${type}/details/${placeid}`}
+              />
             </div>
 
             <h3>{item!.description}</h3>
 
             <p>
               <FaTags style={{ marginRight: "10px" }} />
-              {item!.preferenceTags?.map((tag: { name: string }) => tag.name).join(", ")}
+              {item!.preferenceTags
+                ?.map((tag: { name: string }) => tag.name)
+                .join(", ")}
             </p>
 
-            {item.specialDiscount ? <p>Special Discounts: {item.specialDiscount}</p> : null}
+            {item.specialDiscount ? (
+              <p>Special Discounts: {item.specialDiscount}</p>
+            ) : null}
 
             {item.date ? (
               <p>
                 Date: {new Date(item.date).toLocaleDateString()} <br />
                 Time:{" "}
-                {new Date(item.time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                {new Date(item.time).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </p>
-            ) : item.availableDatesTime && item.availableDatesTime.length > 0 ? (
+            ) : item.availableDatesTime &&
+              item.availableDatesTime.length > 0 ? (
               <div style={{ marginTop: "4%" }}>
                 <strong>Available Dates and Times:</strong>
                 {item.availableDatesTime.map(
                   (dateTime: { Date: string; Time: string }, index: number) => (
                     <p key={index}>
-                      Date: {new Date(dateTime.Date).toLocaleDateString()} <br />
+                      Date: {new Date(dateTime.Date).toLocaleDateString()}{" "}
+                      <br />
                       Time:{" "}
                       {new Date(dateTime.Time).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
                     </p>
-                  ),
+                  )
                 )}
               </div>
             ) : null}
@@ -112,13 +132,21 @@ const DetailsPage = () => {
 
             <p>
               Rating: {getAverageRating(item.ratings.rating)}{" "}
-              <IoMdStar style={{ marginLeft: "0.4rem", fontSize: "1.1rem", color: "#FDCC0D" }} />{" "}
+              <IoMdStar
+                style={{
+                  marginLeft: "0.4rem",
+                  fontSize: "1.1rem",
+                  color: "#FDCC0D",
+                }}
+              />{" "}
             </p>
 
             {item.languages ? (
               <p>
-                <CiGlobe style={{ marginRight: "0.4rem", fontSize: "1.1rem" }} /> Languages:{" "}
-                {item.languages.join("/")}
+                <CiGlobe
+                  style={{ marginRight: "0.4rem", fontSize: "1.1rem" }}
+                />{" "}
+                Languages: {item.languages.join("/")}
               </p>
             ) : null}
 
@@ -140,7 +168,8 @@ const DetailsPage = () => {
               : null}
             {item.openingHours ? (
               <p>
-                Opening Hours: {item.openingHours.open}-{item.openingHours.close}
+                Opening Hours: {item.openingHours.open}-
+                {item.openingHours.close}
               </p>
             ) : null}
 
@@ -182,7 +211,10 @@ const DetailsPage = () => {
                 </p>
                 <ul>
                   {item.ratings.map(
-                    (rating: { user: string; rating: number; review?: string }, index: number) => (
+                    (
+                      rating: { user: string; rating: number; review?: string },
+                      index: number
+                    ) => (
                       <li key={index}>
                         <p>
                           <strong>User ID:</strong> {rating.user}
@@ -196,7 +228,7 @@ const DetailsPage = () => {
                           </p>
                         )}
                       </li>
-                    ),
+                    )
                   )}
                 </ul>
               </div>
@@ -224,7 +256,12 @@ const DetailsPage = () => {
                   <h1>
                     Price:{" "}
                     {item.price
-                      ? currencyExchangeSpec("EGP", item.price, rates, currency)?.toFixed(0)
+                      ? currencyExchangeSpec(
+                          "EGP",
+                          item.price,
+                          rates,
+                          currency
+                        )?.toFixed(0)
                       : "N/A"}{" "}
                     {currency}
                   </h1>
@@ -232,7 +269,12 @@ const DetailsPage = () => {
                   item.price &&
                   Object.entries(item.price).map(([key, value], index) => {
                     const convertedValue = value
-                      ? currencyExchangeSpec("EGP", Number(value), rates, currency)
+                      ? currencyExchangeSpec(
+                          "EGP",
+                          Number(value),
+                          rates,
+                          currency
+                        )
                       : undefined;
                     const displayConvertedValue = convertedValue
                       ? convertedValue.toFixed(0)

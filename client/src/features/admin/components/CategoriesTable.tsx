@@ -4,7 +4,10 @@ import {
   categoriesColumns,
   TCategory,
 } from "@/features/admin/utils/columns-definitions/categories-columns";
-import { fetchCategories, deleteCategory } from "@/api-calls/categories-api-calls";
+import {
+  fetchCategories,
+  deleteCategory,
+} from "@/api-calls/categories-api-calls";
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { CategoryModal } from "./CategoryModal";
 import { toast } from "@/hooks/use-toast";
@@ -13,9 +16,16 @@ import { cn } from "@/lib/utils";
 
 function CategoryView() {
   const [categories, setCategories] = useState<TCategory[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchCategories().then((data) => setCategories(data));
+    const fetchData = async () => {
+      setLoading(true);
+      const data = await fetchCategories();
+      setCategories(data);
+      setLoading(false);
+    };
+    fetchData();
   }, []);
 
   const handleCategoryDelete = async (id: string) => {
@@ -31,13 +41,16 @@ function CategoryView() {
           },
         });
 
-        const newCategories = categories.filter((category) => category._id !== id);
+        const newCategories = categories.filter(
+          (category) => category._id !== id
+        );
         setCategories(newCategories);
       }
     } catch (error) {
       toast({
         title: "Error",
-        description: (error as any).response?.data?.message || "Error deleting category",
+        description:
+          (error as any).response?.data?.message || "Error deleting category",
         variant: "destructive",
       });
     }
@@ -53,12 +66,13 @@ function CategoryView() {
     setCategories(newCategories);
   };
 
+  if (loading) return <div className="w-full text-center py-8">Loading...</div>;
   return (
-    <div className="container m-auto">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1
         className={cn(
-          "text-3xl font-bold tracking-tight",
-          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent",
+          "text-2xl sm:text-3xl font-bold tracking-tight mb-6",
+          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
         )}
       >
         Categories
@@ -71,7 +85,10 @@ function CategoryView() {
             categoryData={undefined}
             dialogTrigger={<DataTableAddButton className="bg-[#1d3c51]" />}
             onSubmit={(newCategory) => {
-              setCategories((prevCategories) => [...prevCategories, newCategory]);
+              setCategories((prevCategories) => [
+                ...prevCategories,
+                newCategory,
+              ]);
             }}
             onDelete={handleCategoryDelete}
           />

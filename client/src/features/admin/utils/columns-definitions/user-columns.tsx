@@ -4,25 +4,30 @@ import { ChevronRight } from "lucide-react";
 import { UserModal } from "@/features/admin/components/UserModal";
 import type { TUser } from "@/types/user";
 
-
-export const userColumns= (
+export const userColumns = (
   onDelete: (id: string) => void,
-  onSubmit: (user: TUser) => void,
+  onSubmit: (user: TUser) => void
 ): ColumnDef<TUser>[] => [
   {
     accessorKey: "username",
     header: "Username",
-    cell: ({ row }) => <div className="capitalize">{row.original.username}</div>,
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-    cell: ({ row }) => <div>{row.original.email}</div>,
+    cell: ({ row }) => (
+      <div className="capitalize font-medium">{row.original.username}</div>
+    ),
   },
   {
     accessorKey: "role",
     header: "Role",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("role")}</div>,
+    cell: ({ row }) => (
+      <div className="capitalize text-sm">{row.getValue("role")}</div>
+    ),
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+    cell: ({ row }) => (
+      <div className="text-sm text-muted-foreground">{row.original.email}</div>
+    ),
   },
 
   {

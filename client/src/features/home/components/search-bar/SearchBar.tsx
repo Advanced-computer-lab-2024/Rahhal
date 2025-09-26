@@ -10,12 +10,17 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { IoCloseOutline } from "react-icons/io5";
 import { DateTimePickerSearchBar } from "./date-time-picker-search";
 import GuestSelector from "./counter";
 import { useGeneralSearchBarStore } from "@/stores/general-search-bar-store";
 import { DualDatePickerSearchBar } from "./dual-range-date-picker-search";
+import { MobileSearchBar } from "./SearchBarMobile";
 
 interface SearchIconProps {
   className: string;
@@ -71,7 +76,8 @@ export default function SearchBar({
   onIconClick,
   displayHours,
 }: SearchBar) {
-  const { focusIndex, setFocusIndex, hoverIndex, setHoverIndex } = useGeneralSearchBarStore();
+  const { focusIndex, setFocusIndex, hoverIndex, setHoverIndex } =
+    useGeneralSearchBarStore();
 
   const index = 1;
   console.log(focusIndex, hoverIndex);
@@ -108,169 +114,248 @@ export default function SearchBar({
   }, []);
   let newIndex = 0;
   return (
-    <div
-      className={cn(
-        "overflow-hidden flex items-center w-auto rounded-full border-2 bg-background transition-all h-[66px]",
-        focusIndex !== 0 ? "bg-gray-300/65" : "",
-      )}
-      ref={searchBarRef}
-    >
+    <>
+      {/* Desktop and tablets view */}
       <div
         className={cn(
-          "bg-transparent flex items-center px-0 group relative overflow-hidden h-[66px]",
-          focusIndex === 1 && hoverIndex === 2
-            ? "bg-gray-300/65"
-            : focusIndex === 2 && hoverIndex === 1
-              ? "bg-gray-300/65"
-              : "",
+          "hidden overflow-hidden lg:flex items-center w-fit rounded-full border-2 bg-background transition-all h-[66px]",
+          focusIndex !== 0 ? "bg-gray-300/65" : ""
         )}
-        onMouseEnter={() => setHoverIndex(1)}
-        onMouseLeave={() => setHoverIndex(0)}
+        ref={searchBarRef}
       >
         <div
           className={cn(
-            "relative rounded-full focus-within:bg-background focus-within:shadow-sm flex items-center h-[66px]",
-            focusIndex != index ? "hover:bg-gray-200/65" : "",
+            "bg-transparent flex items-center  px-0 group relative overflow-hidden h-[66px]",
+            focusIndex === 1 && hoverIndex === 2
+              ? "bg-gray-300/65"
+              : focusIndex === 2 && hoverIndex === 1
+                ? "bg-gray-300/65"
+                : ""
           )}
           onMouseEnter={() => setHoverIndex(1)}
           onMouseLeave={() => setHoverIndex(0)}
         >
-          {inputBox && onSearch && (
-            <Input
-              type="search"
-              className={cn(
-                "border-0  focus-visible:outline-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent bg-transparent h-[66px] ",
-                searchParts ? "" : "w-[330px]",
-              )}
-              onFocus={() => {
-                setFocusIndex(1);
-              }}
-              placeholder={searchPlaceHolder}
-              //onBlur={() => setFocusIndex(0)}
-              onChange={(e) => onSearch(e.target.value)}
-            />
-          )}
-        </div>
-      </div>
-      {focusIndex == 0 && (
-        <div className="relative">
-          <div className="border-l border-gray-300 h-8" />{" "}
-        </div>
-      )}
-      {searchParts?.map((value, index) => (
-        <>
-          {searchPartsValues &&
-            searchPartsHandlers &&
-            searchPartsTypes &&
-            (searchPartsTypes[index] === "dropdown" ? (
-              ((newIndex = index + (dualDatePickerFound ? 1 : 0)),
-              (
-                <SearchPart
-                  corner={searchParts.length}
-                  setFocusIndex={setFocusIndex}
-                  focusIndex={focusIndex}
-                  index={index + 1 + (inputBox ? 1 : 0) + (dualDatePickerFound ? 1 : 0)}
-                  placeholder_1={value}
-                  placeholder_2={searchPartsPlaceholders ? searchPartsPlaceholders[newIndex] : ""}
-                  hoverIndex={hoverIndex}
-                  setHoverIndex={setHoverIndex}
-                  values={searchPartsValues.length > 0 ? searchPartsValues[newIndex] : []}
-                  handler={searchPartsHandlers[newIndex] as SearchPartHandler<string>}
-                  onValueChange={
-                    searchPartsOnValueChange && searchPartsOnValueChange.length >= newIndex
-                      ? searchPartsOnValueChange[newIndex]
-                      : undefined
-                  }
-                />
-              ))
-            ) : searchPartsTypes[index] === "date" ? (
-              <DateTimePickerSearchBar
-                index={index + 1 + (inputBox ? 1 : 0) + (dualDatePickerFound ? 1 : 0)}
-                setFocusIndex={setFocusIndex}
-                focusIndex={focusIndex}
-                hoverIndex={hoverIndex}
-                setHoverIndex={setHoverIndex}
-                corner={searchParts.length}
-                date={searchPartsHandlers[index].state[0] as Date}
-                placeholder={searchPartsPlaceholders ? searchPartsPlaceholders[index] : ""}
-                onDateChange={
-                  searchPartsHandlers[index].setState as (date: Date | undefined) => void
-                }
-              />
-            ) : searchPartsTypes[index] === "dualDate" ? (
-              ((dualDatePickerFound = true),
-              (
-                <DualDatePickerSearchBar
-                  index={index + 1 + (inputBox ? 1 : 0)}
-                  setFocusIndex={setFocusIndex}
-                  focusIndex={focusIndex}
-                  hoverIndex={hoverIndex}
-                  setHoverIndex={setHoverIndex}
-                  corner={searchParts.length}
-                  leftDate={searchPartsHandlers[index].state[0] as Date}
-                  leftPlaceholder={searchPartsPlaceholders ? searchPartsPlaceholders[index] : ""}
-                  onLeftDateChange={
-                    searchPartsHandlers[index].setState as (date: Date | undefined) => void
-                  }
-                  rightDate={searchPartsHandlers[index + 1].state[0] as Date}
-                  rightPlaceholder={
-                    searchPartsPlaceholders ? searchPartsPlaceholders[index + 1] : ""
-                  }
-                  onRightDateChange={
-                    searchPartsHandlers[index + 1].setState as (date: Date | undefined) => void
-                  }
-                  popoverRef={popoverRef}
-                  hour={displayHours}
-                />
-              ))
-            ) : searchPartsTypes[index] === "stepper" ? (
-              ((newIndex = index + (dualDatePickerFound ? 1 : 0)),
-              (
-                <GuestSelector
-                  index={index + 1 + (inputBox ? 1 : 0) + (dualDatePickerFound ? 1 : 0)}
-                  setFocusIndex={setFocusIndex}
-                  focusIndex={focusIndex}
-                  hoverIndex={hoverIndex}
-                  setHoverIndex={setHoverIndex}
-                  corner={searchParts.length}
-                  adults={searchPartsHandlers[newIndex].state[0] as number}
-                  setAdults={searchPartsHandlers[newIndex].setState as (value: number) => void}
-                  children={searchPartsHandlers[newIndex + 1].state[0] as number}
-                  setChildren={
-                    searchPartsHandlers[newIndex + 1].setState as (value: number) => void
-                  }
-                  infants={searchPartsHandlers[newIndex + 2].state[0] as number}
-                  setInfants={searchPartsHandlers[newIndex + 2].setState as (value: number) => void}
-                  placeholder={searchPartsPlaceholders ? searchPartsPlaceholders[newIndex] : ""}
-                />
-              ))
-            ) : (
-              ""
-            ))}
-          {focusIndex == 0 && (
-            <div className="relative">
-              <div className="border-l border-gray-300 h-8" />{" "}
-            </div>
-          )}
-        </>
-      ))}
-      {focusIndex == 0 && (
-        <div className="relative flex justify-center items-center h-full">
-          <Button
-            variant="default"
-            size="default"
-            //bg-[#ff585f] hover:bg-[#ff585f] hover:bg-gradient-to-r hover:from-[#ff111c] to hover:to-[#ff1151]
-            className=" bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] absolute right-1 w-10 h-10 rounded-full px-2 py-0 transition duration-300"
-            onClick={onIconClick}
+          <div
+            className={cn(
+              "relative rounded-full focus-within:bg-background focus-within:shadow-sm flex items-center h-[66px]",
+              focusIndex != index ? "hover:bg-gray-200/65" : ""
+            )}
+            onMouseEnter={() => setHoverIndex(1)}
+            onMouseLeave={() => setHoverIndex(0)}
           >
-            <SearchIcon className="w-7 h-7" />
-          </Button>
+            {inputBox && onSearch && (
+              <Input
+                type="search"
+                className={cn(
+                  "border-0  focus-visible:outline-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent bg-transparent h-[66px] ",
+                  searchParts ? "" : "w-[330px]"
+                )}
+                onFocus={() => {
+                  setFocusIndex(1);
+                }}
+                placeholder={searchPlaceHolder}
+                onChange={(e) => onSearch(e.target.value)}
+              />
+            )}
+          </div>
         </div>
-      )}
-    </div>
+        {focusIndex == 0 && (
+          <div className="relative">
+            <div className="border-l border-gray-300 h-8" />{" "}
+          </div>
+        )}
+        {searchParts?.map((value, index) => (
+          <>
+            {searchPartsValues &&
+              searchPartsHandlers &&
+              searchPartsTypes &&
+              (searchPartsTypes[index] === "dropdown" ? (
+                ((newIndex = index + (dualDatePickerFound ? 1 : 0)),
+                (
+                  <SearchPart
+                    corner={searchParts.length}
+                    setFocusIndex={setFocusIndex}
+                    focusIndex={focusIndex}
+                    index={
+                      index +
+                      1 +
+                      (inputBox ? 1 : 0) +
+                      (dualDatePickerFound ? 1 : 0)
+                    }
+                    placeholder_1={value}
+                    placeholder_2={
+                      searchPartsPlaceholders
+                        ? searchPartsPlaceholders[newIndex]
+                        : ""
+                    }
+                    hoverIndex={hoverIndex}
+                    setHoverIndex={setHoverIndex}
+                    values={
+                      searchPartsValues.length > 0
+                        ? searchPartsValues[newIndex]
+                        : []
+                    }
+                    handler={
+                      searchPartsHandlers[newIndex] as SearchPartHandler<string>
+                    }
+                    onValueChange={
+                      searchPartsOnValueChange &&
+                      searchPartsOnValueChange.length >= newIndex
+                        ? searchPartsOnValueChange[newIndex]
+                        : undefined
+                    }
+                  />
+                ))
+              ) : searchPartsTypes[index] === "date" ? (
+                <DateTimePickerSearchBar
+                  index={
+                    index +
+                    1 +
+                    (inputBox ? 1 : 0) +
+                    (dualDatePickerFound ? 1 : 0)
+                  }
+                  setFocusIndex={setFocusIndex}
+                  focusIndex={focusIndex}
+                  hoverIndex={hoverIndex}
+                  setHoverIndex={setHoverIndex}
+                  corner={searchParts.length}
+                  date={searchPartsHandlers[index].state[0] as Date}
+                  placeholder={
+                    searchPartsPlaceholders
+                      ? searchPartsPlaceholders[index]
+                      : ""
+                  }
+                  onDateChange={
+                    searchPartsHandlers[index].setState as (
+                      date: Date | undefined
+                    ) => void
+                  }
+                />
+              ) : searchPartsTypes[index] === "dualDate" ? (
+                ((dualDatePickerFound = true),
+                (
+                  <DualDatePickerSearchBar
+                    index={index + 1 + (inputBox ? 1 : 0)}
+                    setFocusIndex={setFocusIndex}
+                    focusIndex={focusIndex}
+                    hoverIndex={hoverIndex}
+                    setHoverIndex={setHoverIndex}
+                    corner={searchParts.length}
+                    leftDate={searchPartsHandlers[index].state[0] as Date}
+                    leftPlaceholder={
+                      searchPartsPlaceholders
+                        ? searchPartsPlaceholders[index]
+                        : ""
+                    }
+                    onLeftDateChange={
+                      searchPartsHandlers[index].setState as (
+                        date: Date | undefined
+                      ) => void
+                    }
+                    rightDate={searchPartsHandlers[index + 1].state[0] as Date}
+                    rightPlaceholder={
+                      searchPartsPlaceholders
+                        ? searchPartsPlaceholders[index + 1]
+                        : ""
+                    }
+                    onRightDateChange={
+                      searchPartsHandlers[index + 1].setState as (
+                        date: Date | undefined
+                      ) => void
+                    }
+                    popoverRef={popoverRef}
+                    hour={displayHours}
+                  />
+                ))
+              ) : searchPartsTypes[index] === "stepper" ? (
+                ((newIndex = index + (dualDatePickerFound ? 1 : 0)),
+                (
+                  <GuestSelector
+                    index={
+                      index +
+                      1 +
+                      (inputBox ? 1 : 0) +
+                      (dualDatePickerFound ? 1 : 0)
+                    }
+                    setFocusIndex={setFocusIndex}
+                    focusIndex={focusIndex}
+                    hoverIndex={hoverIndex}
+                    setHoverIndex={setHoverIndex}
+                    corner={searchParts.length}
+                    adults={searchPartsHandlers[newIndex].state[0] as number}
+                    setAdults={
+                      searchPartsHandlers[newIndex].setState as (
+                        value: number
+                      ) => void
+                    }
+                    children={
+                      searchPartsHandlers[newIndex + 1].state[0] as number
+                    }
+                    setChildren={
+                      searchPartsHandlers[newIndex + 1].setState as (
+                        value: number
+                      ) => void
+                    }
+                    infants={
+                      searchPartsHandlers[newIndex + 2].state[0] as number
+                    }
+                    setInfants={
+                      searchPartsHandlers[newIndex + 2].setState as (
+                        value: number
+                      ) => void
+                    }
+                    placeholder={
+                      searchPartsPlaceholders
+                        ? searchPartsPlaceholders[newIndex]
+                        : ""
+                    }
+                  />
+                ))
+              ) : (
+                ""
+              ))}
+
+            {focusIndex == 0 && (
+              <div className="relative">
+                <div className="border-l border-gray-300 h-8" />{" "}
+              </div>
+            )}
+          </>
+        ))}
+
+        {focusIndex == 0 && (
+          <div className="relative flex justify-center items-center h-full">
+            <Button
+              variant="default"
+              size="default"
+              className=" bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] absolute right-1 w-10 h-10 rounded-full px-2 py-0 transition duration-300"
+              onClick={onIconClick}
+            >
+              <SearchIcon className="w-7 h-7" />
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {/* Mobile view */}
+      <MobileSearchBar
+        onSearch={onSearch}
+        searchPlaceHolder={searchPlaceHolder}
+        searchPartsPlaceholders={searchPartsPlaceholders}
+        searchParts={searchParts}
+        searchPartsTypes={searchPartsTypes}
+        searchPartsValues={searchPartsValues}
+        searchPartsHandlers={searchPartsHandlers}
+        searchPartsOnValueChange={searchPartsOnValueChange}
+        inputBox={inputBox}
+        onIconClick={onIconClick}
+        displayHours={displayHours}
+      />
+    </>
   );
 }
 
+// Internal search bar components
 function SearchPart(SearchPartProps: SearchPartProps) {
   const { focusIndex, hoverIndex, corner, index } = SearchPartProps;
   return (
@@ -283,7 +368,8 @@ function SearchPart(SearchPartProps: SearchPartProps) {
             : index === 2
               ? "bg-gray-300/65 rounded-r-full"
               : ""
-          : focusIndex === corner && hoverIndex === (corner ? corner - 1 : 0 - 1)
+          : focusIndex === corner &&
+              hoverIndex === (corner ? corner - 1 : 0 - 1)
             ? index === corner
               ? "bg-gray-300/65"
               : index === (corner ? corner - 1 : 0 - 1)
@@ -307,7 +393,7 @@ function SearchPart(SearchPartProps: SearchPartProps) {
                   : index === focusIndex
                     ? "bg-gray-300/65 rounded-r-full"
                     : ""
-                : "",
+                : ""
       )}
     >
       <div
@@ -315,12 +401,13 @@ function SearchPart(SearchPartProps: SearchPartProps) {
           "rounded-full focus-within:bg-background focus-within:shadow-sm h-[66px] flex items-center",
           focusIndex != index
             ? hoverIndex == index &&
-              (index == focusIndex! - 1 || (index == focusIndex! + 1 && index != 1))
+              (index == focusIndex! - 1 ||
+                (index == focusIndex! + 1 && index != 1))
               ? ""
               : "hover:bg-gray-300/65"
             : focusIndex === index
               ? "bg-background shadow-[0_0_12px_0_rgba(0,0,0,0.20)]"
-              : "",
+              : ""
         )}
       >
         <ComboboxPopover {...SearchPartProps} />
@@ -351,8 +438,6 @@ function SearchIcon(props: SearchIconProps) {
 function ComboboxPopover(SearchPartProps: SearchPartProps) {
   const [open, setOpen] = useState(false);
 
-  // if (!open && SearchPartProps.focusIndex === SearchPartProps.index) {
-  //   SearchPartProps.setFocusIndex(0); // Reset focus when the popover closes
   if (open && SearchPartProps.focusIndex !== SearchPartProps.index) {
     SearchPartProps.setFocusIndex(SearchPartProps.index); // Set focus when the popover opens
   }
@@ -379,17 +464,21 @@ function ComboboxPopover(SearchPartProps: SearchPartProps) {
               variant="outline"
               size="lg"
               className={cn(
-                "border-0 focus-visible:outline-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent bg-transparent hover:bg-transparent flex justify-start items-center px-2 w-40 py-0 relative",
+                "border-0 focus-visible:outline-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent bg-transparent hover:bg-transparent flex justify-start items-center px-2 w-36 py-0 relative",
                 SearchPartProps.handler.state.length > 0
                   ? "text-foreground"
-                  : "text-muted-foreground hover:text-muted-foreground",
+                  : "text-muted-foreground hover:text-muted-foreground"
               )}
-              onMouseEnter={() => SearchPartProps.setHoverIndex(SearchPartProps.index)}
+              onMouseEnter={() =>
+                SearchPartProps.setHoverIndex(SearchPartProps.index)
+              }
               onMouseLeave={() => SearchPartProps.setHoverIndex(0)}
               onMouseDown={(e) => e.preventDefault()}
             >
               <div className="flex flex-col w-[100%] text-left pl-2">
-                <span className="text-black text-sm">{SearchPartProps.placeholder_1}</span>
+                <span className="text-black text-sm">
+                  {SearchPartProps.placeholder_1}
+                </span>
                 <span
                   className={
                     SearchPartProps.handler.state.length > 0
@@ -401,7 +490,10 @@ function ComboboxPopover(SearchPartProps: SearchPartProps) {
                     ? SearchPartProps.placeholder_2
                     : SearchPartProps.handler.state.join(", ").length < 18
                       ? SearchPartProps.handler.state.join(", ")
-                      : SearchPartProps.handler.state.join(", ").substring(0, 17).concat("...")}
+                      : SearchPartProps.handler.state
+                          .join(", ")
+                          .substring(0, 17)
+                          .concat("...")}
                 </span>
               </div>
               {SearchPartProps.handler.state.length > 0 &&
@@ -437,10 +529,14 @@ function ComboboxPopover(SearchPartProps: SearchPartProps) {
                       >
                         <span
                           className={
-                            SearchPartProps.handler.state.includes(status) ? "font-bold" : ""
+                            SearchPartProps.handler.state.includes(status)
+                              ? "font-bold"
+                              : ""
                           }
                         >
-                          {SearchPartProps.handler.state.includes(status) ? "✓ " : ""}
+                          {SearchPartProps.handler.state.includes(status)
+                            ? "✓ "
+                            : ""}
                           {status}
                         </span>
                       </CommandItem>

@@ -1,4 +1,3 @@
-
 .product-grid-view {
   overflow-x: hidden; /* Prevent horizontal scrolling */
   width: 100%; /* Ensure the container width is 100% */
@@ -14,6 +13,7 @@
 .product-grid-view__cards {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 40px; /* Add some space between cards */
   padding: 20px;

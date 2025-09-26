@@ -13,12 +13,18 @@ import useUserStore from "@/stores/user-state-store";
 
 function HistoricalTagsView() {
   const [historicalTags, setHistoricalTags] = useState<THistoricalTag[]>([]);
-
+  const [loading, setLoading] = useState(true);
 
   const { id } = useUserStore();
 
   useEffect(() => {
-    fetchUserHistoricalTags(id!).then((data) => setHistoricalTags(data));
+    const fetchData = async () => {
+      setLoading(true);
+      const data = await fetchUserHistoricalTags(id!);
+      setHistoricalTags(data);
+      setLoading(false);
+    };
+    fetchData();
   }, []);
 
   const handleHistoricalTagUpdate = (tag: THistoricalTag) => {
@@ -31,12 +37,13 @@ function HistoricalTagsView() {
     setHistoricalTags(newHistoricalTags);
   };
 
+  if (loading) return <div className="w-full text-center py-8">Loading...</div>;
   return (
     <div className="container m-auto">
       <h1
         className={cn(
           "text-3xl font-bold tracking-tight",
-          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent",
+          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
         )}
       >
         Historical Tags

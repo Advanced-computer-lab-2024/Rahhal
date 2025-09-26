@@ -4,13 +4,19 @@ import { TActivity } from "@/features/advertiser/utils/advertiser-columns";
 import { TPopulatedBooking } from "../../types/home-page-types";
 import { getUserById, refundMoney } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
-import { fetchBookingById, updateBookingRequest } from "@/api-calls/booking-api-calls";
+import {
+  fetchBookingById,
+  updateBookingRequest,
+} from "@/api-calls/booking-api-calls";
 import { toast } from "@/hooks/use-toast";
 import { RatingFormDialog } from "../RatingFormDialog";
 import { formatDate, formatTime } from "../../utils/filter-lists/overview-card";
 import { handleTripRatingSubmit, tripRatingEntity } from "../TripDetails";
 import { bookingStatus, RateableEntityType } from "@/utils/enums";
-import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
+import {
+  useCurrencyStore,
+  useRatesStore,
+} from "@/stores/currency-exchange-store";
 import DetailsPageTemplateProps from "../DetailsPageTemplate";
 
 interface BookedActivityDetailsProps {
@@ -35,6 +41,7 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
     description,
     location,
     date,
+    time,
     price,
     ratings,
     specialDiscount,
@@ -42,10 +49,16 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
     preferenceTags,
   } = activity;
   const [ownerName, setOwnerName] = React.useState("");
-  const [preferenceTagNames, setPreferenceTagNames] = React.useState<string[]>([]);
+  const [preferenceTagNames, setPreferenceTagNames] = React.useState<string[]>(
+    []
+  );
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
-  const [selectedTicket, setSelectedTicket] = React.useState<string | null>(null);
-  const [booking, setBooking] = React.useState<TPopulatedBooking | null>(initialBooking);
+  const [selectedTicket, setSelectedTicket] = React.useState<string | null>(
+    null
+  );
+  const [booking, setBooking] = React.useState<TPopulatedBooking | null>(
+    initialBooking
+  );
   const [text, setText] = React.useState<string>();
   const { currency } = useCurrencyStore();
   const { rates } = useRatesStore();
@@ -56,18 +69,23 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
       // adjust the selected ticket price based on the currency
       const selectedPrice = booking.selectedPrice;
 
-      const foundKey = Object.keys(price).find((key) => price[key] === selectedPrice);
+      const foundKey = Object.keys(price).find(
+        (key) => price[key] === selectedPrice
+      );
 
       let convertedSelectedPrice = selectedPrice;
 
       if (rates.rates) {
         const rateOfEURToOld = rates.rates["EGP"];
         const rateOfEURToNew = rates.rates[currency];
-        convertedSelectedPrice = (selectedPrice * rateOfEURToNew) / rateOfEURToOld;
+        convertedSelectedPrice =
+          (selectedPrice * rateOfEURToNew) / rateOfEURToOld;
       }
       const selectedDisplayPrice = convertedSelectedPrice.toFixed(0);
 
-      setSelectedTicket(foundKey ? `${foundKey} - ${currency} ${selectedDisplayPrice}` : null);
+      setSelectedTicket(
+        foundKey ? `${foundKey} - ${currency} ${selectedDisplayPrice}` : null
+      );
     }
   }, [currency]);
 
@@ -80,7 +98,9 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
   React.useEffect(() => {
     for (let i = 0; i < activity.preferenceTags.length; i++) {
       fetchPreferenceTagById(activity.preferenceTags[i]._id).then((tag) => {
-        setPreferenceTagNames((prev) => [(tag as { _id: string; name: string }).name]);
+        setPreferenceTagNames((prev) => [
+          (tag as { _id: string; name: string }).name,
+        ]);
       });
     }
   }, [preferenceTags]);
@@ -103,18 +123,23 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
       // NOTE: THIS WILL NOT WORK IF THE PRICES ARE NOT UNIQUE
       let selectedPrice = booking.selectedPrice;
 
-      const foundKey = Object.keys(price).find((key) => price[key] === selectedPrice);
+      const foundKey = Object.keys(price).find(
+        (key) => price[key] === selectedPrice
+      );
 
       let convertedSelectedPrice = selectedPrice;
 
       if (rates.rates) {
         const rateOfEURToOld = rates.rates["EGP"];
         const rateOfEURToNew = rates.rates[currency];
-        convertedSelectedPrice = (selectedPrice * rateOfEURToNew) / rateOfEURToOld;
+        convertedSelectedPrice =
+          (selectedPrice * rateOfEURToNew) / rateOfEURToOld;
       }
       const selectedDisplayPrice = convertedSelectedPrice.toFixed(0);
 
-      setSelectedTicket(foundKey ? `${foundKey} - ${currency} ${selectedDisplayPrice}` : null);
+      setSelectedTicket(
+        foundKey ? `${foundKey} - ${currency} ${selectedDisplayPrice}` : null
+      );
     }
   }, []);
 
@@ -141,11 +166,15 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
     if (booking && booking?._id && booking.selectedDate) {
       const currentDate = new Date();
       const itineraryDate = new Date(booking.selectedDate);
-      const difference = Math.abs(itineraryDate.getTime() - currentDate.getTime());
+      const difference = Math.abs(
+        itineraryDate.getTime() - currentDate.getTime()
+      );
       const hours = difference / (1000 * 60 * 60);
-      if (hours < 48) {
+      if (hours < 48 && booking.status !== bookingStatus.Completed) {
         setIsButtonDisabled(true);
-        setText("You can't cancel this activity anymore as it is less than 48 hours away");
+        setText(
+          "You can't cancel this activity anymore as it is less than 48 hours away"
+        );
       }
     }
   }, [booking]);
@@ -160,10 +189,14 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
         if (!text) {
           const discountedPrice =
             booking.selectedPrice -
-            (booking.selectedPrice * (booking.entity as TActivity).specialDiscount) / 100;
+            (booking.selectedPrice *
+              (booking.entity as TActivity).specialDiscount) /
+              100;
           const promocodeDiscountedPrice =
             discountedPrice - discountedPrice * ((booking.discount ?? 0) / 100);
-          updateBookingRequest(booking._id, { status: bookingStatus.Cancelled });
+          updateBookingRequest(booking._id, {
+            status: bookingStatus.Cancelled,
+          });
           refundMoney(userId, promocodeDiscountedPrice);
           setBooking({ ...booking, status: bookingStatus.Cancelled });
           booking.status = bookingStatus.Cancelled;
@@ -185,9 +218,8 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
         ? "Review Activity"
         : "Cancel Activity";
 
-  const activityDate = new Date(date);
-  const formattedDate = formatDate(activityDate);
-  const formattedTime = formatTime(activityDate);
+  const formattedDate = formatDate(new Date(date));
+  const formattedTime = formatTime(new Date(time));
 
   const cardDropdownOptions =
     booking && booking?.status === bookingStatus.Cancelled
@@ -207,7 +239,7 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
                 RateableEntityType.ACTIVITY,
                 userId,
                 booking?._id ?? "",
-                ratingFormRef,
+                ratingFormRef
               )
             : null
         }
@@ -227,12 +259,17 @@ const BookedActivityDetailsPage: React.FC<BookedActivityDetailsProps> = ({
           originalPrice={booking ? booking.selectedPrice : undefined}
           buttonText={cardButtonText}
           buttonColor={
-            booking?.status === bookingStatus.Upcoming || bookingStatus.Cancelled ? "red" : "gold"
+            booking?.status === bookingStatus.Upcoming ||
+            booking?.status === bookingStatus.Cancelled
+              ? "red"
+              : "gold"
           }
           date={booking ? formattedDate : undefined}
           time={booking ? formattedTime : undefined}
           dropdownOptions={cardDropdownOptions}
-          disabled={isButtonDisabled || booking?.status === bookingStatus.Cancelled}
+          disabled={
+            isButtonDisabled || booking?.status === bookingStatus.Cancelled
+          }
           onButtonClick={handleButtonClick}
           discount={specialDiscount}
           tickets={selectedTicket ? [selectedTicket] : []}

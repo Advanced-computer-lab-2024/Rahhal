@@ -6,12 +6,17 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import FlightCardRoute from "./FlightCardRoute";
-import currencyExchange, { currencyExchangeDefault } from "@/utils/currency-exchange";
+import currencyExchange, {
+  currencyExchangeDefault,
+} from "@/utils/currency-exchange";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import { Info } from "lucide-react";
 
 import { createBooking } from "@/api-calls/booking-api-calls";
-import type { FlightOfferDisplay, TBookingType } from "../types/home-page-types";
+import type {
+  FlightOfferDisplay,
+  TBookingType,
+} from "../types/home-page-types";
 import { bookingType } from "@/utils/enums";
 import { addLoyalityPoints } from "@/api-calls/users-api-calls";
 
@@ -42,10 +47,16 @@ export default function FlightAccordion({
   const closeModal = () => setIsModalOpen(false);
 
   const { currency } = useCurrencyStore();
-  const convertedPrice = currencyExchange(offer.price.currency, offer.price.amount);
+  const convertedPrice = currencyExchange(
+    offer.price.currency,
+    offer.price.amount
+  );
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
 
-  const bookingPrice = currencyExchangeDefault(offer.price.currency, offer.price.amount);
+  const bookingPrice = currencyExchangeDefault(
+    offer.price.currency,
+    offer.price.amount
+  );
 
   const dbPrice = bookingPrice ? bookingPrice.toFixed(0) : "N/A";
 
@@ -102,20 +113,62 @@ export default function FlightAccordion({
       )}
 
       <Accordion type="single" collapsible key={offer.id}>
-        <AccordionItem value={offer.id} className="border rounded-lg overflow-hidden">
-          <AccordionTrigger className="no-arrow hover:no-underline [&[data-state=open]>div]:bg-muted">
-            <div className="flex items-center justify-between w-full px-6 py-4 transition-colors">
-              <div className="flex items-center gap-10">
-                <div className="min-w-28 flex flex-col items-center">
+        <AccordionItem
+          value={offer.id}
+          className="border-2 rounded-lg overflow-hidden data-[state=open]:border-[var(--primary-color)] "
+        >
+          <AccordionTrigger className="hover:no-underline [&[data-state=open]>div]:bg-muted [&>svg]:hidden">
+            {/* Mobile Layout */}
+            <div className="block md:hidden w-full px-4 py-3 transition-colors">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className="min-w-16 flex flex-col items-center">
+                    {logoPath !== "NA" && isImageLoaded ? (
+                      <img
+                        src={logoPath}
+                        alt={offer.airline}
+                        className="h-12 w-12 object-contain"
+                        onError={() => setIsImageLoaded(false)}
+                      />
+                    ) : (
+                      <span className="text-center font-semibold text-gray-600 text-xs">
+                        {offer.airline}
+                      </span>
+                    )}
+                  </div>
+                  <FlightCardRoute
+                    departureTime={offer.departure.time}
+                    departureCode={offer.departure.code}
+                    departureDate={offer.departure.date}
+                    arrivalTime={offer.arrival.time}
+                    arrivalDate={offer.arrival.date}
+                    arrivalCode={offer.arrival.code}
+                  />
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-bold">{displayPrice}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {currency}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop Layout */}
+            <div className="hidden md:flex items-center justify-between w-full px-6 py-4 transition-colors">
+              <div className="flex items-center gap-6 lg:gap-10">
+                <div className="min-w-20 lg:min-w-28 flex flex-col items-center">
                   {logoPath !== "NA" && isImageLoaded ? (
                     <img
                       src={logoPath}
                       alt={offer.airline}
-                      className="h-[5.5rem] w-[5.5rem] object-contain"
+                      className="h-16 w-16 lg:h-[5.5rem] lg:w-[5.5rem] object-contain"
                       onError={() => setIsImageLoaded(false)}
                     />
                   ) : (
-                    <span className="text-center font-semibold text-gray-600">{offer.airline}</span>
+                    <span className="text-center font-semibold text-gray-600">
+                      {offer.airline}
+                    </span>
                   )}
                 </div>
                 <div className="flex items-center">
@@ -132,24 +185,31 @@ export default function FlightAccordion({
               <div className="flex items-center gap-6">
                 <div className="text-right">
                   <div className="text-xl font-bold">{displayPrice}</div>
-                  <div className="text-sm text-muted-foreground">{currency}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {currency}
+                  </div>
                 </div>
               </div>
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="px-6 py-4 bg-muted/50">
-              <div className="space-y-6">
-                <div className="flex items-start gap-8">
-                  <div className="min-w-28">
+            <div className="px-4 md:px-6 py-4 bg-muted/50">
+              <div className="space-y-4 md:space-y-6">
+                <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-8">
+                  <div className="md:min-w-28">
                     <div className="text-sm font-medium">Flight Details</div>
                   </div>
                   <div className="flex-1">
                     <div className="space-y-4">
-                      <div className="flex justify-between items-start">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <div className="font-medium"> ({offer.departure.code})</div>
-                          <div className="text-sm text-muted-foreground">Departure : </div>
+                          <div className="font-medium">
+                            {" "}
+                            ({offer.departure.code})
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            Departure :{" "}
+                          </div>
                           <div className="text-sm text-muted-foreground">
                             on : {offer.departure.date}
                           </div>
@@ -157,9 +217,13 @@ export default function FlightAccordion({
                             at : {offer.departure.time}
                           </div>
                         </div>
-                        <div className="text-right">
-                          <div className="font-medium">({offer.arrival.code})</div>
-                          <div className="text-sm text-muted-foreground">Arrival : </div>
+                        <div className="md:text-right">
+                          <div className="font-medium">
+                            ({offer.arrival.code})
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            Arrival :{" "}
+                          </div>
                           <div className="text-sm text-muted-foreground">
                             on : {offer.arrival.date}
                           </div>
@@ -172,8 +236,12 @@ export default function FlightAccordion({
                       {offer.stops.length > 0 && (
                         <div className="pt-2">
                           <div className="flex justify-between items-start">
-                            <div className="text-sm font-medium mb-2">Stops</div>
-                            <div className="text-sm font-medium mb-2">Duration</div>
+                            <div className="text-sm font-medium mb-2">
+                              Stops
+                            </div>
+                            <div className="text-sm font-medium mb-2">
+                              Duration
+                            </div>
                           </div>
                           {offer.stops.map((stop, index) => (
                             <div
@@ -181,7 +249,9 @@ export default function FlightAccordion({
                               className="flex justify-between items-center py-2 border-t"
                             >
                               <div className="text-sm">{stop.code}</div>
-                              <div className="text-m text-muted-foreground">{stop.duration}</div>
+                              <div className="text-sm text-muted-foreground">
+                                {stop.duration}
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -189,22 +259,24 @@ export default function FlightAccordion({
                     </div>
                   </div>
                 </div>
-                <div className="flex items-start gap-8">
-                  <div className="min-w-28">
+                <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-8">
+                  <div className="md:min-w-28">
                     <div className="text-sm font-medium">Price Details</div>
                   </div>
                   <div className="flex-1">
                     <div className="flex justify-between items-center">
-                      <div className="text-sm text-muted-foreground">Total fare</div>
+                      <div className="text-sm text-muted-foreground">
+                        Total fare
+                      </div>
                       <div className="font-medium">
                         {currency} {displayPrice.toLocaleString()}
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col items-center md:items-start">
                   <Button
-                    className="bg-[var(--primary-color)] hover:bg-[var( --primary-color-hover)] text-black min-w-24"
+                    className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-black min-w-24 w-full md:w-auto"
                     disabled={!isAdult}
                     onClick={onConfirmFlight}
                   >
@@ -212,7 +284,7 @@ export default function FlightAccordion({
                   </Button>
 
                   {loggedIn && !isAdult && (
-                    <div className=" flex items-center gap-2 rounded p-2 text-red-700 text-sm">
+                    <div className="flex items-center gap-2 rounded p-2 text-red-700 text-sm mt-2">
                       <div className="flex items-center justify-center w-5 h-5 text-red rounded-full">
                         <Info className="h-4 w-4" />
                       </div>

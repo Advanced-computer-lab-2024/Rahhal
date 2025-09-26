@@ -6,9 +6,16 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 import { loginUser } from "@/api-calls/users-api-calls";
 import { UserState } from "@/stores/user-state-store";
+import { Eye, EyeOff } from "lucide-react";
 interface LoginPageProps {
   redirectLink?: string;
 }
@@ -19,7 +26,9 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [disabled, setDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ username: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false); // 👈 state for toggle
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -35,6 +44,8 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
       setErrors(newErrors);
       return;
     }
+    setLoading(true);
+    setDisabled(true);
     try {
       newErrors.username = "";
       newErrors.password = "";
@@ -42,9 +53,8 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
       const reqBody = { username: username, password: password };
       const response: any = await loginUser(reqBody);
       await UserState();
-      setDisabled(true);
       toast({
-        title: "Login Successfull",
+        title: "Login Successful",
         description: "You have successfully logged in.",
         style: {
           backgroundColor: "#34D399",
@@ -52,7 +62,6 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
         },
         duration: 3000,
       });
-      setDisabled(false);
       navigate(`/`);
     } catch (error) {
       if (isAxiosError(error)) {
@@ -60,7 +69,7 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
         if (axiosError.response) {
           toast({
             title: "Error",
-            description: axiosError.response.data.error,
+            description: (axiosError.response.data as any).error,
             variant: "destructive",
             duration: 3000,
           });
@@ -68,6 +77,9 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
       } else {
         console.error("Unexpected error:", error);
       }
+    } finally {
+      setLoading(false);
+      setDisabled(false);
     }
   };
 
@@ -98,11 +110,14 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") setErrors({ ...errors, username: "", password: "" });
+                    if (e.key === "Enter")
+                      setErrors({ ...errors, username: "", password: "" });
                   }}
                   className={`border ${errors.username ? "border-red-500" : "border-gray-300"}`}
                 />
-                {errors.username && <p className="text-sm text-red-500">{errors.username}</p>}
+                {errors.username && (
+                  <p className="text-sm text-red-500">{errors.username}</p>
+                )}
               </div>
               <div className="grid gap-1">
                 <div className="flex items-center justify-between">
@@ -120,28 +135,69 @@ export default function LoginCard({ redirectLink }: LoginPageProps) {
                     Forgot Password?
                   </button>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Please enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") setErrors({ ...errors, username: "", password: "" });
-                  }}
-                  className={`border ${errors.password ? "border-red-500" : "border-gray-300"}`}
-                />
-                {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"} // 👈 toggle
+                    placeholder="Please enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter")
+                        setErrors({ ...errors, username: "", password: "" });
+                    }}
+                    className={`border pr-10 ${errors.password ? "border-red-500" : "border-gray-300"}`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 hover:text-gray-800"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="text-sm text-red-500">{errors.password}</p>
+                )}
               </div>
             </div>
 
             <Button
               type="submit"
-              disabled={disabled}
-              className="w-full py-2 text-lg"
+              disabled={disabled || loading}
+              className="w-full py-2 text-lg flex items-center justify-center"
               style={{ backgroundColor: "#E1BC6D" }}
             >
-              Login
+              {loading ? (
+                <span className="flex items-center justify-center">
+                  <svg
+                    className="animate-spin mr-2 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8z"
+                    ></path>
+                  </svg>
+                  Loading...
+                </span>
+              ) : (
+                "Login"
+              )}
             </Button>
           </form>
         </CardContent>

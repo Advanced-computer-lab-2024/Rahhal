@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/data-table/DataTable";
-import { activitiesColumns, TActivity } from "@/features/advertiser/utils/advertiser-columns";
+import {
+  activitiesColumns,
+  TActivity,
+} from "@/features/advertiser/utils/advertiser-columns";
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { ActivitiesModal } from "./ActivityModal";
 import { useParams } from "react-router-dom";
-import { fetchUserActivities, deleteActivity } from "@/api-calls/activities-api-calls";
+import {
+  fetchUserActivities,
+  deleteActivity,
+} from "@/api-calls/activities-api-calls";
 import { TUser } from "@/types/user";
 import { getUserById } from "@/api-calls/users-api-calls";
 import { toast } from "@/hooks/use-toast";
@@ -14,11 +20,13 @@ import useUserStore from "@/stores/user-state-store";
 
 function AdvertiserView() {
   const [activities, setActivities] = useState<TActivity[]>([]);
+  const [loading, setLoading] = useState(true);
   const { id } = useUserStore();
   const [user, setUser] = useState<TUser>();
 
   useEffect(() => {
     const init = async () => {
+      setLoading(true);
       if (id) {
         const data = await fetchUserActivities(id);
         const userDate = await getUserById(id);
@@ -31,6 +39,7 @@ function AdvertiserView() {
           activity.date = new Date(activity.date);
         });
       }
+      setLoading(false);
     };
     init();
   }, []);
@@ -48,13 +57,16 @@ function AdvertiserView() {
           },
         });
 
-        const newActivities = activities.filter((activity) => activity._id !== id);
+        const newActivities = activities.filter(
+          (activity) => activity._id !== id
+        );
         setActivities(newActivities);
       }
     } catch (error) {
       toast({
         title: "Error",
-        description: (error as any).response?.data?.message || "Error deleting activity",
+        description:
+          (error as any).response?.data?.message || "Error deleting activity",
         variant: "destructive",
       });
     }
@@ -70,33 +82,39 @@ function AdvertiserView() {
     setActivities(newActivities);
   };
 
+  if (loading) return <div className="w-full text-center py-8">Loading...</div>;
   return (
-    <div className="container m-auto">
+    <div className="w-full max-w-full mx-auto">
       <h1
         className={cn(
-          "text-3xl font-bold tracking-tight",
-          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent",
+          "text-2xl sm:text-3xl font-bold tracking-tight mb-6",
+          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
         )}
       >
         Activities
       </h1>
       {id ? (
-        <DataTable
-          data={activities}
-          columns={activitiesColumns(handleActivityDelete, handleActivityUpdate)}
-          newRowModal={
-            <ActivitiesModal
-              userId={id}
-              username={user?.companyName}
-              activityData={undefined}
-              dialogTrigger={<DataTableAddButton className="bg-[#1d3c51]" />}
-              onSubmit={(newActivity) => {
-                setActivities((prev) => [...prev, newActivity]);
-              }}
-              onDelete={handleActivityDelete}
-            />
-          }
-        />
+        <div className="w-full overflow-hidden">
+          <DataTable
+            data={activities}
+            columns={activitiesColumns(
+              handleActivityDelete,
+              handleActivityUpdate
+            )}
+            newRowModal={
+              <ActivitiesModal
+                userId={id}
+                username={user?.companyName}
+                activityData={undefined}
+                dialogTrigger={<DataTableAddButton className="bg-[#1d3c51]" />}
+                onSubmit={(newActivity) => {
+                  setActivities((prev) => [...prev, newActivity]);
+                }}
+                onDelete={handleActivityDelete}
+              />
+            }
+          />
+        </div>
       ) : (
         <p>Resource not found</p>
       )}

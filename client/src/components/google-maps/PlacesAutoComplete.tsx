@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useDebounce } from "use-debounce";
 import { cn } from "@/lib/utils";
+import { SERVICES_URLS } from "@/lib/constants";
 
 type Prediction = {
   place_id: string;
@@ -22,7 +23,7 @@ type PlacesAutocompleteProps = {
 
 async function fetchPlacesAutocomplete(inputValue: string) {
   const { data } = await axios.get(
-    `${import.meta.env.VITE_GATEWAY_SERVICE_URL}/api/google-maps/autocomplete?input=${inputValue}`,
+    `${SERVICES_URLS.GOOGLE_MAPS}/autocomplete?input=${inputValue}`
   );
   console.log(data);
   return data;
@@ -30,12 +31,14 @@ async function fetchPlacesAutocomplete(inputValue: string) {
 
 async function fetchPlaceLocation(placeId: string) {
   const { data } = await axios.get(
-    `${import.meta.env.VITE_GATEWAY_SERVICE_URL}/api/google-maps/place-details?placeId=${placeId}`,
+    `${SERVICES_URLS.GOOGLE_MAPS}/place-details?placeId=${placeId}`
   );
   return data.location;
 }
 
-export default function PlacesAutocomplete({ setLocation }: PlacesAutocompleteProps) {
+export default function PlacesAutocomplete({
+  setLocation,
+}: PlacesAutocompleteProps) {
   const [input, setInput] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [predictions, setPredictions] = useState<Prediction[]>([]);
@@ -74,7 +77,9 @@ export default function PlacesAutocomplete({ setLocation }: PlacesAutocompletePr
               key={prediction.place_id}
               onMouseDown={async () => {
                 setInput(prediction.description);
-                const placeLocation = await fetchPlaceLocation(prediction.place_id);
+                const placeLocation = await fetchPlaceLocation(
+                  prediction.place_id
+                );
                 setLocation(placeLocation);
               }}
             >

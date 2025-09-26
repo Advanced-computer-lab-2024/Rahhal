@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check, Plus, PlusCircle, X, XIcon } from "lucide-react";
+import { Check, PlusCircle, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ItineraryActivitiesEdit from "./ItineraryActivitiesEdit";
@@ -10,7 +10,9 @@ interface ItineraryActivities {
   title: string;
   itineraryActivities: { type: string; duration: string }[];
   initialIsDisabled?: boolean;
-  onItineraryActivityChange: (itineraryActivities: { type: string; duration: string }[]) => void;
+  onItineraryActivityChange: (
+    itineraryActivities: { type: string; duration: string }[]
+  ) => void;
 }
 
 const ItineraryActivities = ({
@@ -19,10 +21,12 @@ const ItineraryActivities = ({
   initialIsDisabled = false,
   onItineraryActivityChange,
 }: ItineraryActivities) => {
-  let itineraryActivitiesWithId = itineraryActivities.map((activity, index) => ({
-    id: index,
-    ...activity,
-  }));
+  let itineraryActivitiesWithId = itineraryActivities.map(
+    (activity, index) => ({
+      id: index,
+      ...activity,
+    })
+  );
 
   const [isDisabled, setIsDisabled] = useState(initialIsDisabled);
   const [activities, setActivities] = useState(itineraryActivitiesWithId);
@@ -35,20 +39,34 @@ const ItineraryActivities = ({
 
   const addActivity = () => {
     if (newType && newDuration) {
-      const newId = activities.length ? activities[activities.length - 1].id + 1 : 1;
-      setActivities([...activities, { id: newId, type: newType, duration: newDuration }]);
+      const newId = activities.length
+        ? activities[activities.length - 1].id + 1
+        : 1;
+      setActivities([
+        ...activities,
+        { id: newId, type: newType, duration: newDuration },
+      ]);
       setNewType("");
       setNewDuration("");
-      onItineraryActivityChange([...activities, { type: newType, duration: newDuration }]);
+      onItineraryActivityChange([
+        ...activities,
+        { type: newType, duration: newDuration },
+      ]);
     }
   };
 
   const removeActivity = (id: number) => {
     setActivities(activities.filter((activity) => activity.id !== id));
-    onItineraryActivityChange(activities.filter((activity) => activity.id !== id));
+    onItineraryActivityChange(
+      activities.filter((activity) => activity.id !== id)
+    );
   };
 
-  const startEditing = (activity: { id: number; type: string; duration: string }) => {
+  const startEditing = (activity: {
+    id: number;
+    type: string;
+    duration: string;
+  }) => {
     setEditingId(activity.id);
     setEditType(activity.type);
     setEditDuration(activity.duration);
@@ -66,8 +84,8 @@ const ItineraryActivities = ({
         activities.map((activity) =>
           activity.id === editingId
             ? { ...activity, type: editType, duration: editDuration }
-            : activity,
-        ),
+            : activity
+        )
       );
       setEditingId(null);
       setEditType("");
@@ -76,8 +94,8 @@ const ItineraryActivities = ({
         activities.map((activity) =>
           activity.id === editingId
             ? { ...activity, type: editType, duration: editDuration }
-            : activity,
-        ),
+            : activity
+        )
       );
     }
   };
@@ -86,7 +104,11 @@ const ItineraryActivities = ({
     <div>
       <div className="flex gap-3 items-center">
         <Label className="text-lg">Activites</Label>
-        <Button variant="link" className="p-0" onClick={() => setIsAdding(true)}>
+        <Button
+          variant="link"
+          className="p-0"
+          onClick={() => setIsAdding(true)}
+        >
           <PlusCircle className="h-5 w-5 text-primary-color" />
         </Button>
       </div>
@@ -94,7 +116,7 @@ const ItineraryActivities = ({
         {activities.map((activity) => (
           <div
             key={activity.id}
-            className="flex justify-between items-center border py-2 px-4 rounded-md"
+            className="flex flex-col sm:flex-row sm:justify-between sm:items-center border p-3 sm:py-2 sm:px-4 rounded-md space-y-2 sm:space-y-0"
           >
             {editingId === activity.id ? (
               <ItineraryActivitiesEdit
@@ -115,18 +137,20 @@ const ItineraryActivities = ({
           </div>
         ))}
         {!isDisabled && isAdding && (
-          <div className="flex space-x-2">
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
             <Input
               placeholder="Activity"
               value={newType}
               onChange={(e) => setNewType(e.target.value)}
+              className="flex-1"
             />
             <Input
               placeholder="Duration"
               value={newDuration}
               onChange={(e) => setNewDuration(e.target.value)}
+              className="flex-1"
             />
-            <div className="flex">
+            <div className="flex justify-end sm:justify-start">
               <Button onClick={() => setIsAdding(false)} variant="link">
                 <XIcon className="h-4 w-4 hover:text-primary/60" />
               </Button>

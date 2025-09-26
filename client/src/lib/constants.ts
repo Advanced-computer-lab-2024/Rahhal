@@ -1,7 +1,9 @@
 import { UserRoleEnum } from "@/utils/enums";
 
-const gatewayServiceUrl = import.meta.env.VITE_GATEWAY_SERVICE_URL;
-const notificationServiceUrl = import.meta.env.VITE_NOTIFICATION_SERVICE_URL;
+const gatewayServiceUrl =
+  import.meta.env.VITE_GATEWAY_SERVICE_URL || "http://localhost:3000";
+const notificationServiceUrl =
+  import.meta.env.VITE_NOTIFICATION_SERVICE_URL || "http://localhost:3008";
 
 export const SERVICES_URLS = {
   ENTERTAINMENT: `${gatewayServiceUrl}/api/entertainment`,
@@ -227,7 +229,10 @@ export const NATIONALITIES = [
   { value: "Colombia", label: "Colombia" },
   { value: "Comoros", label: "Comoros" },
   { value: "Congo (Congo-Brazzaville)", label: "Congo (Congo-Brazzaville)" },
-  { value: "Congo (Democratic Republic of the)", label: "Congo (Democratic Republic of the)" },
+  {
+    value: "Congo (Democratic Republic of the)",
+    label: "Congo (Democratic Republic of the)",
+  },
   { value: "Costa Rica", label: "Costa Rica" },
   { value: "Croatia", label: "Croatia" },
   { value: "Cuba", label: "Cuba" },
@@ -334,7 +339,10 @@ export const NATIONALITIES = [
   { value: "Rwanda", label: "Rwanda" },
   { value: "Saint Kitts and Nevis", label: "Saint Kitts and Nevis" },
   { value: "Saint Lucia", label: "Saint Lucia" },
-  { value: "Saint Vincent and the Grenadines", label: "Saint Vincent and the Grenadines" },
+  {
+    value: "Saint Vincent and the Grenadines",
+    label: "Saint Vincent and the Grenadines",
+  },
   { value: "Samoa", label: "Samoa" },
   { value: "San Marino", label: "San Marino" },
   { value: "Sao Tome and Principe", label: "Sao Tome and Principe" },

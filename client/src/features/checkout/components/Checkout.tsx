@@ -10,11 +10,18 @@ import { PaymentOptions } from "./PaymentOptions";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { constructReceiptData, createOrderInstance, updateProductsStock } from "../utils/helpers";
+import {
+  constructReceiptData,
+  createOrderInstance,
+  updateProductsStock,
+} from "../utils/helpers";
 import { emptyCart, fetchUserCart } from "@/api-calls/cart-api-calls";
 import { usePromocode } from "@/api-calls/promocode-api-calls";
 import { sendReceipt } from "@/api-calls/payment-api-calls";
-import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
+import {
+  useCurrencyStore,
+  useRatesStore,
+} from "@/stores/currency-exchange-store";
 import { currencyExchangeSpec } from "@/utils/currency-exchange";
 import useUserStore from "@/stores/user-state-store";
 import useCartStore from "@/stores/nav-bar-icon-stores/cart-count-store";
@@ -56,7 +63,8 @@ export default function Checkout() {
   const [deliveryFee, setDeliveryFee] = useState(BASE_DELIVERY_FEE);
 
   const [discountAmount, setDiscountAmount] = useState(0);
-  const [activePromotion, setActivePromotion] = useState<ActivePromotion | null>(null);
+  const [activePromotion, setActivePromotion] =
+    useState<ActivePromotion | null>(null);
   const [totalAmount, setTotalAmount] = useState(0);
 
   const [currentCheckoutStep, setCurrentCheckoutStep] = useState(1);
@@ -69,19 +77,25 @@ export default function Checkout() {
   };
 
   const handleContinueToPayment = () => {
-    const newErrors: { address?: string; city?: string; postalCode?: string; phone?: string } = {};
+    const newErrors: {
+      address?: string;
+      city?: string;
+      postalCode?: string;
+      phone?: string;
+    } = {};
 
-    if (!newAddress) {
+    if (selectedAddress === "new") {
+      if (!city) {
+        newErrors.city = "City is required";
+      }
+      if (!postalCode) {
+        newErrors.postalCode = "Postal code is required";
+      }
+      if (!phone) {
+        newErrors.phone = "Phone is required";
+      }
+    } else if (!newAddress) {
       newErrors.address = "Address is required";
-    }
-    if (!city) {
-      newErrors.city = "City is required";
-    }
-    if (!postalCode) {
-      newErrors.postalCode = "Postal code is required";
-    }
-    if (!phone) {
-      newErrors.phone = "Phone is required";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -126,10 +140,19 @@ export default function Checkout() {
   const handlePaymentCompletion = async () => {
     try {
       if (user && cart) {
-        const fullAddress = `${newAddress}, ${city}`;
+        let fullAddress = newAddress;
+        if (city) {
+          fullAddress += `, ${city}`;
+        }
+        if (postalCode) {
+          fullAddress += `, ${postalCode}`;
+        }
         const updatedPromocode =
-          activePromotion?.promotion.type === "shipping" ? "DELIVERY" : activePromotion?.code || "";
+          activePromotion?.promotion.type === "shipping"
+            ? "DELIVERY"
+            : activePromotion?.code || "";
 
+        setIsPaymentLoading(true);
         await updateProductsStock(cart);
 
         const order = await createOrderInstance(
@@ -137,17 +160,24 @@ export default function Checkout() {
           selectedPaymentMethod,
           discountAmount,
           updatedPromocode,
-          fullAddress,
+          fullAddress
         );
 
         if (selectedPaymentMethod === "wallet") {
-          await updateUser(user, { balance: (user.balance as number) - totalAmount });
+          await updateUser(user, {
+            balance: (user.balance as number) - totalAmount,
+          });
         }
         if (activePromotion) {
           await usePromocode(activePromotion.code, user._id);
         }
 
-        const orderReceipt = constructReceiptData(order, deliveryFee, currency, currencyConvertor);
+        const orderReceipt = constructReceiptData(
+          order,
+          deliveryFee,
+          currency,
+          currencyConvertor
+        );
         await sendReceipt(id!, orderReceipt);
         await emptyCart(cart.user);
         setCount(0);
@@ -156,6 +186,7 @@ export default function Checkout() {
           const updatedAddresses = [...(user.addresses || []), fullAddress];
           await updateUser(user, { addresses: updatedAddresses });
         }
+        setIsPaymentLoading(false);
         setCompleted(true);
         setTimeout(() => {
           setCompleted(false);
@@ -178,15 +209,17 @@ export default function Checkout() {
   };
   return (
     <>
-      <div className="min-h-screen flex">
-        <div className="w-1/2 bg-white">
-          <div className="p-8">
-            <div className="mb-8">
-              <h1 className="text-5xl font-semibold">Checkout</h1>
+      <div className="min-h-screen flex flex-col lg:flex-row">
+        <div className="w-full lg:w-1/2 bg-white">
+          <div className="p-4 sm:p-6 lg:p-8">
+            <div className="mb-6 lg:mb-8">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold">
+                Checkout
+              </h1>
             </div>
             {currentCheckoutStep === 2 ? (
               user && (
-                <div className="mt-10">
+                <div className="mt-6 lg:mt-10">
                   <PaymentOptions
                     selectedPaymentMethod={selectedPaymentMethod}
                     stripePaymentTrigger={stripePaymentTrigger}
@@ -198,24 +231,32 @@ export default function Checkout() {
                     amount={totalAmount}
                   />
                   <div className="flex gap-4 mt-4">
-                    <Button variant="outline" onClick={handleGoToPrevStep}>
-                      <ArrowLeft className="h-5 w-5 " />
+                    <Button
+                      variant="outline"
+                      onClick={handleGoToPrevStep}
+                      className="flex items-center gap-2"
+                    >
+                      <ArrowLeft className="h-4 w-4" />
+                      <span className="hidden sm:inline">Back</span>
                     </Button>
                   </div>
                 </div>
               )
             ) : (
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <div>
                   <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold">Contact</h2>
+                    <h2 className="text-lg sm:text-xl font-semibold">
+                      Contact
+                    </h2>
                   </div>
-                  <div className="mt-4 space-y-4">
+                  <div className="mt-3 sm:mt-4 space-y-4">
                     <Input
                       type="email"
                       placeholder="Email"
                       defaultValue={user?.email || ""}
                       disabled
+                      className="text-sm sm:text-base"
                     />
                   </div>
                 </div>
@@ -245,10 +286,10 @@ export default function Checkout() {
           </div>
         </div>
 
-        <div className="w-1/2 bg-gray-50 ">
-          <div className="p-8 sticky top-0  ">
+        <div className="w-full lg:w-1/2 bg-gray-50 order-first lg:order-last">
+          <div className="p-4 sm:p-6 lg:p-8 lg:sticky lg:top-0">
             {user && cart && (
-              <div className="max-w-md mx-auto p-4">
+              <div className="max-w-none lg:max-w-md mx-auto">
                 <OrderSummary
                   cart={cart}
                   discountAmount={discountAmount}
@@ -261,9 +302,15 @@ export default function Checkout() {
                   onFreeDelivery={handleFreeDelivery}
                 />
                 <Button
-                  className="mt-6 w-full bg-complimentary-color hover:bg-complementary-hover disabled:bg-[--complimentary-color-fade] text-white py-3 px-4 rounded-md font-medium transition-colors"
-                  onClick={currentCheckoutStep == 2 ? handleCompleteOrder : handleContinueToPayment}
-                  disabled={currentCheckoutStep == 2 && selectedPaymentMethod === ""}
+                  className="mt-4 lg:mt-6 w-full bg-complimentary-color hover:bg-complementary-hover disabled:bg-[--complimentary-color-fade] text-white py-3 px-4 rounded-md font-medium transition-colors"
+                  onClick={
+                    currentCheckoutStep == 2
+                      ? handleCompleteOrder
+                      : handleContinueToPayment
+                  }
+                  disabled={
+                    currentCheckoutStep == 2 && selectedPaymentMethod === ""
+                  }
                 >
                   {isPaymentLoading
                     ? "Processing..."

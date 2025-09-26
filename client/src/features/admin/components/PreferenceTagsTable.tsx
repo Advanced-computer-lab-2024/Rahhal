@@ -4,7 +4,10 @@ import {
   preferenceTagsColumns,
   TPreferenceTag,
 } from "@/features/admin/utils/columns-definitions/preference-tags-columns";
-import { fetchPreferenceTags, deletePreferenceTag } from "@/api-calls/preference-tags-api-calls";
+import {
+  fetchPreferenceTags,
+  deletePreferenceTag,
+} from "@/api-calls/preference-tags-api-calls";
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { PreferenceTagsModal } from "./PreferenceTagsModal";
 import { toast } from "@/hooks/use-toast";
@@ -13,9 +16,16 @@ import { cn } from "@/lib/utils";
 
 function AdminPreferenceTagView() {
   const [preferenceTags, setPreferenceTags] = useState<TPreferenceTag[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchPreferenceTags().then((data) => setPreferenceTags(data));
+    const fetchData = async () => {
+      setLoading(true);
+      const data = await fetchPreferenceTags();
+      setPreferenceTags(data);
+      setLoading(false);
+    };
+    fetchData();
   }, []);
 
   const handlePreferenceTagDelete = async (id: string) => {
@@ -32,14 +42,16 @@ function AdminPreferenceTagView() {
         });
 
         const newPreferenceTags = preferenceTags.filter(
-          (preferenceTag) => preferenceTag._id !== id,
+          (preferenceTag) => preferenceTag._id !== id
         );
         setPreferenceTags(newPreferenceTags);
       }
     } catch (error) {
       toast({
         title: "Error",
-        description: (error as any).response?.data?.message || "Error deleting preference tag",
+        description:
+          (error as any).response?.data?.message ||
+          "Error deleting preference tag",
         variant: "destructive",
       });
     }
@@ -55,19 +67,23 @@ function AdminPreferenceTagView() {
     setPreferenceTags(newPreferenceTags);
   };
 
+  if (loading) return <div className="w-full text-center py-8">Loading...</div>;
   return (
-    <div className="container m-auto">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1
         className={cn(
-          "text-3xl font-bold tracking-tight",
-          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent",
+          "text-2xl sm:text-3xl font-bold tracking-tight mb-6",
+          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
         )}
       >
         Preference Tags
       </h1>
       <DataTable
         data={preferenceTags}
-        columns={preferenceTagsColumns(handlePreferenceTagDelete, handlePreferenceTagUpdate)}
+        columns={preferenceTagsColumns(
+          handlePreferenceTagDelete,
+          handlePreferenceTagUpdate
+        )}
         newRowModal={
           <PreferenceTagsModal
             preferenceTagData={undefined}

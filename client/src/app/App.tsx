@@ -1,5 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import TouristHomePage from "@/features/home/components/TouristHomePage";
 import SignupSelector from "@/features/signup/components/SignupSelector";
 import AdvertiserView from "@/features/advertiser/components/AdvertiserView";
@@ -29,13 +34,14 @@ import AdminItinerariesView from "@/features/admin/components/AdminItinerariesVi
 import AdminActivitiesView from "@/features/admin/components/AdminActivitiesView";
 import { TripDetails } from "@/features/home/components/TripDetails";
 import { getCurrencyExchangeRates } from "@/api-calls/currency-exchange-api-calls";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRatesStore } from "@/stores/currency-exchange-store";
 import MyOrdersPage from "@/features/home/components/my-orders-section/MyOrdersPage";
 import ProductReport from "@/features/seller/components/ProductReport";
-import HotelsPage from "@/features/home/components/HotelsPage";
-import HotelDetails from "@/features/home/components/HotelDetails";
-import { useHotelStore } from "@/stores/hotel-store";
+import ComingSoon from "@/components/ComingSoon";
+// import HotelsPage from "@/features/home/components/HotelsPage";
+// import HotelDetails from "@/features/home/components/HotelDetails";
+// import { useHotelStore } from "@/stores/hotel-store";
 import ActivityDetailsPage from "@/features/home/components/activities/ActivityDetailsPage";
 import ItineraryDetailsPage from "@/features/home/components/itineraries/ItineraryDetailsPage";
 import Checkout from "@/features/checkout/components/Checkout";
@@ -55,324 +61,440 @@ import SellerHomePage from "@/features/seller/components/SellerHomePage";
 import TourGuideHomePage from "@/features/tour-guide/components/TourGuideHomePage";
 import ReviewDisplay from "@/components/Ratings";
 import AdvertiserHomePage from "@/features/advertiser/components/AdvertiserHomePage";
-import useUserStore from "@/stores/user-state-store";
+import useUserStore, { UserState } from "@/stores/user-state-store";
 import { Roles } from "@/types/enums";
 import ForgetPassword from "@/features/Login/components/ForgetPassword";
 import NotFound from "@/features/home/NotFound";
+import LoadingPage from "@/features/home/Loading";
 
 export default function App() {
   const { setRates } = useRatesStore();
-  const { hotels } = useHotelStore();
+  // const { hotels } = useHotelStore();
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    ApiCurrencyCall();
+    const init = async () => {
+      setLoading(true);
+      await ApiCurrencyCall();
+
+      // Initialize user store states
+      await UserState();
+      setLoading(false);
+    };
+    init();
   }, []);
   const { role } = useUserStore();
 
   const queryClient = new QueryClient();
 
   return (
-    <div style={{ overflowY: "scroll", height: "100vh" }}>
-      <QueryClientProvider client={queryClient}>
-        <Router>
-          <TourProvider>
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  role === Roles.GUEST ? (
-                    <Navigate to="/home" replace />
-                  ) : role === Roles.TOURIST ? (
-                    <Navigate to="/entertainment" replace />
-                  ) : role === Roles.ADMIN ? (
-                    <Navigate to="/home" replace />
-                  ) : role === Roles.ADVERTISER ? (
-                    <Navigate to="/home" replace />
-                  ) : role === Roles.SELLER ? (
-                    <Navigate to="/home" replace />
-                  ) : role === Roles.TOURGUIDE ? (
-                    <Navigate to="/home" replace />
-                  ) : role === Roles.TOURISMGOVERNOR ? (
-                    <Navigate to="/home" replace />
-                  ) : null
-                }
-              />
+    <>
+      {loading ? (
+        <LoadingPage />
+      ) : (
+        <div style={{ overflowY: "scroll", height: "100vh" }}>
+          <QueryClientProvider client={queryClient}>
+            <Router>
+              <TourProvider>
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      role === Roles.GUEST ? (
+                        <Navigate to="/home" replace />
+                      ) : role === Roles.TOURIST ? (
+                        <Navigate to="/entertainment" replace />
+                      ) : role === Roles.ADMIN ? (
+                        <Navigate to="/home" replace />
+                      ) : role === Roles.ADVERTISER ? (
+                        <Navigate to="/home" replace />
+                      ) : role === Roles.SELLER ? (
+                        <Navigate to="/home" replace />
+                      ) : role === Roles.TOURGUIDE ? (
+                        <Navigate to="/home" replace />
+                      ) : role === Roles.TOURISMGOVERNOR ? (
+                        <Navigate to="/home" replace />
+                      ) : null
+                    }
+                  />
 
-              <Route
-                element={
-                  role === Roles.GUEST || role === Roles.TOURIST ? (
-                    <TouristHomePage />
-                  ) : role === Roles.ADMIN ? (
-                    <AdminHomepage />
-                  ) : role === Roles.ADVERTISER ? (
-                    <AdvertiserHomePage />
-                  ) : role === Roles.SELLER ? (
-                    <SellerHomePage />
-                  ) : role === Roles.TOURGUIDE ? (
-                    <TourGuideHomePage />
-                  ) : role === Roles.TOURISMGOVERNOR ? (
-                    <TourismGovernerHomepage />
-                  ) : (
-                    <NotFound />
-                  )
-                }
-              >
-                <Route
-                  path="/entertainment"
-                  element={
-                    role === Roles.GUEST || role === Roles.TOURIST ? (
-                      <GeneralGridView />
-                    ) : (
-                      <NotFound />
-                    )
-                  }
-                />
-                <Route
-                  path="/shop"
-                  element={
-                    role === Roles.GUEST || role === Roles.TOURIST ? (
-                      <ProductGridView />
-                    ) : (
-                      <NotFound />
-                    )
-                  }
-                />
-                <Route
-                  path="/travel"
-                  element={
-                    role === Roles.GUEST || role === Roles.TOURIST ? <TravelPage /> : <NotFound />
-                  }
-                />
-                <Route
-                  path="/stays"
-                  element={
-                    role === Roles.GUEST || role === Roles.TOURIST ? <HotelsPage /> : <NotFound />
-                  }
-                />
-                <Route
-                  path="/stays/hotel/:index"
-                  element={
-                    role === Roles.GUEST || role === Roles.TOURIST ? (
-                      <HotelDetails hotels={hotels} />
-                    ) : (
-                      <NotFound />
-                    )
-                  }
-                />
-                <Route
-                  path="/my-trips"
-                  element={role === Roles.TOURIST ? <MyTripsPage /> : <NotFound />}
-                />
-                <Route
-                  path="/my-trips-details"
-                  element={role === Roles.TOURIST ? <TripDetails /> : <NotFound />}
-                />
-                <Route
-                  path="/my-orders"
-                  element={role === Roles.TOURIST ? <MyOrdersPage /> : <NotFound />}
-                />
-                <Route
-                  path="/my-bookmarks"
-                  element={role === Roles.TOURIST ? <BookmarksPage /> : <NotFound />}
-                />
-                <Route
-                  path="/my-wishlist"
-                  element={role === Roles.TOURIST ? <WishListPage /> : <NotFound />}
-                />
-                <Route
-                  path="/checkout"
-                  element={role === Roles.TOURIST ? <Checkout /> : <NotFound />}
-                />
-                <Route
-                  path="/:type/details/:placeid"
-                  element={
-                    role === Roles.GUEST || role === Roles.TOURIST ? (
-                      <HistoricalDetailsPage />
-                    ) : (
-                      <NotFound />
-                    )
-                  }
-                />
-                <Route
-                  path="/help-center/"
-                  element={role === Roles.TOURIST ? <ComplaintsTable /> : <NotFound />}
-                />
+                  <Route
+                    element={
+                      role === Roles.GUEST || role === Roles.TOURIST ? (
+                        <TouristHomePage />
+                      ) : role === Roles.ADMIN ? (
+                        <AdminHomepage />
+                      ) : role === Roles.ADVERTISER ? (
+                        <AdvertiserHomePage />
+                      ) : role === Roles.SELLER ? (
+                        <SellerHomePage />
+                      ) : role === Roles.TOURGUIDE ? (
+                        <TourGuideHomePage />
+                      ) : role === Roles.TOURISMGOVERNOR ? (
+                        <TourismGovernerHomepage />
+                      ) : (
+                        <NotFound />
+                      )
+                    }
+                  >
+                    <Route
+                      path="/entertainment"
+                      element={
+                        role === Roles.GUEST || role === Roles.TOURIST ? (
+                          <GeneralGridView />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/shop"
+                      element={
+                        role === Roles.GUEST || role === Roles.TOURIST ? (
+                          <ProductGridView />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/travel"
+                      element={
+                        role === Roles.GUEST || role === Roles.TOURIST ? (
+                          <TravelPage />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/stays"
+                      element={
+                        role === Roles.GUEST || role === Roles.TOURIST ? (
+                          <ComingSoon
+                            title="Hotels & Stays"
+                            subtitle="We're building something amazing"
+                            description="Our hotel booking feature is coming soon! We're working hard to bring you the best accommodation options."
+                          />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/stays/hotel/:index"
+                      element={
+                        role === Roles.GUEST || role === Roles.TOURIST ? (
+                          <ComingSoon
+                            title="Hotel Details"
+                            subtitle="Coming Soon"
+                            description="Hotel details and booking will be available shortly."
+                          />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/my-trips"
+                      element={
+                        role === Roles.TOURIST ? <MyTripsPage /> : <NotFound />
+                      }
+                    />
+                    <Route
+                      path="/my-trips-details"
+                      element={
+                        role === Roles.TOURIST ? <TripDetails /> : <NotFound />
+                      }
+                    />
+                    <Route
+                      path="/my-orders"
+                      element={
+                        role === Roles.TOURIST ? <MyOrdersPage /> : <NotFound />
+                      }
+                    />
+                    <Route
+                      path="/my-bookmarks"
+                      element={
+                        role === Roles.TOURIST ? (
+                          <BookmarksPage />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/my-wishlist"
+                      element={
+                        role === Roles.TOURIST ? <WishListPage /> : <NotFound />
+                      }
+                    />
+                    <Route
+                      path="/checkout"
+                      element={
+                        role === Roles.TOURIST ? <Checkout /> : <NotFound />
+                      }
+                    />
+                    <Route
+                      path="/:type/details/:placeid"
+                      element={
+                        role === Roles.GUEST || role === Roles.TOURIST ? (
+                          <HistoricalDetailsPage />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/help-center/"
+                      element={
+                        role === Roles.TOURIST ? (
+                          <ComplaintsTable />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
 
-                <Route
-                  path="/activities"
-                  element={
-                    role === Roles.GUEST || role === Roles.TOURIST ? (
-                      <ActivityDetailsPage />
-                    ) : role === Roles.ADMIN ? (
-                      <AdminActivitiesView />
-                    ) : (
-                      <NotFound />
-                    )
-                  }
-                />
-                <Route
-                  path="/itineraries"
-                  element={
-                    role === Roles.GUEST || role === Roles.TOURIST ? (
-                      <ItineraryDetailsPage />
-                    ) : role === Roles.ADMIN ? (
-                      <AdminItinerariesView />
-                    ) : (
-                      <NotFound />
-                    )
-                  }
-                />
+                    <Route
+                      path="/activities"
+                      element={
+                        role === Roles.GUEST || role === Roles.TOURIST ? (
+                          <ActivityDetailsPage />
+                        ) : role === Roles.ADMIN ? (
+                          <AdminActivitiesView />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/itineraries"
+                      element={
+                        role === Roles.GUEST || role === Roles.TOURIST ? (
+                          <ItineraryDetailsPage />
+                        ) : role === Roles.ADMIN ? (
+                          <AdminItinerariesView />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
 
-                <Route
-                  path="/home"
-                  element={
-                    role === Roles.ADVERTISER ? (
-                      <AdvertiserView />
-                    ) : role === Roles.SELLER ? (
-                      <SellerView />
-                    ) : role === Roles.TOURGUIDE ? (
-                      <TourGuideView />
-                    ) : role === Roles.ADMIN ? (
-                      <AdminReport />
-                    ) : role === Roles.TOURISMGOVERNOR ? (
-                      <HistoricalPlacesView />
-                    ) : role === Roles.GUEST ? (
-                      <AuroraHero />
-                    ) : (
-                      <NotFound />
-                    )
-                  }
-                />
+                    <Route
+                      path="/home"
+                      element={
+                        role === Roles.ADVERTISER ? (
+                          <AdvertiserView />
+                        ) : role === Roles.SELLER ? (
+                          <SellerView />
+                        ) : role === Roles.TOURGUIDE ? (
+                          <TourGuideView />
+                        ) : role === Roles.ADMIN ? (
+                          <AdminReport />
+                        ) : role === Roles.TOURISMGOVERNOR ? (
+                          <HistoricalPlacesView />
+                        ) : role === Roles.GUEST ? (
+                          <AuroraHero />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
 
-                <Route
-                  path="/report"
-                  element={
-                    role === Roles.ADVERTISER ? (
-                      <ActivityReport />
-                    ) : role === Roles.SELLER ? (
-                      <ProductReport />
-                    ) : role === Roles.TOURGUIDE ? (
-                      <ItineraryReport />
-                    ) : (
-                      <NotFound />
-                    )
-                  }
-                />
+                    <Route
+                      path="/report"
+                      element={
+                        role === Roles.ADVERTISER ? (
+                          <ActivityReport />
+                        ) : role === Roles.SELLER ? (
+                          <ProductReport />
+                        ) : role === Roles.TOURGUIDE ? (
+                          <ItineraryReport />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
 
-                <Route
-                  path="/reviews"
-                  element={role === Roles.TOURGUIDE ? <ReviewDisplay /> : <NotFound />}
-                />
+                    <Route
+                      path="/reviews"
+                      element={
+                        role === Roles.TOURGUIDE ? (
+                          <ReviewDisplay />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
 
-                <Route
-                  path="/categories"
-                  element={role === Roles.ADMIN ? <CategoryView /> : <NotFound />}
-                />
-                <Route path="/users" element={role === Roles.ADMIN ? <UserView /> : <NotFound />} />
-                <Route
-                  path="/users/requests"
-                  element={role === Roles.ADMIN ? <UsersPendingRequests /> : <NotFound />}
-                />
-                <Route
-                  path="/products"
-                  element={role === Roles.ADMIN ? <AdminProductsView /> : <NotFound />}
-                />
-                <Route
-                  path="/preference-tags"
-                  element={role === Roles.ADMIN ? <PreferenceTagsAdminView /> : <NotFound />}
-                />
-                <Route
-                  path="/complaints"
-                  element={role === Roles.ADMIN ? <AdminComplaintsView /> : <NotFound />}
-                />
-                <Route
-                  path="/account"
-                  element={role === Roles.ADMIN ? <AccountForm /> : <NotFound />}
-                />
-                <Route
-                  path="/promocodes"
-                  element={role === Roles.ADMIN ? <PromocodeTable /> : <NotFound />}
-                />
+                    <Route
+                      path="/categories"
+                      element={
+                        role === Roles.ADMIN ? <CategoryView /> : <NotFound />
+                      }
+                    />
+                    <Route
+                      path="/users"
+                      element={
+                        role === Roles.ADMIN ? <UserView /> : <NotFound />
+                      }
+                    />
+                    <Route
+                      path="/users/requests"
+                      element={
+                        role === Roles.ADMIN ? (
+                          <UsersPendingRequests />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/products"
+                      element={
+                        role === Roles.ADMIN ? (
+                          <AdminProductsView />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/preference-tags"
+                      element={
+                        role === Roles.ADMIN ? (
+                          <PreferenceTagsAdminView />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/complaints"
+                      element={
+                        role === Roles.ADMIN ? (
+                          <AdminComplaintsView />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/account"
+                      element={
+                        role === Roles.ADMIN ? <AccountForm /> : <NotFound />
+                      }
+                    />
+                    <Route
+                      path="/promocodes"
+                      element={
+                        role === Roles.ADMIN ? <PromocodeTable /> : <NotFound />
+                      }
+                    />
 
-                <Route
-                  path="/historical-places"
-                  element={role === Roles.TOURISMGOVERNOR ? <HistoricalPlacesView /> : <NotFound />}
-                />
-                <Route
-                  path="/historical-tags"
-                  element={role === Roles.TOURISMGOVERNOR ? <HistoricalTagsView /> : <NotFound />}
-                />
-              </Route>
+                    <Route
+                      path="/historical-places"
+                      element={
+                        role === Roles.TOURISMGOVERNOR ? (
+                          <HistoricalPlacesView />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/historical-tags"
+                      element={
+                        role === Roles.TOURISMGOVERNOR ? (
+                          <HistoricalTagsView />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
+                  </Route>
 
-              <Route
-                path="/signup"
-                element={role === Roles.GUEST ? <SignupSelector /> : <NotFound />}
-              />
-              <Route path="/signin" element={role === Roles.GUEST ? <LoginPage /> : <NotFound />} />
-              <Route
-                path="/forgot-password"
-                element={role === Roles.GUEST ? <ForgetPassword /> : <NotFound />}
-              />
+                  <Route
+                    path="/signup"
+                    element={
+                      role === Roles.GUEST ? <SignupSelector /> : <NotFound />
+                    }
+                  />
+                  <Route
+                    path="/signin"
+                    element={
+                      role === Roles.GUEST ? <LoginPage /> : <NotFound />
+                    }
+                  />
+                  <Route
+                    path="/forgot-password"
+                    element={
+                      role === Roles.GUEST ? <ForgetPassword /> : <NotFound />
+                    }
+                  />
 
-              <Route
-                element={
-                  role === Roles.TOURIST ? (
-                    <SettingsView />
-                  ) : role === Roles.ADMIN ? (
-                    <AdminHomepage />
-                  ) : role === Roles.ADVERTISER ? (
-                    <AdvertiserHomePage />
-                  ) : role === Roles.SELLER ? (
-                    <SellerHomePage />
-                  ) : role === Roles.TOURGUIDE ? (
-                    <TourGuideHomePage />
-                  ) : role === Roles.TOURISMGOVERNOR ? (
-                    <TourismGovernerHomepage />
-                  ) : (
-                    <NotFound />
-                  )
-                }
-              >
-                <Route
-                  path="/user-settings"
-                  element={
-                    role === Roles.TOURIST ||
-                    role === Roles.ADMIN ||
-                    role === Roles.ADVERTISER ||
-                    role === Roles.SELLER ||
-                    role === Roles.TOURGUIDE ||
-                    role === Roles.TOURISMGOVERNOR ? (
-                      <ProfileForm />
-                    ) : (
-                      <NotFound />
-                    )
-                  }
-                />
-                <Route
-                  path="/user-settings/account"
-                  element={
-                    role === Roles.TOURIST ||
-                    role === Roles.ADMIN ||
-                    role === Roles.ADVERTISER ||
-                    role === Roles.SELLER ||
-                    role === Roles.TOURGUIDE ||
-                    role === Roles.TOURISMGOVERNOR ? (
-                      <AccountForm />
-                    ) : (
-                      <NotFound />
-                    )
-                  }
-                />
-                <Route
-                  path="/user-settings/wallet"
-                  element={role === Roles.TOURIST ? <WalletForm /> : null}
-                />
-              </Route>
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </TourProvider>
-        </Router>
-      </QueryClientProvider>
-    </div>
+                  <Route
+                    element={
+                      role === Roles.TOURIST ? (
+                        <SettingsView />
+                      ) : role === Roles.ADMIN ? (
+                        <AdminHomepage />
+                      ) : role === Roles.ADVERTISER ? (
+                        <AdvertiserHomePage />
+                      ) : role === Roles.SELLER ? (
+                        <SellerHomePage />
+                      ) : role === Roles.TOURGUIDE ? (
+                        <TourGuideHomePage />
+                      ) : role === Roles.TOURISMGOVERNOR ? (
+                        <TourismGovernerHomepage />
+                      ) : (
+                        <NotFound />
+                      )
+                    }
+                  >
+                    <Route
+                      path="/user-settings"
+                      element={
+                        role === Roles.TOURIST ||
+                        role === Roles.ADMIN ||
+                        role === Roles.ADVERTISER ||
+                        role === Roles.SELLER ||
+                        role === Roles.TOURGUIDE ||
+                        role === Roles.TOURISMGOVERNOR ? (
+                          <ProfileForm />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/user-settings/account"
+                      element={
+                        role === Roles.TOURIST ||
+                        role === Roles.ADMIN ||
+                        role === Roles.ADVERTISER ||
+                        role === Roles.SELLER ||
+                        role === Roles.TOURGUIDE ||
+                        role === Roles.TOURISMGOVERNOR ? (
+                          <AccountForm />
+                        ) : (
+                          <NotFound />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/user-settings/wallet"
+                      element={role === Roles.TOURIST ? <WalletForm /> : null}
+                    />
+                  </Route>
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </TourProvider>
+            </Router>
+          </QueryClientProvider>
+        </div>
+      )}
+    </>
   );
 
   function ApiCurrencyCall() {

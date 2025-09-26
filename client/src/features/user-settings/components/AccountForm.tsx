@@ -34,8 +34,11 @@ import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { Checkbox } from "@/components/ui/checkbox";
 import useUserStore, { UserState } from "@/stores/user-state-store";
 import { Roles } from "@/types/enums";
+import { AxiosError } from "axios";
 export default function AccountForm() {
-  const [preferenceTags, setPreferenceTags] = useState<{ _id: string; name: string }[]>([]);
+  const [preferenceTags, setPreferenceTags] = useState<
+    { _id: string; name: string }[]
+  >([]);
   const { id, role } = useUserStore();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -121,7 +124,7 @@ export default function AccountForm() {
   //for preferences
   useEffect(() => {
     fetchPreferenceTags().then((tags) =>
-      setPreferenceTags(tags as { _id: string; name: string }[]),
+      setPreferenceTags(tags as { _id: string; name: string }[])
     );
     form.reset(user);
   }, [user, form]);
@@ -160,7 +163,7 @@ export default function AccountForm() {
         await changeuserPassword(
           id!,
           oldPasswordForm.getValues().oldPassword as string,
-          oldPasswordForm.getValues().newPassword as string,
+          oldPasswordForm.getValues().newPassword as string
         );
         if (isOldPasswordValid) {
           update({ ...data });
@@ -204,9 +207,9 @@ export default function AccountForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex-1" style={{ width: user.role === "tourist" ? "80%" : "100%" }}>
+        <div className="w-full max-w-full overflow-x-hidden">
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <h3 className="text-lg font-medium">Account</h3>
               <Button
                 onClick={() => {
@@ -220,13 +223,14 @@ export default function AccountForm() {
                   }
                 }}
                 type="button"
-                className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
+                className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 w-full sm:w-auto"
               >
                 <span>{editForm ? "Cancel" : "Edit Account"}</span>
               </Button>
             </div>
             <p className="text-sm text-muted-foreground">
-              Update your account settings. Set your preferred language and timezone.
+              Update your account settings. Set your preferred language and
+              timezone.
             </p>
             <div
               data-orientation="horizontal"
@@ -246,8 +250,8 @@ export default function AccountForm() {
                       <Input disabled placeholder="shadcn" {...field} />
                     </FormControl>
                     <FormDescription>
-                      This is your public display name. It can be your real name or a pseudonym. You
-                      cannot change this.
+                      This is your public display name. It can be your real name
+                      or a pseudonym. You cannot change this.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -263,10 +267,15 @@ export default function AccountForm() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input disabled={!editForm} placeholder="johndoe@gmail.com" {...field} />
+                      <Input
+                        disabled={!editForm}
+                        placeholder="johndoe@gmail.com"
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription>
-                      Your email address is not displayed publicly and is used to log in.
+                      Your email address is not displayed publicly and is used
+                      to log in.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -284,7 +293,11 @@ export default function AccountForm() {
                       <FormItem>
                         <FormLabel>Please Re-enter your Old Password</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter your Old Password" type="password" {...field} />
+                          <Input
+                            placeholder="Enter your Old Password"
+                            type="password"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -300,7 +313,11 @@ export default function AccountForm() {
                       <FormItem>
                         <FormLabel>New Password</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="Enter your new Password" {...field} />
+                          <Input
+                            type="password"
+                            placeholder="Enter your new Password"
+                            {...field}
+                          />
                         </FormControl>
                         <FormDescription></FormDescription>
                         <FormMessage />
@@ -335,7 +352,9 @@ export default function AccountForm() {
                     <FormItem>
                       <div className="mb-4">
                         <FormLabel className="text-base">Preferences</FormLabel>
-                        <FormDescription>Select your favorite categories.</FormDescription>
+                        <FormDescription>
+                          Select your favorite categories.
+                        </FormDescription>
                       </div>
                       {preferenceTags.map((item) => (
                         <FormField
@@ -354,14 +373,21 @@ export default function AccountForm() {
                                     disabled={!editForm}
                                     onCheckedChange={(checked) => {
                                       return checked
-                                        ? field.onChange([...field.value, item.name])
+                                        ? field.onChange([
+                                            ...field.value,
+                                            item.name,
+                                          ])
                                         : field.onChange(
-                                            field.value?.filter((value) => value !== item.name),
+                                            field.value?.filter(
+                                              (value) => value !== item.name
+                                            )
                                           );
                                     }}
                                   />
                                 </FormControl>
-                                <FormLabel className="text-sm font-normal">{item.name}</FormLabel>
+                                <FormLabel className="text-sm font-normal">
+                                  {item.name}
+                                </FormLabel>
                               </FormItem>
                             );
                           }}
@@ -374,22 +400,22 @@ export default function AccountForm() {
               </div>
             )}
             <div className="space-y-2">
-              <div className="grid grid-cols-12">
-                <div className="col-span-2">
+              <div className="flex flex-col sm:flex-row gap-4 sm:justify-between items-stretch sm:items-center">
+                <div className="order-2 sm:order-1">
                   <button
-                    className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
+                    className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white shadow-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 w-full sm:w-auto"
                     type="submit"
                     disabled={
                       !editForm ||
-                      (!form.formState.isDirty && !oldPasswordForm.formState.isDirty) ||
+                      (!form.formState.isDirty &&
+                        !oldPasswordForm.formState.isDirty) ||
                       (changePassword && !oldPasswordForm.formState.isValid)
                     }
                   >
                     Update account
                   </button>
                 </div>
-                <div className="col-span-8"></div>
-                <div className="col-span-2 ml-auto">
+                <div className="order-1 sm:order-2">
                   <DoubleCheckPopupWrapper
                     customMessage="This will permanently delete your account."
                     isOpen={isDoubleCheckDialogOpen}
@@ -398,7 +424,7 @@ export default function AccountForm() {
                   >
                     <Button
                       variant="destructive"
-                      className="rounded-md text-sm font-medium h-9 px-4 py-2"
+                      className="rounded-md text-sm font-medium h-9 px-4 py-2 w-full sm:w-auto"
                       onClick={() => setIsDoubleCheckDialogOpen(true)}
                     >
                       Delete My Account

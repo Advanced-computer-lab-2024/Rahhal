@@ -5,7 +5,6 @@ import { addLoyalityPoints, getUserById } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
 import { createBooking } from "@/api-calls/booking-api-calls";
 import { useLocation, useSearchParams } from "react-router-dom";
-import TouristHomePageNavigation from "../TouristHomePageNavigation";
 import ItinerariesPageTemplate from "../ItinerariesPageTemplate";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import { bookingType } from "@/utils/enums";
@@ -25,7 +24,9 @@ const ItineraryDetailsPage: React.FC = () => {
   const loc = useLocation();
   const [searchParams] = useSearchParams();
   const eventId = searchParams.get("eventId");
-  const [itinerary, setItinerary] = useState(loc.state?.item || DEFAULT_ITINERARY);
+  const [itinerary, setItinerary] = useState(
+    loc.state?.item || DEFAULT_ITINERARY
+  );
   const { setIsLoading } = useTour();
 
   const empty = itinerary === DEFAULT_ITINERARY;
@@ -70,7 +71,9 @@ const ItineraryDetailsPage: React.FC = () => {
     }));
   const [preferenceTagNames, setPreferenceTagNames] = useState<string[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<string>(cardDropdownOptions[0].value);
+  const [selectedDate, setSelectedDate] = useState<string>(
+    cardDropdownOptions[0].value
+  );
   const [isGuestAction, setIsGuestAction] = useState(false);
   const [text, setText] = useState<string>();
   const cardButtonText = "Book Itinerary";
@@ -84,7 +87,9 @@ const ItineraryDetailsPage: React.FC = () => {
   const { currency } = useCurrencyStore();
 
   const convertedPrice = currencyExchange("EGP", price);
-  const convertedDisplayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
+  const convertedDisplayPrice = convertedPrice
+    ? convertedPrice.toFixed(0)
+    : "N/A";
   React.useEffect(() => {
     if (id) {
       getUserById(id).then((user) => {
@@ -100,7 +105,7 @@ const ItineraryDetailsPage: React.FC = () => {
   React.useEffect(() => {
     for (let i = 0; i < itinerary.preferenceTags.length; i++) {
       fetchPreferenceTagById(itinerary.preferenceTags[i]._id).then((tag) => {
-        setPreferenceTagNames((prev) => [(tag as { _id: string; name: string }).name]);
+        setPreferenceTagNames([(tag as { _id: string; name: string }).name]);
       });
     }
   }, [preferenceTags]);
@@ -151,7 +156,7 @@ const ItineraryDetailsPage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       {!empty && (
         <>
           {isGuestAction && (
@@ -159,7 +164,9 @@ const ItineraryDetailsPage: React.FC = () => {
               onClose={() => {
                 setIsGuestAction(false);
               }}
-              text={"Excited to book? Sign in or create an account to secure your spot now!"}
+              text={
+                "Excited to book? Sign in or create an account to secure your spot now!"
+              }
             />
           )}
 

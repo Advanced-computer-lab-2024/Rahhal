@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
 import { useSideBarToggleStore } from "@/stores/side-bar-toggle-store";
-import { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -15,35 +14,22 @@ function FilterSideBar({
 }) {
   const { isOpen } = useSideBarToggleStore();
   const [firstItem, ...restItems] = sideBarItems;
-  const [heightClass, setHeightClass] = useState("h-[80vh]");
-
-  useEffect(() => {
-    const updateHeightClass = () => {
-      if (window.innerHeight >= 900) {
-        setHeightClass("h-[90vh]");
-      } else {
-        setHeightClass("h-[80vh]");
-      }
-    };
-
-    updateHeightClass();
-    window.addEventListener("resize", updateHeightClass);
-    return () => window.removeEventListener("resize", updateHeightClass);
-  }, []);
 
   return (
     <aside
       className={cn(
-        "z-10 ease-in-out duration-300 ",
+        "z-10 ease-in-out duration-300",
         isOpen
-          ? `w-[50vh] overflow-y-scroll ${heightClass} border-r border-gray-500`
-          : "w-0 overflow-hidden",
+          ? "w-full lg:w-80 xl:w-96 overflow-y-auto h-[80vh] lg:h-[90vh] border-b lg:border-r lg:border-b-0 border-gray-500 bg-white"
+          : "w-0 h-0 lg:h-auto overflow-hidden"
       )}
     >
       {isOpen && (
         <>
           <div className="m-4">
-            <div className="flex justify-center items-center">{firstItem.content}</div>
+            <div className="flex justify-center items-center">
+              {firstItem.content}
+            </div>
           </div>
 
           <Accordion
@@ -56,7 +42,7 @@ function FilterSideBar({
                 <AccordionTrigger className="ml-2 hover:no-underline">
                   {item.title}
                 </AccordionTrigger>
-                <AccordionContent className="flex justify-center items-center  relative overflow-visible !overflow-visible">
+                <AccordionContent className="flex justify-center items-center relative overflow-visible">
                   {item.content}
                 </AccordionContent>
               </AccordionItem>

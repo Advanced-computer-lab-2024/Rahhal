@@ -30,7 +30,6 @@ export type TActivity = {
   isAppropriate: boolean;
 };
 
-
 export function calculateAverageRating(ratings: TRating[]) {
   if (ratings.length === 0) {
     return 0;
@@ -40,20 +39,13 @@ export function calculateAverageRating(ratings: TRating[]) {
   return totalRating / ratings.length;
 }
 
-export const activitiesColumns= (
-  onSubmit: (promocode: TActivity) => void,
+export const activitiesColumns = (
+  onSubmit: (promocode: TActivity) => void
 ): ColumnDef<TActivity>[] => [
   {
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => <div className="capitalize">{row.original.name}</div>,
-  },
-  {
-    accessorKey: "ratings",
-    header: "Average Rating",
-    cell: ({ row }) => (
-      <div className="capitalize">{calculateAverageRating(row.getValue("ratings"))}</div>
-    ),
   },
   {
     accessorKey: "status",
@@ -68,7 +60,17 @@ export const activitiesColumns= (
       </div>
     ),
   },
-    {
+  {
+    accessorKey: "ratings",
+    header: "Average Rating",
+    cell: ({ row }) => (
+      <div className="capitalize">
+        {calculateAverageRating(row.getValue("ratings"))}
+      </div>
+    ),
+  },
+
+  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {

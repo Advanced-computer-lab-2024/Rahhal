@@ -5,10 +5,12 @@ import { addLoyalityPoints, getUserById } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
 import { createBooking } from "@/api-calls/booking-api-calls";
 import { formatDate, formatTime } from "../../utils/filter-lists/overview-card";
-import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
+import {
+  useCurrencyStore,
+  useRatesStore,
+} from "@/stores/currency-exchange-store";
 import DetailsPageTemplateProps from "../DetailsPageTemplate";
 import { useLocation, useSearchParams } from "react-router-dom";
-import TouristHomePageNavigation from "../TouristHomePageNavigation";
 import { bookingType } from "@/utils/enums";
 import SignUpModal from "../SignupModal";
 import { calculateAge } from "@/utils/age-calculator";
@@ -34,7 +36,9 @@ const ActivityDetailsPage: React.FC = () => {
       fetchActivityById(eventId).then((data) => {
         setActivity(data);
         const activityData = data as TActivity;
-        setSelectedPrice(activityData.price[Object.keys(activityData.price)[0]]);
+        setSelectedPrice(
+          activityData.price[Object.keys(activityData.price)[0]]
+        );
       });
     }
   }, [loc.state?.item, eventId]);
@@ -46,6 +50,7 @@ const ActivityDetailsPage: React.FC = () => {
     description,
     location,
     date,
+    time,
     price,
     ratings,
     specialDiscount,
@@ -53,10 +58,12 @@ const ActivityDetailsPage: React.FC = () => {
     preferenceTags,
     isBookingOpen,
   } = activity;
-  const [preferenceTagNames, setPreferenceTagNames] = React.useState<string[]>([]);
+  const [preferenceTagNames, setPreferenceTagNames] = React.useState<string[]>(
+    []
+  );
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
   const [selectedPrice, setSelectedPrice] = React.useState<number | undefined>(
-    price[Object.keys(price)[0]],
+    price[Object.keys(price)[0]]
   );
 
   const [isGuestAction, setIsGuestAction] = React.useState(false);
@@ -86,7 +93,7 @@ const ActivityDetailsPage: React.FC = () => {
   React.useEffect(() => {
     for (let i = 0; i < activity.preferenceTags.length; i++) {
       fetchPreferenceTagById(activity.preferenceTags[i]._id).then((tag) => {
-        setPreferenceTagNames((prev) => [(tag as { _id: string; name: string }).name]);
+        setPreferenceTagNames([(tag as { _id: string; name: string }).name]);
       });
     }
   }, [preferenceTags]);
@@ -148,9 +155,8 @@ const ActivityDetailsPage: React.FC = () => {
     setSelectedPrice(price[Object.keys(price)[index]]);
   };
 
-  const activityDate = new Date(date);
-  const formattedDate = formatDate(activityDate);
-  const formattedTime = formatTime(activityDate);
+  const formattedDate = formatDate(new Date(date));
+  const formattedTime = formatTime(new Date(time));
 
   const cardButtonText = isBookingOpen ? "Book Activity" : "Notify Me";
   let convertedSelectedPrice = 0;
@@ -161,7 +167,8 @@ const ActivityDetailsPage: React.FC = () => {
       const rateOfEURToOld = rates.rates["EGP"];
       const rateOfEURToNew = rates.rates[currency];
       convertedTicketPrice = (price[key] * rateOfEURToNew) / rateOfEURToOld;
-      convertedSelectedPrice = ((selectedPrice ?? 0) * rateOfEURToNew) / rateOfEURToOld;
+      convertedSelectedPrice =
+        ((selectedPrice ?? 0) * rateOfEURToNew) / rateOfEURToOld;
     }
 
     const displayPrice = convertedTicketPrice.toFixed(0);
@@ -170,7 +177,7 @@ const ActivityDetailsPage: React.FC = () => {
   });
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       {!empty && (
         <>
           {isGuestAction && (
@@ -178,7 +185,9 @@ const ActivityDetailsPage: React.FC = () => {
               onClose={() => {
                 setIsGuestAction(false);
               }}
-              text={"Excited to book? Sign in or create an account to secure your spot now!"}
+              text={
+                "Excited to book? Sign in or create an account to secure your spot now!"
+              }
             />
           )}
 
@@ -227,8 +236,7 @@ const ActivityDetailsPage: React.FC = () => {
               footerText={text}
             />
           </DetailsPageTemplateProps>
-          </>
-        
+        </>
       )}
     </div>
   );

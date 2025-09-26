@@ -6,7 +6,9 @@ function FileComponent({ url }: { url: string }) {
   // Decode URL to make sure encoded characters are readable
   const decodedUrl = decodeURIComponent(url);
   const lastSegment = decodedUrl.split("/").pop();
-  const [fileName, fileExtension] = lastSegment ? lastSegment.split("?")[0].split(".") : ["", ""];
+  const [fileName, fileExtension] = lastSegment
+    ? lastSegment.split("?")[0].split(".")
+    : ["", ""];
 
   return (
     <div className="group relative rounded-md border border-gray-200 bg-white p-4 shadow-sm transition-all hover:border-gray-300 ">
@@ -34,7 +36,7 @@ export default function UserDocuments({
 }) {
   return (
     <Tabs defaultValue="governmental-documents" className="w-full">
-      <TabsList className="grid w-full grid-cols-2">
+      <TabsList className="grid w-full sm:grid-cols-2 grid-col-1 mb-10">
         <TabsTrigger value="governmental-documents">
           <Scale className="h-5 w-5 mr-2" />
           Governmental Documents
@@ -55,7 +57,10 @@ export default function UserDocuments({
           </div>
         ) : (
           <div className="flex justify-center">
-            <img src={NoFiles} className="h-1/2 w-1/2 rounded-md object-cover" />
+            <img
+              src={NoFiles}
+              className="h-4/5 w-4/5 rounded-md object-cover"
+            />
           </div>
         )}
       </TabsContent>
@@ -70,7 +75,10 @@ export default function UserDocuments({
           </div>
         ) : (
           <div className="flex justify-center">
-            <img src={NoFiles} className="h-1/2 w-1/2 rounded-md object-cover" />
+            <img
+              src={NoFiles}
+              className="h-4/5 w-4/5 rounded-md object-cover"
+            />
           </div>
         )}
       </TabsContent>

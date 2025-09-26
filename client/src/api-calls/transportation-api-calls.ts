@@ -17,12 +17,14 @@ const isErrorResponse = (data: any): data is ErrorResponse => {
 };
 
 export const getTransportation = async (
-  transferReq: TransferRequest,
+  transferReq: TransferRequest
 ): Promise<TransportationData> => {
-  const { data } = await axios.post(`${SERVICES_URLS.TRANSPORTATION}`, transferReq);
+  const { data } = await axios.post(
+    `${SERVICES_URLS.TRANSPORTATION}`,
+    transferReq
+  );
   if (isErrorResponse(data)) {
-    console.error("Error details:", data.errors);
-    alert(`Error: ${data.errors[0].detail}`);
+    console.error("Error fetching transportation:", data.errors);
     return { data: [] };
   }
   return data as TransportationData;
@@ -30,9 +32,12 @@ export const getTransportation = async (
 
 export const getAirportCode = async (longitude: number, latitude: number) => {
   try {
-    const { data } = await axios.get(`${SERVICES_URLS.TRANSPORTATION}/airport-code`, {
-      params: { longitude: longitude, latitude: latitude },
-    });
+    const { data } = await axios.get(
+      `${SERVICES_URLS.TRANSPORTATION}/airport-code`,
+      {
+        params: { longitude: longitude, latitude: latitude },
+      }
+    );
     const response = data as AirportResponse;
     return response.data.length != 0 ? response.data[0].iataCode : "";
   } catch (error) {

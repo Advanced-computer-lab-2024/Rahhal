@@ -6,7 +6,10 @@ import { useEffect, useState } from "react";
 import PictureCard from "@/components/PictureCard";
 import PriceCategories from "@/components/price-categories";
 import { GenericSelect } from "@//components/GenericSelect";
-import { createActivity, updateActivity } from "@/api-calls/activities-api-calls";
+import {
+  createActivity,
+  updateActivity,
+} from "@/api-calls/activities-api-calls";
 import { fetchCategories } from "@/api-calls/categories-api-calls";
 import { fetchPreferenceTags } from "@/api-calls/preference-tags-api-calls";
 import { DEFAULTS } from "@/lib/constants";
@@ -38,7 +41,9 @@ export function ActivitiesModal({
   onSubmit,
 }: ActivitiesModalProps) {
   const isNewActivity: boolean = activityData === undefined; // check if the activity is new or existing
-  const [modalActivityData, setModalActivitiesData] = useState<TActivity | undefined>(activityData); // current activity data present in the modal
+  const [modalActivityData, setModalActivitiesData] = useState<
+    TActivity | undefined
+  >(activityData); // current activity data present in the modal
 
   const [modalDBData, setModalDBData] = useState<{ [key: string]: any }>({
     categories: [],
@@ -46,7 +51,9 @@ export function ActivitiesModal({
     tags: [],
   }); // holds the data fetched from the server like categories and preference tags, etc.
 
-  const [activityPictures, setActivityPictures] = useState<FileList | null>(null); // holds the pictures uploaded by the user
+  const [activityPictures, setActivityPictures] = useState<FileList | null>(
+    null
+  ); // holds the pictures uploaded by the user
 
   const extractIds = (data: ({ _id: string } & Record<string, any>)[]) => {
     const ids = data.map(({ _id }) => _id);
@@ -83,7 +90,20 @@ export function ActivitiesModal({
           owner: userId!,
         };
 
-        response = await createActivity(newActivityData, userId!, username!, activityPictures);
+        response = await createActivity(
+          newActivityData,
+          userId!,
+          username!,
+          activityPictures
+        );
+
+        const createdActivityData = response.data as TActivity;
+
+        // Add the missing fields values to the modalActivityData before being added to the activity table
+        // so that we can properly update the same entity without the need to refresh the page
+        modalActivityData._id = createdActivityData._id;
+        modalActivityData.owner = createdActivityData.owner;
+        modalActivityData.ownerName = createdActivityData.ownerName;
       } else {
         response = await updateActivity(modalActivityData, activityPictures);
       }
@@ -119,7 +139,12 @@ export function ActivitiesModal({
       const categories = await fetchCategories();
       const preferenceTags = await fetchPreferenceTags();
 
-      setModalDBData({ ...modalDBData, categories, preferenceTags, tags: preferenceTags });
+      setModalDBData({
+        ...modalDBData,
+        categories,
+        preferenceTags,
+        tags: preferenceTags,
+      });
 
       // if the activity is new, set the modal data to default values
       if (isNewActivity) {
@@ -147,7 +172,9 @@ export function ActivitiesModal({
             value={modalActivityData?.name}
             onChange={(e) =>
               setModalActivitiesData(
-                modalActivityData ? { ...modalActivityData, name: e.target.value } : undefined,
+                modalActivityData
+                  ? { ...modalActivityData, name: e.target.value }
+                  : undefined
               )
             }
             placeholder="Enter activity name"
@@ -164,7 +191,7 @@ export function ActivitiesModal({
               setModalActivitiesData(
                 modalActivityData
                   ? { ...modalActivityData, description: e.target.value }
-                  : undefined,
+                  : undefined
               )
             }
             placeholder="Enter activity description"
@@ -178,7 +205,9 @@ export function ActivitiesModal({
             date={modalActivityData?.date ?? new Date()}
             setDate={(date) =>
               setModalActivitiesData(
-                modalActivityData ? { ...modalActivityData, date: date ?? new Date() } : undefined,
+                modalActivityData
+                  ? { ...modalActivityData, date: date ?? new Date() }
+                  : undefined
               )
             }
           />
@@ -192,7 +221,9 @@ export function ActivitiesModal({
             date={modalActivityData?.time ?? new Date()}
             onChange={(time) =>
               setModalActivitiesData(
-                modalActivityData ? { ...modalActivityData, time: time ?? new Date() } : undefined,
+                modalActivityData
+                  ? { ...modalActivityData, time: time ?? new Date() }
+                  : undefined
               )
             }
             hourCycle={12}
@@ -220,7 +251,7 @@ export function ActivitiesModal({
                   ...modalActivityData,
                   location: { latitude: location.lat, longitude: location.lng },
                 }
-              : undefined,
+              : undefined
           )
         }
       />
@@ -234,7 +265,7 @@ export function ActivitiesModal({
                   ...modalActivityData,
                   price: newPrices,
                 }
-              : undefined,
+              : undefined
           );
         }}
       />
@@ -242,16 +273,20 @@ export function ActivitiesModal({
       <GenericSelect
         label="Category"
         placeholder="Select a category"
-        options={modalDBData.categories.map((category: { name: any; _id: any }) => ({
-          label: category.name,
-          value: category._id,
-        }))}
+        options={modalDBData.categories.map(
+          (category: { name: any; _id: any }) => ({
+            label: category.name,
+            value: category._id,
+          })
+        )}
         onSelect={(value: string) => {
           const selectedCategory = modalDBData.categories.find(
-            (category: { _id: string }) => category._id === value,
+            (category: { _id: string }) => category._id === value
           );
           setModalActivitiesData(
-            modalActivityData ? { ...modalActivityData, category: selectedCategory } : undefined,
+            modalActivityData
+              ? { ...modalActivityData, category: selectedCategory }
+              : undefined
           );
         }}
         initialValue={modalActivityData?.category._id ?? ""}
@@ -266,8 +301,11 @@ export function ActivitiesModal({
             onChange={(e) =>
               setModalActivitiesData(
                 modalActivityData
-                  ? { ...modalActivityData, specialDiscount: Number(e.target.value) }
-                  : undefined,
+                  ? {
+                      ...modalActivityData,
+                      specialDiscount: Number(e.target.value),
+                    }
+                  : undefined
               )
             }
             placeholder="Enter special discounts"
@@ -283,8 +321,11 @@ export function ActivitiesModal({
           onToggle={() =>
             setModalActivitiesData(
               modalActivityData
-                ? { ...modalActivityData, isBookingOpen: !modalActivityData.isBookingOpen }
-                : undefined,
+                ? {
+                    ...modalActivityData,
+                    isBookingOpen: !modalActivityData.isBookingOpen,
+                  }
+                : undefined
             )
           }
         />
@@ -310,7 +351,7 @@ export function ActivitiesModal({
                     name: option.label,
                   })),
                 }
-              : undefined,
+              : undefined
           );
         }}
         value={modalActivityData?.preferenceTags.map((tag) => {

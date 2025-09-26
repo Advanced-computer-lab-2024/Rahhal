@@ -77,7 +77,7 @@ export function CategoryModal({
       showDeleteButton={!isNewCategory}
       onDelete={handleDelete}
     >
-      <div className="flex flex-col gap-4 p-4">
+      <div className="flex flex-col gap-4 p-4 sm:p-6">
         <div className="flex flex-col gap-2">
           <Label>Category</Label>
           <Input 

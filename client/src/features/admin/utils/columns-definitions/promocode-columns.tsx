@@ -11,18 +11,29 @@ export const promoCodeColumns = (
   {
     accessorKey: "code",
     header: "Code",
-    cell: ({ row }) => <div className="capitalize">{row.original.code}</div>,
+    cell: ({ row }) => <div className="capitalize font-medium">{row.original.code}</div>,
   },
   {
     accessorKey: "type",
     header: "Type",
-    cell: ({ row }) => <div className="capitalize">{row.original.type}</div>,
+    cell: ({ row }) => <div className="capitalize text-sm">{row.original.type}</div>,
+    meta: {
+      className: "hidden sm:table-cell",
+    },
   },
   {
     accessorKey: "isActive",
     header: "Active",
     cell: ({ row }) => (
-      <div className="capitalize">{row.original.isActive ? "Active" : "Inactive"}</div>
+      <div className="capitalize text-sm">
+        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+          row.original.isActive 
+            ? 'bg-green-100 text-green-800' 
+            : 'bg-red-100 text-red-800'
+        }`}>
+          {row.original.isActive ? "Active" : "Inactive"}
+        </span>
+      </div>
     ),
   },
   {
@@ -43,18 +54,27 @@ export const promoCodeColumns = (
         formattedDate = "Invalid Date";
       }
 
-      return <div className="capitalize">{formattedDate}</div>;
+      return <div className="capitalize text-sm text-muted-foreground">{formattedDate}</div>;
+    },
+    meta: {
+      className: "hidden md:table-cell",
     },
   },
   {
     accessorKey: "value",
     header: "Value",
-    cell: ({ row }) => <div className="capitalize">{row.original.value}</div>,
+    cell: ({ row }) => <div className="capitalize font-medium">{row.original.value}</div>,
+    meta: {
+      className: "hidden lg:table-cell",
+    },
   },
   {
     accessorKey: "uses",
     header: "Uses",
-    cell: ({ row }) => <div className="capitalize">{row.original.uses}</div>,
+    cell: ({ row }) => <div className="capitalize text-sm">{row.original.uses}</div>,
+    meta: {
+      className: "hidden lg:table-cell",
+    },
   },
   {
     id: "actions",

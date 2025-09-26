@@ -60,7 +60,9 @@ export function DualDatePickerSearchBar({
   const [checkIn, setCheckIn] = useState<Date | undefined>();
   const [checkOut, setCheckOut] = useState<Date | undefined>();
   const [activeType, setActiveType] = useState<Boolean>(false);
-  const [activeButton, setActiveButton] = useState<"checkIn" | "checkOut">("checkIn");
+  const [activeButton, setActiveButton] = useState<"checkIn" | "checkOut">(
+    "checkIn"
+  );
   const [sliderValue, setSliderValue] = useState<number>(1);
   const leftButtonRef = useRef<HTMLButtonElement>(null);
   const rightButtonRef = useRef<HTMLButtonElement>(null);
@@ -113,8 +115,13 @@ export function DualDatePickerSearchBar({
   };
 
   useEffect(() => {
-    if ((focusIndex === leftIndex || focusIndex === rightIndex) && open === false) setOpen(true);
-    if (focusIndex != leftIndex && focusIndex != rightIndex && open === true) setOpen(false);
+    if (
+      (focusIndex === leftIndex || focusIndex === rightIndex) &&
+      open === false
+    )
+      setOpen(true);
+    if (focusIndex != leftIndex && focusIndex != rightIndex && open === true)
+      setOpen(false);
   }, [focusIndex]);
 
   const handleBlur = () => {
@@ -167,7 +174,8 @@ export function DualDatePickerSearchBar({
               : leftIndex === 2
                 ? "bg-gray-300/65 rounded-r-full"
                 : ""
-            : focusIndex === corner && hoverIndex === (corner ? corner - 1 : 0 - 1)
+            : focusIndex === corner &&
+                hoverIndex === (corner ? corner - 1 : 0 - 1)
               ? leftIndex === corner
                 ? "bg-gray-300/65"
                 : leftIndex === (corner ? corner - 1 : 0 - 1)
@@ -191,7 +199,7 @@ export function DualDatePickerSearchBar({
                     : leftIndex === focusIndex
                       ? "bg-gray-300/65 rounded-r-full"
                       : ""
-                  : "",
+                  : ""
         )}
       >
         <div
@@ -204,14 +212,14 @@ export function DualDatePickerSearchBar({
                 : "hover:bg-gray-300/65"
               : focusIndex === leftIndex
                 ? "bg-background shadow-[0_0_12px_0_rgba(0,0,0,0.16)]"
-                : "",
+                : ""
           )}
         >
           <Button
             variant="outline"
             className={cn(
               "border-0 focus-visible:outline-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent bg-transparent hover:bg-transparent flex justify-start items-center px-2 w-40 py-0 relative",
-              "w-[200px] h-[66px] justify-start text-left font-normal rounded-full border-none ",
+              "w-[200px] h-[66px] justify-start text-left font-normal rounded-full border-none "
             )}
             onMouseEnter={() => setHoverIndex && setHoverIndex(leftIndex || 0)}
             onMouseLeave={() => setHoverIndex && setHoverIndex(0)}
@@ -229,7 +237,11 @@ export function DualDatePickerSearchBar({
             <CalendarIcon className="mr-2 h-4 w-4 color: black" />
             <div className="flex flex-col">
               <span className="text-black text-sm">{leftPlaceholder}</span>
-              <span className={leftDate ? "text-black text-xs" : "text-gray-500 text-xs"}>
+              <span
+                className={
+                  leftDate ? "text-black text-xs" : "text-gray-500 text-xs"
+                }
+              >
                 {leftDate
                   ? !activeType
                     ? format(leftDate, "MMM d, hh:mm aa")
@@ -265,7 +277,8 @@ export function DualDatePickerSearchBar({
               : rightIndex === 2
                 ? "bg-gray-300/65 rounded-r-full"
                 : ""
-            : focusIndex === corner && hoverIndex === (corner ? corner - 1 : 0 - 1)
+            : focusIndex === corner &&
+                hoverIndex === (corner ? corner - 1 : 0 - 1)
               ? rightIndex === corner
                 ? "bg-gray-300/65"
                 : rightIndex === (corner ? corner - 1 : 0 - 1)
@@ -289,7 +302,7 @@ export function DualDatePickerSearchBar({
                     : rightIndex === focusIndex
                       ? "bg-gray-300/65 rounded-r-full"
                       : ""
-                  : "",
+                  : ""
         )}
       >
         <div
@@ -302,13 +315,13 @@ export function DualDatePickerSearchBar({
                 : "hover:bg-gray-300/65"
               : focusIndex === rightIndex
                 ? "bg-background shadow-[0_0_12px_0_rgba(0,0,0,0.16)]"
-                : "",
+                : ""
           )}
         >
           <button
             className={cn(
               "border-0 focus:outline-none focus:ring-0 focus-visible:outline-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent bg-transparent hover:bg-transparent flex justify-start items-center px-2 w-40 py-0 relative",
-              "w-[200px] h-[66px] justify-start text-left font-normal rounded-full border-none ",
+              "w-[200px] h-[66px] justify-start text-left font-normal rounded-full border-none "
             )}
             onMouseEnter={() => setHoverIndex && setHoverIndex(rightIndex || 0)}
             onMouseLeave={() => setHoverIndex && setHoverIndex(0)}
@@ -326,7 +339,11 @@ export function DualDatePickerSearchBar({
             <CalendarIcon className="mr-2 h-4 w-4 color: black" />
             <div className="flex flex-col">
               <span className="text-black text-sm">{rightPlaceholder}</span>
-              <span className={rightDate ? "text-black text-xs" : "text-gray-500 text-xs"}>
+              <span
+                className={
+                  rightDate ? "text-black text-xs" : "text-gray-500 text-xs"
+                }
+              >
                 {rightDate
                   ? !activeType
                     ? format(rightDate, "MMM d, hh:mm aa")
@@ -357,14 +374,19 @@ export function DualDatePickerSearchBar({
           onBlur={handleBlur}
         >
           <div
-            className={cn("flex flex-col w-full h-full py-6", activeType || !hour ? "gap-10" : "")}
+            className={cn(
+              "flex flex-col w-full h-full py-6",
+              activeType || !hour ? "gap-10" : ""
+            )}
           >
-            <div className={"flex w-full justify-center"}>
+            <div className={"flex w-full justify-center mb-2"}>
               <div className="rounded-3xl w-1/3 h-12 flex p-1 bg-gray-300/65">
                 <button
                   className={cn(
                     "flex justify-center items-center w-1/2 rounded-3xl hover:bg-gray-300/65 text-md font-medium",
-                    activeType ? "" : "bg-white hover:bg-white border border-gray-300",
+                    activeType
+                      ? ""
+                      : "bg-white hover:bg-white border border-gray-300"
                   )}
                   onClick={handleDateButton}
                 >
@@ -373,7 +395,9 @@ export function DualDatePickerSearchBar({
                 <button
                   className={cn(
                     "flex justify-center items-center w-1/2 rounded-3xl hover:bg-gray-300/65 text-md font-medium rounded-",
-                    activeType ? "bg-white hover:bg-white border border-gray-300" : "",
+                    activeType
+                      ? "bg-white hover:bg-white border border-gray-300"
+                      : ""
                   )}
                   onClick={handleMonthButton}
                 >
@@ -406,9 +430,13 @@ export function DualDatePickerSearchBar({
               />
               {leftDate && rightDate && (
                 <div className="flex gap-2">
-                  <span className={"font-medium"}>{format(leftDate!, "MMM dd, yyyy")}</span>
+                  <span className={"font-medium"}>
+                    {format(leftDate!, "MMM dd, yyyy")}
+                  </span>
                   <span>{" to "}</span>
-                  <span className={"font-medium"}>{format(rightDate!, "MMM dd, yyyy")}</span>
+                  <span className={"font-medium"}>
+                    {format(rightDate!, "MMM dd, yyyy")}
+                  </span>
                 </div>
               )}
             </div>
@@ -419,10 +447,12 @@ export function DualDatePickerSearchBar({
             >
               <DayPicker
                 classNames={{
-                  months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+                  months:
+                    "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
                   month: "flex flex-col justify-center items-center space-y-4",
                   head_row: "flex",
-                  head_cell: "text-muted-foreground rounded-md w-11 font-normal text-[0.8rem]",
+                  head_cell:
+                    "text-muted-foreground rounded-md w-11 font-normal text-[0.8rem]",
                   row: "flex w-full mt-0.5 ",
                   caption_label: "text-lg font-md",
                   button_previous: "top-4 border-none rounded-[999px]",
@@ -459,35 +489,42 @@ export function DualDatePickerSearchBar({
                     const isBeforeToday = dayDate < startOfToday();
 
                     return (
-                      <div className={cn("flex justify-center items-center w-11")}>
+                      <div
+                        className={cn("flex justify-center items-center w-11")}
+                      >
                         <div
                           className={cn(
                             "absolute top-0 left-0 w-1/2 h-11",
-                            isRange || (isTo && from) ? "bg-accent" : "",
+                            isRange || (isTo && from) ? "bg-accent" : ""
                           )}
                         />
 
                         <div
                           className={cn(
                             "absolute top-0 right-0 w-1/2 h-11",
-                            isRange || (isFrom && to) ? "bg-accent" : "",
+                            isRange || (isFrom && to) ? "bg-accent" : ""
                           )}
                         />
 
                         <button
                           className={cn(
                             "text-black text-xs font-medium w-11 h-11 flex justify-center items-center rounded-full relative z-10 hover:bg-white hover:border hover:border-black",
-                            isSelected ? " bg-black text-white hover:bg-black" : "",
-                            (activeButton == "checkOut" && isBefore) || isBeforeToday
-                              ? "hover:border-transparent text-gray-400"
+                            isSelected
+                              ? " bg-black text-white hover:bg-black"
                               : "",
+                            (activeButton == "checkOut" && isBefore) ||
+                              isBeforeToday
+                              ? "hover:border-transparent text-gray-400"
+                              : ""
                           )}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDateSelect(dayDate);
                           }}
                           disabled={
-                            (activeButton == "checkOut" && (isBefore || isFrom)) || isBeforeToday
+                            (activeButton == "checkOut" &&
+                              (isBefore || isFrom)) ||
+                            isBeforeToday
                           }
                         >
                           {format(dayDate, "d")}
@@ -495,12 +532,20 @@ export function DualDatePickerSearchBar({
                       </div>
                     );
                   },
-                  IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
-                  IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
+                  IconLeft: ({ ...props }) => (
+                    <ChevronLeft className="h-4 w-4" />
+                  ),
+                  IconRight: ({ ...props }) => (
+                    <ChevronRight className="h-4 w-4" />
+                  ),
                   Months: ({ ...props }) => {
                     console.log(props.children);
                     return (
-                      <div className={"flex justify-between mx-5 w-full h-full relative"}>
+                      <div
+                        className={
+                          "flex flex-col xl:flex-row gap-y-2 justify-between mx-5 w-full h-full relative"
+                        }
+                      >
                         {" "}
                         {props.children}
                       </div>

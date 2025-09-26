@@ -15,13 +15,17 @@ import { bookmarkType } from "@/utils/enums";
 import useUserStore from "@/stores/user-state-store";
 
 function BookmarksPage() {
-  const { id } =  useUserStore();
+  const { id } = useUserStore();
   const navigate = useNavigate();
 
   const handleCardClick = (item: Itinerary | Activity | HistoricalPlace) => {
     // Navigate to detail page, pass the item data via state
     const type =
-      "languages" in item ? "itinerary" : "isBookingOpen" in item ? "activity" : "historicalPlace";
+      "languages" in item
+        ? "itinerary"
+        : "isBookingOpen" in item
+          ? "activity"
+          : "historicalPlace";
     if (type === "historicalPlace") {
       navigate(`/hplace/details/${item._id}`, { state: { item } });
       return;
@@ -37,7 +41,9 @@ function BookmarksPage() {
   };
   const getAverageRating = (ratings?: IRating[]) => {
     if (!ratings || ratings.length === 0) return 0;
-    return ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length;
+    return (
+      ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length
+    );
   };
   const {
     data: bookmarks,
@@ -51,10 +57,12 @@ function BookmarksPage() {
   });
   return (
     <>
-      <div className="flex justify-center mt-[2%] mx-[10%]">
-        <p className="text-[1.8rem] font-normal text-black">My Bookmarks</p>
+      <div className="flex justify-center mt-4 sm:mt-6 md:mt-8 mx-4 sm:mx-6 md:mx-[8%] lg:mx-[10%]">
+        <p className="text-xl sm:text-2xl md:text-[1.8rem] font-normal text-black text-center">
+          My Bookmarks
+        </p>
       </div>
-      <div className="flex mt-[2%] mx-[10%] gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6 mt-4 sm:mt-6 md:mt-8 mx-4 sm:mx-6 md:mx-[8%] lg:mx-[10%] justify-items-center">
         {isLoading && (
           <div className="space-y-2">
             <Skeleton className="h-4 w-[250px]" />
@@ -63,13 +71,15 @@ function BookmarksPage() {
         )}
 
         {bookmarks?.length === 0 && isSuccess && (
-          <div className="flex flex-col justify-center items-center h-[50vh] w-full gap-[5%]">
+          <div className="flex flex-col justify-center items-center h-[50vh] w-full gap-4 sm:gap-6 md:gap-8 col-span-full">
             <img
               src={NoBookMarks}
-              className="w-[10.5rem] max-w-xs h-auto mb-4"
+              className="w-32 sm:w-40 md:w-[10.5rem] max-w-xs h-auto mb-4"
               alt="No Bookmarked Items"
             />
-            <p className="text-[1.5rem] font-normal text-black ">No Saved Events</p>
+            <p className="text-lg sm:text-xl md:text-[1.5rem] font-normal text-black text-center px-4">
+              No Saved Events
+            </p>
           </div>
         )}
 
@@ -91,14 +101,26 @@ function BookmarksPage() {
               rating={getAverageRating(item.entity.ratings)}
               title={item.entity.name}
               price={item.entity.price}
-              languages={item.type === bookmarkType.Itinerary ? item.entity.languages : undefined}
+              languages={
+                item.type === bookmarkType.Itinerary
+                  ? item.entity.languages
+                  : undefined
+              }
               availability={
-                item.type === bookmarkType.Activity ? item.entity.isBookingOpen : undefined
+                item.type === bookmarkType.Activity
+                  ? item.entity.isBookingOpen
+                  : undefined
               }
               openingTime={
-                item.type === bookmarkType.HistoricalPlace ? item.entity.openingHours : undefined
+                item.type === bookmarkType.HistoricalPlace
+                  ? item.entity.openingHours
+                  : undefined
               }
-              date={item.type === bookmarkType.Activity ? item.entity.date : undefined}
+              date={
+                item.type === bookmarkType.Activity
+                  ? item.entity.date
+                  : undefined
+              }
               onClick={() => handleCardClick(item.entity)}
             />
           ))}

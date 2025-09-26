@@ -2,7 +2,10 @@ import { OverviewCard } from "../overview-card/OverViewCard";
 import { TPopulatedBooking } from "../../types/home-page-types";
 import { getUserById, refundMoney } from "@/api-calls/users-api-calls";
 import { fetchPreferenceTagById } from "@/api-calls/preference-tags-api-calls";
-import { fetchBookingById, updateBookingRequest } from "@/api-calls/booking-api-calls";
+import {
+  fetchBookingById,
+  updateBookingRequest,
+} from "@/api-calls/booking-api-calls";
 import { TItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
 import { useCurrencyStore } from "@/stores/currency-exchange-store";
 import { useEffect, useRef, useState } from "react";
@@ -47,7 +50,9 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
   const [preferenceTagNames, setPreferenceTagNames] = useState<string[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [booking, setBooking] = useState<TPopulatedBooking | null>(initialBooking);
+  const [booking, setBooking] = useState<TPopulatedBooking | null>(
+    initialBooking
+  );
   const [text, setText] = useState<string>();
   const tourGuideRatingFormRef = useRef<HTMLButtonElement>(null);
 
@@ -56,7 +61,9 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
   useEffect(() => {
     for (let i = 0; i < itinerary.preferenceTags.length; i++) {
       fetchPreferenceTagById(itinerary.preferenceTags[i]._id).then((tag) => {
-        setPreferenceTagNames((prev) => [(tag as { _id: string; name: string }).name]);
+        setPreferenceTagNames((prev) => [
+          (tag as { _id: string; name: string }).name,
+        ]);
       });
     }
   }, [preferenceTags]);
@@ -67,7 +74,6 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
       if (booking && booking?.rating !== 0) {
         setIsButtonDisabled(true);
       }
-      
 
       if (booking && booking?.status === bookingStatus.Cancelled) {
         setIsButtonDisabled(true);
@@ -98,11 +104,15 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
     if (booking && booking?._id && booking.selectedDate) {
       const currentDate = new Date();
       const itineraryDate = new Date(booking.selectedDate);
-      const difference = Math.abs(itineraryDate.getTime() - currentDate.getTime());
+      const difference = Math.abs(
+        itineraryDate.getTime() - currentDate.getTime()
+      );
       const hours = difference / (1000 * 60 * 60);
-      if (hours < 48) {
+      if (hours < 48 && booking.status !== bookingStatus.Completed) {
         setIsButtonDisabled(true);
-        setText("You can't cancel this itinerary anymore as it is less than 48 hours away");
+        setText(
+          "You can't cancel this itinerary anymore as it is less than 48 hours away"
+        );
       }
     }
   }, [booking]);
@@ -117,8 +127,11 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
         // If the text field is not empty, this means that the user has passed the 48 hours limit
         if (!text) {
           const price =
-            booking.selectedPrice - booking.selectedPrice * ((booking.discount ?? 0) / 100);
-          updateBookingRequest(booking._id, { status: bookingStatus.Cancelled });
+            booking.selectedPrice -
+            booking.selectedPrice * ((booking.discount ?? 0) / 100);
+          updateBookingRequest(booking._id, {
+            status: bookingStatus.Cancelled,
+          });
           refundMoney(userId, price);
           setBooking({ ...booking, status: bookingStatus.Cancelled });
           setIsButtonDisabled(true);
@@ -152,7 +165,7 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
                 RateableEntityType.ITINERARY,
                 userId,
                 booking?._id ?? "",
-                itineraryRatingFormRef,
+                itineraryRatingFormRef
               )
             : null
         }
@@ -168,11 +181,11 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
               RateableEntityType.USER,
               userId,
               booking?._id ?? "",
-              tourGuideRatingFormRef,
+              tourGuideRatingFormRef
             );
         }}
       />
-      
+
       <ItinerariesPageTemplate
         _id={_id ?? ""}
         name={name}
@@ -193,17 +206,26 @@ const BookedItineraryDetailsPage: React.FC<BookedItineraryDetailsProps> = ({
           originalPrice={price}
           buttonText={cardButtonText}
           buttonColor={
-            booking?.status === bookingStatus.Upcoming || bookingStatus.Cancelled ? "red" : "gold"
+            booking?.status === bookingStatus.Upcoming ||
+            booking?.status === bookingStatus.Cancelled
+              ? "red"
+              : "gold"
           }
           button2Text={
-            booking && booking?.status === bookingStatus.Completed ? "Review Tour Guide" : undefined
+            booking && booking?.status === bookingStatus.Completed
+              ? "Review Tour Guide"
+              : undefined
           }
           onButton2Click={() => tourGuideRatingFormRef.current?.click()}
           button2Color="gold"
-          date={booking ? formatDate(new Date(booking.selectedDate)) : undefined}
-          time={booking ? formatTime(new Date(booking.selectedDate)) : undefined}
+          date={
+            booking ? formatDate(new Date(booking.selectedDate)) : undefined
+          }
+          time={
+            booking ? formatTime(new Date(booking.selectedDate)) : undefined
+          }
           disabled={isButtonDisabled}
-          disabled2={booking ? booking.itineraryTourGuideRating !== 0 : false}  
+          disabled2={booking ? booking.itineraryTourGuideRating !== 0 : false}
           onButtonClick={handleButtonClick}
           onDateChange={(selectedDate) => setSelectedDate(selectedDate)}
           footerText={text}

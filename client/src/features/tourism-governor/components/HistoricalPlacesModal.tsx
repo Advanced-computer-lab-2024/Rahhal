@@ -11,10 +11,8 @@ import {
   createHistoricalPlace,
   updateHistoricalPlace,
 } from "@/api-calls/historical-places-api-calls";
-import TimeRange from "@/components/TimeRange";
 import LocationMap from "@/components/google-maps/LocationMap";
 import { GenericSelect } from "@/components/GenericSelect";
-import TagsSelector from "@/components/TagsSelector";
 import { DEFAULTS } from "@/lib/constants";
 import { fetchHistoricalTags } from "@/api-calls/historical-tags-api-calls";
 import PriceCategories from "@/components/price-categories";
@@ -52,7 +50,8 @@ export function HistoricalPlacesModal({
     historicalTags: [],
   }); // holds the data fetched from the server like categories and preference tags, etc.
 
-  const [historicalPlacesPictures, setHistoricalPlacesPictures] = useState<FileList | null>(null); // holds the pictures uploaded by the user
+  const [historicalPlacesPictures, setHistoricalPlacesPictures] =
+    useState<FileList | null>(null); // holds the pictures uploaded by the user
 
   const extractIds = (data: ({ _id: string } & Record<string, any>)[]) => {
     const ids = data.map(({ _id }) => _id);
@@ -84,8 +83,16 @@ export function HistoricalPlacesModal({
             tags: extractIds(modalHistoricalPlaceData.tags),
           } as TNewHistoricalPlace,
           userId!,
-          historicalPlacesPictures,
+          historicalPlacesPictures
         );
+
+        const createdHistoricalPlace = response.data as THistoricalPlace;
+
+        // Add the missing fields values to the modalHistoricalPlaceData before being added to the historical places table
+        // so that we can properly update the same entity without the need to refresh the page
+        modalHistoricalPlaceData._id = createdHistoricalPlace._id;
+        modalHistoricalPlaceData.owner = createdHistoricalPlace.owner;
+        modalHistoricalPlaceData.images = createdHistoricalPlace.images;
 
         if (
           response?.status === STATUS_CODES.STATUS_OK ||
@@ -105,14 +112,15 @@ export function HistoricalPlacesModal({
           }
         }
       } else {
+        console.log("Updating historical place...", modalHistoricalPlaceData);
         const response = await updateHistoricalPlace(
           {
             ...modalHistoricalPlaceData,
-            category: extractIds(modalDBData.categories),
+            category: modalHistoricalPlaceData.category._id,
             preferenceTags: extractIds(modalHistoricalPlaceData.preferenceTags),
             tags: extractIds(modalHistoricalPlaceData.tags),
           },
-          historicalPlacesPictures,
+          historicalPlacesPictures
         );
 
         if (response?.status === STATUS_CODES.STATUS_OK) {
@@ -151,7 +159,12 @@ export function HistoricalPlacesModal({
       const preferenceTags = await fetchPreferenceTags();
       const historicalTags = await fetchHistoricalTags();
 
-      setModalDBData({ ...modalDBData, categories, preferenceTags, historicalTags });
+      setModalDBData({
+        ...modalDBData,
+        categories,
+        preferenceTags,
+        historicalTags,
+      });
 
       if (isNewHistoricalPlace) {
         setModalHistoricalPlaceData(DEFAULTS.HISTORICAL_PLACE);
@@ -180,7 +193,7 @@ export function HistoricalPlacesModal({
               setModalHistoricalPlaceData(
                 modalHistoricalPlaceData
                   ? { ...modalHistoricalPlaceData, name: e.target.value }
-                  : undefined,
+                  : undefined
               )
             }
             placeholder="Enter Historical Place Name"
@@ -198,7 +211,7 @@ export function HistoricalPlacesModal({
                   ...modalHistoricalPlaceData,
                   price: value,
                 }
-              : undefined,
+              : undefined
           );
         }}
       />
@@ -212,7 +225,7 @@ export function HistoricalPlacesModal({
               setModalHistoricalPlaceData(
                 modalHistoricalPlaceData
                   ? { ...modalHistoricalPlaceData, description: e.target.value }
-                  : undefined,
+                  : undefined
               )
             }
             placeholder="Enter Historical Place Description"
@@ -223,19 +236,21 @@ export function HistoricalPlacesModal({
       <GenericSelect
         label="Category"
         placeholder="Select a category"
-        options={modalDBData.categories.map((category: { name: any; _id: any }) => ({
-          label: category.name,
-          value: category._id,
-        }))}
+        options={modalDBData.categories.map(
+          (category: { name: any; _id: any }) => ({
+            label: category.name,
+            value: category._id,
+          })
+        )}
         onSelect={(value: string) => {
           console.log(value);
           const selectedCategory = modalDBData.categories.find(
-            (category: { _id: string }) => category._id === value,
+            (category: { _id: string }) => category._id === value
           );
           setModalHistoricalPlaceData(
             modalHistoricalPlaceData
               ? { ...modalHistoricalPlaceData, category: selectedCategory }
-              : undefined,
+              : undefined
           );
         }}
         initialValue={modalHistoricalPlaceData?.category._id ?? ""}
@@ -247,7 +262,9 @@ export function HistoricalPlacesModal({
           label: tag.name,
           value: tag._id,
         }))}
-        emptyIndicator={<p className="text-gray-400 text-sm">No preference tags available</p>}
+        emptyIndicator={
+          <p className="text-gray-400 text-sm">No preference tags available</p>
+        }
         onChange={(selectedOptions) => {
           setModalHistoricalPlaceData(
             modalHistoricalPlaceData
@@ -258,7 +275,7 @@ export function HistoricalPlacesModal({
                     name: option.label,
                   })),
                 }
-              : undefined,
+              : undefined
           );
         }}
         value={modalHistoricalPlaceData?.preferenceTags.map((tag) => ({
@@ -273,7 +290,9 @@ export function HistoricalPlacesModal({
           label: tag.name,
           value: tag._id,
         }))}
-        emptyIndicator={<p className="text-gray-400 text-sm">No tags available</p>}
+        emptyIndicator={
+          <p className="text-gray-400 text-sm">No tags available</p>
+        }
         onChange={(selectedOptions) => {
           setModalHistoricalPlaceData(
             modalHistoricalPlaceData
@@ -284,7 +303,7 @@ export function HistoricalPlacesModal({
                     name: option.label,
                   })),
                 }
-              : undefined,
+              : undefined
           );
         }}
         value={modalHistoricalPlaceData?.tags.map((tag) => ({
@@ -325,7 +344,7 @@ export function HistoricalPlacesModal({
                         close: modalHistoricalPlaceData.openingHours.close,
                       },
                     }
-                  : undefined,
+                  : undefined
               );
             }}
             hourCycle={12}
@@ -345,7 +364,7 @@ export function HistoricalPlacesModal({
                         close: date ?? new Date(),
                       },
                     }
-                  : undefined,
+                  : undefined
               );
             }}
             hourCycle={12}
@@ -380,7 +399,7 @@ export function HistoricalPlacesModal({
                   ...modalHistoricalPlaceData,
                   location: { latitude: location.lat, longitude: location.lng },
                 }
-              : undefined,
+              : undefined
           )
         }
       />

@@ -1,7 +1,9 @@
 import { GenericModal } from "@/components/GenericModal";
-import { TItinerary, TNewItinerary } from "@/features/tour-guide/utils/tour-guide-columns";
+import {
+  TItinerary,
+  TNewItinerary,
+} from "@/features/tour-guide/utils/tour-guide-columns";
 import { useEffect, useState, useRef } from "react";
-import PictureCard from "@/components/PictureCard";
 import LocationMap from "@/components/google-maps/LocationMap";
 import { GenericSelect } from "@/components/GenericSelect";
 import { createItinerary } from "@/api-calls/itineraries-api-calls";
@@ -13,8 +15,6 @@ import MultipleSelector from "@/components/ui/multiple-selector";
 import ItineraryActivities from "@/features/tour-guide/components/itinerary-activities/ItineratyActivities";
 import ItineraryAvailableDatesAndTimes from "@/features/tour-guide/components/itinerary-available-dates-times/ItineraryAvailableDatesAndTimes";
 import ItineraryLocations from "@/features/tour-guide/components/itinerary-locations/ItineraryLocations";
-import { useParams } from "react-router-dom";
-import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/hooks/use-toast";
 import { STATUS_CODES } from "@/lib/constants";
 import { deleteItinerary } from "@/api-calls/itineraries-api-calls";
@@ -24,10 +24,7 @@ import Footer from "@/features/tour-guide/components/itinerary-modal/Footer";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { AxiosError } from "axios";
 import ItineraryPictureCard from "./ItineraryPictureCard";
-import { FaTrash } from "react-icons/fa";
-import { Button } from "@/components/ui/button";
 import useUserStore from "@/stores/user-state-store";
 
 interface ItinerariesModalProps {
@@ -46,9 +43,9 @@ export function ItinerariesModal({
   const isNewItinerary: boolean = itineraryData === undefined;
   const [step, setStep] = useState(1);
   const modalContentRef = useRef<HTMLDivElement | null>(null); // Ref so i always return to the top of the modal
-  const [modalItineraryData, setModalItinerariesData] = useState<TItinerary | undefined>(
-    itineraryData ?? DEFAULTS.ITINERARY,
-  );
+  const [modalItineraryData, setModalItinerariesData] = useState<
+    TItinerary | undefined
+  >(itineraryData ?? DEFAULTS.ITINERARY);
   const [modalDBData, setModalDBData] = useState<{ [key: string]: any }>({
     categories: [],
     preferenceTags: [],
@@ -58,7 +55,9 @@ export function ItinerariesModal({
   >([]);
 
   const [itineraryImages, setItineraryImages] = useState<FileList | null>(null);
-  const [imageSources, setImageSources] = useState<string[]>(itineraryData?.images ?? []);
+  const [imageSources, setImageSources] = useState<string[]>(
+    itineraryData?.images ?? []
+  );
 
   const extractIds = (data: ({ _id: string } & Record<string, any>)[]) => {
     const ids = data.map(({ _id }) => _id);
@@ -81,7 +80,9 @@ export function ItinerariesModal({
         // For fields that are referenced in the database by ids, we need to extract them first
         // since the database will only accept for these field an id or list of ids
         const categoryId = extractIds([modalItineraryData!.category]) as string;
-        const preferenceTagsIds = extractIds(modalItineraryData!.preferenceTags) as string[];
+        const preferenceTagsIds = extractIds(
+          modalItineraryData!.preferenceTags
+        ) as string[];
         const { _id, ...rest } = modalItineraryData!;
         const newItinerary: TNewItinerary = {
           ...rest,
@@ -112,8 +113,8 @@ export function ItinerariesModal({
       toast({
         title: "Ops! Something went wrong",
         description:
-          error instanceof AxiosError
-            ? error?.response?.data?.message
+          error instanceof Error
+            ? (error as any)?.response?.data?.message || error.message
             : "An error occurred while saving the itinerary",
         variant: "destructive",
       });
@@ -134,6 +135,10 @@ export function ItinerariesModal({
           title: "Success",
           description: "Itinerary deleted successfully",
           variant: "default",
+          style: {
+            backgroundColor: "#34D399",
+            color: "white",
+          },
         });
 
         setTimeout(() => {
@@ -143,7 +148,8 @@ export function ItinerariesModal({
     } catch (error) {
       toast({
         title: "Error",
-        description: (error as any).response?.data?.message || "Error deleting itinerary",
+        description:
+          (error as any).response?.data?.message || "Error deleting itinerary",
         variant: "destructive",
       });
     }
@@ -177,7 +183,10 @@ export function ItinerariesModal({
       newDurations.push(modalItineraryData.durationOfActivities[i]);
     }
     setActivitiesWithDurations(
-      newActivities.map((activity, index) => ({ name: activity, duration: newDurations[index] })),
+      newActivities.map((activity, index) => ({
+        name: activity,
+        duration: newDurations[index],
+      }))
     );
   }, [modalItineraryData]);
 
@@ -205,13 +214,21 @@ export function ItinerariesModal({
           onSave={handleSubmit}
         />
       }
-      customFooter={<Footer step={step} onNextStep={handleNext} onPrevStep={handlePrevious} onSave={handleSubmit} isNew={isNewItinerary}/>}
+      customFooter={
+        <Footer
+          step={step}
+          onNextStep={handleNext}
+          onPrevStep={handlePrevious}
+          onSave={handleSubmit}
+          isNew={isNewItinerary}
+        />
+      }
     >
       <></>
       <div ref={modalContentRef} className="my-4">
         {step == 1 && (
-          <div className="flex flex-col gap-6">
-            <div>
+          <div className="flex flex-col gap-4 sm:gap-6">
+            <div className="space-y-2">
               <Label htmlFor="itinerary-name">Itinerary Name</Label>
               <Input
                 id="itinerary-name"
@@ -221,61 +238,71 @@ export function ItinerariesModal({
                   setModalItinerariesData(
                     modalItineraryData
                       ? { ...modalItineraryData, name: event.target.value }
-                      : undefined,
+                      : undefined
                   );
                 }}
               />
             </div>
 
-            <div>
-              <Label htmlFor="price">Price in EGP</Label>
-              <Input
-                id="price"
-                min={0}
-                type="number"
-                placeholder="Enter itinerary price"
-                value={modalItineraryData?.price ?? 0}
-                onChange={(event) => {
-                  setModalItinerariesData(
-                    modalItineraryData
-                      ? { ...modalItineraryData, price: parseFloat(event.target.value) }
-                      : undefined,
-                  );
-                }}
-              />
-            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="price">Price in EGP</Label>
+                <Input
+                  id="price"
+                  min={0}
+                  type="number"
+                  placeholder="Enter itinerary price"
+                  value={modalItineraryData?.price ?? 0}
+                  onChange={(event) => {
+                    setModalItinerariesData(
+                      modalItineraryData
+                        ? {
+                            ...modalItineraryData,
+                            price: parseFloat(event.target.value),
+                          }
+                        : undefined
+                    );
+                  }}
+                />
+              </div>
 
-            <div>
-              <Label htmlFor="accessibility">Accessibility</Label>
-              <Input
-                id="accessibility"
-                placeholder="Enter itinerary accessibility"
-                value={modalItineraryData?.accessibility ?? ""}
-                onChange={(event) => {
-                  setModalItinerariesData(
-                    modalItineraryData
-                      ? { ...modalItineraryData, accessibility: event.target.value }
-                      : undefined,
-                  );
-                }}
-              />
+              <div className="space-y-2">
+                <Label htmlFor="accessibility">Accessibility</Label>
+                <Input
+                  id="accessibility"
+                  placeholder="Enter itinerary accessibility"
+                  value={modalItineraryData?.accessibility ?? ""}
+                  onChange={(event) => {
+                    setModalItinerariesData(
+                      modalItineraryData
+                        ? {
+                            ...modalItineraryData,
+                            accessibility: event.target.value,
+                          }
+                        : undefined
+                    );
+                  }}
+                />
+              </div>
             </div>
 
             <GenericSelect
               label="Category"
               placeholder="Select a category"
-              options={modalDBData.categories.map((category: { name: any; _id: any }) => ({
-                label: category.name,
-                value: category._id,
-              }))}
+              options={modalDBData.categories.map(
+                (category: { name: any; _id: any }) => ({
+                  label: category.name,
+                  value: category._id,
+                })
+              )}
               onSelect={(value: string) => {
                 const selectedCategory = modalDBData.categories.find(
-                  (category: { _id: string }) => category._id === value,
+                  (category: { _id: string }) => category._id === value
                 );
                 setModalItinerariesData(
                   modalItineraryData
                     ? { ...modalItineraryData, category: selectedCategory }
-                    : undefined,
+                    : undefined
                 );
               }}
               initialValue={modalItineraryData?.category._id ?? ""}
@@ -302,7 +329,7 @@ export function ItinerariesModal({
                           name: option.label,
                         })),
                       }
-                    : undefined,
+                    : undefined
                 );
               }}
               value={modalItineraryData?.preferenceTags.map((tag) => {
@@ -325,13 +352,19 @@ export function ItinerariesModal({
               ]}
               placeholder="Select languages"
               value={
-                modalItineraryData?.languages.map((lang) => ({ label: lang, value: lang })) ?? []
+                modalItineraryData?.languages.map((lang) => ({
+                  label: lang,
+                  value: lang,
+                })) ?? []
               }
               onChange={(options: { label: string; value: string }[]) =>
                 setModalItinerariesData(
                   modalItineraryData
-                    ? { ...modalItineraryData, languages: options.map((option) => option.value) }
-                    : undefined,
+                    ? {
+                        ...modalItineraryData,
+                        languages: options.map((option) => option.value),
+                      }
+                    : undefined
                 )
               }
             />
@@ -374,9 +407,11 @@ export function ItinerariesModal({
                     ? {
                         ...modalItineraryData,
                         activities: activities.map((activity) => activity.type),
-                        durationOfActivities: activities.map((activity) => activity.duration),
+                        durationOfActivities: activities.map(
+                          (activity) => activity.duration
+                        ),
                       }
-                    : undefined,
+                    : undefined
                 );
               }}
             />
@@ -417,8 +452,8 @@ export function ItinerariesModal({
         )}
 
         {step == 3 && (
-          <div className="flex flex-col gap-6">
-            <div>
+          <div className="flex flex-col gap-4 sm:gap-6">
+            <div className="space-y-2">
               <Label htmlFor="time-line">Time Line Of Itinerary</Label>
               <Textarea
                 id="time-line"
@@ -428,14 +463,14 @@ export function ItinerariesModal({
                   setModalItinerariesData(
                     modalItineraryData
                       ? { ...modalItineraryData, timeline: event.target.value }
-                      : undefined,
+                      : undefined
                   )
                 }
-                className="flex-grow min-h-40"
+                className="flex-grow min-h-32 sm:min-h-40"
               />
             </div>
 
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="description">Description of the itinerary</Label>
               <Textarea
                 id="description"
@@ -444,11 +479,14 @@ export function ItinerariesModal({
                 onChange={(event) =>
                   setModalItinerariesData(
                     modalItineraryData
-                      ? { ...modalItineraryData, description: event.target.value }
-                      : undefined,
+                      ? {
+                          ...modalItineraryData,
+                          description: event.target.value,
+                        }
+                      : undefined
                   )
                 }
-                className="flex-grow min-h-40"
+                className="flex-grow min-h-32 sm:min-h-40"
               />
             </div>
 
@@ -464,57 +502,61 @@ export function ItinerariesModal({
           </div>
         )}
         {step == 4 && (
-          <div className="flex flex-col gap-6">
-            <LocationMap
-              title="Pick Up Location"
-              initialLocation={
-                modalItineraryData?.pickUpLocation
-                  ? {
-                      lat: modalItineraryData.pickUpLocation.latitude,
-                      lng: modalItineraryData.pickUpLocation.longitude,
-                    }
-                  : { lat: 0, lng: 0 }
-              }
-              onSave={(location: { lat: number; lng: number }) =>
-                setModalItinerariesData(
-                  modalItineraryData
+          <div className="flex flex-col gap-4 sm:gap-6">
+            <div className="border rounded-lg p-4">
+              <LocationMap
+                title="Pick Up Location"
+                initialLocation={
+                  modalItineraryData?.pickUpLocation
                     ? {
-                        ...modalItineraryData,
-                        pickUpLocation: {
-                          ...modalItineraryData.pickUpLocation,
-                          latitude: location.lat,
-                          longitude: location.lng,
-                        },
+                        lat: modalItineraryData.pickUpLocation.latitude,
+                        lng: modalItineraryData.pickUpLocation.longitude,
                       }
-                    : undefined,
-                )
-              }
-            />
-            <LocationMap
-              title="Drop Off Location"
-              initialLocation={
-                modalItineraryData?.dropOffLocation
-                  ? {
-                      lat: modalItineraryData.dropOffLocation.latitude,
-                      lng: modalItineraryData.dropOffLocation.longitude,
-                    }
-                  : { lat: 0, lng: 0 }
-              }
-              onSave={(location: { lat: number; lng: number }) =>
-                setModalItinerariesData(
-                  modalItineraryData
+                    : { lat: 0, lng: 0 }
+                }
+                onSave={(location: { lat: number; lng: number }) =>
+                  setModalItinerariesData(
+                    modalItineraryData
+                      ? {
+                          ...modalItineraryData,
+                          pickUpLocation: {
+                            ...modalItineraryData.pickUpLocation,
+                            latitude: location.lat,
+                            longitude: location.lng,
+                          },
+                        }
+                      : undefined
+                  )
+                }
+              />
+            </div>
+            <div className="border rounded-lg p-4">
+              <LocationMap
+                title="Drop Off Location"
+                initialLocation={
+                  modalItineraryData?.dropOffLocation
                     ? {
-                        ...modalItineraryData,
-                        dropOffLocation: {
-                          ...modalItineraryData.dropOffLocation,
-                          latitude: location.lat,
-                          longitude: location.lng,
-                        },
+                        lat: modalItineraryData.dropOffLocation.latitude,
+                        lng: modalItineraryData.dropOffLocation.longitude,
                       }
-                    : undefined,
-                )
-              }
-            />
+                    : { lat: 0, lng: 0 }
+                }
+                onSave={(location: { lat: number; lng: number }) =>
+                  setModalItinerariesData(
+                    modalItineraryData
+                      ? {
+                          ...modalItineraryData,
+                          dropOffLocation: {
+                            ...modalItineraryData.dropOffLocation,
+                            latitude: location.lat,
+                            longitude: location.lng,
+                          },
+                        }
+                      : undefined
+                  )
+                }
+              />
+            </div>
           </div>
         )}
       </div>

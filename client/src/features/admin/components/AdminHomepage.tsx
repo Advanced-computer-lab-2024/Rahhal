@@ -1,4 +1,4 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/features/admin/components/AdminSidebar";
 import { createContext, useEffect, useState } from "react";
 import { TUser } from "@/types/user";
@@ -23,11 +23,18 @@ export default function AdminHomepage() {
   return (
     <SidebarProvider>
       <AdminSidebar id={id} />
-      <div className="flex-1 p-4">
+      <main className="flex-1 p-4 md:p-6 lg:p-8 min-h-screen">
+        {/* Mobile Header with Burger Menu */}
+        <div className="md:hidden mb-6 flex items-center justify-between border-b pb-4">
+          <SidebarTrigger className="md:hidden" />
+          <h1 className="text-lg font-semibold">Admin Panel</h1>
+          <div className="w-8"></div> {/* Spacer for centering */}
+        </div>
+        
         <EditContextAdmin.Provider value={{ user }}>
           <Outlet />
         </EditContextAdmin.Provider>
-      </div>
+      </main>
     </SidebarProvider>
   );
 }

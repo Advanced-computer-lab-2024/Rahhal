@@ -1,9 +1,16 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import GoogleMap from "./GoogleMap";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useDebounce } from "use-debounce";
 import EditSaveButton from "@/components/EditSaveButton";
+import { SERVICES_URLS } from "@/lib/constants";
 
 type LocationMapProps = {
   initialLocation: { lat: number; lng: number };
@@ -14,7 +21,7 @@ type LocationMapProps = {
 
 async function fetchLocationDetails(location: { lat: number; lng: number }) {
   const { data } = await axios.get(
-    `${import.meta.env.VITE_GATEWAY_SERVICE_URL}/api/google-maps/place-details/location?latitude=${location.lat}&longitude=${location.lng}`,
+    `${SERVICES_URLS.GOOGLE_MAPS}/place-details/location?latitude=${location.lat}&longitude=${location.lng}`
   );
   return data;
 }
@@ -61,9 +68,15 @@ export default function LocationMap({
         />
       </CardHeader>
       <CardContent>
-        <GoogleMap isEditable={isEditable} location={location} setLocation={setLocation} />
+        <GoogleMap
+          isEditable={isEditable}
+          location={location}
+          setLocation={setLocation}
+        />
       </CardContent>
-      <CardFooter className="text-gray-600 text-xl font-semibold">{description}</CardFooter>
+      <CardFooter className="text-gray-600 text-xl font-semibold">
+        {description}
+      </CardFooter>
     </Card>
   );
 }
