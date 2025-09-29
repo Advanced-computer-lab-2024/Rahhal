@@ -6,7 +6,7 @@
 
 Rahhal is our project for the seventh semester **Advanced Computer Lab (ACL)** course at the German University in Cairo. The goal was to design a platform that simplifies vacation planning for tourists by combining everything they need in one place - from booking activities, joining fully planned itineraries, and purchasing tickets for historical sites, hotels, flights, and transportation, to even buying souvenirs. Rahhal also provides a space where advertisers, tour guides, sellers, and authorized tourism authorities can manage their businesses. You can find the full list of features we offer in [this sheet](https://docs.google.com/spreadsheets/d/1i6mHStVzos0D9_JLRtFxw-I7yGWB45-E/edit?usp=sharing&ouid=102190922931485059302&rtpof=true&sd=true), which was given to us as the desired list of requirements.
 
-Find it live here: [rahhal-eight.vercel.app](https://rahhal-eight.vercel.app/)
+Find it live at [rahhal.dev](https://rahhal.dev), and for all the nitty gritty details about our journey developing and deploying Rahhal, you can check the blog post we wrote about it [here](https://hawater.hashnode.dev/rahha)
 
 ## About this Repo
 
@@ -31,7 +31,9 @@ Rahhal is a **microservices project**, and in this repository you can find the c
 ![Vitest](https://img.shields.io/badge/vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![Google Cloud](https://img.shields.io/badge/google%20cloud-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white)
+![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)
 ![Google Maps](https://img.shields.io/badge/google%20maps-4285F4?style=for-the-badge&logo=googlemaps&logoColor=white)
+![Vercel](https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 ![Figma](https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
 ![Stripe](https://img.shields.io/badge/stripe-635BFF?style=for-the-badge&logo=stripe&logoColor=white)
  
@@ -81,19 +83,17 @@ You can view the Figma design system [here](https://www.figma.com/design/Cs0qZl2
 
 ## Local Development
 
-In the project structure, each directory represents a separate **microservice**. After cloning the repo to your local machine, the first step is to go to each service directory and create a new `.env` file (if required). These `.env` files should contain all the necessary environment variables for the service to operate. You can find a `.env.example` file in each directory to guide you, which specifies the required variables along with brief descriptions.
+In the project structure, each directory represents a separate **microservice**. After cloning the repo, the first step is to navigate into each service directory and create a new `.env` file if required. You can find a `.env.example` file in each relevant directory to guide you; it specifies the necessary variables along with brief descriptions.
 
-> Services that do not have a `.env.example` file require no `.env` file to run locally.
+> By default, the Docker containers communicate with each other, the database instances, and the messaging queue through the Docker environment network. However, if you plan to host these containers on a service like Cloud Run, you will need to make sure you fill in the deployment environment variables, which can also be found in the `.env.example` files.
 
-After creating and populating the `.env` files, run the following command in the project’s root directory to build all the microservice Docker images and run the containers in the background:
+After creating and populating the necessary `.env` files, run the following command in the project’s root directory to build all microservice images and run the containers in the background:
 
 ```bash
 docker compose up -d
 ```
 
-Once all containers are up, you can check if they are running properly using `docker ps` and remove all containers using `docker compose down`. On the first run, this process may take some time since all images will be built from scratch. However, subsequent runs will be much faster as only the containers need to be started.
-
-Finally, you can open the client-side frontend locally in your browser at `http://localhost:5173` and monitor the Docker containers using **Docker Desktop**.
+On the first run, this process may take some time since all images will be built from scratch. However, subsequent runs will be much faster. Once the containers are up, you can check if they are running properly using `docker ps` or stop them all with `docker compose down`. The client-side frontend will be available locally at `http://localhost:5173`, and you can monitor the containers using **Docker Desktop**.
 
 <a id="usage"></a>
 
