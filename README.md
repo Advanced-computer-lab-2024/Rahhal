@@ -6,7 +6,7 @@
 
 Rahhal is our project for the seventh semester **Advanced Computer Lab (ACL)** course at the German University in Cairo. The goal was to design a platform that simplifies vacation planning for tourists by combining everything they need in one place - from booking activities, joining fully planned itineraries, and purchasing tickets for historical sites, hotels, flights, and transportation, to even buying souvenirs. Rahhal also provides a space where advertisers, tour guides, sellers, and authorized tourism authorities can manage their businesses. You can find the full list of features we offer in [this sheet](https://docs.google.com/spreadsheets/d/1i6mHStVzos0D9_JLRtFxw-I7yGWB45-E/edit?usp=sharing&ouid=102190922931485059302&rtpof=true&sd=true), which was given to us as the desired list of requirements.
 
-Find it live at [rahhal.dev](https://rahhal.dev), and for all the nitty gritty details about our journey developing and deploying Rahhal, you can check the blog post we wrote about it [here](https://hawater.hashnode.dev/rahha)
+Find it live at [rahhal.dev](https://rahhal.dev), and for all the nitty gritty details about our journey developing and deploying Rahhal, you can check the blog post we wrote about it [here](https://hawater.hashnode.dev/rahhal)
 
 ## About this Repo
 
