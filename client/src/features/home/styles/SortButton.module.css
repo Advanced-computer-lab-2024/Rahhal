@@ -66,10 +66,6 @@
 }
 
 @media (max-width: 600px) {
-  .dropdown-button {
-    font-size: 0.9rem;
-  }
-
   .dropdown-list li {
     font-size: 0.85rem;
   }

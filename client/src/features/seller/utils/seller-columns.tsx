@@ -31,7 +31,7 @@ export const productsColumns = (
   {
     accessorKey: "name",
     header: "Name",
-    cell: ({ row }) => <div className="capitalize">{row.original.name}</div>,
+    cell: ({ row }) => <div className="capitalize font-medium">{row.original.name}</div>,
     enableColumnFilter: true,
   },
 
@@ -41,9 +41,9 @@ export const productsColumns = (
     cell: ({ row }) => (
       <div>
         {row.original.archived ? (
-          <span className="text-muted-foreground">Archived</span>
+          <span className="text-muted-foreground text-sm">Archived</span>
         ) : (
-          <span className="text-muted-foreground">Available</span>
+          <span className="text-muted-foreground text-sm">Available</span>
         )}
       </div>
     ),
@@ -53,11 +53,14 @@ export const productsColumns = (
       if (value === "available") return !row.original.archived;
       return true;
     },
+    meta: {
+      className: "hidden sm:table-cell",
+    },
   },
   {
     accessorKey: "price",
     header: "Price",
-    cell: ({ row }) => <div className="capitalize">{row.original.price}</div>,
+    cell: ({ row }) => <div className="capitalize font-medium">${row.original.price}</div>,
     enableColumnFilter: true,
     filterFn: (row, id, value: { min: string; max: string }) => {
       const price = parseFloat(row.getValue(id));
@@ -69,7 +72,10 @@ export const productsColumns = (
   {
     accessorKey: "quantity",
     header: "Quantity",
-    cell: ({ row }) => <div className="capitalize">{row.original.quantity}</div>,
+    cell: ({ row }) => <div className="capitalize text-sm">{row.original.quantity}</div>,
+    meta: {
+      className: "hidden md:table-cell",
+    },
   },
   {
     accessorKey: "ratings",
@@ -85,8 +91,11 @@ export const productsColumns = (
       );
     },
     cell: ({ row }) => (
-      <div className="capitalize">{calculateAverageRating(row.getValue("ratings"))}</div>
+      <div className="capitalize text-sm">{calculateAverageRating(row.getValue("ratings")).toFixed(1)}</div>
     ),
+    meta: {
+      className: "hidden lg:table-cell",
+    },
   },
   {
     id: "actions",

@@ -18,7 +18,7 @@ const handleFileUpload = (
   e: React.ChangeEvent<HTMLInputElement>,
   imageSources: string[],
   imageSourcesCallback: (imageSources: string[]) => void,
-  handleFileUploadCallback: (files: FileList) => void,
+  handleFileUploadCallback: (files: FileList) => void
 ) => {
   const files = e.target.files;
   if (files) {
@@ -39,7 +39,9 @@ const handleFileUpload = (
 };
 
 // Function to open the file upload dialog using the file input reference
-const openFileUploadDialog = (pictureUploadFieldRef: React.RefObject<HTMLInputElement>) => {
+const openFileUploadDialog = (
+  pictureUploadFieldRef: React.RefObject<HTMLInputElement>
+) => {
   if (pictureUploadFieldRef.current) {
     pictureUploadFieldRef.current.click();
   }
@@ -58,13 +60,19 @@ const ItineraryPictureCard = ({
 
   const pictureUploadFieldRef: React.RefObject<HTMLInputElement> = useRef(null); // Picture upload field reference to open the file dialog when the plus icon is clicked
 
-  const thumbnailImages: string[] = imageSources.slice(MIN_NUMBER_OF_IMAGES, MAX_NUMBER_OF_IMAGES); // Thumbnail images
+  const thumbnailImages: string[] = imageSources.slice(
+    MIN_NUMBER_OF_IMAGES,
+    MAX_NUMBER_OF_IMAGES
+  ); // Thumbnail images
   const numberOfImages: number = imageSources.length; // Number of images
 
   let plusIconRotation: string = ""; // Rotation of the plus icon
 
   // set the rotation of the plus icon based on the number of images
-  if (numberOfImages >= MIN_NUMBER_OF_IMAGES && numberOfImages < MAX_NUMBER_OF_IMAGES) {
+  if (
+    numberOfImages >= MIN_NUMBER_OF_IMAGES &&
+    numberOfImages < MAX_NUMBER_OF_IMAGES
+  ) {
     plusIconRotation = "rotate-0";
   } else {
     plusIconRotation = "rotate-3";
@@ -72,27 +80,27 @@ const ItineraryPictureCard = ({
 
   return (
     <Card>
-      <div className="p-4">
-        <h2 className="text-xl font-semibold mb-2">{title}</h2>
-        <p className="text-gray-600 mb-4">{description}</p>
+      <div className="p-3 sm:p-4">
+        <h2 className="text-lg sm:text-xl font-semibold mb-2">{title}</h2>
+        <p className="text-gray-600 mb-4 text-sm sm:text-base">{description}</p>
         <div
-          className="relative bg-white h-48 rounded-lg flex items-center justify-center"
+          className="relative bg-white h-40 sm:h-48 rounded-lg flex items-center justify-center"
           style={{
             backgroundImage: "url(" + thumbnailImages[0] + ")",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >
-          <div className="absolute top-2 left-2 bg-white bg-opacity-75 rounded-full px-2 py-1 text-sm flex items-center">
-            <Camera size={16} className="mr-1" />
+          <div className="absolute top-2 left-2 bg-white bg-opacity-75 rounded-full px-2 py-1 text-xs sm:text-sm flex items-center">
+            <Camera size={14} className="mr-1 sm:w-4 sm:h-4" />
             <span>{numberOfImages} photos</span>
           </div>
 
           <div className="absolute bottom-0 left-0 right-0">
-            <div className="flex justify-center -mb-4">
+            <div className="flex justify-center -mb-3 sm:-mb-4">
               {numberOfImages > 1 && (
                 <img
-                  className="w-16 h-16 bg-gray-300 rounded-lg shadow-md -mr-2 transform -rotate-3"
+                  className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-300 rounded-lg shadow-md -mr-2 transform -rotate-3"
                   src={thumbnailImages[1]}
                   alt="Thumbnail"
                 />
@@ -100,7 +108,7 @@ const ItineraryPictureCard = ({
 
               {numberOfImages > 2 && (
                 <img
-                  className="w-20 h-20 bg-gray-300 rounded-lg shadow-md z-10"
+                  className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-300 rounded-lg shadow-md z-10"
                   src={thumbnailImages[2]}
                   alt="Thumbnail"
                 />
@@ -108,11 +116,12 @@ const ItineraryPictureCard = ({
 
               <Button
                 className={
-                  "w-16 h-16 bg-gray-300 rounded-lg shadow-md -ml-2 transform " + plusIconRotation
+                  "w-12 h-12 sm:w-16 sm:h-16 bg-gray-300 rounded-lg shadow-md -ml-2 transform " +
+                  plusIconRotation
                 }
                 onClick={() => openFileUploadDialog(pictureUploadFieldRef)}
               >
-                <Plus />
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
               <input
                 id="files"
@@ -121,7 +130,12 @@ const ItineraryPictureCard = ({
                 multiple={true}
                 accept="image/*"
                 onChange={(e) =>
-                  handleFileUpload(e, imageSources, updateImageSources, handleFileUploadCallback)
+                  handleFileUpload(
+                    e,
+                    imageSources,
+                    updateImageSources,
+                    handleFileUploadCallback
+                  )
                 }
                 hidden
               />

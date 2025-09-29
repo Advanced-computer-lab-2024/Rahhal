@@ -2,7 +2,7 @@ import cors from "cors";
 import morgan from "morgan";
 import express from "express";
 import swaggerUi from "swagger-ui-express";
-import swaggerFile from "@/api/swagger/swagger-output.json";
+import swaggerFile from "@/api/swagger/swagger-output.json" assert { type: "json" };
 import notificationRoutes from "@/api/routes/notification-routes";
 
 const app = express();
@@ -11,8 +11,8 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors({
-  origin: ['http://localhost:5173'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH'],
+  origin: (origin, callback) => callback(null, true),
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   credentials: true
 }));
 

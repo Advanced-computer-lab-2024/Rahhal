@@ -4,12 +4,20 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { HomeIcon, UserIcon as Male } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 import { SuccessPopup } from "@/components/SuccessPopup";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { forgotPassword, resetPassword, verifyOTP } from "@/api-calls/users-api-calls";
+import {
+  forgotPassword,
+  resetPassword,
+  verifyOTP,
+} from "@/api-calls/users-api-calls";
 import { useToast } from "@/hooks/use-toast";
 // import { verify } from "crypto";
 import SecondaryLogo from "@/features/logos/SecondaryLogo";
@@ -24,7 +32,7 @@ export default function ForgetPassword() {
   const [showOTP, setShowOTP] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [timer, setTimer] = useState(60);
+  const [timer, setTimer] = useState(120);
   const [canResend, setCanResend] = useState(false);
   const [passwords, setPasswords] = useState({
     password: "",
@@ -93,7 +101,7 @@ export default function ForgetPassword() {
       await forgotPassword(username);
       setShowOTP(true);
     } catch (error) {
-      setUsernameError("Username not found");
+      setUsernameError("Something went wrong.");
     }
   };
 
@@ -116,8 +124,8 @@ export default function ForgetPassword() {
     e.preventDefault();
     try {
       const response = await verifyOTP(username, otp);
-      console.log(response.status)
-      if(response.status === 500) throw new Error;
+      console.log(response.status);
+      if (response.status === 500) throw new Error();
       setShowOTP(false);
       setShowNewPassword(true);
     } catch (error) {
@@ -155,7 +163,7 @@ export default function ForgetPassword() {
         <span className="ml-2 text-lg hover:underline">Home</span>
       </Link>
       <div className="absolute mt-5 top-10 flex justify-center w-full">
-        <SecondaryLogo width={200} height={100}  />
+        <SecondaryLogo width={200} height={100} />
       </div>
       <SuccessPopup show={showSuccess} />
       <Card className="w-full max-w-md p-6 shadow-2xl">
@@ -197,7 +205,9 @@ export default function ForgetPassword() {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                   />
-                  {usernameError && <p className="text-xs text-red-500">{usernameError}</p>}
+                  {usernameError && (
+                    <p className="text-xs text-red-500">{usernameError}</p>
+                  )}
                 </div>
                 <Button
                   className="w-full bg-[var(--primary-color-dark)] hover:bg-[var(--primary-color-fade)] mt-4"
@@ -216,7 +226,11 @@ export default function ForgetPassword() {
               >
                 <div className="space-y-4 ">
                   <div className="flex justify-center itmes-center">
-                    <InputOTP maxLength={6} className=" gap-2" onChange={setOtp}>
+                    <InputOTP
+                      maxLength={6}
+                      className=" gap-2"
+                      onChange={setOtp}
+                    >
                       <InputOTPGroup className="flex justify-center">
                         {[...Array(6)].map((_, index) => (
                           <InputOTPSlot
@@ -224,7 +238,7 @@ export default function ForgetPassword() {
                             index={index}
                             className={cn(
                               "w-10 h-12 text-lg border-[#E1BC6D]/20",
-                              "focus:border-[#E1BC6D] focus:ring-[#E1BC6D]",
+                              "focus:border-[#E1BC6D] focus:ring-[#E1BC6D]"
                             )}
                           />
                         ))}
@@ -238,7 +252,10 @@ export default function ForgetPassword() {
                   >
                     Verify
                   </Button>
-                  <div className="text-center">
+                  <div className="text-center flex flex-col">
+                    <span className="text-xs">
+                      Please, keep and eye on your spam folder
+                    </span>
                     <Button
                       variant="link"
                       className="text-sm text-muted-foreground hover:text-[#E1BC6D]"
@@ -284,13 +301,15 @@ export default function ForgetPassword() {
                       }
                     }}
                   />
-                  {errors.password && <p className="text-xs text-red-500">{errors.password}</p>}
-                  <p className="text-xs text-muted-foreground">Must be at least 8 characters.</p>
+                  {errors.password && (
+                    <p className="text-xs text-red-500">{errors.password}</p>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    Must be at least 8 characters.
+                  </p>
                 </div>
                 <div className="space-y-2">
-                  <Label >
-                    Confirm password
-                  </Label>
+                  <Label>Confirm password</Label>
                   <Input
                     id="confirm-password"
                     type="password"
@@ -312,10 +331,15 @@ export default function ForgetPassword() {
                     }}
                   />
                   {errors.confirmPassword && (
-                    <p className="text-xs text-red-500">{errors.confirmPassword}</p>
+                    <p className="text-xs text-red-500">
+                      {errors.confirmPassword}
+                    </p>
                   )}
                 </div>
-                <Button className="w-full bg-[#E1BC6D] hover:bg-[#E1BC6D]/90" type="submit">
+                <Button
+                  className="w-full bg-[#E1BC6D] hover:bg-[#E1BC6D]/90"
+                  type="submit"
+                >
                   Reset password
                 </Button>
               </motion.form>

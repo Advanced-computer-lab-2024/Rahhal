@@ -6,8 +6,8 @@ import dailyUpdate from "@/utils/cronjobs";
 
 dotenv.config();
 
-const PORT = process.env.PORT;
-const MONGODB_URI = process.env.MONGODB_URI;
+const PORT = process.env.PORT || "3000";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://payment_database";
 
 async function connectToDB() {
   try {
@@ -27,5 +27,5 @@ if (connected) {
 }
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

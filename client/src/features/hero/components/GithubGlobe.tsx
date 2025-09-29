@@ -1,10 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import dynamic from "next/dynamic";
-
-const World = dynamic(() => import("@/components/ui/globe").then((m) => m.World), {
-  ssr: false,
-});
+import { World } from "@/components/ui/globe";
 
 export default function GlobeDemo() {
   const globeConfig = {
@@ -394,8 +390,8 @@ export default function GlobeDemo() {
   ];
 
   return (
-    <div className="flex flex-row items-center justify-center pb-0 h-screen md:h-auto bg-transparent relative </div>w-full">
-      <div className="max-w-9xl mx-auto w-full relative overflow-hidden h-full md:h-[40rem]" style={{paddingLeft:"-10px", minWidth:"700px"}}>
+    <div className="flex flex-row items-center justify-center pb-0 h-full w-full bg-transparent relative overflow-hidden">
+      <div className="mx-auto relative overflow-hidden h-full w-full aspect-square max-h-[80vh] md:max-h-full">
         <motion.div
           initial={{
             opacity: 0,
@@ -409,11 +405,10 @@ export default function GlobeDemo() {
             duration: 1,
           }}
           className="div"
-        >
-        </motion.div>
-        <div className="absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none z-40" />
-        <div className="absolute w-full md:h-full z-10">
-          <World data={sampleArcs} globeConfig={globeConfig}/>
+        ></motion.div>
+        <div className="absolute w-full bottom-0 inset-x-0 h-8 sm:h-16 md:h-32 bg-gradient-to-b pointer-events-none select-none z-40" />
+        <div className="absolute w-full h-full z-10">
+          <World data={sampleArcs} globeConfig={globeConfig} />
         </div>
       </div>
     </div>

@@ -13,7 +13,11 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { ChevronDown, Settings } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import SecondaryLogo from "@/features/logos/SecondaryLogo";
 import {
   DropdownMenu,
@@ -25,7 +29,7 @@ import NotificaionPopover from "@/components/NotificationPopover";
 import { Pyramid, Tags } from "lucide-react";
 import { logoutUser } from "@/api-calls/users-api-calls";
 import { UserState } from "@/stores/user-state-store";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 interface TourismGovernerSidebarProps {
   id?: string;
@@ -33,6 +37,7 @@ interface TourismGovernerSidebarProps {
 
 export function TourismGovernerSidebar({ id }: TourismGovernerSidebarProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const handleLogout = async () => {
     await logoutUser();
     await UserState();
@@ -63,22 +68,20 @@ export function TourismGovernerSidebar({ id }: TourismGovernerSidebarProps) {
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
-                      isActive={
-                        window.location.pathname === `http://localhost:5173/historical-places`
-                      }
+                      isActive={location.pathname === "/historical-places"}
                       tooltip="Historical Places"
                     >
-                      <a href={`/historical-places`}>
+                      <Link to="/historical-places">
                         <Pyramid />
                         Historical Places
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                     <SidebarMenuAction className="peer-data-[active=true]/menu-button:opacity-100" />
                   </SidebarMenuItem>
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
-                      isActive={window.location.pathname === `http://localhost:5173/historical-tags`}
+                      isActive={location.pathname === "/historical-tags"}
                       tooltip="Historical Tags"
                     >
                       <a href={`/historical-tags`}>
@@ -108,16 +111,19 @@ export function TourismGovernerSidebar({ id }: TourismGovernerSidebarProps) {
                     </a>
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                  <a href={`http//localhost:5173/user-settings/account`}>
+                <DropdownMenuContent
+                  side="top"
+                  className="w-[--radix-popper-anchor-width]"
+                >
+                  <Link to="/user-settings/account">
                     <DropdownMenuItem>Account</DropdownMenuItem>
-                  </a>
-                  <a href={`http//localhost:5173/user-settings`}>
+                  </Link>
+                  <Link to="/user-settings">
                     <DropdownMenuItem>Profile</DropdownMenuItem>
-                  </a>
-                  <a>
-                    <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
-                  </a>
+                  </Link>
+                  <Link to="#" onClick={handleLogout}>
+                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                  </Link>
                 </DropdownMenuContent>
               </DropdownMenu>
             </SidebarMenuItem>

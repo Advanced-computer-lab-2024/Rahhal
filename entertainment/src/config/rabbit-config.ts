@@ -1,5 +1,8 @@
 import amqp from 'amqplib';
 import { RABBITMQ } from '@/utils/constants';
+import dotenv from "dotenv";
+
+dotenv.config();
 
 class RabbitMQConnection {
   private static instance: RabbitMQConnection;
@@ -25,7 +28,7 @@ class RabbitMQConnection {
       // Declare queues
       await this.channel.assertQueue(RABBITMQ.QUEUE.NOTIFICATION, { durable: true });
       await this.channel.assertQueue(RABBITMQ.QUEUE.EVENT_REMINDER, { durable: true });
-
+      console.log(this.connection);
       return this.connection;
     } catch (error) {
       console.error('RabbitMQ Connection Error:', error);

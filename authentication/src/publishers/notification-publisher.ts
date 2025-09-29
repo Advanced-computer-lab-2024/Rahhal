@@ -7,7 +7,6 @@ interface NotificationData {
 }
 
 export async function publishNotification(data: NotificationData) {
-  try {
     const rabbitMQ = RabbitMQConnection.getInstance();
     await rabbitMQ.connect();
     const channel = rabbitMQ.channel;
@@ -15,11 +14,11 @@ export async function publishNotification(data: NotificationData) {
     if (!channel) {
       throw new Error('RabbitMQ channel not initialized');
     }
+    else { 
+      console.log("Channel is initialized");
+    }
 
     await channel.assertQueue(RABBITMQ.QUEUE.NOTIFICATION, { durable: true });
     channel.sendToQueue(RABBITMQ.QUEUE.NOTIFICATION, Buffer.from(JSON.stringify(data)));
     console.log(`Message published to queue: ${RABBITMQ.QUEUE.NOTIFICATION}`);
-  } catch (err) {
-    console.error('Error publishing notification:', err);
-  }
 }

@@ -1,4 +1,3 @@
-import ProductGridStyle from "../styles/ProductsGridView.module.css";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -12,22 +11,19 @@ import MinMaxRangeSlider from "@/features/home/components/filter-sidebar/MinMaxR
 import FilterStarRating from "@/features/home/components/filter-sidebar/FilterStarRating";
 import { getPriceValue } from "../utils/price-calculator";
 import ProductCard from "@/features/home/components/product-card/ProductCard";
-import { addToWishlist } from "@/api-calls/wishlist-api-calls";
 import FilterButton from "./FilterButton";
 import SortButton from "./SortButton";
-import useUserStore from "@/stores/user-state-store";
 
 // Fetching logic from the database
 const ProductGridView = () => {
   const [search, setSearch] = useState<string>("");
   const [skeleton, setSkeleton] = useState<boolean>(true);
   const [combined, setCombined] = useState<Product[]>([]);
-  const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>([0, 1000]);
+  const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>([
+    0, 1000,
+  ]);
   const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
   const [sortOption, setSortOption] = useState<SortOption | null>(null);
-
-  const { id } = useUserStore();
-
 
   // useQueries
   const { data: products, isLoading: isLoadingProducts } = useQuery({
@@ -48,25 +44,14 @@ const ProductGridView = () => {
 
   const resetFilters = () => {
     if (combined.length > 0) {
-      const maxPrice = Math.max(...combined.map((item) => getPriceValue(item.price)));
+      const maxPrice = Math.max(
+        ...combined.map((item) => getPriceValue(item.price))
+      );
       setSelectedPriceRange([0, maxPrice]); // Dynamically set the max price
     } else {
       setSelectedPriceRange([0, 10000]); // Fallback if combined is empty
     }
     setSelectedRatings([]);
-  };
-
-  const handleWishListClick = async (productId: string) => {
-    if (id) {
-      try {
-        await addToWishlist(id, productId);
-        console.log("Added to wishlist");
-      } catch (error) {
-        console.error("Failed to add to wishlist", error);
-      }
-    } else {
-      console.error("User ID is undefined");
-    }
   };
 
   useEffect(() => {
@@ -76,7 +61,9 @@ const ProductGridView = () => {
 
   useEffect(() => {
     if (combined.length > 0) {
-      const maxPrice = Math.max(...combined.map((item) => getPriceValue(item.price)));
+      const maxPrice = Math.max(
+        ...combined.map((item) => getPriceValue(item.price))
+      );
       setSelectedPriceRange([0, maxPrice]);
     }
   }, [combined]);
@@ -99,18 +86,28 @@ const ProductGridView = () => {
     {
       title: "Price Range",
       content: (
-        <MinMaxRangeSlider values={selectedPriceRange} onValueChange={setSelectedPriceRange} />
+        <MinMaxRangeSlider
+          values={selectedPriceRange}
+          onValueChange={setSelectedPriceRange}
+        />
       ),
     },
     {
       title: "Rating",
-      content: <FilterStarRating values={selectedRatings} onValueChange={setSelectedRatings} />,
+      content: (
+        <FilterStarRating
+          values={selectedRatings}
+          onValueChange={setSelectedRatings}
+        />
+      ),
     },
   ];
 
   const getAverageRating = (ratings?: IRating[]) => {
     if (!ratings || ratings.length === 0) return 0;
-    return ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length;
+    return (
+      ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length
+    );
   };
 
   //Searching first, then result is filter  then result is sorted
@@ -132,7 +129,9 @@ const ProductGridView = () => {
         (selectedPriceRange[0] === -1 && selectedPriceRange[1] === -1);
       const matchRating =
         selectedRatings.length === 0 ||
-        selectedRatings.some((rating) => itemRating >= rating && itemRating < rating + 1);
+        selectedRatings.some(
+          (rating) => itemRating >= rating && itemRating < rating + 1
+        );
 
       return matchPrice && matchRating;
     });
@@ -155,28 +154,30 @@ const ProductGridView = () => {
   });
 
   return (
-    <>
-      <div className={ProductGridStyle["product-grid-view"]}>
-        <FilterSortSearchHeader
-          searchPlaceHolder={"Search for products.. "}
-          setSearch={setSearch}
-          handleSort={handleSort}
-        ></FilterSortSearchHeader>
-        <hr className="border-t bg-[var(--gray-scale)] " />
-        <div className="flex w-[100vw]">
-          <FilterSideBar sideBarItems={combinedSideBarFilters} />
-          <div className={ProductGridStyle["scrollable"]}>
-            <div className={ProductGridStyle["product-grid-view__header"]}>
-              <h1>Products</h1>
-              <div className="flex flex-row items-center">
-                <FilterButton />
-                <SortButton onSort={handleSort} />
-              </div>
-            </div>
+    <div className="w-full overflow-hidden">
+      <FilterSortSearchHeader
+        searchPlaceHolder={"Search for products.. "}
+        setSearch={setSearch}
+        handleSort={handleSort}
+      />
+      <hr className="border-t bg-[var(--gray-scale)]" />
 
-            <div className={ProductGridStyle["product-grid-view__cards"]}>
+      {/* Desktop Layout - Large screens only */}
+      <div className="hidden xl:flex w-full">
+        <FilterSideBar sideBarItems={combinedSideBarFilters} />
+        <div className="flex-1 overflow-y-auto h-[70vh] xl:h-[80vh] 2xl:h-[87vh]">
+          <div className="flex items-center justify-between p-4">
+            <h1 className="text-2xl xl:text-3xl font-semibold">Products</h1>
+            <div className="flex items-center space-x-4">
+              <FilterButton />
+              <SortButton onSort={handleSort} />
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center justify-center w-full">
+            <div className="grid grid-cols-4  gap-x-6 gap-y-16 p-4 w-full max-w-7xl justify-items-center">
               {skeleton && (
-                <div className="space-y-2">
+                <div className="space-y-2 col-span-full">
                   <Skeleton className="h-4 w-[250px]" />
                   <Skeleton className="h-4 w-[200px]" />
                 </div>
@@ -184,23 +185,99 @@ const ProductGridView = () => {
 
               {!skeleton &&
                 sortedProducts?.map((products: Product) => (
-                  <>
-                    <ProductCard
-                      id={products._id}
-                      imageUrl={products.picture}
-                      name={products.name}
-                      price={products.price}
-                      sellername={products.sellerName}
-                      rating={getAverageRating(products.ratings)}
-                      handleWishlistClick={() => handleWishListClick(products._id)}
-                    />
-                  </>
+                  <ProductCard
+                    key={products._id}
+                    id={products._id}
+                    imageUrl={products.picture}
+                    name={products.name}
+                    price={products.price}
+                    sellername={products.sellerName}
+                    rating={getAverageRating(products.ratings)}
+                  />
                 ))}
             </div>
           </div>
         </div>
       </div>
-    </>
+
+      {/* Tablet Layout - Medium to Large screens */}
+      <div className="hidden lg:flex xl:hidden w-full">
+        <FilterSideBar sideBarItems={combinedSideBarFilters} />
+        <div className="flex-1 overflow-y-auto h-[70vh] lg:h-[80vh]">
+          <div className="flex items-center justify-between p-4">
+            <h1 className="text-xl lg:text-2xl font-semibold">Products</h1>
+            <div className="flex items-center space-x-2">
+              <FilterButton />
+              <SortButton onSort={handleSort} />
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center justify-center w-full p-4 pb-20">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-16 w-full max-w-5xl justify-items-center">
+              {skeleton && (
+                <div className="space-y-2 col-span-full">
+                  <Skeleton className="h-4 w-[250px]" />
+                  <Skeleton className="h-4 w-[200px]" />
+                </div>
+              )}
+
+              {!skeleton &&
+                sortedProducts?.map((products: Product) => (
+                  <ProductCard
+                    key={products._id}
+                    id={products._id}
+                    imageUrl={products.picture}
+                    name={products.name}
+                    price={products.price}
+                    sellername={products.sellerName}
+                    rating={getAverageRating(products.ratings)}
+                  />
+                ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Layout */}
+      <div className="lg:hidden">
+        {/* Mobile Filter/Sort Bar */}
+        <div className="flex items-center justify-between p-4 bg-white border-b">
+          <h1 className="text-lg font-semibold">Products</h1>
+          <div className="flex items-center space-x-2">
+            <FilterButton />
+            <SortButton onSort={handleSort} />
+          </div>
+        </div>
+
+        {/* Mobile Sidebar */}
+        <FilterSideBar sideBarItems={combinedSideBarFilters} />
+
+        {/* Mobile Content */}
+        <div className="flex flex-col items-center justify-center w-full p-4 pb-20">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-16 w-full max-w-4xl justify-items-center">
+            {skeleton && (
+              <div className="space-y-2 col-span-full">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            )}
+
+            {!skeleton &&
+              sortedProducts?.map((products: Product) => (
+                <ProductCard
+                  key={products._id}
+                  id={products._id}
+                  imageUrl={products.picture}
+                  name={products.name}
+                  price={products.price}
+                  sellername={products.sellerName}
+                  rating={getAverageRating(products.ratings)}
+                />
+              ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

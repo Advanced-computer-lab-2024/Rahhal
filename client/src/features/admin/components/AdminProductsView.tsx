@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { DataTable } from "@/components/data-table/DataTable";
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { ProductModal } from "@/features/seller/components/ProductsModal";
-import { productsColumns, TProduct } from "@/features/seller/utils/seller-columns";
+import {
+  productsColumns,
+  TProduct,
+} from "@/features/seller/utils/seller-columns";
 import { fetchProducts, deleteProduct } from "@/api-calls/products-api-calls";
 import { SUPER_ADMIN_ID } from "@/lib/constants";
 import { toast } from "@/hooks/use-toast";
@@ -11,11 +14,14 @@ import { cn } from "@/lib/utils";
 
 function AdminProductsView() {
   const [products, setProducts] = useState<TProduct[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const init = async () => {
+      setLoading(true);
       const data = await fetchProducts();
       setProducts(data);
+      setLoading(false);
     };
     init();
   }, []);
@@ -39,7 +45,8 @@ function AdminProductsView() {
     } catch (error) {
       toast({
         title: "Error",
-        description: (error as any).response?.data?.message || "Error deleting product",
+        description:
+          (error as any).response?.data?.message || "Error deleting product",
         variant: "destructive",
       });
     }
@@ -55,12 +62,13 @@ function AdminProductsView() {
     setProducts(newProducts);
   };
 
+  if (loading) return <div className="w-full text-center py-8">Loading...</div>;
   return (
-    <div className="container m-auto">
+    <div className="w-full max-w-full mx-auto">
       <h1
         className={cn(
-          "text-3xl font-bold tracking-tight",
-          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent",
+          "text-2xl sm:text-3xl font-bold tracking-tight mb-6",
+          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
         )}
       >
         Products

@@ -6,6 +6,7 @@
   "main": "src/server.ts",
   "scripts": {
     "dev": "tsx watch src/server.ts",
+    "build": "rm -rf ./build && tsc && tsc-alias",
     "test": "vitest",
     "lint": "eslint . --fix",
     "format": "prettier . --write",
@@ -26,7 +27,8 @@
     "tsx": "^4.19.1",
     "typescript": "^5.6.2",
     "typescript-eslint": "^8.7.0",
-    "vitest": "^2.1.1"
+    "vitest": "^2.1.1",
+    "tsc-alias": "^1.8.10"
   },
   "dependencies": {
     "amqplib": "^0.10.5",

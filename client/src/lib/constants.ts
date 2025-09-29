@@ -1,22 +1,27 @@
 import { UserRoleEnum } from "@/utils/enums";
 
+const gatewayServiceUrl =
+  import.meta.env.VITE_GATEWAY_SERVICE_URL || "http://localhost:3000";
+const notificationServiceUrl =
+  import.meta.env.VITE_NOTIFICATION_SERVICE_URL || "http://localhost:3008";
+
 export const SERVICES_URLS = {
-  ENTERTAINMENT: "http://localhost:3000/api/entertainment",
-  USER: "http://localhost:3000/api/user",
-  PAYMENT: "http://localhost:3000/api/payment",
-  PRODUCT: "http://localhost:3000/api/product",
-  FIREBASE: "http://localhost:3000/api/firebase",
-  BOOKING: "http://localhost:3000/api/booking",
-  TRANSPORTATION: "http://localhost:3000/api/transportation",
-  GOOGLE_MAPS: "http://localhost:3000/api/google-maps",
-  EXCHANGERATES: "http://localhost:3000/api/exchange-rates",
-  ORDER: "http://localhost:3000/api/order",
-  RATING: "http://localhost:3000/api/rating",
-  FLIGHTS: "http://localhost:3000/api/flights-search",
-  EXTERNALAPI: "http://localhost:3000/api/external-api",
-  NOTIFICATION: "http://localhost:3008",
-  GENERAL : "http://localhost:3000/api",
-  AUTHENTICATION : "http://localhost:3000/api/auth"
+  ENTERTAINMENT: `${gatewayServiceUrl}/api/entertainment`,
+  USER: `${gatewayServiceUrl}/api/user`,
+  PAYMENT: `${gatewayServiceUrl}/api/payment`,
+  PRODUCT: `${gatewayServiceUrl}/api/product`,
+  FIREBASE: `${gatewayServiceUrl}/api/firebase`,
+  BOOKING: `${gatewayServiceUrl}/api/booking`,
+  TRANSPORTATION: `${gatewayServiceUrl}/api/transportation`,
+  GOOGLE_MAPS: `${gatewayServiceUrl}/api/google-maps`,
+  EXCHANGERATES: `${gatewayServiceUrl}/api/exchange-rates`,
+  ORDER: `${gatewayServiceUrl}/api/order`,
+  RATING: `${gatewayServiceUrl}/api/rating`,
+  FLIGHTS: `${gatewayServiceUrl}/api/flights-search`,
+  EXTERNALAPI: `${gatewayServiceUrl}/api/external-api`,
+  GENERAL: `${gatewayServiceUrl}/api`,
+  AUTHENTICATION: `${gatewayServiceUrl}/api/auth`,
+  NOTIFICATION: `${notificationServiceUrl}`,
 };
 
 export const STATUS_CODES = {
@@ -224,7 +229,10 @@ export const NATIONALITIES = [
   { value: "Colombia", label: "Colombia" },
   { value: "Comoros", label: "Comoros" },
   { value: "Congo (Congo-Brazzaville)", label: "Congo (Congo-Brazzaville)" },
-  { value: "Congo (Democratic Republic of the)", label: "Congo (Democratic Republic of the)" },
+  {
+    value: "Congo (Democratic Republic of the)",
+    label: "Congo (Democratic Republic of the)",
+  },
   { value: "Costa Rica", label: "Costa Rica" },
   { value: "Croatia", label: "Croatia" },
   { value: "Cuba", label: "Cuba" },
@@ -331,7 +339,10 @@ export const NATIONALITIES = [
   { value: "Rwanda", label: "Rwanda" },
   { value: "Saint Kitts and Nevis", label: "Saint Kitts and Nevis" },
   { value: "Saint Lucia", label: "Saint Lucia" },
-  { value: "Saint Vincent and the Grenadines", label: "Saint Vincent and the Grenadines" },
+  {
+    value: "Saint Vincent and the Grenadines",
+    label: "Saint Vincent and the Grenadines",
+  },
   { value: "Samoa", label: "Samoa" },
   { value: "San Marino", label: "San Marino" },
   { value: "Sao Tome and Principe", label: "Sao Tome and Principe" },

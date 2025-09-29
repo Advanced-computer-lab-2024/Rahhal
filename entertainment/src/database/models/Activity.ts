@@ -56,6 +56,7 @@ const activitySchema = new mongoose.Schema<IActivity>({
     },
     required: true,
   },
+  // @ts-ignore
   price: {
     type: Map,
     of: Number,

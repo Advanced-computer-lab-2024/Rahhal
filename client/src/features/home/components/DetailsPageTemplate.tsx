@@ -1,7 +1,7 @@
 import GoogleMap from "@/components/google-maps/GoogleMap";
 import SharePopover from "@/components/SharePopover";
 import { MapPin, Star, Tag } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Review from "./Reviews";
 import {
   calculateAverageRating,
@@ -45,7 +45,9 @@ export default function DetailsPageTemplate({
           lat: location.latitude,
           lng: location.longitude,
         });
-        const locationDescription = (locationDetails as { description?: string })?.description;
+        const locationDescription = (
+          locationDetails as { description?: string }
+        )?.description;
 
         setLocationName(locationDescription ?? "Undefined");
       };
@@ -58,19 +60,23 @@ export default function DetailsPageTemplate({
   }, [ratings]);
 
   return (
-    <div className="px-32 py-4">
-      <h1 className="text-3xl font-semibold mb-2 ">{name}</h1>
+    <div className="px-4 md:px-8 lg:px-16 xl:px-32 py-4">
+      <h1 className="text-2xl md:text-3xl font-semibold mb-2">{name}</h1>
 
       {/* Rating */}
       <div className="flex justify-between mb-4">
         <div className="flex gap-0.5 text-sm items-center">
-          <Star className={"w-4 h-4 fill-[var(--primary-color)] text-[var(--primary-color)]"} />
+          <Star
+            className={
+              "w-4 h-4 fill-[var(--primary-color)] text-[var(--primary-color)]"
+            }
+          />
           <h6 className="w-4 h-4 ">{rating.toFixed(1)}</h6>
           <h6 className="ml-1 mt-1">({ratings.length})</h6>
         </div>
         <div className="flex">
           <SharePopover
-            link={`http://localhost:5173/activities?eventId=${_id}`}
+            link={`${window.location.origin}/activities?eventId=${_id}`}
             size={18}
             shareText={true}
           />
@@ -82,11 +88,13 @@ export default function DetailsPageTemplate({
       <ImageGallery images={images} />
 
       {/* Tags */}
-      <div className="flex space-x-2 py-3">
+      <div className="flex flex-wrap gap-2 py-3">
         {preferenceTagNames.map((tag, index) => (
           <div
             key={index}
-            className={"flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700"}
+            className={
+              "flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700"
+            }
           >
             <Tag className="w-4 h-4 mr-1" />
             {tag}
@@ -97,8 +105,36 @@ export default function DetailsPageTemplate({
       {/* Horizontal line */}
       <hr className="border-t border-gray-200" />
 
-      <div className="grid grid-cols-3 gap-8 px-2 py-5">
-        <div className="space-y-6 col-span-2">
+      {/* Mobile Layout */}
+      <div className="block xl:hidden">
+        {/* Mobile Booking Card - Top Position */}
+        <div className="my-6 top-4 z-10">{children}</div>
+
+        <div className="space-y-6 px-2 py-5">
+          {/* Author and Description */}
+          <div className="space-y-4">
+            <p className="font-medium">By: {ownerName}</p>
+            <p className="text-gray-600">{description}</p>
+          </div>
+          <hr className="border-t border-gray-200" />
+          <p className="font-medium text-lg">Where you can find us</p>
+          <GoogleMap
+            isEditable={false}
+            location={{ lat: location.latitude, lng: location.longitude }}
+            setLocation={() => {}}
+            className="rounded-full"
+          />
+          {/* Location */}
+          <div className="flex items-center gap-2">
+            <MapPin className="w-6 h-6" />
+            <p className="mt-1">{locationName}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop/Tablet Layout */}
+      <div className="hidden xl:grid grid-cols-1 xl:grid-cols-3 gap-8 px-2 py-5">
+        <div className="space-y-6 xl:col-span-2">
           {/* Author and Description */}
           <div className="space-y-4">
             <p className="font-medium">By: {ownerName}</p>
@@ -120,8 +156,9 @@ export default function DetailsPageTemplate({
         </div>
 
         {/* Right Column - Booking Card */}
-        <div className="justify-center items-center ">{children}</div>
+        <div className="justify-center items-center">{children}</div>
       </div>
+
       {/* Horizontal line */}
       <hr className="border-t border-gray-200" />
       {/* Reviews */}

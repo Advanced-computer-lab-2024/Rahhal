@@ -49,29 +49,42 @@ export const itinerariesColumns= (
   {
     accessorKey: "name",
     header: "Name",
-    cell: ({ row }) => <div className="capitalize">{row.original.name}</div>,
+    cell: ({ row }) => <div className="capitalize font-medium">{row.original.name}</div>,
   },
   {
     accessorKey: "price",
     header: "Price",
+    cell: ({ row }) => <div className="font-medium">${row.original.price}</div>,
+    meta: {
+      className: "hidden sm:table-cell",
+    },
   },
   {
     accessorKey: "ratings",
     header: "Rating",
     cell: ({ row }) => (
-      <div className="capitalize">{calculateAverageRating(row.original.ratings)}</div>
+      <div className="capitalize text-sm">
+        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+          {calculateAverageRating(row.original.ratings).toFixed(1)} ⭐
+        </span>
+      </div>
     ),
+    meta: {
+      className: "hidden md:table-cell",
+    },
   },
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
       <div>
-        {row.original.appropriate ? (
-          <span className="text-muted-foreground">Appropriate</span>
-        ) : (
-          <span className="text-muted-foreground">Inappropriate</span>
-        )}
+        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+          row.original.appropriate 
+            ? 'bg-green-100 text-green-800' 
+            : 'bg-red-100 text-red-800'
+        }`}>
+          {row.original.appropriate ? "Appropriate" : "Inappropriate"}
+        </span>
       </div>
     ),
   },

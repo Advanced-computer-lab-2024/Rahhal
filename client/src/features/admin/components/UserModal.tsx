@@ -25,29 +25,39 @@ interface UserModalProps {
   onSubmit?: (user: TUser) => void;
 }
 
-export function UserModal({ userData, dialogTrigger, onDelete, onSubmit }: UserModalProps) {
+export function UserModal({
+  userData,
+  dialogTrigger,
+  onDelete,
+  onSubmit,
+}: UserModalProps) {
   const isNewUser: boolean = userData === undefined; // check if the user is new or existing
-  const [modalUserData, setModalUserData] = useState<TUser>(userData ?? DEFAULTS.USER); // current user data present in the modal
-  
+  const [modalUserData, setModalUserData] = useState<TUser>(
+    userData ?? DEFAULTS.USER
+  ); // current user data present in the modal
+
   const handleDelete = () => {
     if (modalUserData && onDelete) {
       onDelete(modalUserData._id);
     }
-  }
+  };
 
   const handleSubmit = async () => {
     if (!modalUserData) return;
-    
+
     try {
       const response = await submitUser(modalUserData, isNewUser);
-      if (response?.status === STATUS_CODES.STATUS_OK || response?.status === STATUS_CODES.CREATED) {
+      if (
+        response?.status === STATUS_CODES.STATUS_OK ||
+        response?.status === STATUS_CODES.CREATED
+      ) {
         toast({
           title: "Success",
           description: "User saved successfully",
           style: {
             backgroundColor: "#34D399",
             color: "white",
-          }
+          },
         });
         if (onSubmit) {
           onSubmit(modalUserData);
@@ -57,11 +67,12 @@ export function UserModal({ userData, dialogTrigger, onDelete, onSubmit }: UserM
     } catch (error) {
       toast({
         title: "Error",
-        description: (error as any).response?.data?.message || "Error saving user",
+        description:
+          (error as any).response?.data?.message || "Error saving user",
         variant: "destructive",
       });
     }
-  }
+  };
 
   return (
     <GenericModal
@@ -73,12 +84,14 @@ export function UserModal({ userData, dialogTrigger, onDelete, onSubmit }: UserM
       onDelete={handleDelete}
     >
       {isNewUser && (
-        <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-4 p-4 sm:p-6">
           <div className="flex flex-col gap-2">
             <Label>Username</Label>
             <Input
               value={modalUserData.username}
-              onChange={(e) => setModalUserData({ ...modalUserData, username: e.target.value })}
+              onChange={(e) =>
+                setModalUserData({ ...modalUserData, username: e.target.value })
+              }
               placeholder="Username"
             />
           </div>
@@ -87,7 +100,9 @@ export function UserModal({ userData, dialogTrigger, onDelete, onSubmit }: UserM
             <Label>Password</Label>
             <Input
               value={modalUserData.password}
-              onChange={(e) => setModalUserData({ ...modalUserData, password: e.target.value })}
+              onChange={(e) =>
+                setModalUserData({ ...modalUserData, password: e.target.value })
+              }
               placeholder="Password"
             />
           </div>
@@ -95,11 +110,17 @@ export function UserModal({ userData, dialogTrigger, onDelete, onSubmit }: UserM
           <GenericSelect
             label={"Role"}
             options={[
-              { value: UserRoleEnum.tourismGovernor, label: "Tourism Governor" },
+              {
+                value: UserRoleEnum.tourismGovernor,
+                label: "Tourism Governor",
+              },
               { value: UserRoleEnum.admin, label: "Admin" },
             ]}
             onSelect={(value: string) =>
-              setModalUserData({ ...modalUserData, role: value as UserRoleEnum })
+              setModalUserData({
+                ...modalUserData,
+                role: value as UserRoleEnum,
+              })
             }
             placeholder={"Select a role"}
           />
@@ -134,38 +155,53 @@ export function UserModal({ userData, dialogTrigger, onDelete, onSubmit }: UserM
           ].map(({ title, value }) => {
             if (value)
               return (
-                <Card key={title}>
-                  <CardHeader>
-                    <CardTitle>{title}</CardTitle>
+                <Card key={title} className="w-full">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg">{title}</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <Textarea value={value} className="flex-grow min-h-40" readOnly={true} />
+                  <CardContent className="pt-0">
+                    <Textarea
+                      value={value}
+                      className="flex-grow min-h-32 sm:min-h-40 text-sm"
+                      readOnly={true}
+                    />
                   </CardContent>
                 </Card>
               );
           })}
-<PictureViewer 
-          title="Profile Picture"
-          description="User's profile picture"
-          imageSources={modalUserData.profilePicture ? [modalUserData.profilePicture] : []}
+          <PictureViewer
+            title="Profile Picture"
+            description="User's profile picture"
+            imageSources={
+              modalUserData.profilePicture ? [modalUserData.profilePicture] : []
+            }
           />
           <ToggleableSwitchCard
             title="Approved"
             switchState={modalUserData.approved}
             onToggle={() =>
-              setModalUserData({ ...modalUserData, approved: !modalUserData.approved })
+              setModalUserData({
+                ...modalUserData,
+                approved: !modalUserData.approved,
+              })
             }
             description={"Check if user is approved"}
             icon={<FaCircleCheck />}
           />
           {modalUserData.role !== UserRoleEnum.tourist && (
-            <div>
-              <h1 className="text-2xl font-semibold mt-6 mb-4">Uploaded Documents</h1>
+            <div className="w-full">
+              <h1 className="text-xl sm:text-2xl font-semibold mt-6 mb-4">
+                Uploaded Documents
+              </h1>
               <UserDocuments
                 certificatesUrls={modalUserData.certificates}
                 governmentalDocumentsUrls={[
-                  ...(modalUserData.nationalID ? [modalUserData.nationalID] : []),
-                  ...(modalUserData.taxRegistration ? [modalUserData.taxRegistration] : []),
+                  ...(modalUserData.nationalID
+                    ? [modalUserData.nationalID]
+                    : []),
+                  ...(modalUserData.taxRegistration
+                    ? [modalUserData.taxRegistration]
+                    : []),
                 ]}
               />
             </div>

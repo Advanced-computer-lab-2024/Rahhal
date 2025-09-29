@@ -21,6 +21,7 @@ interface Destination {
   image: string;
   placeId: string;
   address: string;
+  iataCode: string;
 }
 
 export default function FlightsLandingComponent() {
@@ -40,6 +41,7 @@ export default function FlightsLandingComponent() {
       image: paris,
       placeId: "ChIJHTtq-rF15kcRIoTbQ9feeJ0",
       address: "Paris Orly Airport (ORY), Orly, France",
+      iataCode: "ORY",
     },
     {
       name: "Berlin",
@@ -47,12 +49,14 @@ export default function FlightsLandingComponent() {
       placeId: "ChIJUTAoz9NGqEcRCGpRR5dAFJA",
       address:
         "Berlin Brandenburg Airport Willy Brandt (BER), Melli-Beese-Ring, Schönefeld, Germany",
+      iataCode: "BER",
     },
     {
       name: "Cairo",
       image: Cairo,
       placeId: "ChIJOWJsUarIhkcRYNL_HukulK8",
       address: "Cairo International Airport (CAI), El Nozha, Egypt",
+      iataCode: "CAI",
     },
     {
       name: "Milan",
@@ -60,6 +64,7 @@ export default function FlightsLandingComponent() {
       placeId: "ChIJDYMynm9QgUcRggAD8frHdwE",
       address:
         "Milan Linate Airport (LIN), Viale Forlanini, Segrate, Metropolitan City of Milan, Italy",
+      iataCode: "LIN",
     },
   ];
 
@@ -98,7 +103,8 @@ export default function FlightsLandingComponent() {
     if (targetElement) {
       targetElement.scrollIntoView({ behavior: "smooth" });
       departureSuggestionsPlaceId = [
-        destinations.find((destination) => destination.name === "Cairo")?.placeId || "",
+        destinations.find((destination) => destination.name === "Cairo")
+          ?.placeId || "",
       ];
       destinations.forEach((destination) => {
         if (destination.name === destinationName) {
@@ -106,7 +112,9 @@ export default function FlightsLandingComponent() {
           arrivalLocation = destination.address;
         }
       });
-      setDepartureLocation("Cairo International Airport (CAI), El Nozha, Egypt");
+      setDepartureLocation(
+        "Cairo International Airport (CAI), El Nozha, Egypt"
+      );
       setArrivalLocation(arrivalLocation);
       setDepartureSuggestionsPlaceId(departureSuggestionsPlaceId);
       setArrivalSuggestionsPlaceId(arrivalSuggestionsPlaceId);
@@ -117,9 +125,15 @@ export default function FlightsLandingComponent() {
     <div className="w-full px-0 sm:px-8 lg:px-16 py-4">
       {/* Hero Section */}
       <div className="relative rounded-xl overflow-hidden w-full h-64 sm:h-80 lg:h-96">
-        <img src={Plane} alt="Explore every destination" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-start px-8 sm:px-16">
-          <p className="text-white text-lg sm:text-xl font-medium">Can’t decide where to go?</p>
+        <img
+          src={Plane}
+          alt="Explore every destination"
+          className="w-full h-full object-cover p-2 rounded-2xl "
+        />
+        <div className="absolute rounded-lg inset-0 bg-black bg-opacity-40 m-2 flex flex-col justify-center items-start px-8 sm:px-16">
+          <p className="text-white text-lg sm:text-xl font-medium">
+            Can’t decide where to go?
+          </p>
           <h1 className="text-white text-3xl sm:text-4xl lg:text-5xl font-bold mt-2">
             Explore every destination
           </h1>
@@ -128,8 +142,10 @@ export default function FlightsLandingComponent() {
 
       {/* Carousel Section */}
       <div className="px-4 sm:px-0 py-8">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">Trending destinations</h1>
-        <div className="relative">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6 sm:mb-8 px-2 sm:px-0">
+          Trending destinations
+        </h1>
+        <div className="relative px-4 sm:px-0">
           <Carousel
             opts={{
               align: "start",
@@ -138,15 +154,15 @@ export default function FlightsLandingComponent() {
             className="w-full"
             ref={emblaRef}
           >
-            <CarouselContent className="flex gap-0">
+            <CarouselContent className="flex gap-2 sm:gap-4">
               {destinations.map((destination, index) => (
                 <CarouselItem
                   key={index}
-                  className="pl-0 md:pl-4 cursor-pointer" // Remove padding for the leftmost item
+                  className="pl-0 cursor-pointer"
                   style={{ flex: `0 0 ${100 / slidesPerView}%` }}
                 >
                   <Card
-                    className="overflow-hidden"
+                    className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 mx-1 sm:mx-0"
                     onClick={(e) => handleCardClick(destination.name, e)}
                   >
                     <div className="relative aspect-[4/3]">
@@ -155,8 +171,8 @@ export default function FlightsLandingComponent() {
                         alt={destination.name}
                         className="object-cover w-full h-full"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                      <h2 className="absolute bottom-4 left-4 text-white text-xl sm:text-2xl font-semibold">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                      <h2 className="absolute bottom-3 sm:bottom-4 left-6 sm:left-6 text-white text-lg sm:text-xl lg:text-2xl xl:text-4xl font-bold drop-shadow-lg">
                         {destination.name}
                       </h2>
                     </div>
@@ -164,8 +180,14 @@ export default function FlightsLandingComponent() {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="hidden sm:flex left-0 sm:-left-12" />
-            <CarouselNext className="hidden sm:flex right-0 sm:-right-12" />
+
+            {/* Mobile Navigation Arrows */}
+            <CarouselPrevious className="sm:hidden -left-2 w-8 h-8 bg-white/90 hover:bg-white border-2 shadow-lg" />
+            <CarouselNext className="sm:hidden -right-2 w-8 h-8 bg-white/90 hover:bg-white border-2 shadow-lg" />
+
+            {/* Desktop Navigation Arrows */}
+            <CarouselPrevious className="hidden sm:flex left-0 sm:-left-12 w-10 h-10 bg-white hover:bg-gray-50" />
+            <CarouselNext className="hidden sm:flex right-0 sm:-right-12 w-10 h-10 bg-white hover:bg-gray-50" />
           </Carousel>
         </div>
       </div>

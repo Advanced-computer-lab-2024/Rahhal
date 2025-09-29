@@ -13,8 +13,8 @@ export default function Header({
 }) {
   const [isDoubleCheckDialogOpen, setIsDoubleCheckDialogOpen] = useState(false);
   return (
-    <div className="flex justify-between px-2 items-center">
-      <div className="flex gap-3 items-center">
+    <div className="flex flex-col sm:flex-row justify-between px-2 items-center space-y-2 sm:space-y-0">
+      <div className="flex gap-3 items-center order-2 sm:order-1">
         {!isNew && (
           <DoubleCheckPopUpWrapper
             isOpen={isDoubleCheckDialogOpen}
@@ -22,13 +22,17 @@ export default function Header({
             onCancel={() => setIsDoubleCheckDialogOpen(false)}
             customMessage="Your itinerary will be permanently deleted."
           >
-            <Button onClick={() => setIsDoubleCheckDialogOpen(true)} variant="destructive">
+            <Button
+              onClick={() => setIsDoubleCheckDialogOpen(true)}
+              variant="destructive"
+              size="sm"
+            >
               Delete
             </Button>
           </DoubleCheckPopUpWrapper>
         )}
       </div>
-      <DialogTitle className="text-xl xl:text-3xl mr-4 content-center">
+      <DialogTitle className="text-lg sm:text-xl xl:text-3xl content-center order-1 sm:order-2">
         Itinerary Details
       </DialogTitle>
     </div>

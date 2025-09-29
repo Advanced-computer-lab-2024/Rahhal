@@ -17,9 +17,13 @@ interface ActivityViewProps {
   onSubmit?: (activity: TActivity) => void;
 }
 
-export function ActivityView({ activityData, dialogTrigger, onSubmit }: ActivityViewProps) {
+export function ActivityView({
+  activityData,
+  dialogTrigger,
+  onSubmit,
+}: ActivityViewProps) {
   const [modalActivityData, setModalActivityData] = useState<TActivity>(
-    activityData ?? DEFAULTS.ACTIVITY,
+    activityData ?? DEFAULTS.ACTIVITY
   );
 
   useEffect(() => {
@@ -77,23 +81,25 @@ export function ActivityView({ activityData, dialogTrigger, onSubmit }: Activity
           "images",
         ]}
       />
-      <div className="flex items-center space-x-2 pt-4">
+      <div className="flex flex-col items-center gap-6 pt-4">
         <PictureViewer
           title="Activity Images"
           description="Activity Images"
           imageSources={modalActivityData.images}
         />
-        <Checkbox
-          id="inappropriate"
-          checked={!modalActivityData.isAppropriate}
-          onCheckedChange={(checked) => {
-            setModalActivityData({
-              ...modalActivityData,
-              isAppropriate: !checked,
-            });
-          }}
-        />
-        <Label htmlFor="inappropriate">Inappropriate Activity</Label>
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="inappropriate"
+            checked={!modalActivityData.isAppropriate}
+            onCheckedChange={(checked) => {
+              setModalActivityData({
+                ...modalActivityData,
+                isAppropriate: !checked,
+              });
+            }}
+          />
+          <Label htmlFor="inappropriate">Inappropriate Activity</Label>
+        </div>
       </div>
     </GenericModal>
   );

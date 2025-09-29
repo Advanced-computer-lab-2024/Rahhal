@@ -59,6 +59,7 @@ const historicalPlaceSchema = new mongoose.Schema<IHistoricalPlace>({
     },
     required: true,
   },
+  // @ts-ignore
   price: {
     type: Map,
     of: Number,

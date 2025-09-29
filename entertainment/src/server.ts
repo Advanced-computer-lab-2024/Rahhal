@@ -2,11 +2,10 @@ import app from "./app";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
-// Load environment variables
 dotenv.config();
 
-const PORT = process.env.PORT;
-const MONGODB_URI = process.env.MONGODB_URI;
+const PORT = process.env.PORT || "3000";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://entertainment_database";
 
 async function connectToDB() {
   try {
@@ -19,5 +18,5 @@ async function connectToDB() {
 
 await connectToDB();
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

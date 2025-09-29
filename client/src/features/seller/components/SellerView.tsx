@@ -2,8 +2,14 @@ import { useEffect, useState } from "react";
 import { DataTable } from "@/components/data-table/DataTable";
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { ProductModal } from "./ProductsModal";
-import { productsColumns, TProduct } from "@/features/seller/utils/seller-columns";
-import { fetchUserProducts, deleteProduct } from "@/api-calls/products-api-calls";
+import {
+  productsColumns,
+  TProduct,
+} from "@/features/seller/utils/seller-columns";
+import {
+  fetchUserProducts,
+  deleteProduct,
+} from "@/api-calls/products-api-calls";
 import { getUserById } from "@/api-calls/users-api-calls";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
@@ -13,15 +19,18 @@ import { cn } from "@/lib/utils";
 import useUserStore from "@/stores/user-state-store";
 function SellerView() {
   const [products, setProducts] = useState<TProduct[]>([]);
+  const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState<string>("");
   const { id } = useUserStore();
 
   useEffect(() => {
     const init = async () => {
+      setLoading(true);
       if (id) {
         const data = await fetchUserProducts(id);
         setProducts(data);
       }
+      setLoading(false);
     };
     init();
   }, []);
@@ -57,7 +66,8 @@ function SellerView() {
     } catch (error) {
       toast({
         title: "Error",
-        description: (error as any).response?.data?.message || "Error deleting product",
+        description:
+          (error as any).response?.data?.message || "Error deleting product",
         variant: "destructive",
       });
     }
@@ -73,12 +83,13 @@ function SellerView() {
     setProducts(newProducts);
   };
 
+  if (loading) return <div className="w-full text-center py-8">Loading...</div>;
   return (
     <div className="container m-auto">
       <h1
         className={cn(
           "text-3xl font-bold tracking-tight",
-          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent",
+          "bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
         )}
       >
         Products
@@ -93,7 +104,7 @@ function SellerView() {
               userId={id}
               username={username}
               productData={undefined}
-              dialogTrigger={<DataTableAddButton className="bg-[#1d3c51]"/>}
+              dialogTrigger={<DataTableAddButton className="bg-[#1d3c51]" />}
               onSubmit={(newProduct) => {
                 setProducts((prev) => [...prev, newProduct]);
               }}

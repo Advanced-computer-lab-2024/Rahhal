@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import PageStyles from "@/features/home/styles/MyTripsPage.module.css";
 import { MyTripsCard } from "./MyTripsCard";
 import { fetchUserBookings } from "@/api-calls/booking-api-calls";
 import { useQuery } from "@tanstack/react-query";
@@ -110,13 +109,13 @@ export const MyTripsPage = () => {
   const [selectedMainFilter, setSelectedMainFilter] = useState("");
   const [selectedSubFilter, setSelectedSubFilter] = useState("");
   const [filteredBookings, setFilteredBookings] = useState<TPopulatedBooking[]>(
-    booking as TPopulatedBooking[],
+    booking as TPopulatedBooking[]
   );
 
   useEffect(() => {
     // update the main filter when the sub filter changes
     const selectedOption = transferOptions.find((option) =>
-      option.dropdownItems.some((item) => item.value === selectedSubFilter),
+      option.dropdownItems.some((item) => item.value === selectedSubFilter)
     );
     if (selectedOption) setSelectedMainFilter(selectedOption.type);
 
@@ -125,21 +124,60 @@ export const MyTripsPage = () => {
     setFilteredBookings(
       (booking as TPopulatedBooking[]).filter(
         (booking) =>
-          (!selectedOption && selectedMainFilter === "") || booking.type === selectedSubFilter,
-      ),
+          (!selectedOption && selectedMainFilter === "") ||
+          booking.type === selectedSubFilter
+      )
     );
   }, [selectedSubFilter, booking]);
 
   return (
-    <div className="mb-5">
-      <div className={PageStyles["trip-page-header"]}>
-        <p>Trips & Booking</p>
-        <div className="flex justify-end px-16 py-[1%] space-x-2">
+    <div className="min-h-screen bg-gray-50 pb-8">
+      {/* Header Section */}
+      <div className="px-4 md:px-8 lg:px-16 xl:px-32 pt-6 pb-4">
+        {/* Title */}
+        <h1 className="text-2xl md:text-3xl font-bold text-black mb-6">
+          Trips & Booking
+        </h1>
+
+        {/* Mobile Filter Section */}
+        <div className="block md:hidden mb-4">
+          <div className="flex flex-wrap gap-2">
+            {transferOptions.map((option) => (
+              <DropdownMenu key={option.type}>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    className={`rounded-full bg-transparent text-black hover:bg-gray-200 px-4 py-2 text-sm flex items-center ${
+                      selectedMainFilter === option.type ? "bg-gray-200" : ""
+                    }`}
+                  >
+                    {option.icon}
+                    <span className="ml-1">{option.label}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {option.dropdownItems.map((item) => (
+                    <DropdownMenuItem
+                      key={item.value}
+                      onClick={() => setSelectedSubFilter(item.value)}
+                    >
+                      {item.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop Filter Section */}
+        <div className="hidden md:flex justify-end space-x-2">
           {transferOptions.map((option) => (
             <DropdownMenu key={option.type}>
               <DropdownMenuTrigger asChild>
                 <Button
-                  className={`rounded-full bg-transparent text-black hover:bg-gray-200 px-6 py-3 text-md ${selectedMainFilter === option.type ? "bg-gray-200" : ""}`}
+                  className={`rounded-full bg-transparent text-black hover:bg-gray-200 px-6 py-3 text-md ${
+                    selectedMainFilter === option.type ? "bg-gray-200" : ""
+                  }`}
                 >
                   {option.icon}
                   {option.label}
@@ -160,33 +198,67 @@ export const MyTripsPage = () => {
         </div>
       </div>
 
-      <div className={PageStyles["trip-list"]}>
-        {filteredBookings && filteredBookings.length > 0
-          ? filteredBookings.map((booking: TPopulatedBooking) => {
+      {/* Trips List Section */}
+      <div className="px-4 md:px-8 lg:px-16 xl:px-32">
+        <div className="flex flex-col gap-4 md:gap-6">
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center min-h-[400px]">
+              <svg
+                className="animate-spin h-10 w-10 text-gray-400 mb-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8z"
+                ></path>
+              </svg>
+              <p className="text-lg text-gray-500">Loading your trips...</p>
+            </div>
+          ) : filteredBookings && filteredBookings.length > 0 ? (
+            filteredBookings.map((booking: TPopulatedBooking) => {
               let price;
               if (booking.type === bookmarkType.Activity) {
                 price =
                   booking.selectedPrice -
-                  (booking.selectedPrice * (booking.entity as TActivity).specialDiscount) / 100;
+                  (booking.selectedPrice *
+                    (booking.entity as TActivity).specialDiscount) /
+                    100;
                 price -= price * ((booking.discount ?? 0) / 100);
               } else
                 price =
-                  booking.selectedPrice - booking.selectedPrice * ((booking.discount ?? 0) / 100);
+                  booking.selectedPrice -
+                  booking.selectedPrice * ((booking.discount ?? 0) / 100);
 
-              const status = isDateInPast(
-                booking.selectedDate ? booking.selectedDate : booking.selectedDate,
-                booking.status,
-              )
-                ? "completed"
-                : booking.status;
-              const date = formatDate(
-                booking.selectedDate ? booking.selectedDate : booking.selectedDate,
+              const isPastTrip = isDateInPast(
+                booking.selectedDate
+                  ? booking.selectedDate
+                  : booking.selectedDate,
+                booking.status
               );
-              const image = booking.entity.images ? booking.entity.images[0] : undefined;
+              const status = isPastTrip ? "completed" : booking.status;
+              const date = formatDate(
+                booking.selectedDate
+                  ? booking.selectedDate
+                  : booking.selectedDate
+              );
+              const image = booking.entity.images
+                ? booking.entity.images[0]
+                : undefined;
 
               return (
                 <MyTripsCard
-                  key={booking.entity._id}
+                  key={booking._id}
                   title={booking.entity.name || `${booking.type}`}
                   price={price}
                   status={status}
@@ -196,17 +268,21 @@ export const MyTripsPage = () => {
                 />
               );
             })
-          : !isLoading &&
+          ) : (
             !isError && (
-              <EmptyStatePlaceholder
-                img={luggage}
-                img_alt="No trips"
-                textOne="No bookings yet—let's change that"
-                textTwo="Book things before you go, and get right to the good stuff when you're there."
-                buttonText="Start Planning"
-                navigateTo={`/entertainment`}
-              />
-            )}
+              <div className="flex justify-center items-center min-h-[400px]">
+                <EmptyStatePlaceholder
+                  img={luggage}
+                  img_alt="No trips"
+                  textOne="No bookings yet—let's change that"
+                  textTwo="Book things before you go, and get right to the good stuff when you're there."
+                  buttonText="Start Planning"
+                  navigateTo={`/entertainment`}
+                />
+              </div>
+            )
+          )}
+        </div>
       </div>
     </div>
   );

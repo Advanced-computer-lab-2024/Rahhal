@@ -1,0 +1,72 @@
+services:
+  backend:
+    image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/backend:latest
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile.prod
+    env_file:
+      - ./api-gateway/.env
+
+  entertainment:
+    image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/entertainment:latest
+    build:
+      context: ./entertainment
+      dockerfile: Dockerfile.prod
+    env_file:
+      - ./entertainment/.env
+
+  product:
+    image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/product:latest
+    build:
+      context: ./product
+      dockerfile: Dockerfile.prod
+    env_file:
+      - ./product/.env
+
+  order:
+    image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/order:latest
+    build:
+      context: ./order
+      dockerfile: Dockerfile.prod
+    env_file:
+      - ./order/.env
+
+  user:
+    image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/user:latest
+    build:
+      context: ./user
+      dockerfile: Dockerfile.prod
+    env_file:
+      - ./user/.env
+
+  booking:
+    image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/booking:latest
+    build:
+      context: ./booking
+      dockerfile: Dockerfile.prod
+    env_file:
+      - ./booking/.env
+
+  payment:
+    image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/payment:latest
+    build:
+      context: ./payment
+      dockerfile: Dockerfile.prod
+    env_file:
+      - ./payment/.env
+
+  authentication:
+    image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/authentication:latest
+    build:
+      context: ./authentication
+      dockerfile: Dockerfile.prod
+    env_file:
+      - ./authentication/.env
+
+  notification:
+    image: me-central1-docker.pkg.dev/rahhal-437608/rahhal/notification:latest
+    build:
+      context: ./notification
+      dockerfile: Dockerfile.prod
+    env_file:
+      - ./notification/.env

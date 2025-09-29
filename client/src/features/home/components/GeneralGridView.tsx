@@ -1,4 +1,3 @@
-import GeneralGridStyle from "../styles/GeneralGridView.module.css";
 import EntertainmentCard from "@/features/home/components/EntertainmentCard";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -44,21 +43,31 @@ import useUserStore from "@/stores/user-state-store";
 function GeneralGridView() {
   const [activeFilter, setActiveFilter] = useState<string[]>([]);
   const [search, setSearch] = useState<string>("");
-  const [combined, setCombined] = useState<(Itinerary | Activity | HistoricalPlace)[]>([]);
-  const [searchPartsValues, setSearchPartsValues] = useState<string[][]>([[], []]);
+  const [combined, setCombined] = useState<
+    (Itinerary | Activity | HistoricalPlace)[]
+  >([]);
+  const [searchPartsValues, setSearchPartsValues] = useState<string[][]>([
+    [],
+    [],
+  ]);
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [selectedTag, setSelectedTag] = useState<string[]>([]);
   const [skeleton, setSkeleton] = useState<boolean>(true);
   const [finishedLoading, setFinishedLoading] = useState<boolean>(false);
-  const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>([0, 10000]);
-  const [selectedDates, setSelectedDates] = useState<DateRange>({ from: undefined, to: undefined });
+  const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>([
+    0, 10000,
+  ]);
+  const [selectedDates, setSelectedDates] = useState<DateRange>({
+    from: undefined,
+    to: undefined,
+  });
   const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<Option[]>([]);
-  const [selectedHistoricalTags, setSelectedHistoricalTags] = useState<Option[]>([]);
+  const [selectedHistoricalTags, setSelectedHistoricalTags] = useState<
+    Option[]
+  >([]);
   const [sortOption, setSortOption] = useState<SortOption | null>(null);
-  const [loaded, setLoaded] = useState(false);
-  const { toggleLoading, isLoadingTour, setIsLoading } = useTour();
-
+  const { setIsLoading } = useTour();
 
   const { id } = useUserStore();
   // useQueries
@@ -80,8 +89,8 @@ function GeneralGridView() {
     queryFn: fetchActiveAppropriateItineraries,
     select: (data) => data as Itinerary[],
   });
-  console.log("Itineraries2: ",itineraries);
-  
+  console.log("Itineraries2: ", itineraries);
+
   const {
     data: historicalPlaces,
     isLoading: isHistoricalPlaces,
@@ -126,12 +135,14 @@ function GeneralGridView() {
 
   const navigate = useNavigate();
 
-
-
   const handleCardClick = (item: Itinerary | Activity | HistoricalPlace) => {
     // Navigate to detail page, pass the item data via state
     const type =
-      "languages" in item ? "itinerary" : "isBookingOpen" in item ? "activity" : "historicalPlace";
+      "languages" in item
+        ? "itinerary"
+        : "isBookingOpen" in item
+          ? "activity"
+          : "historicalPlace";
     if (type === "historicalPlace") {
       navigate(`/hplace/details/${item._id}`, { state: { item } });
       return;
@@ -150,11 +161,11 @@ function GeneralGridView() {
   useEffect(() => {
     setFinishedLoading(
       !isLoadingActivities &&
-      !isLoadingItineraries &&
-      !isPreferenceTags &&
-      !isLoadingCategories &&
-      !isHistoricalPlaces &&
-      !isHistoricalTags,
+        !isLoadingItineraries &&
+        !isPreferenceTags &&
+        !isLoadingCategories &&
+        !isHistoricalPlaces &&
+        !isHistoricalTags
     );
   }, [
     isLoadingActivities,
@@ -167,7 +178,9 @@ function GeneralGridView() {
 
   useEffect(() => {
     if (combined.length > 0) {
-      const maxPrice = Math.max(...combined.map((item) => getPriceValue(item.price)));
+      const maxPrice = Math.max(
+        ...combined.map((item) => getPriceValue(item.price))
+      );
       setSelectedPriceRange([0, maxPrice]);
     }
   }, [combined]);
@@ -180,15 +193,24 @@ function GeneralGridView() {
 
   const searchParts = ["Category", "Tag"];
   useEffect(() => {
-    if (isSuccessCategories && isSuccessPreferenceTags && isSuccessHistoricalTags) {
-      const categoryNames = categories.map((category: Category) => category.name);
+    if (
+      isSuccessCategories &&
+      isSuccessPreferenceTags &&
+      isSuccessHistoricalTags
+    ) {
+      const categoryNames = categories.map(
+        (category: Category) => category.name
+      );
       const preferenceTagsNames = preferenceTags.map(
-        (preferenceTag: PreferenceTag) => preferenceTag.name,
+        (preferenceTag: PreferenceTag) => preferenceTag.name
       );
       const historicalTagsNames = historicalTags.map(
-        (historicalTag: HistoricalTag) => historicalTag.name,
+        (historicalTag: HistoricalTag) => historicalTag.name
       );
-      setSearchPartsValues([categoryNames, [...preferenceTagsNames, ...historicalTagsNames]]);
+      setSearchPartsValues([
+        categoryNames,
+        [...preferenceTagsNames, ...historicalTagsNames],
+      ]);
     }
   }, [isSuccessCategories, isSuccessPreferenceTags, isSuccessHistoricalTags]);
 
@@ -207,7 +229,7 @@ function GeneralGridView() {
 
   useEffect(() => {
     setIsLoading(false);
-  },[]);
+  }, []);
 
   const handleSort = (sortOption: SortOption) => {
     setSortOption(sortOption);
@@ -225,7 +247,9 @@ function GeneralGridView() {
   const handleCategoryClick = (value: string) => {
     if (value === "") setSelectedCategory([]);
     else if (selectedCategory.includes(value)) {
-      setSelectedCategory(selectedCategory.filter((categoryValue) => categoryValue !== value));
+      setSelectedCategory(
+        selectedCategory.filter((categoryValue) => categoryValue !== value)
+      );
     } else {
       setSelectedCategory(selectedCategory.concat([value]));
     }
@@ -242,7 +266,9 @@ function GeneralGridView() {
 
   const resetFilters = () => {
     if (combined.length > 0) {
-      const maxPrice = Math.max(...combined.map((item) => getPriceValue(item.price)));
+      const maxPrice = Math.max(
+        ...combined.map((item) => getPriceValue(item.price))
+      );
       setSelectedPriceRange([0, maxPrice]); // Dynamically set the max price
     } else {
       setSelectedPriceRange([0, 10000]); // Fallback if combined is empty
@@ -275,48 +301,55 @@ function GeneralGridView() {
       setSelectedPriceRange,
       selectedRatings,
       setSelectedRatings,
-      activeFilter.includes("itinerary") && activeFilter.length === 1,
-    ),
+      activeFilter.includes("itinerary") && activeFilter.length === 1
+    )
   );
   if (historicalTags && activeFilter.includes("place")) {
     const historicalTagsNames = historicalTags
       .map((historicalTag: HistoricalTag) => historicalTag.name)
       .map((tag: string) => ({ label: tag, value: tag }));
     combinedSideBarFilters = combinedSideBarFilters.concat(
-      HistoricalPlacesFilter(historicalTagsNames, setSelectedHistoricalTags),
+      HistoricalPlacesFilter(historicalTagsNames, setSelectedHistoricalTags)
     );
   }
   if (itineraries && activeFilter.includes("itinerary")) {
     const languages: Option[] = Array.from(
       new Set<string>(
-        itineraries.flatMap((itinerary: Itinerary) => (itinerary as Itinerary).languages),
-      ),
+        itineraries.flatMap(
+          (itinerary: Itinerary) => (itinerary as Itinerary).languages
+        )
+      )
     ).map((language: string) => ({ label: language, value: language }));
 
     combinedSideBarFilters = combinedSideBarFilters.concat(
-      ItinerariesFilter(languages, setSelectedLanguages),
+      ItinerariesFilter(languages, setSelectedLanguages)
     );
   }
 
   const getAverageRating = (ratings?: IRating[]) => {
     if (!ratings || ratings.length === 0) return 0;
-    return ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length;
+    return (
+      ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length
+    );
   };
 
   //Searching first, then result is filter  then result is sorted
   const filteredCombinedItems = combined
     .filter((item) => {
       if ("languages" in item) {
-        const itemDates = (item as Itinerary).availableDatesTime.map((date) => new Date(date.Date));
+        const itemDates = (item as Itinerary).availableDatesTime.map(
+          (date) => new Date(date.Date)
+        );
         return itemDates.some(
           (date) =>
             new Date(date) >= new Date() ||
-            new Date(date).toDateString() === new Date().toDateString(),
+            new Date(date).toDateString() === new Date().toDateString()
         );
       } else if ("isBookingOpen" in item) {
         return (
           new Date((item as Activity).date) >= new Date() ||
-          new Date((item as Activity).date).toDateString() === new Date().toDateString()
+          new Date((item as Activity).date).toDateString() ===
+            new Date().toDateString()
         );
       } else return true;
     })
@@ -330,24 +363,31 @@ function GeneralGridView() {
     .filter((item) => {
       // Filter based on active filters
       if (activeFilter.length === 0) return true; // No filters applied, show all
-      if (activeFilter.includes("itinerary") && "languages" in item) return true;
-      if (activeFilter.includes("activity") && "isBookingOpen" in item) return true;
+      if (activeFilter.includes("itinerary") && "languages" in item)
+        return true;
+      if (activeFilter.includes("activity") && "isBookingOpen" in item)
+        return true;
       if (activeFilter.includes("place") && "openingHours" in item) return true;
       return false;
     })
     .filter((item) => {
       // Filter based on selected category
       if (item.category) {
-        return selectedCategory.length === 0 || selectedCategory.includes(item.category.name);
+        return (
+          selectedCategory.length === 0 ||
+          selectedCategory.includes(item.category.name)
+        );
       }
     })
     .filter((item) => {
       // Filter based on selected tag
       const preferenceTags = selectedTag.some((tag) =>
-        item.preferenceTags?.some((preferenceTag) => preferenceTag.name === tag),
+        item.preferenceTags?.some((preferenceTag) => preferenceTag.name === tag)
       );
       const historicalTags = selectedTag.some((tag) =>
-        (item as HistoricalPlace).tags?.some((historicalTag) => historicalTag.name === tag),
+        (item as HistoricalPlace).tags?.some(
+          (historicalTag) => historicalTag.name === tag
+        )
       );
       return selectedTag.length === 0 || preferenceTags || historicalTags;
     })
@@ -356,7 +396,7 @@ function GeneralGridView() {
       return (
         selectedLanguages.length === 0 ||
         selectedLanguages.some((language) =>
-          (item as Itinerary)?.languages?.includes(language.value),
+          (item as Itinerary)?.languages?.includes(language.value)
         )
       );
     })
@@ -365,7 +405,7 @@ function GeneralGridView() {
       return (
         selectedHistoricalTags.length === 0 ||
         selectedHistoricalTags.some((tag) =>
-          (item as HistoricalPlace)?.tags?.some((t) => t.name === tag.value),
+          (item as HistoricalPlace)?.tags?.some((t) => t.name === tag.value)
         )
       );
     })
@@ -384,7 +424,9 @@ function GeneralGridView() {
       const itemRating = getAverageRating(item.ratings);
       return (
         selectedRatings.length === 0 ||
-        selectedRatings.some((rating) => itemRating >= rating && itemRating < rating + 1)
+        selectedRatings.some(
+          (rating) => itemRating >= rating && itemRating < rating + 1
+        )
       );
     })
     .filter((item) => {
@@ -403,54 +445,70 @@ function GeneralGridView() {
         matchDate =
           (selectedDates.from &&
             adjustedToDate &&
-            isWithinInterval(itemDate, { start: selectedDates.from, end: adjustedToDate })) ||
+            isWithinInterval(itemDate, {
+              start: selectedDates.from,
+              end: adjustedToDate,
+            })) ||
           (selectedDates.to === undefined &&
             selectedDates.from &&
-            new Date(itemDate).toDateString() === selectedDates.from.toDateString());
+            new Date(itemDate).toDateString() ===
+              selectedDates.from.toDateString());
       } else if ("languages" in item) {
-        const itemDates = (item as Itinerary).availableDatesTime.map((date) => new Date(date.Date));
+        const itemDates = (item as Itinerary).availableDatesTime.map(
+          (date) => new Date(date.Date)
+        );
         matchDate =
           !selectedDates?.from ||
           itemDates.some(
             (date) =>
               (selectedDates.from &&
                 adjustedToDate &&
-                isWithinInterval(date, { start: selectedDates.from, end: adjustedToDate })) ||
+                isWithinInterval(date, {
+                  start: selectedDates.from,
+                  end: adjustedToDate,
+                })) ||
               (selectedDates.to === undefined &&
                 selectedDates.from &&
-                new Date(date).toDateString() === selectedDates.from.toDateString()),
+                new Date(date).toDateString() ===
+                  selectedDates.from.toDateString())
           );
       }
       return matchDate;
     });
 
-  const sortedCombinedItems = filteredCombinedItems.sort((firstItem, secondItem) => {
-    const firstItemRating = getAverageRating(firstItem.ratings ?? []);
-    const secondItemRating = getAverageRating(secondItem.ratings ?? []);
-    const firstItemPrice = getPriceValue(firstItem.price);
-    const secondItemPrice = getPriceValue(secondItem.price);
-    switch (sortOption) {
-      case "price-high-low":
-        return secondItemPrice - firstItemPrice;
-      case "price-low-high":
-        return firstItemPrice - secondItemPrice;
-      case "rating-high-low":
-        return secondItemRating - firstItemRating;
-      case "rating-low-high":
-        return firstItemRating - secondItemRating;
-      default:
-        // Sort by user preferences
-        const aPreferenceTags =
-          userData &&
-          firstItem.preferenceTags?.some((tag) => userData.preferences?.includes(tag.name));
-        const bPreferenceTags =
-          userData &&
-          secondItem.preferenceTags?.some((tag) => userData.preferences?.includes(tag.name));
-        if (aPreferenceTags && !bPreferenceTags) return -1;
-        if (!aPreferenceTags && bPreferenceTags) return 1;
-        return 0;
+  const sortedCombinedItems = filteredCombinedItems.sort(
+    (firstItem, secondItem) => {
+      const firstItemRating = getAverageRating(firstItem.ratings ?? []);
+      const secondItemRating = getAverageRating(secondItem.ratings ?? []);
+      const firstItemPrice = getPriceValue(firstItem.price);
+      const secondItemPrice = getPriceValue(secondItem.price);
+      switch (sortOption) {
+        case "price-high-low":
+          return secondItemPrice - firstItemPrice;
+        case "price-low-high":
+          return firstItemPrice - secondItemPrice;
+        case "rating-high-low":
+          return secondItemRating - firstItemRating;
+        case "rating-low-high":
+          return firstItemRating - secondItemRating;
+        default:
+          // Sort by user preferences
+          const aPreferenceTags =
+            userData &&
+            firstItem.preferenceTags?.some((tag) =>
+              userData.preferences?.includes(tag.name)
+            );
+          const bPreferenceTags =
+            userData &&
+            secondItem.preferenceTags?.some((tag) =>
+              userData.preferences?.includes(tag.name)
+            );
+          if (aPreferenceTags && !bPreferenceTags) return -1;
+          if (!aPreferenceTags && bPreferenceTags) return 1;
+          return 0;
+      }
     }
-  });
+  );
 
   useEffect(() => {
     if (!skeleton) {
@@ -462,19 +520,19 @@ function GeneralGridView() {
               img.src = item.images[0];
               img.onload = () => resolve();
               img.onerror = () => reject();
-            }),
+            })
         );
         await Promise.all(imagePromises);
-        setLoaded(true);
+        // Images loaded, could be used for further optimization
       };
       loadImages();
     }
-  }, [sortedCombinedItems]);
+  }, [sortedCombinedItems, skeleton]);
 
   return (
-    <div className={GeneralGridStyle["general-grid-view"]}>
+    <div className="w-full overflow-hidden">
       <FilterSortSearchHeader
-        searchPlaceHolder={"Name"}
+        searchPlaceHolder={"Search for your next experience"}
         setSearch={setSearch}
         searchParts={searchParts}
         searchPartsValues={searchPartsValues}
@@ -485,25 +543,150 @@ function GeneralGridView() {
         ]}
         searchPartsPlaceholders={["Add Category", "Add Tag"]}
         handleSort={handleSort}
-      ></FilterSortSearchHeader>
-      <hr className="border-t bg-[var(--gray-scale)] " />
-      <div id="experiences-tour" className="flex w-[100vw]">
+      />
+      <hr className="border-t bg-[var(--gray-scale)]" />
+
+      {/* Desktop Layout - Large screens only */}
+      <div id="experiences-tour" className="hidden xl:flex w-full">
         <FilterSideBar sideBarItems={combinedSideBarFilters} />
-        <div className={GeneralGridStyle["scrollable"]}>
-          <div className={GeneralGridStyle["general-grid-view__header"]}>
+        <div className="flex-1 overflow-y-auto h-[70vh] xl:h-[80vh] 2xl:h-[87vh]">
+          <div className="flex items-center justify-between p-4">
             <HeaderIcons
               activeFilters={activeFilter}
               handleActiveFilterClick={handleActiveFilterClick}
             />
-            <div className={GeneralGridStyle["filter-sort-buttons__container"]}>
+            <div className="flex items-center space-x-4">
               <FilterButton />
               <SortButton onSort={handleSort} />
             </div>
           </div>
 
-          <div className={GeneralGridStyle["general-grid-view__cards"]}>
+          <div className="flex flex-col items-center justify-center w-full">
+            <div
+              className="grid grid-cols-4 gap-y-16 gap-x-6 p-4 w-full max-w-7xl justify-items-center"
+              id="experiences-grid-tour"
+            >
+              {skeleton && (
+                <div className="space-y-2 col-span-full">
+                  <Skeleton className="h-4 w-[250px]" />
+                  <Skeleton className="h-4 w-[200px]" />
+                </div>
+              )}
+
+              {!skeleton &&
+                sortedCombinedItems.map((item) => (
+                  <EntertainmentCard
+                    key={item._id}
+                    id={item._id}
+                    entityType={
+                      "languages" in item
+                        ? bookmarkType.Itinerary
+                        : "isBookingOpen" in item
+                          ? bookmarkType.Activity
+                          : bookmarkType.HistoricalPlace
+                    }
+                    image={item.images[0]}
+                    rating={getAverageRating(item.ratings)}
+                    title={item.name}
+                    price={item.price}
+                    languages={(item as Itinerary)?.languages}
+                    availability={(item as Activity)?.isBookingOpen}
+                    openingTime={(item as HistoricalPlace)?.openingHours}
+                    date={(item as Activity)?.date}
+                    onClick={() => handleCardClick(item)}
+                  />
+                ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Tablet Layout - Medium to Large screens */}
+      <div
+        id="experiences-tour-tablet"
+        className="hidden lg:flex xl:hidden w-full"
+      >
+        <FilterSideBar sideBarItems={combinedSideBarFilters} />
+        <div className="flex-1 overflow-y-auto h-[70vh] lg:h-[80vh]">
+          <div className="flex items-center justify-between p-4">
+            <HeaderIcons
+              activeFilters={activeFilter}
+              handleActiveFilterClick={handleActiveFilterClick}
+            />
+            <div className="flex items-center space-x-2">
+              <FilterButton />
+              <SortButton onSort={handleSort} />
+            </div>
+          </div>
+
+          {/* Tablet Content */}
+          <div className="flex flex-col items-center justify-center w-full p-4 pb-20">
+            <div
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-6 w-full max-w-5xl justify-items-center"
+              id="experiences-grid-tour-tablet"
+            >
+              {skeleton && (
+                <div className="space-y-2 col-span-full">
+                  <Skeleton className="h-4 w-[250px]" />
+                  <Skeleton className="h-4 w-[200px]" />
+                </div>
+              )}
+
+              {!skeleton &&
+                sortedCombinedItems.map((item) => (
+                  <EntertainmentCard
+                    key={item._id}
+                    id={item._id}
+                    entityType={
+                      "languages" in item
+                        ? bookmarkType.Itinerary
+                        : "isBookingOpen" in item
+                          ? bookmarkType.Activity
+                          : bookmarkType.HistoricalPlace
+                    }
+                    image={item.images[0]}
+                    rating={getAverageRating(item.ratings)}
+                    title={item.name}
+                    price={item.price}
+                    languages={(item as Itinerary)?.languages}
+                    availability={(item as Activity)?.isBookingOpen}
+                    openingTime={(item as HistoricalPlace)?.openingHours}
+                    date={(item as Activity)?.date}
+                    onClick={() => handleCardClick(item)}
+                  />
+                ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Layout */}
+      <div id="experiences-tour-mobile" className="lg:hidden">
+        {/* Mobile Filter/Sort Bar */}
+        <div className="flex gap-3 flex-col sm:flex-row items-center justify-between p-4 bg-white border-b">
+          <div className="flex items-center space-x-4 overflow-x-auto">
+            <HeaderIcons
+              activeFilters={activeFilter}
+              handleActiveFilterClick={handleActiveFilterClick}
+            />
+          </div>
+          <div className="flex items-center space-x-2">
+            <FilterButton />
+            <SortButton onSort={handleSort} />
+          </div>
+        </div>
+
+        {/* Mobile Sidebar */}
+        <FilterSideBar sideBarItems={combinedSideBarFilters} />
+
+        {/* Mobile Content */}
+        <div className="flex flex-col items-center justify-center w-full p-4 pb-20">
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-4xl justify-items-center"
+            id="experiences-grid-tour-mobile"
+          >
             {skeleton && (
-              <div className="space-y-2">
+              <div className="space-y-2 col-span-full">
                 <Skeleton className="h-4 w-[250px]" />
                 <Skeleton className="h-4 w-[200px]" />
               </div>

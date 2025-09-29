@@ -2,6 +2,9 @@ import type { Request, Response } from "express";
 import { STATUS_CODES } from "@/utils/constants";
 import * as authService from "@/services/auth-service";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export async function login(req: Request, res: Response) {
   try {
@@ -18,12 +21,7 @@ export async function login(req: Request, res: Response) {
 export async function signup(req: Request, res: Response) {
   try {
     const userData = req.body;
-    // const token = await authService.signup(userData);
     await authService.signup(userData);
-    // delete user!.password;
-    // if (token) {
-    //     res.status(STATUS_CODES.STATUS_OK).json(token);
-    // }
     res.status(STATUS_CODES.STATUS_OK).json();
   } catch (error) {
     if (error instanceof Error) {
@@ -35,9 +33,7 @@ export async function signup(req: Request, res: Response) {
 export async function changePassword(req: Request, res: Response) {
   try {
     const { id, oldPassword, newPassword } = req.body;
-    // const { id, newPassword } = req.body;
     const changePassword = await authService.changePassword(id, oldPassword, newPassword);
-    // const changePassword = await authService.changePassword(id, newPassword);
     res.status(STATUS_CODES.STATUS_OK).json(changePassword);
   } catch (error) {
     if (error instanceof Error) {
@@ -50,11 +46,11 @@ export async function authenticate(req: Request, res: Response) {
   try {
     const token = req.params.token;
     if (!token) {
-      res.status(STATUS_CODES.SERVER_ERROR).json({ error: "No token provided" });
+      res.status(STATUS_CODES.UNAUTHORIZED).json({ error: "No token provided" });
     }
     jwt.verify(token, process.env.SECRETKEY!, (err: unknown, decodedToken: unknown) => {
       if (err) {
-        res.status(STATUS_CODES.SERVER_ERROR).json({ error: "Invalid token" });
+        res.status(STATUS_CODES.UNAUTHORIZED).json({ error: "Invalid token" });
       } else {
         console.log(decodedToken);
         res.status(STATUS_CODES.STATUS_OK).json(decodedToken);

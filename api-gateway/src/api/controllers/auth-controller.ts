@@ -10,11 +10,11 @@ export async function login(req: Request, res: Response) {
         // console.log(cookie.data);
         if (cookie.status === STATUS_CODES.STATUS_OK) {
             res.cookie("jwt", cookie.data, {
-                sameSite:'lax' , 
-                 
+                secure: true,         // required for SameSite=None
+                sameSite: "none",
+                httpOnly: true,
                 maxAge: CONSTANTS.MAXAGE 
             });
-            // const token = cookie.data;
             res.status(STATUS_CODES.STATUS_OK).json();
         }
         else {
@@ -105,7 +105,9 @@ export async function verifyOTP(req: Request, res: Response) {
         const response = await authService.verifyOTP({username, otp});
         res.status(response.status).json(response.data);
     }
-    catch (error) {
-        res.status(STATUS_CODES.BAD_GATEWAY).json(error.message);
+    catch (error:unknown) {
+        if (error instanceof Error) {
+            res.status(STATUS_CODES.BAD_GATEWAY).json(error.message);
+        }
     }
 }

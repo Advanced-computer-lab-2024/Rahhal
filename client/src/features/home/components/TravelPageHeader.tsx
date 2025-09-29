@@ -1,10 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { PiTaxi } from "react-icons/pi";
-import flightIcon from "@/assets/flight-Icon.png";
-import busIcon from "@/assets/Bus Icon.png";
 import TransportationSearchBar from "./TransportationSearchBar";
 import FlightSearchBar from "./FlightSearchBar";
-//import TravelSearchBar from "./TravelSearchBar";
 
 interface TravelPageHeaderProps {
   transferType: string;
@@ -14,20 +9,21 @@ interface TravelPageHeaderProps {
 }
 function TravelPageHeader({
   transferType,
-  setTransferType,
   onIconClickFlights,
   onIconClickTaxis,
 }: TravelPageHeaderProps) {
   return (
     <div id="searchBar">
-      <div className="flex justify-center py-[10px] px-[16px] items-center w-[100%] ">
-        {transferType === "taxis" ? (
-          <TransportationSearchBar onIconClick={onIconClickTaxis} />
-        ) : transferType === "flights" ? (
-          <FlightSearchBar onIconClick={onIconClickFlights} />
-        ) : (
-          <TransportationSearchBar onIconClick={onIconClickTaxis} />
-        )}
+      <div className="flex justify-center py-2 md:py-[10px] px-4 md:px-[16px] items-center w-full">
+        <div className="w-full max-w-6xl flex justify-center items-center">
+          {transferType === "taxis" ? (
+            <TransportationSearchBar onIconClick={onIconClickTaxis} />
+          ) : transferType === "flights" ? (
+            <FlightSearchBar onIconClick={onIconClickFlights} />
+          ) : (
+            <TransportationSearchBar onIconClick={onIconClickTaxis} />
+          )}
+        </div>
       </div>
       <hr className="border-t bg-[var(--gray-scale)] " />
     </div>

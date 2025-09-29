@@ -129,22 +129,22 @@ export function OrderSummary({
   return (
     <div className="space-y-4">
       {productsWithViewingPrices.map((item) => (
-        <div key={item.product._id} className="flex items-center gap-4">
-          <div className="relative">
+        <div key={item.product._id} className="flex items-center gap-3 sm:gap-4">
+          <div className="relative flex-shrink-0">
             <img
               src={item.product.picture}
               alt={item.product.name}
-              className="w-16 h-16 object-cover rounded-md"
+              className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-md"
             />
-            <span className="absolute -top-2 -right-2 bg-[#E0D1A5] text-white rounded-full w-6 h-6 flex items-center justify-center text-sm ">
+            <span className="absolute -top-2 -right-2 bg-[#E0D1A5] text-white rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center text-xs sm:text-sm">
               {item.quantity}
             </span>
           </div>
-          <div className="flex-1">
-            <h3 className="font-medium">{item.product.name}</h3>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-medium text-sm sm:text-base truncate">{item.product.name}</h3>
           </div>
-          <div className="text-right">
-            <p className="font-medium">
+          <div className="text-right flex-shrink-0">
+            <p className="font-medium text-sm sm:text-base">
               {item.viewingPrice} {currency}
             </p>
           </div>
@@ -172,14 +172,18 @@ export function OrderSummary({
 
       {!activePromotion && (
         <div className="mt-6">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <Input
               placeholder="Enter promo code"
               value={promoCode}
               onChange={(e) => setPromoCode(e.target.value)}
               className="flex-1"
             />
-            <Button variant="outline" onClick={handleApplyPromoCode}>
+            <Button
+              variant="outline"
+              onClick={handleApplyPromoCode}
+              className="w-full sm:w-auto"
+            >
               Apply
             </Button>
           </div>

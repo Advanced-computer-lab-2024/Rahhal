@@ -6,9 +6,13 @@ interface PictureCardProps {
   imageSources: string[];
 }
 
-const PictureViewer = ({ title, description, imageSources }: PictureCardProps) => {
+const PictureViewer = ({
+  title,
+  description,
+  imageSources,
+}: PictureCardProps) => {
   return (
-    <Card>
+    <Card className="w-full">
       <div className="p-4">
         <h2 className="text-xl font-semibold mb-2">{title}</h2>
         <p className="text-gray-600 mb-4">{description}</p>

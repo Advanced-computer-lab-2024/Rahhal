@@ -18,7 +18,8 @@ export async function sendNotification(notificationData: NotificationData) {
     throw new Error('User not found');
   }
 
-  if (!user.email) {
+  // Only non-admins receive emails
+  if (!user.email && user.role !== 'admin') {
     throw new Error('User email not found');
   }
 

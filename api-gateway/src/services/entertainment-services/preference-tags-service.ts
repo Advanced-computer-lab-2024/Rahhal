@@ -1,8 +1,11 @@
 import axios from "axios";
 import { STATUS_CODES } from "@/utils/constants";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const axiosInstance = axios.create({
-  baseURL: "http://entertainment:3000",
+  baseURL: process.env.ENTERTAINMENT_SERVICE_URL || "http://entertainment:3000",
   validateStatus: (status) => {
     return status < STATUS_CODES.GATEWAY_TIMEOUT;
   },

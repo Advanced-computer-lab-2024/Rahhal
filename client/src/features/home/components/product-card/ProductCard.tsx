@@ -53,7 +53,10 @@ export default function ProductCard({
   const [isRatingHovered, setIsRatingHovered] = useState(false);
   const [guestActionText, setGuestActionText] = useState("");
   const { incrementCount, decrementCount } = useWishlistStore();
-  const { incrementCount: incrementCartCount, decrementCount: decrementCartCount } = useCartStore();
+  const {
+    incrementCount: incrementCartCount,
+    decrementCount: decrementCartCount,
+  } = useCartStore();
   const { refresh } = useProductRefreshStore();
   useEffect(() => {
     if (!userId) {
@@ -81,7 +84,9 @@ export default function ProductCard({
 
     if (!userId) {
       setIsGuestAction(true);
-      setGuestActionText("Making a list? Sign in to wishlist your favourite products");
+      setGuestActionText(
+        "Making a list? Sign in to wishlist your favourite products"
+      );
 
       return;
     }
@@ -153,17 +158,22 @@ export default function ProductCard({
   const convertedPrice = currencyExchange("EGP", price);
   const displayPrice = convertedPrice ? convertedPrice.toFixed(0) : "N/A";
 
-  const formattedRating = typeof rating === "number" ? rating.toFixed(1) : "N/A";
+  const formattedRating =
+    typeof rating === "number" ? rating.toFixed(1) : "N/A";
 
   return (
     <Card
-      className="relative w-64 overflow-hidden flex flex-col"
+      className="relative max-w-[330px] aspect-[3/4] cursor-pointer overflow-hidden flex flex-col"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardContent className="p-0 flex-grow">
         <div className="relative aspect-square">
-          <img src={imageUrl} alt={name} className="w-full h-full object-cover rounded-[12px]" />
+          <img
+            src={imageUrl}
+            alt={name}
+            className="w-full h-full object-cover rounded-[12px]"
+          />
 
           {isGuestAction && (
             <SignUpModal
@@ -182,7 +192,7 @@ export default function ProductCard({
               "stroke-gray-600",
               isWishlisted
                 ? "fill-[var(--primary-color)] stroke-[var(--primary-color)]"
-                : " fill-foreground/20",
+                : " fill-foreground/20"
             )}
             onClick={handleWishlistClick}
             whileTap={{ scale: 0.9 }}
@@ -194,7 +204,7 @@ export default function ProductCard({
                 "hover:scale-110 active:scale-95",
                 "stroke-[1.5]",
                 "stroke-white",
-                isWishlisted ? "fill-red-500" : " fill-foreground/40",
+                isWishlisted ? "fill-red-500" : " fill-foreground/40"
               )}
             />
           </motion.button>
@@ -224,7 +234,9 @@ export default function ProductCard({
                 onMouseLeave={() => setIsRatingHovered(false)}
               >
                 <div className="flex items-center justify-between mb-4">
-                  <p className="font-semibold text-center flex-1">Ratings & Reviews</p>
+                  <p className="font-semibold text-center flex-1">
+                    Ratings & Reviews
+                  </p>
                   <XIcon
                     className="cursor-pointer ml-4 w-5 h-5"
                     onClick={() => setIsRatingHovered(false)}
@@ -237,12 +249,18 @@ export default function ProductCard({
                       <li key={index}>
                         <div className="flex items-center space-x-2">
                           <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-                          <span className="text-sm font-medium">{rating.rating}</span>
+                          <span className="text-sm font-medium">
+                            {rating.rating}
+                          </span>
 
-                          <span className="text-sm text-gray-500">- {rating.userName}</span>
+                          <span className="text-sm text-gray-500">
+                            - {rating.userName}
+                          </span>
                         </div>
 
-                        <div className="text-xs text-gray-500 ml-6">{rating.review}</div>
+                        <div className="text-xs text-gray-500 ml-6">
+                          {rating.review}
+                        </div>
                       </li>
                     ))
                   ) : (
@@ -277,11 +295,19 @@ export default function ProductCard({
         {isInCart && (
           <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white to-transparent">
             <div className="flex justify-between items-center">
-              <Button variant="outline" size="icon" onClick={() => decrementProductInCart()}>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => decrementProductInCart()}
+              >
                 <Minus className="h-4 w-4" />
               </Button>
               <span className="font-semibold">{quantity}</span>
-              <Button variant="outline" size="icon" onClick={() => incrementProductInCart()}>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => incrementProductInCart()}
+              >
                 <Plus className="h-4 w-4" />
               </Button>
             </div>

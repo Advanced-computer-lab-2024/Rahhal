@@ -6,6 +6,7 @@
   "main": "src/server.ts",
   "scripts": {
     "dev": "tsx watch src/server.ts",
+    "build": "rm -rf ./build && tsc && tsc-alias",
     "test": "vitest",
     "lint": "eslint . --fix",
     "format": "prettier . --write",
@@ -17,11 +18,14 @@
   "devDependencies": {
     "@eslint/js": "^9.11.1",
     "@types/amqplib": "^0.10.5",
+    "@types/cors": "^2.8.17",
     "@types/eslint__js": "^8.42.3",
     "@types/express": "^5.0.0",
     "@types/morgan": "^1.9.9",
     "eslint": "^9.11.1",
     "prettier": "^3.3.3",
+    "swagger-autogen": "^2.23.7",
+    "tsc-alias": "^1.8.10",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2",
     "typescript-eslint": "^8.7.0",

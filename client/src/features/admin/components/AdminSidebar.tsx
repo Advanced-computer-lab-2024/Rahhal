@@ -14,7 +14,11 @@ import {
 } from "@/components/ui/sidebar";
 import { ChevronDown, Settings } from "lucide-react";
 import { SidebarMenuItems } from "@/features/admin/utils/SidebarMenuItems";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import SecondaryLogo from "@/features/logos/SecondaryLogo";
 import {
   DropdownMenu,
@@ -25,7 +29,7 @@ import {
 import NotificaionPopover from "@/components/NotificationPopover";
 import { logoutUser } from "@/api-calls/users-api-calls";
 import { UserState } from "@/stores/user-state-store";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 interface AdminSidebarProps {
   id?: string | null;
 }
@@ -52,7 +56,10 @@ export function AdminSidebar({ id }: AdminSidebarProps) {
       <SidebarContent>
         {SidebarMenuItems.map((group) => (
           <Collapsible defaultOpen className="group/collapsible">
-            <SidebarGroup key={group.section} className="group-data-[collapsible=icon]">
+            <SidebarGroup
+              key={group.section}
+              className="group-data-[collapsible=icon]"
+            >
               <SidebarGroupLabel asChild>
                 <CollapsibleTrigger>
                   {group.section}
@@ -72,10 +79,10 @@ export function AdminSidebar({ id }: AdminSidebarProps) {
                             isActive={window.location.pathname === fullPath}
                             tooltip={item.label}
                           >
-                            <a href={"http://localhost:5173" + fullPath}>
+                            <Link to={fullPath}>
                               <item.icon />
                               <span>{item.label}</span>
-                            </a>
+                            </Link>
                           </SidebarMenuButton>
                           <SidebarMenuAction className="peer-data-[active=true]/menu-button:opacity-100" />
                         </SidebarMenuItem>
@@ -102,16 +109,19 @@ export function AdminSidebar({ id }: AdminSidebarProps) {
                     </a>
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                  <a href={`http://localhost:5173/user-settings/account`}>
+                <DropdownMenuContent
+                  side="top"
+                  className="w-[--radix-popper-anchor-width]"
+                >
+                  <Link to="/user-settings/account">
                     <DropdownMenuItem>Account</DropdownMenuItem>
-                  </a>
-                  <a href={`http://localhost:5173/user-settings`}>
+                  </Link>
+                  <Link to="/user-settings">
                     <DropdownMenuItem>Profile</DropdownMenuItem>
-                  </a>
-                  <a>
-                    <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
-                  </a>
+                  </Link>
+                  <Link to="#" onClick={handleLogout}>
+                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                  </Link>
                 </DropdownMenuContent>
               </DropdownMenu>
             </SidebarMenuItem>

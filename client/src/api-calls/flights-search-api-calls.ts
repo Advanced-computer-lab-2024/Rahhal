@@ -1,6 +1,6 @@
 import type {
   FlightData,
-  FlightRequest
+  FlightRequest,
 } from "@/features/home/types/home-page-types";
 import { SERVICES_URLS } from "@/lib/constants";
 import axios from "axios";
@@ -17,13 +17,22 @@ const isErrorResponse = (data: any): data is ErrorResponse => {
 };
 
 export const getFlights = async (
-  flightReq: FlightRequest,
+  flightReq: FlightRequest
 ): Promise<FlightData> => {
-  const {data} = await axios.post(`${SERVICES_URLS.FLIGHTS}`, flightReq);
-  if (isErrorResponse(data)) {
-    console.error("Error details:", data.errors);
-    alert(`Error: ${data.errors[0].detail}`);
-    return { data: [], dictionaries: { carriers: {} }, meta: { count: 0 } };
+  const erroredDataPlaceHolder = {
+    data: [],
+    dictionaries: { carriers: {} },
+    meta: { count: 0 },
+  };
+  try {
+    const { data } = await axios.post(`${SERVICES_URLS.FLIGHTS}`, flightReq);
+    if (isErrorResponse(data)) {
+      console.error("Error fetching flight", data.errors);
+      return erroredDataPlaceHolder;
+    }
+    return data as FlightData;
+  } catch (error) {
+    console.error("Error fetching flight", error);
+    return erroredDataPlaceHolder;
   }
-  return data as FlightData;
 };

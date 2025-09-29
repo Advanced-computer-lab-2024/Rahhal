@@ -25,6 +25,7 @@ class NotificationWorker {
         try {
           const notificationData = JSON.parse(msg.content.toString());
           await jobHnadler.sendNotification(notificationData);
+          console.log('Notification processed:', notificationData);
 
           // Acknowledge message
           channel.ack(msg);

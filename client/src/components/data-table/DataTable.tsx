@@ -44,8 +44,11 @@ export function DataTable<TData, TValue>({
   complaintFilter = false,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
   const [priceRange, setPriceRange] = React.useState({ min: "", max: "" });
@@ -87,40 +90,69 @@ export function DataTable<TData, TValue>({
     }
   }, [priceRange, table]);
 
+  // Hide all columns except the first two on mobile view
+  // (which should be the most two important columns)
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        table.getAllColumns().forEach((col, idx) => {
+          if (idx > 1) {
+            col.toggleVisibility(false);
+          }
+        });
+      } else {
+        table.getAllColumns().forEach((col) => {
+          col.toggleVisibility(true);
+        });
+      }
+    };
+
+    handleResize(); // Run on mount
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [table]);
+
   return (
-    <div className="container m-auto">
-      <div className="flex items-center py-4">
-        <DataTableViewOptions table={table} />
-        {newRowModal}
-      </div>
-      {enableFilters && (
-        <div className="flex space-x-2 py-4">
-          <Input
-            placeholder="Filter names..."
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-            onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
-            className="max-w-sm"
-          />
-          <div className="flex space-x-2">
+    <div className="w-full">
+      <div className="flex flex-row-reverse justify-start flex-wrap gap-4 items-center">
+        <div className="flex items-start sm:items-center py-4 gap-2 sm:gap-4">
+          <DataTableViewOptions table={table} />
+          {newRowModal}
+        </div>
+        {enableFilters && (
+          <div className="flex gap-x-2 py-4">
+            <Input
+              placeholder="Filter names..."
+              value={
+                (table.getColumn("name")?.getFilterValue() as string) ?? ""
+              }
+              onChange={(event) =>
+                table.getColumn("name")?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
             <Input
               placeholder="Min price"
               type="number"
               value={priceRange.min}
-              onChange={(e) => setPriceRange((prev) => ({ ...prev, min: e.target.value }))}
+              onChange={(e) =>
+                setPriceRange((prev) => ({ ...prev, min: e.target.value }))
+              }
               className="max-w-[100px]"
             />
             <Input
               placeholder="Max price"
               type="number"
               value={priceRange.max}
-              onChange={(e) => setPriceRange((prev) => ({ ...prev, max: e.target.value }))}
+              onChange={(e) =>
+                setPriceRange((prev) => ({ ...prev, max: e.target.value }))
+              }
               className="max-w-[100px]"
             />
           </div>
-        </div>
-      )}
-      {complaintFilter && (
-        <div className="w-50">
+        )}
+        {complaintFilter && (
           <GenericSelect
             width="w-1/4"
             label="Status"
@@ -139,19 +171,25 @@ export function DataTable<TData, TValue>({
               }
             }}
           />
-        </div>
-      )}
-      <div className="rounded-md">
-        <Table className="border-separate border-spacing-y-2">
+        )}
+      </div>
+      <div className="rounded-md overflow-x-auto">
+        <Table className="border-separate border-spacing-y-2 min-w-full">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="hover:bg-transparent border-none">
+              <TableRow
+                key={headerGroup.id}
+                className="hover:bg-transparent border-none"
+              >
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}
@@ -167,18 +205,25 @@ export function DataTable<TData, TValue>({
                       key={cell.id}
                       // Apply rounded corners to the first and last cell in the row as a workaround since border-radius does not apply on <tr> elements
                       className={cn({
-                        "rounded-tr-xl rounded-br-xl": index === row.getVisibleCells().length - 1,
+                        "rounded-tr-xl rounded-br-xl":
+                          index === row.getVisibleCells().length - 1,
                         "rounded-tl-xl rounded-bl-xl": index === 0,
                       })}
                     >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   No results.
                 </TableCell>
               </TableRow>

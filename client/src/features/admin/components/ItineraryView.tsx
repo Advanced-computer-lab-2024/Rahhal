@@ -68,23 +68,25 @@ export function ItineraryView({ itineraryData, dialogTrigger, onSubmit }: Itiner
         formatter={format}
         excludedFields={["_id", "createdAt", "updatedAt", "__v", "owner", "images"]}
       />
-      <div className="flex items-center space-x-2 pt-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 pt-4">
         <PictureViewer
           title="Itinerary Images"
           description="Itinerary Images"
           imageSources={modalItineraryData.images}
         />
-        <Checkbox
-          id="inappropriate"
-          checked={!modalItineraryData.appropriate}
-          onCheckedChange={(checked) => {
-            setModalItineraryData({
-              ...modalItineraryData,
-              appropriate: !checked,
-            });
-          }}
-        />
-        <Label htmlFor="inappropriate">Inappropriate Itinerary</Label>
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="inappropriate"
+            checked={!modalItineraryData.appropriate}
+            onCheckedChange={(checked) => {
+              setModalItineraryData({
+                ...modalItineraryData,
+                appropriate: !checked,
+              });
+            }}
+          />
+          <Label htmlFor="inappropriate" className="text-sm">Inappropriate Itinerary</Label>
+        </div>
       </div>
     </GenericModal>
   );

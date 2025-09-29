@@ -78,7 +78,7 @@ export function PromocodeModal({
       showDeleteButton={!isNewPromocode}
       onDelete={handleDelete}
     >
-      <div className="flex flex-col gap-4 p-4">
+      <div className="flex flex-col gap-4 p-4 sm:p-6">
         <div className="flex flex-col gap-2">
           <Label>Code</Label>
           <Input
@@ -101,15 +101,15 @@ export function PromocodeModal({
               )
             }
             defaultValue={modalPromocodeData?.type ?? "percentage"}
-            className="flex flex-col space-y-1"
+            className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4"
           >
-            <div className="flex items-center space-x-3 space-y-0">
-              <RadioGroupItem value="percentage">Percentage</RadioGroupItem>
-              <Label>Percentage</Label>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="percentage" id="percentage" />
+              <Label htmlFor="percentage" className="text-sm">Percentage</Label>
             </div>
-            <div className="flex items-center space-x-3 space-y-0">
-              <RadioGroupItem value="shipping">Shipping</RadioGroupItem>
-              <Label>Shipping</Label>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="shipping" id="shipping" />
+              <Label htmlFor="shipping" className="text-sm">Shipping</Label>
             </div>
           </RadioGroup>
         </div>

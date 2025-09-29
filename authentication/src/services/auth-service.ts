@@ -90,7 +90,7 @@ export async function sendOTP(username: string){
     await authRepository.updateUser(user.id, { otp });
     const message = {
       userId: user.id,
-      message: `Dear ${user.username}, Your OTP is ${otp} /n Please do not share this OTP with anyone`,
+      message: `Dear ${user.username},\n\nYour OTP is ${otp}, please do not share this OTP with anyone`,
     }
     await publishNotification(message);
   }

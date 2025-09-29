@@ -1,23 +1,25 @@
 import axios from 'axios';
 import { STATUS_CODES } from '@/utils/constants';
+import dotenv from "dotenv";
 
+dotenv.config();
 
 const entertainmentAxiosInstance = axios.create({
-    baseURL: "http://entertainment:3000",
+    baseURL: process.env.ENTERTAINMENT_SERVICE_URL || "http://entertainment:3000",
     validateStatus: (status) => {
       return status < STATUS_CODES.SERVER_ERROR;
     },
   });
   
   const productAxiosInstance = axios.create({
-    baseURL: "http://product:3000",
+    baseURL: process.env.PRODUCT_SERVICE_URL || "http://product:3000",
     validateStatus: (status) => {
       return status < STATUS_CODES.SERVER_ERROR;
     },
   });
 
   const gatewayAxiosInstance = axios.create({
-    baseURL: "http://backend:3000/api",
+    baseURL: `${process.env.GATEWAY_SERVICE_URL || "http://backend:3000"}/api`,
     validateStatus: (status) => {
       return status < STATUS_CODES.SERVER_ERROR;
     },

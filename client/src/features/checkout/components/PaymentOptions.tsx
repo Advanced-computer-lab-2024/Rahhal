@@ -66,8 +66,8 @@ export function PaymentOptions({
   return (
     <div className="w-full">
       <div className="mb-4">
-        <h2 className="text-xl font-medium">Payment</h2>
-        <p className="text-sm text-gray-500">All transactions are secure and encrypted.</p>
+        <h2 className="text-lg sm:text-xl font-medium">Payment</h2>
+        <p className="text-xs sm:text-sm text-gray-500">All transactions are secure and encrypted.</p>
       </div>
 
       <RadioGroup
@@ -95,24 +95,26 @@ export function PaymentOptions({
                       : "hover:bg-gray-50 transition-colors"
                   }`}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 flex-1">
                     <RadioGroupItem
                       value={method.id}
                       id={method.id}
                       className="text-complementary"
-                      disabled={isDisabled} // The RadioGroupItem is still disabled
+                      disabled={isDisabled}
                     />
-                    <Label htmlFor={method.id} className="text-sm font-medium">
+                    <Label htmlFor={method.id} className="text-xs sm:text-sm font-medium flex-1">
                       {method.label}
                     </Label>
-                    {method.icon}
+                    <div className="flex-shrink-0">
+                      {method.icon}
+                    </div>
                   </div>
                   <div className="flex flex-col items-end">
                     {method.id === "wallet" && (
                       <div className="flex flex-col items-end">
-                        <span className="text-sm text-gray-500">{formattedWalletBalance}</span>
+                        <span className="text-xs sm:text-sm text-gray-500">{formattedWalletBalance}</span>
                         {isDisabled && (
-                          <p className="text-[0.7rem] text-red-800 mt-1">Insufficient balance</p>
+                          <p className="text-[0.6rem] sm:text-[0.7rem] text-red-800 mt-1">Insufficient balance</p>
                         )}
                       </div>
                     )}

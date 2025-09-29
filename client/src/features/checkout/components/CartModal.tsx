@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import {
@@ -13,9 +18,12 @@ import { useQuery } from "@tanstack/react-query";
 import type { PopulatedCart } from "@/features/home/types/home-page-types";
 import useCartStore from "@/stores/nav-bar-icon-stores/cart-count-store";
 import useProductRefreshStore from "@/stores/refresh-product-store";
-import { useCurrencyStore, useRatesStore } from "@/stores/currency-exchange-store";
+import {
+  useCurrencyStore,
+  useRatesStore,
+} from "@/stores/currency-exchange-store";
 import { currencyExchangeSpec } from "@/utils/currency-exchange";
-import useUserStore from "@/stores/user-state-store"
+import useUserStore from "@/stores/user-state-store";
 interface CartModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -24,7 +32,6 @@ interface CartModalProps {
 export function CartModal({ open, onOpenChange }: CartModalProps) {
   const [cart, setCart] = useState<PopulatedCart | null>(null);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
-  // const [prices, setPrices] = useState<Record<string, number>>([]);
   const navigate = useNavigate();
   const { incrementCount, decrementCount, setCount } = useCartStore();
   const { setRefresh } = useProductRefreshStore();
@@ -34,7 +41,11 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
 
   const { id: paramId } = useUserStore();
 
-  const { data: cartData, isSuccess } = useQuery({
+  const {
+    data: cartData,
+    isSuccess,
+    isLoading,
+  } = useQuery({
     queryKey: ["cart", "products"],
     queryFn: () => fetchUserCart(paramId as string),
     enabled: !!paramId && open,
@@ -73,10 +84,20 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
   };
 
   let subtotal = cart
-    ? cart.products.reduce((acc, item) => acc + item.product.price * item.quantity, 0)
+    ? cart.products.reduce(
+        (acc, item) => acc + item.product.price * item.quantity,
+        0
+      )
     : 0;
-  const subTotalConverted = currencyExchangeSpec(baseCurrency, subtotal, rates, currency);
-  const subTotalDisplayed = subTotalConverted ? subTotalConverted.toFixed(2) : "N/A";
+  const subTotalConverted = currencyExchangeSpec(
+    baseCurrency,
+    subtotal,
+    rates,
+    currency
+  );
+  const subTotalDisplayed = subTotalConverted
+    ? subTotalConverted.toFixed(2)
+    : "N/A";
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -85,7 +106,31 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
           <SheetTitle className="text-xl">Shopping Cart</SheetTitle>
         </SheetHeader>
         <div className="flex flex-col h-[calc(100vh-8rem)]">
-          {cart?.products.length === 0 ? (
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <svg
+                className="animate-spin h-10 w-10 text-gray-400 mb-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8z"
+                ></path>
+              </svg>
+              <p className="text-lg text-gray-500">Loading cart...</p>
+            </div>
+          ) : cart?.products.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full">
               <ShoppingCart className="w-24 h-24 text-gray-300 mb-4" />
               <p className="text-xl font-medium mb-4">Your cart is empty</p>
@@ -109,11 +154,16 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
                     baseCurrency,
                     item.product.price,
                     rates,
-                    currency,
+                    currency
                   );
-                  const displayedPrice = convertedPrice ? convertedPrice.toFixed(2) : "N/A";
+                  const displayedPrice = convertedPrice
+                    ? convertedPrice.toFixed(2)
+                    : "N/A";
                   return (
-                    <div key={item.product._id} className="flex gap-4 py-4 border-b">
+                    <div
+                      key={item.product._id}
+                      className="flex gap-4 py-4 border-b"
+                    >
                       <img
                         src={item.product.picture}
                         alt={item.product.name}
@@ -132,7 +182,9 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
                             variant="outline"
                             size="icon"
                             className="h-8 w-8"
-                            onClick={() => decrementProductInCart(item.product._id)}
+                            onClick={() =>
+                              decrementProductInCart(item.product._id)
+                            }
                             disabled={quantities[item.product._id] <= 1}
                           >
                             <Minus className="h-4 w-4" />
@@ -144,15 +196,22 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
                             variant="outline"
                             size="icon"
                             className="h-8 w-8"
-                            onClick={() => incrementProductInCart(item.product._id)}
-                            disabled={quantities[item.product._id] >= item.product.quantity}
+                            onClick={() =>
+                              incrementProductInCart(item.product._id)
+                            }
+                            disabled={
+                              quantities[item.product._id] >=
+                              item.product.quantity
+                            }
                           >
                             <Plus className="h-4 w-4" />
                           </Button>
                           <Button
                             variant="link"
                             className="ml-auto text-sm"
-                            onClick={() => removeProductFromCart(item.product._id)}
+                            onClick={() =>
+                              removeProductFromCart(item.product._id)
+                            }
                           >
                             Remove
                           </Button>
@@ -173,7 +232,7 @@ export function CartModal({ open, onOpenChange }: CartModalProps) {
                 <Button
                   className="w-full bg-[--primary-color-dark] hover:bg-[--primary-color-fade]"
                   size="lg"
-                  onClick={() =>{
+                  onClick={() => {
                     onOpenChange(false);
                     navigate("/checkout");
                   }}

@@ -12,11 +12,18 @@ interface ItineraryLocationsEditProps {
   onSave: (newLocations: LocationEntry[]) => void; // Ensure onSave is defined
 }
 
-const ItineraryLocationsEdit: React.FC<ItineraryLocationsEditProps> = ({ locations, onSave }) => {
-  const [editedLocations, setEditedLocations] = useState<LocationEntry[]>(locations);
+const ItineraryLocationsEdit: React.FC<ItineraryLocationsEditProps> = ({
+  locations,
+  onSave,
+}) => {
+  const [editedLocations, setEditedLocations] =
+    useState<LocationEntry[]>(locations);
 
   const handleAddEntry = () => {
-    setEditedLocations([...editedLocations, { lat: 29.986828500000012, lng: 31.441345800000015 }]); // Initialize new location
+    setEditedLocations([
+      ...editedLocations,
+      { lat: 29.986828500000012, lng: 31.441345800000015 },
+    ]); // Initialize new location
   };
 
   const handleRemoveEntry = (index: number) => {
@@ -31,7 +38,7 @@ const ItineraryLocationsEdit: React.FC<ItineraryLocationsEditProps> = ({ locatio
   return (
     <div className="space-y-4">
       {editedLocations.map((entry, index) => (
-        <div key={index}>
+        <div key={index} className="border rounded-lg p-4">
           <LocationMap
             initialLocation={{ lat: entry.lat, lng: entry.lng }}
             onSave={(location) => {
@@ -41,11 +48,25 @@ const ItineraryLocationsEdit: React.FC<ItineraryLocationsEditProps> = ({ locatio
             }}
             title={`Location ${index + 1}`}
           />
-          <Button onClick={() => handleRemoveEntry(index)}>Remove</Button>
+          <div className="mt-2 flex justify-end">
+            <Button
+              onClick={() => handleRemoveEntry(index)}
+              variant="destructive"
+              size="sm"
+            >
+              Remove
+            </Button>
+          </div>
         </div>
       ))}
-      <Button onClick={handleAddEntry}>Add Location</Button>
-      <Button onClick={handleSave}>Save</Button>
+      <div className="flex flex-col sm:flex-row gap-2">
+        <Button onClick={handleAddEntry} variant="outline" className="flex-1">
+          Add Location
+        </Button>
+        <Button onClick={handleSave} className="flex-1">
+          Save
+        </Button>
+      </div>
     </div>
   );
 };

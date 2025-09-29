@@ -57,14 +57,24 @@ export function DeliveryForm({
 }) {
   return (
     <div>
-      <h2 className="text-xl font-semibold">Delivery</h2>
-      <p className="ml-2 mt-2 text-sm text-gray-500">
+      <h2 className="text-lg sm:text-xl font-semibold">Delivery</h2>
+      <p className="ml-2 mt-2 text-xs sm:text-sm text-gray-500">
         Delivery is Currently Available in Egypt Only!
       </p>
       <div className="mt-4 space-y-4">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Input placeholder="First name" defaultValue={user.firstName} disabled />
-          <Input placeholder="Last name" defaultValue={user.lastName} disabled />
+        <div className="grid gap-3 sm:gap-4 sm:grid-cols-2">
+          <Input
+            placeholder="First name"
+            defaultValue={user.firstName}
+            disabled
+            className="text-sm sm:text-base"
+          />
+          <Input
+            placeholder="Last name"
+            defaultValue={user.lastName}
+            disabled
+            className="text-sm sm:text-base"
+          />
         </div>
 
         <Select
@@ -78,8 +88,6 @@ export function DeliveryForm({
             } else {
               setSelectedAddress(value);
               setNewAddress(value);
-              setCity("Cairo");
-              setPostalCode("11735");
               const newErrors: {
                 address?: string;
                 city?: string;
@@ -107,41 +115,46 @@ export function DeliveryForm({
           </SelectContent>
         </Select>
 
-        <Input
-          placeholder="Enter new address"
-          value={newAddress}
-          onChange={(e) => setNewAddress(e.target.value)}
-          disabled={selectedAddress !== ""}
-          className={errors.address ? "border-red-500" : ""}
-        />
-        {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
+        {selectedAddress === "" && (
+          <>
+            <Input
+              placeholder="Enter new address"
+              value={newAddress}
+              onChange={(e) => setNewAddress(e.target.value)}
+              className={`text-sm sm:text-base ${errors.address ? "border-red-500" : ""}`}
+            />
+            {errors.address && (
+              <p className="text-red-500 text-sm">{errors.address}</p>
+            )}
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Input
-            placeholder="City"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            disabled={selectedAddress !== ""}
-            className={errors.city ? "border-red-500" : ""}
-          />
+            <div className="grid gap-3 sm:gap-4 sm:grid-cols-2">
+              <Input
+                placeholder="City"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className={`text-sm sm:text-base ${errors.city ? "border-red-500" : ""}`}
+              />
 
-          <Input
-            placeholder="Postal code (optional)"
-            value={postalCode}
-            onChange={(e) => setPostalCode(e.target.value)}
-            disabled={selectedAddress !== ""}
-            className={errors.postalCode ? "border-red-500" : ""}
-          />
-        </div>
+              <Input
+                placeholder="Postal code (optional)"
+                value={postalCode}
+                onChange={(e) => setPostalCode(e.target.value)}
+                className={`text-sm sm:text-base ${errors.postalCode ? "border-red-500" : ""}`}
+              />
+            </div>
+          </>
+        )}
 
         <div className="relative">
           <Input
             placeholder="Phone"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className={errors.phone ? "border-red-500" : ""}
+            className={`text-sm sm:text-base ${errors.phone ? "border-red-500" : ""}`}
           />
-          {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+          {errors.phone && (
+            <p className="text-red-500 text-sm">{errors.phone}</p>
+          )}
         </div>
 
         {selectedAddress === "" && (
@@ -151,7 +164,9 @@ export function DeliveryForm({
               checked={saveInfo}
               onCheckedChange={(checked: boolean) => setSaveInfo(checked)}
             />
-            <Label htmlFor="save-info">Save this information for next time</Label>
+            <Label htmlFor="save-info">
+              Save this information for next time
+            </Label>
           </div>
         )}
       </div>

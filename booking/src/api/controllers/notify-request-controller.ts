@@ -40,9 +40,13 @@ export async function getNotifyRequestById(req: Request, res: Response) {
 
 export async function createNotifyRequest(req: Request, res: Response) {
   try {
-    const notifyRequestData: Partial<INotifyRequest> = req.body;
+    const notifyRequestData: Partial<INotifyRequest>  = req.body;
+    if(notifyRequestData.user === undefined) {
+      res.status(STATUS_CODES.BAD_REQUEST).json({ message: ERROR_MESSAGES.BAD_REQUEST });
+      return
+    }
     const notifyRequest = await notifyRequestService.createNotifyRequest(
-      notifyRequestData
+      notifyRequestData as INotifyRequest
     );
     if(notifyRequest) {
       res.status(STATUS_CODES.CREATED).json(notifyRequest);

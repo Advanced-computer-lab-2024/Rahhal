@@ -15,7 +15,10 @@ interface ItineraryLocationsProps {
   onSave: (newLocations: LocationEntry[]) => void;
 }
 
-const ItineraryLocations: React.FC<ItineraryLocationsProps> = ({ locations, onSave }) => {
+const ItineraryLocations: React.FC<ItineraryLocationsProps> = ({
+  locations,
+  onSave,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const handleSave = (newLocations: LocationEntry[]) => {
@@ -30,7 +33,7 @@ const ItineraryLocations: React.FC<ItineraryLocationsProps> = ({ locations, onSa
   return (
     <div>
       <div className="flex gap-3 items-center">
-        <Label className="text-lg">Available Dates and Times</Label>
+        <Label className="text-lg">Locations</Label>
         <Button variant="link" className="p-0" onClick={handleAdd}>
           <Settings2 className="h-5 w-5 text-primary-color" />
         </Button>

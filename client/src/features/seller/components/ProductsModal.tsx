@@ -30,7 +30,9 @@ export function ProductModal({
   onSubmit,
 }: ProductModalProps) {
   const isNewProduct: boolean = productData === undefined;
-  const [modalProductData, setModalProductData] = useState<TProduct | undefined>(productData); // current product data present in the modal
+  const [modalProductData, setModalProductData] = useState<
+    TProduct | undefined
+  >(productData); // current product data present in the modal
   const [productImages, setProductImages] = useState<FileList | null>(null);
 
   const handleDelete = () => {
@@ -61,8 +63,17 @@ export function ProductModal({
           newProduct as TNewProduct,
           userId ?? "",
           username ?? "",
-          productImages,
+          productImages
         );
+
+        const createdProductData = response.data as TProduct;
+
+        // Add the missing fields values to the modalProductData before being added to the product table
+        // so that we can properly update the same entity without the need to refresh the page
+        modalProductData._id = createdProductData._id;
+        modalProductData.seller = createdProductData.seller;
+        modalProductData.sellerName = createdProductData.sellerName;
+        modalProductData.picture = createdProductData.picture;
       } else {
         response = await updateProduct(modalProductData, productImages);
       }
@@ -119,7 +130,9 @@ export function ProductModal({
             value={modalProductData?.name ?? ""}
             onChange={(e) =>
               setModalProductData(
-                modalProductData ? { ...modalProductData, name: e.target.value } : undefined,
+                modalProductData
+                  ? { ...modalProductData, name: e.target.value }
+                  : undefined
               )
             }
             placeholder="Enter the name of your product"
@@ -137,7 +150,7 @@ export function ProductModal({
               setModalProductData(
                 modalProductData
                   ? { ...modalProductData, price: Number(e.target.value) }
-                  : undefined,
+                  : undefined
               )
             }
             placeholder="Enter the price of your product"
@@ -155,7 +168,7 @@ export function ProductModal({
               setModalProductData(
                 modalProductData
                   ? { ...modalProductData, quantity: Number(e.target.value) }
-                  : undefined,
+                  : undefined
               )
             }
             placeholder="Enter the quantity of your product"
@@ -170,7 +183,9 @@ export function ProductModal({
             value={modalProductData?.description ?? ""}
             onChange={(e) =>
               setModalProductData(
-                modalProductData ? { ...modalProductData, description: e.target.value } : undefined,
+                modalProductData
+                  ? { ...modalProductData, description: e.target.value }
+                  : undefined
               )
             }
             placeholder="Enter a detailed description"
@@ -184,7 +199,9 @@ export function ProductModal({
           checked={modalProductData?.archived || false}
           onCheckedChange={(checked) =>
             setModalProductData(
-              modalProductData ? { ...modalProductData, archived: checked as boolean } : undefined,
+              modalProductData
+                ? { ...modalProductData, archived: checked as boolean }
+                : undefined
             )
           }
           // disabled={isNewProduct} // new products can't be archived "ask about it"

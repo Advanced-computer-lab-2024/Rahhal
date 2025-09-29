@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { fetchComplaintByOwner, createComplaint } from "@/api-calls/complaints-api-calls";
+import {
+  fetchComplaintByOwner,
+  createComplaint,
+} from "@/api-calls/complaints-api-calls";
 import { TouristComplaintsModal } from "./TouristComplaintsModal";
 import DataTableAddButton from "@/components/data-table/DataTableAddButton";
 import { DataTable } from "@/components/data-table/DataTable";
@@ -12,11 +15,14 @@ import useUserStore from "@/stores/user-state-store";
 function ComplaintsTable() {
   const { id } = useUserStore();
   const [complaints, setComplaints] = useState<TComplaint[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const init = async () => {
+      setLoading(true);
       const data = await fetchComplaintByOwner(`${id}`);
       setComplaints(data);
+      setLoading(false);
     };
     init();
   }, [id]);
@@ -31,19 +37,26 @@ function ComplaintsTable() {
     setComplaints((prevComplaints) => [...prevComplaints, complaint]);
   };
 
+  if (loading) return <div className="w-full text-center py-8">Loading...</div>;
   return (
     <div className="p-4">
       {complaints.length === 0 ? (
         <div className="flex flex-col items-center">
-          <img src={NoComplaints} alt="No Complaints Yet" className="w-1/2 h-auto mb-4" />
+          <img
+            src={NoComplaints}
+            alt="No Complaints Yet"
+            className="w-1/2 h-auto mb-4"
+          />
           <p className="text-lg text-gray-600 mb-4">
-            You haven't filed any complaints yet. If you're experiencing any issues, feel free to
-            let us know by clicking the button below!
+            You haven't filed any complaints yet. If you're experiencing any
+            issues, feel free to let us know by clicking the button below!
           </p>
           {/* Button for adding a complaint */}
           <TouristComplaintsModal
             complaintData={undefined}
-            dialogTrigger={<DataTableAddButton className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white rounded" />}
+            dialogTrigger={
+              <DataTableAddButton className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white rounded" />
+            }
             id={id ? id : ""}
             onCreateComplaint={handleCreateComplaint}
           />
@@ -51,7 +64,13 @@ function ComplaintsTable() {
       ) : (
         <div className="bg-white rounded-lg shadow-lg border border-gray-300 overflow-hidden">
           <div className="p-4 border-b border-gray-300">
-            <div style={{ backgroundColor: "#6d91e1", padding: "10px", borderRadius: "5px" }}>
+            <div
+              style={{
+                backgroundColor: "#6d91e1",
+                padding: "10px",
+                borderRadius: "5px",
+              }}
+            >
               <h2 className="text-lg font-semibold" style={{ color: "white" }}>
                 My Complaints
               </h2>
@@ -63,7 +82,9 @@ function ComplaintsTable() {
               newRowModal={
                 <TouristComplaintsModal
                   complaintData={undefined}
-                  dialogTrigger={<DataTableAddButton className="bg-[var(--complimentary-color)] hover:bg-[var(--complimentary-color-dark)] text-white rounded" />}
+                  dialogTrigger={
+                    <DataTableAddButton className="bg-[var(--complimentary-color)] hover:bg-[var(--complimentary-color-dark)] text-white rounded" />
+                  }
                   id={id ? id : ""}
                   onCreateComplaint={handleCreateComplaint}
                 />

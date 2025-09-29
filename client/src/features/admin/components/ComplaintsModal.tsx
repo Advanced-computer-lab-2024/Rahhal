@@ -83,7 +83,7 @@ export function ComplaintsModal({ complaintData, dialogTrigger, onSubmit}: Compl
         formatter={format}
         excludedFields={["_id", "status", "replies", "createdAt", "updatedAt", "__v"]}
       />
-      <div className="pt-4 space-y-4">
+      <div className="pt-4 space-y-4 px-4 sm:px-6">
         <Label>Status</Label>
         <GenericSelect
           label={"Status"}
@@ -100,7 +100,7 @@ export function ComplaintsModal({ complaintData, dialogTrigger, onSubmit}: Compl
           placeholder={"Select Status"}
         />
       </div>
-      <div className="flex flex-col gap-4 p-4">
+      <div className="flex flex-col gap-4 p-4 sm:p-6">
         <div className="flex flex-col gap-2">
           <Label>Previous Replies</Label>
           {modalComplaintData?.replies.length !== 0 ? (
